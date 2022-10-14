@@ -1,1 +1,1 @@
-# MacC-Team-Sendals
+# MacC-Team-Sandals
