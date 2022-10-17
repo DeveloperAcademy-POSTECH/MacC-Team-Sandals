@@ -1,8 +1,8 @@
 //
 //  MyPageViewController.swift
-//  Sandals
+//  Kindy
 //
-//  Created by rbwo on 2022/10/16.
+//  Created by rbwo on 2022/10/17.
 //
 
 import UIKit

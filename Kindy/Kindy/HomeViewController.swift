@@ -1,8 +1,8 @@
 //
 //  ViewController.swift
-//  Sandals
+//  Kindy
 //
-//  Created by rbwo on 2022/10/16.
+//  Created by rbwo on 2022/10/17.
 //
 
 import UIKit
@@ -11,9 +11,8 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
-        print("Sandals")
+        print("hello kindy!")
     }
 
 
