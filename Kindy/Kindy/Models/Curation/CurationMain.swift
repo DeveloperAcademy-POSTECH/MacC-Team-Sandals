@@ -9,7 +9,7 @@ import UIKit
 
 struct CurationMain {
     let id: String
-    let mainImage: UIImage
+    let mainImage: String
     let title: String
     let subTitle: String?
 }

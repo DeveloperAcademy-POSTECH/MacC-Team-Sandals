@@ -10,7 +10,7 @@ import UIKit
 struct CurationDetail {
     let id: String
     let text: String?
-    let images: [UIImage : String]
+    let images: [String : String]
     let businessHour: String?
     let address: String
     let instaId: String?
