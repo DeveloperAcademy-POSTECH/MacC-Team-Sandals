@@ -34,6 +34,8 @@ class NearbyViewController: UIViewController {
     func setupTableView() {
         view.addSubview(tableView)
         tableView.dataSource = self
+        tableView.delegate = self
+        
         tableView.register(NearbyCell.self, forCellReuseIdentifier: NearbyCell.reuseID)   // Cell 등록 (코드 베이스라서)
         tableView.rowHeight = NearbyCell.rowHeight
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -64,5 +66,20 @@ extension NearbyViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
+    }
+}
+
+// MARK: - Delegate
+
+extension NearbyViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // TODO: 서점 상세 페이지 연결
+        /* let detailVC = DetailViewController()
+        detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
+        navigationController?.pushViewController(detailVC, animated: true) */
+        
+        print("\(filteredItems[indexPath.row].name) 상세 페이지 연결")
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
