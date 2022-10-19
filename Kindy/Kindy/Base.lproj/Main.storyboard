@@ -65,11 +65,11 @@
             </objects>
             <point key="canvasLocation" x="922" y="-239"/>
         </scene>
-        <!--Item-->
+        <!--홈-->
         <scene sceneID="KXG-Fq-bLU">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gUh-z9-edb" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="UBK-3w-bl4"/>
+                    <tabBarItem key="tabBarItem" title="홈" image="house.fill" catalog="system" id="UBK-3w-bl4"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ja4-4j-OCu">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
@@ -129,6 +129,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="house.fill" catalog="system" width="128" height="104"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
