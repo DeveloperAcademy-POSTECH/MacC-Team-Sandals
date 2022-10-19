@@ -11,7 +11,13 @@ class NearbyCell: UITableViewCell {
 
     static let reuseID = "NearMeListCell"
     static let rowHeight: CGFloat = 136     // Cell 길이
-
+    
+    var bookStore: BookStore? {
+        didSet {
+            configureCell(item: bookStore!)
+        }
+    }
+    
     // MARK: - Cell 프로퍼티
     
     // 서점 사진
@@ -97,15 +103,29 @@ class NearbyCell: UITableViewCell {
         return stack
     }
     
+    private func configureCell(item: BookStore) {
+        nameLabel.text = item.name
+        addressLabel.text = item.address
+        distanceLabel.text = "\(item.meterDistance)m"
+        photoView.image = item.images?[0] ?? nil   // 첫번째 사진이 대표 사진
+    }
     
     // MARK: - 라이프 사이클
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        setup()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        photoView.image = nil
+        nameLabel.text = nil
+        distanceLabel.text = nil
     }
 }
