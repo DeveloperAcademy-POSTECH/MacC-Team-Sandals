@@ -95,7 +95,6 @@ class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: Configure Cell
-    // TODO: TempCuration 나중에 바꿔야함
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
         distanceLabel.text = "\(bookstore.meterDistance)m"
