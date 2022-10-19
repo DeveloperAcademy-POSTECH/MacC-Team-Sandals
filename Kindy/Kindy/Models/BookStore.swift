@@ -8,11 +8,11 @@
 import UIKit
 
 // 서점 구조체(임시)
-struct BookStore {
+struct BookStore: Hashable {
     
     let id = UUID()
     
-    let images: [UIImage]
+    let images: [UIImage]?
     let name: String
     let address: String
     let telNumber: String?
@@ -36,6 +36,14 @@ struct BookStore {
     // 내 주변 서점까지 도보로 걸리는 시간(분)
     var timeDistance: Int {
         return 1
+    }
+    
+    static func == (lhs: BookStore, rhs: BookStore) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
