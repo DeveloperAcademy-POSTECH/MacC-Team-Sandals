@@ -67,6 +67,37 @@ class NearbyCell: UITableViewCell {
         return label
     }()
     
+    // MARK: - Cell 메소드
+    
+    private func setup() {
+        contentView.addSubview(photoView)
+        NSLayoutConstraint.activate([
+            photoView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            photoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+        ])
+        
+        let infoStack = createInfoStack()
+        contentView.addSubview(infoStack)
+        NSLayoutConstraint.activate([
+            infoStack.leadingAnchor.constraint(equalTo: photoView.trailingAnchor, constant: 16),
+            infoStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+    }
+    
+    // 레이블들 감싸는 stack
+    private func createInfoStack() -> UIStackView {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 7   // 피그마에 적혀있는 4 적용하니 좁아보임. 7로 적용하니 피그마에 있는 비율과 비슷
+        stack.alignment = .leading
+        
+        [nameLabel, addressLabel, distanceLabel].forEach { stack.addArrangedSubview($0) }
+        
+        return stack
+    }
+    
+    
     // MARK: - 라이프 사이클
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
