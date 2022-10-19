@@ -14,6 +14,7 @@
 		6EE5E3A428FD313D00EA7413 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EE5E3A328FD313D00EA7413 /* Assets.xcassets */; };
 		6EE5E3A728FD313D00EA7413 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6EE5E3A528FD313D00EA7413 /* LaunchScreen.storyboard */; };
 		6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */; };
+		77B413C3290041FC007C63CF /* NearbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B413C2290041FC007C63CF /* NearbyViewController.swift */; };
 		7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1228FE889200A24C89 /* UIColor+.swift */; };
 		7B404C1528FE88BD00A24C89 /* ResourcesFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1428FE88BD00A24C89 /* ResourcesFile.swift */; };
 		7B404C1728FE88DC00A24C89 /* ProtocolFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1628FE88DC00A24C89 /* ProtocolFile.swift */; };
@@ -34,6 +35,7 @@
 		6EE5E3A628FD313D00EA7413 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6EE5E3A828FD313D00EA7413 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
+		77B413C2290041FC007C63CF /* NearbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyViewController.swift; sourceTree = "<group>"; };
 		7B404C1228FE889200A24C89 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		7B404C1428FE88BD00A24C89 /* ResourcesFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesFile.swift; sourceTree = "<group>"; };
 		7B404C1628FE88DC00A24C89 /* ProtocolFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolFile.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 			children = (
 				6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */,
 				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
+				77B413C2290041FC007C63CF /* NearbyViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
 				7B404C1728FE88DC00A24C89 /* ProtocolFile.swift in Sources */,
 				6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */,
+				77B413C3290041FC007C63CF /* NearbyViewController.swift in Sources */,
 				7B404C1F28FE90B700A24C89 /* Item.swift in Sources */,
 				6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */,
 				7B404C1928FE898B00A24C89 /* ViewFile.swift in Sources */,
