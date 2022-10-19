@@ -9,7 +9,7 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
-    // MARK: Section 정의
+    // MARK: Section
     enum Section: Hashable {
         case mainCuration
         case curations
