@@ -61,7 +61,7 @@ enum Item: Hashable {
     
     static let regions: [Item] = [
         .region(Region(name: "전체")),
-        .region(Region(name: "서을")),
+        .region(Region(name: "서울")),
         .region(Region(name: "강원")),
         .region(Region(name: "경기/인천")),
         .region(Region(name: "충청/대전")),
