@@ -18,6 +18,8 @@ final class HomeViewController: UIViewController {
         case region
     }
     
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
