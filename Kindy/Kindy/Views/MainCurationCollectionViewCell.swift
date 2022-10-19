@@ -29,6 +29,7 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.font = .preferredFont(forTextStyle: .title2)
         label.numberOfLines = 0
         
@@ -39,8 +40,9 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        imageView.addSubview(labelBackgroundView)
-        labelBackgroundView.addSubview(titleLabel)
+        addSubview(imageView)
+        addSubview(labelBackgroundView)
+        addSubview(titleLabel)
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         labelBackgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -52,15 +54,15 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            labelBackgroundView.heightAnchor.constraint(equalTo: superview!.heightAnchor, multiplier: 0.38),
-            labelBackgroundView.bottomAnchor.constraint(equalTo: superview!.bottomAnchor),
-            labelBackgroundView.leadingAnchor.constraint(equalTo: superview!.leadingAnchor),
-            labelBackgroundView.trailingAnchor.constraint(equalTo: superview!.trailingAnchor),
+            labelBackgroundView.heightAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 0.38),
+            labelBackgroundView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
+            labelBackgroundView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            labelBackgroundView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
             
-            titleLabel.widthAnchor.constraint(equalTo: superview!.widthAnchor, multiplier: 0.85),
-            titleLabel.heightAnchor.constraint(equalTo: superview!.heightAnchor, multiplier: 0.25),
-            titleLabel.centerXAnchor.constraint(equalTo: superview!.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: superview!.centerYAnchor)
+            titleLabel.widthAnchor.constraint(equalTo: labelBackgroundView.widthAnchor, multiplier: 0.85),
+            titleLabel.heightAnchor.constraint(equalTo: labelBackgroundView.heightAnchor, multiplier: 0.25),
+            titleLabel.centerXAnchor.constraint(equalTo: labelBackgroundView.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: labelBackgroundView.centerYAnchor)
         ])
     }
     
@@ -69,7 +71,7 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: Configure Cell
-    // TODO: TempCuration 메인 큐레이션으로 바꿔야함
+    // TODO: TempCuration 나중에 바꿔야함
     func configureCell(_ mainCuration: TempCuration) {
         titleLabel.text = mainCuration.name
     }
