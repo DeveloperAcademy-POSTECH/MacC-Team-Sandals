@@ -71,10 +71,10 @@ class RegionCollectionViewCell: UICollectionViewCell {
             bottomLineView.leadingAnchor.constraint(equalTo: leadingAnchor),
             bottomLineView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            rightLineView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
+            rightLineView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
+            rightLineView.heightAnchor.constraint(equalTo: heightAnchor),
             rightLineView.topAnchor.constraint(equalTo: topAnchor),
             rightLineView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            rightLineView.leadingAnchor.constraint(equalTo: trailingAnchor),
             rightLineView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }

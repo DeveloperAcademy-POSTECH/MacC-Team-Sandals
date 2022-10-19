@@ -18,10 +18,8 @@ final class HomeViewController: UIViewController {
         case region
     }
     
-    // MARK: Collection View
     @IBOutlet weak var collectionView: UICollectionView!
     
-    // MARK: Diffable Data Source
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
     var sections = [Section]()
@@ -29,6 +27,9 @@ final class HomeViewController: UIViewController {
     // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // MARK: Collection View Layout Setup
+        collectionView.collectionViewLayout = createLayout()
         
         // MARK: Cell Register
         collectionView.register(MainCurationCollectionViewCell.self, forCellWithReuseIdentifier: MainCurationCollectionViewCell.reuseIdentifier)
@@ -38,6 +39,140 @@ final class HomeViewController: UIViewController {
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.reuseIdentifier)
         
         configureDataSource()
+    }
+    
+    // MARK: Create Layout
+    // TODO: 유연하게 수정할 필요있음(반응형)
+    func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            let section = self.sections[sectionIndex]
+            
+            let padding: CGFloat = 16
+            
+            switch section {
+            case .mainCuration:
+                // MARK: Main Curation Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(0.92),
+                    heightDimension: .estimated(408)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    repeatingSubitem: item,
+                    count: 1
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .groupPagingCentered
+                
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: 0, bottom: padding, trailing: 0)
+                
+                return section
+            case .curation:
+                // MARK: Curation Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .estimated(326),
+                    heightDimension: .estimated(152)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [item]
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .groupPaging
+                
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: padding, bottom: padding, trailing: 0)
+                
+                return section
+            case .nearByBookstore:
+                // MARK: Nearby Bookstore Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1/3)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(0.92),
+                    heightDimension: .estimated(312)
+                )
+                let group = NSCollectionLayoutGroup.vertical(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 3
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .groupPagingCentered
+                
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: 0, bottom: padding, trailing: 0)
+                
+                return section
+            case .bookmarked:
+                // MARK: Bookmarked Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .estimated(136),
+                    heightDimension: .estimated(219)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [item]
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+                
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: padding, bottom: padding, trailing: 0)
+                
+                return section
+            case .region:
+                // MARK: Region Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1/2),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(0.92),
+                    heightDimension: .estimated(50)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 2
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: padding, bottom: padding, trailing: 0)
+                
+                return section
+            }
+        }
+        
+        return layout
     }
 
     // MARK: Configure Data Source
@@ -70,7 +205,7 @@ final class HomeViewController: UIViewController {
             case .region:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RegionCollectionViewCell.reuseIdentifier, for: indexPath) as! RegionCollectionViewCell
                 
-                // TODO: Line 로직 구현
+                // TODO: Line 로직 구현 + 위치 다시 그리기
                 cell.configureCell(item.region!, hideTopLine: false, hideRightLine: false)
                 
                 return cell
@@ -80,11 +215,14 @@ final class HomeViewController: UIViewController {
         // MARK: Snapshot Definition
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.mainCuration, .curation, .nearByBookstore, .bookmarked, .region])
-        snapshot.appendItems(Item.curations, toSection: .mainCuration)
+        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
         snapshot.appendItems(Item.curations, toSection: .curation)
         snapshot.appendItems(Item.nearByBookStores, toSection: .nearByBookstore)
         snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
         snapshot.appendItems(Item.regions, toSection: .region)
+        
+        sections = snapshot.sectionIdentifiers
+        dataSource.apply(snapshot)
     }
 }
 

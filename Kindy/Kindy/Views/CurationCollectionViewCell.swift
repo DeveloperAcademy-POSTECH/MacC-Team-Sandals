@@ -15,7 +15,7 @@ class CurationCollectionViewCell: UICollectionViewCell {
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
-        imageView.backgroundColor = .systemIndigo
+        imageView.backgroundColor = .systemGray2
         
         return imageView
     }()
@@ -28,10 +28,11 @@ class CurationCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    // TODO: label의 corner radius는 어떻게 수정하지? 아니면 백그라은드 뷰를 따로 만들어야하나
     let numberLabel: UILabel = {
         let label = UILabel()
         label.layer.cornerRadius = 8
-        label.backgroundColor = .systemGray6
+        label.backgroundColor = .black
         label.textColor = .white
         label.font = .preferredFont(forTextStyle: .footnote)
         
@@ -51,13 +52,18 @@ class CurationCollectionViewCell: UICollectionViewCell {
         numberLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: 326),
+            imageView.heightAnchor.constraint(equalToConstant: 152),
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            titleLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 12),
-            titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16)
+            titleLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -12),
+            titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16),
+            
+            numberLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 8),
+            numberLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -8),
         ])
     }
     
@@ -67,8 +73,9 @@ class CurationCollectionViewCell: UICollectionViewCell {
     
     // MARK: Configure Cell
     // TODO: TempCuration 나중에 바꿔야함
+    // TODO: 개수 보여주는 로직도 필요
     func configureCell(_ curation: TempCuration, index: IndexPath) {
         titleLabel.text = curation.title
-        numberLabel.text = "\(index.item + 1) / \(index.count)"
+        numberLabel.text = "\(index.item + 1) / \(Item.curations.count)"
     }
 }

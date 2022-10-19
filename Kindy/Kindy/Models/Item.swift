@@ -37,7 +37,8 @@ enum Item: Hashable {
         }
     }
     
-    static let mainCuration: Item = .curation(TempCuration(title: "바쁜 일상, 잠시 쉬어갈 장소가 필요한 분들에게"))
+    // 같은 값이 들어가면 안됨(unique 해야함) -> 어떻게 구별? 다른 큐레이션 구조체를 만들어야하나
+    static let mainCuration: [Item] = [.curation(TempCuration(title: "바쁜 일상, 잠시 쉬어갈 장소가 필요한 분들에게123"))]
     
     static let curations: [Item] = [
         .curation(TempCuration(title: "바쁜 일상, 잠시 쉬어갈 장소가 필요한 분들에게")),
@@ -47,6 +48,7 @@ enum Item: Hashable {
         .curation(TempCuration(title: "큐레이션 5"))
     ]
     
+    // TODO: 3개만 보이게 해야함(가까운 순으로) 필터링한 값을 넣어주는게 더 나을듯 - 컴포지셔널 레이아웃에서는 그냥 다 보여주는것 밖에 안되는것 같아서
     static let nearByBookStores: [Item] = [
         .bookStore(Bookstore(images: nil, name: "달팽이책방", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123))),
         .bookStore(Bookstore(images: nil, name: "달팽이책방2", address: "포항시 북구2", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명2", location: Location(latitude: 1213, longitude: 31203))),
@@ -56,7 +58,11 @@ enum Item: Hashable {
     ]
     
     static let bookmarkedBookStores: [Item] = [
-        .bookStore(Bookstore(images: nil, name: "달팽이책방", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true))
+        .bookStore(Bookstore(images: nil, name: "달팽이책방", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방2", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방3", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방4", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방5", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true))
     ]
     
     static let regions: [Item] = [

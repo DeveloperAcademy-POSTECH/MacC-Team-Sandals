@@ -15,14 +15,15 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
-        imageView.backgroundColor = .systemGray6
+        imageView.backgroundColor = .gray
         
         return imageView
     }()
     
+    // TODO: 아래만 corner radius 줘야함
     let labelBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = .black
         
         return view
     }()

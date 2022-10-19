@@ -71,7 +71,10 @@ class BookmarkedCollectionViewCell: UICollectionViewCell {
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor)
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            
+            imageView.widthAnchor.constraint(equalToConstant: 136),
+            imageView.heightAnchor.constraint(equalToConstant: 168)
         ])
     }
     

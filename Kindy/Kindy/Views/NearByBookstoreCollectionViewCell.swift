@@ -79,9 +79,12 @@ class NearByBookstoreCollectionViewCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 16),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            
+            imageView.widthAnchor.constraint(equalToConstant: 72),
+            imageView.heightAnchor.constraint(equalToConstant: 72),
             
             lineView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
             lineView.bottomAnchor.constraint(equalTo: bottomAnchor),
