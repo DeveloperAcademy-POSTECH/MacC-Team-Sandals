@@ -44,7 +44,7 @@ enum Item: Hashable {
         .curation(TempCuration(name: "큐레이션 2")),
         .curation(TempCuration(name: "큐레이션 3")),
         .curation(TempCuration(name: "큐레이션 4")),
-        .curation(TempCuration(name: "큐레이션 5")),
+        .curation(TempCuration(name: "큐레이션 5"))
     ]
     
     static let nearByBookStores: [Item] = [
@@ -68,7 +68,6 @@ enum Item: Hashable {
         .region(Region(name: "경북/대구")),
         .region(Region(name: "전라/광주")),
         .region(Region(name: "경남/울산/부산")),
-        .region(Region(name: "제주")),
-        
+        .region(Region(name: "제주"))
     ]
 }
