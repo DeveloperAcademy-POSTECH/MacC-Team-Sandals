@@ -7,12 +7,19 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
-
+final class HomeViewController: UIViewController {
+    
+    // MARK: Section 정의
+    enum Section: Hashable {
+        case mainCuration
+        case curations
+        case nearByBookstore
+        case bookmarked
+        case region
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("hello kindy!")
     }
 
 
