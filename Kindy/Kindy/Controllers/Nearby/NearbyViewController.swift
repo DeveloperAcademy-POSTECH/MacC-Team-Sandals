@@ -30,6 +30,8 @@ class NearbyViewController: UIViewController {
     
     func setupTableView() {
         view.addSubview(tableView)
+        tableView.register(NearbyCell.self, forCellReuseIdentifier: NearbyCell.reuseID)   // Cell 등록 (코드 베이스라서)
+        tableView.rowHeight = NearbyCell.rowHeight
         tableView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
