@@ -65,7 +65,7 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
             filteredItems = filteredItems.filter{ (item) -> Bool in
                 item.name.localizedCaseInsensitiveContains(searchString)
             }
-        } 
+        }
         
         tableView.reloadData()
     }
@@ -102,5 +102,43 @@ extension NearbyViewController: UITableViewDelegate {
         
         print("\(filteredItems[indexPath.row].name) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - Empty View
+
+extension UITableView {
+    func setEmptyView(_ message: String) {
+        let messageLabel: UILabel = {
+            let label = UILabel()
+            label.text = message
+            
+            return label
+        }()
+        
+        let reportButton: UIButton = {
+            let btn = UIButton()
+            btn.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
+            
+            return btn
+        }()
+        
+        let emptyView : UIView = {
+            let view = UIView()
+            [messageLabel, reportButton].forEach{ view.addSubview($0) }
+            
+            return view
+        }()
+        
+        self.backgroundView = emptyView
+    }
+    
+    func restore() {
+        self.backgroundView = nil
+    }
+    
+    // TODO: '독립서점 제보하기' 버튼 액션 구현 (메일 앱으로 넘어가기)
+    @objc func reportButtonTapped() {
+        print("메일 앱으로 넘어가는 기능 구현하기")
     }
 }
