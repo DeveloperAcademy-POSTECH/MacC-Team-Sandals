@@ -18,6 +18,11 @@ final class HomeViewController: UIViewController {
         case region
     }
     
+    // MARK: Supplementary View Kind
+    enum SupplementaryViewKind {
+        static let header = "header"
+    }
+    
     @IBOutlet weak var collectionView: UICollectionView!
     
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
@@ -38,7 +43,13 @@ final class HomeViewController: UIViewController {
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.reuseIdentifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.reuseIdentifier)
         
+        // MARK: Supplementary View Register
+        collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier)
+        
         configureDataSource()
+        
+        // MARK: Delegate
+        
     }
     
     // TODO: 유연하게 수정할 필요있음(반응형으로)
@@ -46,7 +57,24 @@ final class HomeViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let section = self.sections[sectionIndex]
             
-            let padding: CGFloat = 16
+            let padding16: CGFloat = 16
+            let padding32: CGFloat = 32
+            
+            // MARK: Section Header
+            let headerItemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(0.92),
+                heightDimension: .estimated(36)
+            )
+            let leadingHeaderItem = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerItemSize,
+                elementKind: SupplementaryViewKind.header,
+                alignment: .topLeading
+            )
+            let centerHeaderItem = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerItemSize,
+                elementKind: SupplementaryViewKind.header,
+                alignment: .top
+            )
             
             switch section {
             case .mainCuration:
@@ -69,8 +97,7 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
-                
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: 0, bottom: padding, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding16, leading: 0, bottom: padding32, trailing: 0)
                 
                 return section
             case .curation:
@@ -80,7 +107,7 @@ final class HomeViewController: UIViewController {
                     heightDimension: .fractionalHeight(1)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .estimated(326),
@@ -93,8 +120,8 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPaging
-                
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: padding, bottom: padding, trailing: 0)
+                section.boundarySupplementaryItems = [leadingHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: padding16, bottom: padding32, trailing: 0)
                 
                 return section
             case .nearByBookstore:
@@ -117,8 +144,8 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
-                
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: 0, bottom: padding, trailing: 0)
+                section.boundarySupplementaryItems = [centerHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
                 
                 return section
             case .bookmarked:
@@ -128,7 +155,7 @@ final class HomeViewController: UIViewController {
                     heightDimension: .fractionalHeight(1)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .estimated(136),
@@ -141,8 +168,8 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-                
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: padding, bottom: padding, trailing: 0)
+                section.boundarySupplementaryItems = [leadingHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: padding16, bottom: padding32, trailing: 0)
                 
                 return section
             case .region:
@@ -164,8 +191,8 @@ final class HomeViewController: UIViewController {
                 )
                 
                 let section = NSCollectionLayoutSection(group: group)
-                
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: 0, bottom: padding, trailing: 0)
+                section.boundarySupplementaryItems = [centerHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
                 
                 return section
             }
@@ -214,6 +241,51 @@ final class HomeViewController: UIViewController {
             }
         }
         
+        // MARK: Supplementary View Provider
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case SupplementaryViewKind.header:
+                let section = self.sections[indexPath.section]
+                let sectionName: String
+                let sectionNameColor: UIColor
+                let hideSeeAllButton: Bool
+                let hideBottomStackView: Bool
+                
+                switch section {
+                case .mainCuration:
+                    return nil
+                case .curation:
+                    sectionName = "킨디터 PICK"
+                    sectionNameColor = .systemGreen
+                    hideSeeAllButton = true
+                    hideBottomStackView = true
+                case .nearByBookstore:
+                    sectionName = "내 주변 서점"
+                    sectionNameColor = .black
+                    hideSeeAllButton = false
+                    hideBottomStackView = false
+                case .bookmarked:
+                    sectionName = "북마크 한 서점"
+                    sectionNameColor = .black
+                    hideSeeAllButton = false
+                    hideBottomStackView = true
+                case .region:
+                    sectionName = "지역별 서점"
+                    sectionNameColor = .black
+                    hideSeeAllButton = true
+                    hideBottomStackView = true
+                }
+                
+                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier, for: indexPath) as! SectionHeaderView
+                headerView.delegate = self
+                headerView.setTitle(sectionName, color: sectionNameColor, hideSeeAllButton: hideSeeAllButton, hideBottomStackView: hideBottomStackView, sectionIndex: indexPath.section)
+                
+                return headerView
+            default:
+                return nil
+            }
+        }
+        
         // MARK: Snapshot Definition
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.mainCuration, .curation, .nearByBookstore, .bookmarked, .region])
@@ -228,3 +300,22 @@ final class HomeViewController: UIViewController {
     }
 }
 
+// MARK: - Section Header Delegate
+
+extension HomeViewController: SectionHeaderDelegate {
+    
+    // 다음 뷰컨과 연결할 때 이련 형태로 구현하겠습니다
+    func segueWithSectionIndex(_ sectionIndex: Int) {
+        
+//        switch sectionIndex {
+//        case 2:
+//            let nearByViewController = NearByViewController()
+//            present(nearByViewController, animated: true)
+//        case 3:
+//            let bookmarkViewController = BookmarkViewController()
+//            present(bookmarkViewController, animated: true)
+//        default:
+//            return
+//        }
+    }
+}
