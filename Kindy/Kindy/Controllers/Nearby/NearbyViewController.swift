@@ -7,8 +7,8 @@
 
 import UIKit
 
-class NearbyViewController: UIViewController {
-
+class NearbyViewController: UIViewController, UISearchResultsUpdating {
+    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -21,11 +21,14 @@ class NearbyViewController: UIViewController {
     // 검색된 프로퍼티 담을 배열 생성 (초기값은 전체가 담겨있는 배열) -> 이 기준으로 cell 나타낼 것이기 때문에 DataSource, Delegate에 이 프로퍼티 적용
     var filteredItems: [BookStore] = []
     
+    let searchController = UISearchController()
+    
     // MARK: - 라이프 사이클
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupSearchController()
         setupTableView()
     }
     
@@ -48,6 +51,18 @@ class NearbyViewController: UIViewController {
         ])
     }
 
+    // SearchController에 대한 설정들
+    private func setupSearchController() {
+        navigationItem.searchController = searchController
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchResultsUpdater = self
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
+    func updateSearchResults(for searchController: UISearchController) {
+        
+    }
 }
 
 // MARK: - DataSource
