@@ -37,7 +37,7 @@ enum Item: Hashable {
         }
     }
     
-    // 같은 값이 들어가면 안됨(unique 해야함) -> 어떻게 구별? 다른 큐레이션 구조체를 만들어야하나
+    // 같은 값이 들어가면 안됨(unique 해야함) -> 어떻게 구별? 다른 큐레이션 구조체(큐레이션 프로토콜 만들어도 괜찮으려나)를 만들어야하나 아니면 아이템의 케이스 하나 더 추가
     static let mainCuration: [Item] = [.curation(TempCuration(title: "바쁜 일상, 잠시 쉬어갈 장소가 필요한 분들에게123"))]
     
     static let curations: [Item] = [

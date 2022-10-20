@@ -15,15 +15,17 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
-        imageView.backgroundColor = .gray
+        imageView.backgroundColor = .systemGray4
         
         return imageView
     }()
     
-    // TODO: 아래만 corner radius 줘야함
     let labelBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.layer.cornerRadius = 8
+        view.layer.opacity = 0.8
+        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        view.backgroundColor = .systemGreen
         
         return view
     }()
@@ -55,7 +57,7 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            labelBackgroundView.heightAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 0.38),
+            labelBackgroundView.heightAnchor.constraint(equalToConstant: 99),
             labelBackgroundView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
             labelBackgroundView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             labelBackgroundView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),

@@ -56,10 +56,8 @@ class RegionCollectionViewCell: UICollectionViewCell {
         rightLineView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            regionLabel.topAnchor.constraint(equalTo: topAnchor),
-            regionLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            regionLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            regionLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            regionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            regionLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             topLineView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
             topLineView.topAnchor.constraint(equalTo: topAnchor),

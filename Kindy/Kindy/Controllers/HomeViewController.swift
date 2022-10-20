@@ -9,7 +9,7 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
-    // MARK: Section
+    // MARK: Section Definition
     enum Section: Hashable {
         case mainCuration
         case curation
@@ -28,7 +28,7 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // MARK: Collection View Layout Setup
+        // MARK: Layout Setup
         collectionView.collectionViewLayout = createLayout()
         
         // MARK: Cell Register
@@ -41,8 +41,7 @@ final class HomeViewController: UIViewController {
         configureDataSource()
     }
     
-    // MARK: Create Layout
-    // TODO: 유연하게 수정할 필요있음(반응형)
+    // TODO: 유연하게 수정할 필요있음(반응형으로)
     func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let section = self.sections[sectionIndex]
@@ -51,7 +50,7 @@ final class HomeViewController: UIViewController {
             
             switch section {
             case .mainCuration:
-                // MARK: Main Curation Section Layout
+                // MARK: Main Curation Layout
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
@@ -155,7 +154,7 @@ final class HomeViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
                 let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(0.92),
+                    widthDimension: .fractionalWidth(1),
                     heightDimension: .estimated(50)
                 )
                 let group = NSCollectionLayoutGroup.horizontal(
@@ -166,7 +165,7 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: padding, bottom: padding, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding, leading: 0, bottom: padding, trailing: 0)
                 
                 return section
             }
@@ -175,7 +174,6 @@ final class HomeViewController: UIViewController {
         return layout
     }
 
-    // MARK: Configure Data Source
     func configureDataSource() {
         // MARK: Data Source Initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -189,7 +187,9 @@ final class HomeViewController: UIViewController {
                 return cell
             case .curation:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.reuseIdentifier, for: indexPath) as! CurationCollectionViewCell
-                cell.configureCell(item.curation!, index: indexPath)
+                
+                let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
+                cell.configureCell(item.curation!, indexPath: indexPath, numberOfItems: numberOfItems)
                 
                 return cell
             case .nearByBookstore:
@@ -205,8 +205,10 @@ final class HomeViewController: UIViewController {
             case .region:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RegionCollectionViewCell.reuseIdentifier, for: indexPath) as! RegionCollectionViewCell
                 
-                // TODO: Line 로직 구현 + 위치 다시 그리기
-                cell.configureCell(item.region!, hideTopLine: false, hideRightLine: false)
+                let isTopCell = !(indexPath.item < 2)
+                let isOddNumber = indexPath.item % 2 == 1
+                
+                cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
                 
                 return cell
             }
