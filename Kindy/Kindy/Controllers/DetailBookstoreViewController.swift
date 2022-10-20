@@ -214,8 +214,38 @@ class DetailBookstoreViewController: UIViewController {
         setupUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        setupBookstoreImages()
+    }
+    
     private func setupUI() {
         
+    }
+    
+    private func setupBookstoreImages() {
+        bookstoreImageScrollView.delegate = self
+        for i in 0..<images.count {
+            let imageView = UIImageView()
+            imageView.frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: bookstoreImageScrollView.frame.width, height: bookstoreImageScrollView.frame.height)
+            imageView.image = images[i]
+            bookstoreImageScrollView.contentSize.width = imageView.frame.width * CGFloat(i + 1)
+            bookstoreImageScrollView.addSubview(imageView)
+        }
+    }
+    
+}
+
+extension DetailBookstoreViewController: UIScrollViewDelegate {
+    
+    // 이미지 스크롤 했을때 현재 페이지 변경
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentValue = scrollView.contentOffset.x / scrollView.frame.size.width
+        setupPageControlSelectedPage(currentPage: Int(round(currentValue)))
+    }
+    
+    // 현재 이미지의 페이지에 따라 pageControl의 currentPage 변경
+    func setupPageControlSelectedPage(currentPage: Int) {
+        imagePageControl.currentPage = currentPage
     }
     
 }
