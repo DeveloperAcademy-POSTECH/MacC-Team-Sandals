@@ -61,7 +61,13 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
     
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
+        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+            filteredItems = filteredItems.filter{ (item) -> Bool in
+                item.name.localizedCaseInsensitiveContains(searchString)
+            }
+        } 
         
+        tableView.reloadData()
     }
 }
 
