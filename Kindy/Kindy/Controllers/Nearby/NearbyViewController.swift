@@ -5,7 +5,8 @@
 //  Created by Park Kangwook on 2022/10/19.
 //
 
-// TODO: 더미데이터 삭제 후 기존 모델 데이터와 연결 | UITable, UIbutton extension 따로 빼기 | 이외 ToDoList는 코드 속에 있으니 참조
+// TODO: 더미데이터 삭제 후 기존 모델 데이터와 연결 | UITable, UIbutton extension 따로 빼기 | extensinon 빼서 정리, PR
+// 이외 ToDoList는 코드 속에 있으니 참조
 
 import UIKit
 
@@ -32,6 +33,8 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
         
         setupSearchController()
         setupTableView()
+        
+        dismissKeyboard()
     }
     
     // MARK: - 메소드
@@ -174,5 +177,17 @@ extension UIButton {
                                       value: NSUnderlineStyle.single.rawValue,
                                       range: NSRange(location: 0, length: title.count))
         setAttributedTitle(attributedString, for: .normal)
+    }
+}
+
+extension UIViewController {
+    func dismissKeyboard() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func hideKeyboard() {
+        self.view.window?.endEditing(true)
     }
 }
