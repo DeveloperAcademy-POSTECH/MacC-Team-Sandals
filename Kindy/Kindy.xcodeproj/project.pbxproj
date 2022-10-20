@@ -141,13 +141,8 @@
 		7B404C0C28FE87DF00A24C89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7B404C2228FFD26100A24C89 /* MainCurationCollectionViewCell.swift */,
-				7B404C2428FFD33500A24C89 /* CurationCollectionViewCell.swift */,
-				7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */,
-				7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */,
-				7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */,
+				7B404C2C29016BDF00A24C89 /* Home */,
 				6EE5E3F228FECEF700EA7413 /* Curation */,
-				7B404C1828FE898B00A24C89 /* ViewFile.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -187,6 +182,18 @@
 				7B404C1428FE88BD00A24C89 /* ResourcesFile.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		7B404C2C29016BDF00A24C89 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				7B404C2228FFD26100A24C89 /* MainCurationCollectionViewCell.swift */,
+				7B404C2428FFD33500A24C89 /* CurationCollectionViewCell.swift */,
+				7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */,
+				7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */,
+				7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -268,7 +275,7 @@
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				7B404C2528FFD33500A24C89 /* CurationCollectionViewCell.swift in Sources */,
 				6EE5E3F428FECF1300EA7413 /* CurationMainView.swift in Sources */,
-				7B404C1B28FE89BA00A24C89 /* BookStore.swift in Sources */,
+				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
 				7B404C1728FE88DC00A24C89 /* ProtocolFile.swift in Sources */,
 				7B404C2328FFD26100A24C89 /* MainCurationCollectionViewCell.swift in Sources */,
@@ -278,7 +285,6 @@
 				6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */,
 				6EE5E3FC28FEF11700EA7413 /* UIViewController+.swift in Sources */,
 				6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */,
-				7B404C1928FE898B00A24C89 /* ViewFile.swift in Sources */,
 				6EE5E3F828FECFA300EA7413 /* CurationDetailCell.swift in Sources */,
 				6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */,
 				7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */,
