@@ -16,6 +16,7 @@
 		6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */; };
 		77B413C3290041FC007C63CF /* NearbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B413C2290041FC007C63CF /* NearbyViewController.swift */; };
 		77B413C529004E36007C63CF /* NearbyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B413C429004E36007C63CF /* NearbyCell.swift */; };
+		77B413C829016C2C007C63CF /* NearbyDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B413C729016C2B007C63CF /* NearbyDummy.swift */; };
 		7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1228FE889200A24C89 /* UIColor+.swift */; };
 		7B404C1528FE88BD00A24C89 /* ResourcesFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1428FE88BD00A24C89 /* ResourcesFile.swift */; };
 		7B404C1728FE88DC00A24C89 /* ProtocolFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1628FE88DC00A24C89 /* ProtocolFile.swift */; };
@@ -38,6 +39,7 @@
 		6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		77B413C2290041FC007C63CF /* NearbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyViewController.swift; sourceTree = "<group>"; };
 		77B413C429004E36007C63CF /* NearbyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyCell.swift; sourceTree = "<group>"; };
+		77B413C729016C2B007C63CF /* NearbyDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyDummy.swift; sourceTree = "<group>"; };
 		7B404C1228FE889200A24C89 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		7B404C1428FE88BD00A24C89 /* ResourcesFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesFile.swift; sourceTree = "<group>"; };
 		7B404C1628FE88DC00A24C89 /* ProtocolFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolFile.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				77B413C2290041FC007C63CF /* NearbyViewController.swift */,
+				77B413C729016C2B007C63CF /* NearbyDummy.swift */,
 				77B413C429004E36007C63CF /* NearbyCell.swift */,
 			);
 			path = Nearby;
@@ -232,6 +235,7 @@
 				7B404C1528FE88BD00A24C89 /* ResourcesFile.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* BookStore.swift in Sources */,
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
+				77B413C829016C2C007C63CF /* NearbyDummy.swift in Sources */,
 				7B404C1728FE88DC00A24C89 /* ProtocolFile.swift in Sources */,
 				6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */,
 				77B413C3290041FC007C63CF /* NearbyViewController.swift in Sources */,

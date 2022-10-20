@@ -5,6 +5,8 @@
 //  Created by Park Kangwook on 2022/10/19.
 //
 
+// TODO: 더미데이터 삭제 후 기존 모델 데이터와 연결 | UITable, UIbutton extension 따로 빼기 | 이외 ToDoList는 코드 속에 있으니 참조
+
 import UIKit
 
 class NearbyViewController: UIViewController, UISearchResultsUpdating {
@@ -19,7 +21,7 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
     }()
     
     // 검색된 프로퍼티 담을 배열 생성 (초기값은 전체가 담겨있는 배열) -> 이 기준으로 cell 나타낼 것이기 때문에 DataSource, Delegate에 이 프로퍼티 적용
-    var filteredItems: [BookStore] = []
+    var filteredItems: [Bookstore] = bookstores
     
     let searchController = UISearchController()
     
@@ -62,9 +64,11 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
-            filteredItems = filteredItems.filter{ (item) -> Bool in
-                item.name.localizedCaseInsensitiveContains(searchString)
+            filteredItems = bookstores.filter{ (item) -> Bool in
+                item.name!.localizedCaseInsensitiveContains(searchString)
             }
+        } else {
+            filteredItems = bookstores
         }
         
         tableView.reloadData()
@@ -75,12 +79,14 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
 
 extension NearbyViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        filteredItems.count == 0 ? tableView.setEmptyView(text: "현재 계신 곳 주변에 독립서점 정보가 없어요") : tableView.restore()
+        
         return filteredItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NearbyCell.reuseID, for: indexPath) as! NearbyCell
-        cell.bookStore = filteredItems[indexPath.row]
+        cell.bookstore = filteredItems[indexPath.row]
         
         return cell
     }
@@ -100,7 +106,7 @@ extension NearbyViewController: UITableViewDelegate {
         detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
         navigationController?.pushViewController(detailVC, animated: true) */
         
-        print("\(filteredItems[indexPath.row].name) 상세 페이지 연결")
+        print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
@@ -108,7 +114,7 @@ extension NearbyViewController: UITableViewDelegate {
 // MARK: - Empty View
 
 extension UITableView {
-    func setEmptyView(_ message: String) {
+    func setEmptyView(text message: String) {
         let messageLabel: UILabel = {
             let label = UILabel()
             label.text = message
@@ -127,6 +133,7 @@ extension UITableView {
             btn.setTitleColor(UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1), for: .normal)
             btn.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
             btn.translatesAutoresizingMaskIntoConstraints = false
+            btn.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
             btn.setUnderline()
             
             return btn
