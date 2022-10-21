@@ -17,4 +17,14 @@ extension UIViewController {
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.9)
         return gradientLayer
     }
+    
+    func dismissKeyboard() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func hideKeyboard() {
+        self.view.window?.endEditing(true)
+    }
 }
