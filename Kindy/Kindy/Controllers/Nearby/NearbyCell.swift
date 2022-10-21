@@ -71,7 +71,7 @@ class NearbyCell: UITableViewCell {
     }()
     
     // 레이블들 감싸는 stack
-    private let infoStack: UIStackView = {
+    private let infoStackView: UIStackView = {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
@@ -84,15 +84,15 @@ class NearbyCell: UITableViewCell {
     // MARK: - Cell 메소드
     
     private func setup() {
-        [photoImageView, infoStack].forEach { contentView.addSubview($0) }
-        [nameLabel, addressLabel, distanceLabel].forEach { infoStack.addArrangedSubview($0) }
+        [photoImageView, infoStackView].forEach { contentView.addSubview($0) }
+        [nameLabel, addressLabel, distanceLabel].forEach { infoStackView.addArrangedSubview($0) }
         
         NSLayoutConstraint.activate([
             photoImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
-            infoStack.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
-            infoStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            infoStackView.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
+            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     
