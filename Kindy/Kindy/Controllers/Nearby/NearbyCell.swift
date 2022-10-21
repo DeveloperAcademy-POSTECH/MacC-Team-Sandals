@@ -21,7 +21,7 @@ class NearbyCell: UITableViewCell {
     // MARK: - Cell 프로퍼티
     
     // 서점 사진
-    private let photoView: UIImageView = {
+    private let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,16 +73,16 @@ class NearbyCell: UITableViewCell {
     // MARK: - Cell 메소드
     
     private func setup() {
-        contentView.addSubview(photoView)
+        contentView.addSubview(photoImageView)
         NSLayoutConstraint.activate([
-            photoView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            photoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+            photoImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         ])
         
         let infoStack = createInfoStack()
         contentView.addSubview(infoStack)
         NSLayoutConstraint.activate([
-            infoStack.leadingAnchor.constraint(equalTo: photoView.trailingAnchor, constant: 16),
+            infoStack.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
             infoStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
@@ -121,7 +121,7 @@ class NearbyCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        photoView.image = nil
+        photoImageView.image = nil
         nameLabel.text = nil
         distanceLabel.text = nil
     }
