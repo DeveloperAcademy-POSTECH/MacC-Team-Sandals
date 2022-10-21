@@ -22,9 +22,9 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
     }()
     
     // 검색된 프로퍼티 담을 배열 생성 (초기값은 전체가 담겨있는 배열) -> 이 기준으로 cell 나타낼 것이기 때문에 DataSource, Delegate에 이 프로퍼티 적용
-    var filteredItems: [Dummy] = dummyList
+    private var filteredItems: [Dummy] = dummyList
     
-    let searchController = UISearchController()
+    private let searchController = UISearchController()
     
     // MARK: - 라이프 사이클
     
@@ -39,7 +39,7 @@ class NearbyViewController: UIViewController, UISearchResultsUpdating {
     
     // MARK: - 메소드
     
-    func setupTableView() {
+    private func setupTableView() {
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
@@ -111,83 +111,5 @@ extension NearbyViewController: UITableViewDelegate {
         
         print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
-
-// MARK: - Empty View
-
-extension UITableView {
-    func setEmptyView(text message: String) {
-        let messageLabel: UILabel = {
-            let label = UILabel()
-            label.text = message
-            label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-            label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
-            label.textAlignment = .center
-            label.sizeToFit()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            
-            return label
-        }()
-        
-        let reportButton: UIButton = {
-            let btn = UIButton()
-            btn.setTitle("독립서점 제보하기", for: .normal)
-            btn.setTitleColor(UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1), for: .normal)
-            btn.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
-            btn.translatesAutoresizingMaskIntoConstraints = false
-            btn.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
-            btn.setUnderline()
-            
-            return btn
-        }()
-        
-        let emptyView : UIView = {
-            let view = UIView()
-            [messageLabel, reportButton].forEach{ view.addSubview($0) }
-            NSLayoutConstraint.activate([
-                messageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                messageLabel.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 200),  // TODO: 서치바 기준으로 잡기
-                reportButton.centerXAnchor.constraint(equalTo: messageLabel.centerXAnchor),
-                reportButton.topAnchor.constraint(equalTo: messageLabel.topAnchor, constant: 26)
-            ])
-            
-            return view
-        }()
-        
-        self.backgroundView = emptyView
-    }
-    
-    func restore() {
-        self.backgroundView = nil
-    }
-    
-    // TODO: '독립서점 제보하기' 버튼 액션 구현 (메일 앱으로 넘어가기)
-    @objc func reportButtonTapped() {
-        print("메일 앱으로 넘어가는 기능 구현하기")
-    }
-}
-
-// button에 underline 주기 위한 extension
-extension UIButton {
-    func setUnderline() {
-        guard let title = title(for: .normal) else { return }
-        let attributedString = NSMutableAttributedString(string: title)
-        attributedString.addAttribute(.underlineStyle,
-                                      value: NSUnderlineStyle.single.rawValue,
-                                      range: NSRange(location: 0, length: title.count))
-        setAttributedTitle(attributedString, for: .normal)
-    }
-}
-
-extension UIViewController {
-    func dismissKeyboard() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc func hideKeyboard() {
-        self.view.window?.endEditing(true)
     }
 }
