@@ -16,21 +16,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V18-TM-n8D">
-                                <rect key="frame" x="143" y="405" width="106" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="HomeView"/>
-                            </button>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="O9Q-w5-zgq">
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="761"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ISY-5c-MJP">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="O9Q-w5-zgq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="3ev-rB-QIE"/>
+                            <constraint firstItem="O9Q-w5-zgq" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="9EP-W6-sqh"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="O9Q-w5-zgq" secondAttribute="bottom" id="WHM-Pl-hqk"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="O9Q-w5-zgq" secondAttribute="trailing" id="mbl-A8-dCx"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="wcF-Dv-lt2"/>
+                    <connections>
+                        <outlet property="collectionView" destination="O9Q-w5-zgq" id="adT-IO-eBr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="94" y="1322"/>
+            <point key="canvasLocation" x="93.84615384615384" y="1321.5639810426539"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="q6j-bb-ryl">
@@ -38,6 +52,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Tiw-lN-1iE" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="XEl-ia-ypF">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -50,11 +65,11 @@
             </objects>
             <point key="canvasLocation" x="922" y="-239"/>
         </scene>
-        <!--Item-->
+        <!--홈-->
         <scene sceneID="KXG-Fq-bLU">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gUh-z9-edb" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="UBK-3w-bl4"/>
+                    <tabBarItem key="tabBarItem" title="홈" image="house.fill" catalog="system" id="UBK-3w-bl4"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ja4-4j-OCu">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
@@ -114,6 +129,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="house.fill" catalog="system" width="128" height="104"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

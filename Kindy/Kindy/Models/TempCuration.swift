@@ -8,5 +8,5 @@
 import Foundation
 
 struct TempCuration: Hashable {
-    let name: String
+    let title: String
 }

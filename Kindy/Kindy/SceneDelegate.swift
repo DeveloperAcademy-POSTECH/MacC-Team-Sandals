@@ -18,6 +18,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
 
+        /// Test Code 사용방법
+        /// 자신이 작업하는 ViewController를 아래줄에 대신 적어주면 끄읕.
+//        let testVC = CurationViewController()
+//        self.window?.rootViewController = testVC
+//        self.window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
