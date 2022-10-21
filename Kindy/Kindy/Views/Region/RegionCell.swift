@@ -54,11 +54,33 @@ class RegionCell: UITableViewCell {
         return label
     }()
     
+    // MARK: - 메소드
+    
+    private func setup() {
+        [nameLabel, addressLabel].forEach{ infoStackView.addArrangedSubview($0) }
+        [photoImageView, infoStackView].forEach{ contentView.addSubview($0) }
+    }
+    
+    private func createLayout() {
+        NSLayoutConstraint.activate([
+            photoImageView.widthAnchor.constraint(equalToConstant: 104),
+            photoImageView.heightAnchor.constraint(equalToConstant: 104),
+            
+            photoImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            
+            infoStackView.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
+            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+    }
+    
     // MARK: - 라이프 사이클
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        setup()
+        createLayout()
     }
 
     required init?(coder: NSCoder) {
