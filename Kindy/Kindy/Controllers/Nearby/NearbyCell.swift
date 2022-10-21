@@ -70,41 +70,37 @@ class NearbyCell: UITableViewCell {
         return label
     }()
     
-    // MARK: - Cell 메소드
-    
-    private func setup() {
-        contentView.addSubview(photoImageView)
-        NSLayoutConstraint.activate([
-            photoImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
-        ])
-        
-        let infoStack = createInfoStack()
-        contentView.addSubview(infoStack)
-        NSLayoutConstraint.activate([
-            infoStack.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
-            infoStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ])
-    }
-    
     // 레이블들 감싸는 stack
-    private func createInfoStack() -> UIStackView {
+    private let infoStack: UIStackView = {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
         stack.spacing = 7   // 피그마에 적혀있는 4 적용하니 좁아보임. 7로 적용하니 피그마에 있는 비율과 비슷
         stack.alignment = .leading
         
-        [nameLabel, addressLabel, distanceLabel].forEach { stack.addArrangedSubview($0) }
-        
         return stack
+    }()
+    
+    // MARK: - Cell 메소드
+    
+    private func setup() {
+        [photoImageView, infoStack].forEach { contentView.addSubview($0) }
+        [nameLabel, addressLabel, distanceLabel].forEach { infoStack.addArrangedSubview($0) }
+        
+        NSLayoutConstraint.activate([
+            photoImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            
+            infoStack.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
+            infoStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
     }
     
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
         addressLabel.text = item.address
         distanceLabel.text = "\(item.meterDistance!)m"
-//        photoView.image = item.image?[0] ?? nil   // 첫번째 사진이 대표 사진
+//        photoImageView.image = item.image?[0] ?? nil   // 첫번째 사진이 대표 사진
     }
     
     // MARK: - 라이프 사이클
