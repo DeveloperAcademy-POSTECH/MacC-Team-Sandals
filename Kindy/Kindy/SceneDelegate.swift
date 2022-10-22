@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// Test Code 사용방법
         /// 자신이 작업하는 ViewController를 아래줄에 대신 적어주면 끄읕.
 //        let testVC = CurationViewController()
-        self.window?.rootViewController = UINavigationController(rootViewController: RegionViewController())
+//        self.window?.rootViewController = testVC
 //        self.window?.makeKeyAndVisible()
     }
 
