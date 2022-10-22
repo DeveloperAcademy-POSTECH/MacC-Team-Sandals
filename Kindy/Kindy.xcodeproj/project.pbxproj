@@ -25,6 +25,9 @@
 		77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */; };
 		77DCB15229029CF500EAB5D5 /* UITableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB15129029CF500EAB5D5 /* UITableView+.swift */; };
 		77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB15329029D1F00EAB5D5 /* UIButton+.swift */; };
+		77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB1602904457600EAB5D5 /* RegionViewController.swift */; };
+		77DCB1632904462300EAB5D5 /* RegionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB1622904462300EAB5D5 /* RegionCell.swift */; };
+		77DCB1662904467B00EAB5D5 /* RegionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB1652904467B00EAB5D5 /* RegionHeaderView.swift */; };
 		7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1228FE889200A24C89 /* UIColor+.swift */; };
 		7B404C1528FE88BD00A24C89 /* ResourcesFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1428FE88BD00A24C89 /* ResourcesFile.swift */; };
 		7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1A28FE89BA00A24C89 /* Bookstore.swift */; };
@@ -61,6 +64,9 @@
 		77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyViewController.swift; sourceTree = "<group>"; };
 		77DCB15129029CF500EAB5D5 /* UITableView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+.swift"; sourceTree = "<group>"; };
 		77DCB15329029D1F00EAB5D5 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
+		77DCB1602904457600EAB5D5 /* RegionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionViewController.swift; sourceTree = "<group>"; };
+		77DCB1622904462300EAB5D5 /* RegionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCell.swift; sourceTree = "<group>"; };
+		77DCB1652904467B00EAB5D5 /* RegionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionHeaderView.swift; sourceTree = "<group>"; };
 		7B404C1228FE889200A24C89 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		7B404C1428FE88BD00A24C89 /* ResourcesFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesFile.swift; sourceTree = "<group>"; };
 		7B404C1A28FE89BA00A24C89 /* Bookstore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookstore.swift; sourceTree = "<group>"; };
@@ -156,6 +162,15 @@
 			path = Nearby;
 			sourceTree = "<group>";
 		};
+		77DCB1642904462D00EAB5D5 /* Region */ = {
+			isa = PBXGroup;
+			children = (
+				77DCB1622904462300EAB5D5 /* RegionCell.swift */,
+				77DCB1652904467B00EAB5D5 /* RegionHeaderView.swift */,
+			);
+			path = Region;
+			sourceTree = "<group>";
+		};
 		7B404C0B28FE87D300A24C89 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -163,6 +178,7 @@
 				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
 				6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */,
 				77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */,
+				77DCB1602904457600EAB5D5 /* RegionViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -174,6 +190,7 @@
 				7B404C2C29016BDF00A24C89 /* Home */,
 				77DCB14B290297F100EAB5D5 /* Nearby */,
 				6EE5E3F228FECEF700EA7413 /* Curation */,
+				77DCB1642904462D00EAB5D5 /* Region */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -329,14 +346,17 @@
 				6EE5E3FC28FEF11700EA7413 /* UIViewController+.swift in Sources */,
 				77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */,
 				6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */,
+				77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */,
 				77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */,
 				7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */,
 				6EE5E3F828FECFA300EA7413 /* CurationDetailCell.swift in Sources */,
 				7B404C2F29016CAF00A24C89 /* SectionHeaderView.swift in Sources */,
+				77DCB1662904467B00EAB5D5 /* RegionHeaderView.swift in Sources */,
 				6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */,
 				7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */,
 				6EE5E3EF28FECECE00EA7413 /* CurationMain.swift in Sources */,
 				6EE5E3F128FECEE900EA7413 /* CurationViewController.swift in Sources */,
+				77DCB1632904462300EAB5D5 /* RegionCell.swift in Sources */,
 				77DCB15229029CF500EAB5D5 /* UITableView+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
