@@ -18,7 +18,9 @@ final class HomeViewController: UIViewController {
         case region
     }
     
-    // MARK: Supplementary View Kind
+    var sections = [Section]()
+    
+    // MARK: Supplementary View Kind Definition
     enum SupplementaryViewKind {
         static let header = "header"
     }
@@ -27,11 +29,16 @@ final class HomeViewController: UIViewController {
     
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    var sections = [Section]()
-    
     // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // MARK: Navigation Item
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "circle.fill"), style: .plain, target: nil, action: nil)
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
+        navigationItem.rightBarButtonItem?.tintColor = .black
         
         // MARK: Layout Setup
         collectionView.collectionViewLayout = createLayout()
@@ -52,6 +59,12 @@ final class HomeViewController: UIViewController {
         
     }
     
+    // MARK: Navigation Item Objc Method
+    @objc func searchButtonTapped() {
+        print(#function)
+    }
+    
+    // MARK: Layout Method
     // TODO: 유연하게 수정할 필요있음(반응형으로)
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
@@ -200,7 +213,8 @@ final class HomeViewController: UIViewController {
         
         return layout
     }
-
+    
+    // MARK: Data Source Method
     private func configureDataSource() {
         // MARK: Data Source Initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
