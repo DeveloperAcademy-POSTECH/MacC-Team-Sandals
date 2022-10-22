@@ -5,7 +5,7 @@
 //  Created by Park Kangwook on 2022/10/21.
 //
 
-// TODO: 헤더 패딩값 주기 (셀 시작점 내리는 방법), 지역 이름 분기 처리해서 표시 (regionHeaderView)
+// TODO: 지역 이름 분기 처리해서 표시 (regionHeaderView)
 
 import UIKit
 
@@ -17,30 +17,13 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         let view = UITableView(frame: .zero, style: .grouped)
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return view
     }()
     
     private var filteredItems: [Dummy] = dummyList
     
     private let searchController = UISearchController()
-    
-    private let regionLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 24)
-        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        return label
-    }()
-    
-    private let regionHeaderView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
     
     // MARK: - 라이프 사이클
     
@@ -61,24 +44,13 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         tableView.delegate = self
         tableView.rowHeight = RegionCell.rowHeight
         tableView.register(RegionCell.self, forCellReuseIdentifier: RegionCell.identifier)   // Cell 등록 (코드 베이스라서)
+        tableView.register(RegionHeaderView.self, forHeaderFooterViewReuseIdentifier: RegionHeaderView.identifier)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-        
-        setupHeaderView()
-    }
-    
-    private func setupHeaderView() {
-        tableView.tableHeaderView = regionHeaderView
-        regionHeaderView.addSubview(regionLabel)
-        regionLabel.text = "포항"
-
-        NSLayoutConstraint.activate([
-            regionHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -108,13 +80,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
 
 extension RegionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if filteredItems.count == 0 {
-            tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?")
-            regionHeaderView.isHidden = true
-        } else {
-            tableView.restore()
-            regionHeaderView.isHidden = false
-        }
+        filteredItems.count == 0 ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
         
         return filteredItems.count
     }
@@ -128,6 +94,10 @@ extension RegionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 65
     }
 }
 
@@ -143,5 +113,21 @@ extension RegionViewController: UITableViewDelegate {
         
         print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RegionHeaderView.identifier) as? RegionHeaderView else {
+            return UIView()
+        }
+        
+        headerView.headerLabel.text = "포항"
+        
+        if filteredItems.count == 0 {
+            headerView.isHidden = true
+        } else {
+            headerView.isHidden = false
+        }
+
+        return headerView
     }
 }
