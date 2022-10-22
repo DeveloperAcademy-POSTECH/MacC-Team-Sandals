@@ -10,7 +10,7 @@
 
 import UIKit
 
-class NearbyViewController: UIViewController, UISearchResultsUpdating {
+final class NearbyViewController: UIViewController, UISearchResultsUpdating {
     
     // MARK: - 프로퍼티
     

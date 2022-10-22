@@ -9,7 +9,7 @@
 
 import UIKit
 
-class RegionViewController: UIViewController, UISearchResultsUpdating {
+final class RegionViewController: UIViewController, UISearchResultsUpdating {
 
     // MARK: - 프로퍼티
     

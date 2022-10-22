@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RegionCell: UITableViewCell {
+final class RegionCell: UITableViewCell {
     
     static let identifier = "RegionCell"
     static let rowHeight: CGFloat = 104     // Cell 길이

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NearbyCell: UITableViewCell {
+final class NearbyCell: UITableViewCell {
 
     static let reuseID = "NearMeListCell"
     static let rowHeight: CGFloat = 136     // Cell 길이
