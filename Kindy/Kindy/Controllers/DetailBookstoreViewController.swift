@@ -14,8 +14,9 @@ final class DetailBookstoreViewController: UIViewController {
     private let padding16: CGFloat = 16
     private let padding24: CGFloat = 24
     
-    private var images = [UIImage(named: "testImage"), UIImage(named: "testImage"), UIImage(named: "testImage"), UIImage(named: "testImage")]
+    private var bookstoreImages = [UIImage(named: "testImage"), UIImage(named: "testImage"), UIImage(named: "testImage"), UIImage(named: "testImage")]
     private var isBookmarked: Bool = false
+    private let bookstoreCoordinate = CLLocationCoordinate2D(latitude: 36.0090456, longitude: 129.3331438)
     
     // 전체 화면을 덮는 스크롤뷰
     private let mainScrollView: UIScrollView = {
@@ -45,7 +46,7 @@ final class DetailBookstoreViewController: UIViewController {
     // 서점 이미지 페이지 컨트롤
     private lazy var imagePageControl: UIPageControl = {
         let pageControl = UIPageControl()
-        pageControl.numberOfPages = images.count
+        pageControl.numberOfPages = bookstoreImages.count
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
     }()
@@ -61,9 +62,9 @@ final class DetailBookstoreViewController: UIViewController {
     
     // TODO: 버튼 키우기
     // 북마크 버튼
-    private let bookmarkButton: UIButton = {
+    private lazy var bookmarkButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        isBookmarked ? button.setImage(UIImage(systemName: "bookmark"), for: .normal) : button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
         button.tintColor = UIColor(named: "kindyGreen")
         button.addTarget(self, action: #selector(bookmarkButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +95,7 @@ final class DetailBookstoreViewController: UIViewController {
     // 서점 이름과 요약 정보 사이의 디바이더
     private let topDivider: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(named: "kindyLightGray")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -207,7 +208,7 @@ final class DetailBookstoreViewController: UIViewController {
     // 요약 정보와 서점 설명 사이의 디바이더
     private let middleDivider: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(named: "kindyLightGray")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -218,6 +219,7 @@ final class DetailBookstoreViewController: UIViewController {
         label.text = "Happiness is good health and a bad memory.Time moves in one direction, memory in another. History is not a burden on the memory but an illumination of the soul. Happiness is good health and a bad memory. Time moves in one direction, memory in another. History is not a burden on the memory but an illumination of the soul. History is not a burden on the memory but an illumination of the soul."
         label.font = UIFont.systemFont(ofSize: 17)
         label.numberOfLines = 0
+        label.setLineSpacing(lineSpacing: 6)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -225,7 +227,7 @@ final class DetailBookstoreViewController: UIViewController {
     // 서점 설명과 맵 뷰 사이의 디바이더
     private let bottomDivider: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(named: "kindyLightGray")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -257,15 +259,20 @@ final class DetailBookstoreViewController: UIViewController {
         return stackView
     }()
     
-    // TODO: MapView 설정 (마커 추가)
     private let bookstoreMapView: MKMapView = {
         let mapView = MKMapView()
-        mapView.centerCoordinate.latitude = 36.0090456
-        mapView.centerCoordinate.longitude = 129.3331438
         mapView.layer.masksToBounds = true
         mapView.layer.cornerRadius = 8
         mapView.translatesAutoresizingMaskIntoConstraints = false
         return mapView
+    }()
+    
+    private lazy var bookstorePin: MKPointAnnotation = {
+        let pin = MKPointAnnotation()
+        guard let bookstoreName = nameLabel.text else { return pin }
+        pin.title = bookstoreName
+        pin.coordinate = bookstoreCoordinate
+        return pin
     }()
     
     override func viewDidLoad() {
@@ -273,6 +280,7 @@ final class DetailBookstoreViewController: UIViewController {
         setupUI()
         setupNavigationBar()
         setupTabbar()
+        setupMapView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -295,9 +303,6 @@ final class DetailBookstoreViewController: UIViewController {
         contentView.addSubview(bottomDivider)
         contentView.addSubview(addressStackView)
         contentView.addSubview(bookstoreMapView)
-        
-        bookmarkButton.widthAnchor.constraint(equalToConstant: 23).isActive = true
-        bookmarkButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         NSLayoutConstraint.activate([
             // 메인 스크롤뷰 오토레이아웃 설정
@@ -384,13 +389,18 @@ final class DetailBookstoreViewController: UIViewController {
         self.tabBarController?.tabBar.isHidden = true
     }
     
+    private func setupMapView() {
+        bookstoreMapView.setRegion(MKCoordinateRegion(center: bookstoreCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: true)
+        bookstoreMapView.addAnnotation(bookstorePin)
+    }
+    
     // 서점 이미지 불러오기
     private func setupBookstoreImages() {
         bookstoreImageScrollView.delegate = self
-        for i in 0..<images.count {
+        for i in 0..<bookstoreImages.count {
             let imageView = UIImageView()
             imageView.frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: bookstoreImageScrollView.frame.width, height: bookstoreImageScrollView.frame.height)
-            imageView.image = images[i]
+            imageView.image = bookstoreImages[i]
             bookstoreImageScrollView.contentSize.width = imageView.frame.width * CGFloat(i + 1)
             bookstoreImageScrollView.addSubview(imageView)
         }
