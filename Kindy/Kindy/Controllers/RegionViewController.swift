@@ -7,18 +7,29 @@
 
 import UIKit
 
-class RegionViewController: UIViewController {
+class RegionViewController: UIViewController, UISearchResultsUpdating {
 
+    // MARK: - 프로퍼티
+    
     private var tableView = UITableView()
     
     private var filteredItems: [Dummy] = dummyList
     
+    private let searchController = UISearchController()
+    
+    // MARK: - 라이프 사이클
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupSearchController()
         setupTableView()
+        
+        dismissKeyboard()
     }
 
+    // MARK: - 메소드
+    
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.dataSource = self
@@ -33,6 +44,27 @@ class RegionViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+    }
+    
+    // SearchController에 대한 설정들
+    private func setupSearchController() {
+        navigationItem.searchController = searchController
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchResultsUpdater = self
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+            filteredItems = dummyList.filter{ (item) -> Bool in
+                item.name!.localizedCaseInsensitiveContains(searchString)
+            }
+        } else {
+            filteredItems = dummyList
+        }
+        
+        tableView.reloadData()
     }
 }
 
