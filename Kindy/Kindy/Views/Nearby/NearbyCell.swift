@@ -43,7 +43,6 @@ class NearbyCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
-        label.text = ""
 
         return label
     }()
@@ -54,7 +53,6 @@ class NearbyCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
         label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
-        label.text = ""
         
         return label
     }()
@@ -65,7 +63,6 @@ class NearbyCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 17)
         label.textColor = UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1)
-        label.text = ""
         
         return label
     }()

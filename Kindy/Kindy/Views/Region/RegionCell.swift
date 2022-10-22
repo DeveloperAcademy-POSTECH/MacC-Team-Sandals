@@ -43,7 +43,6 @@ class RegionCell: UITableViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
         label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -52,7 +51,6 @@ class RegionCell: UITableViewCell {
     
     private let addressLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
         label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
         label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
