@@ -18,7 +18,9 @@ final class HomeViewController: UIViewController {
         case region
     }
     
-    // MARK: Supplementary View Kind
+    var sections = [Section]()
+    
+    // MARK: Supplementary View Kind Definition
     enum SupplementaryViewKind {
         static let header = "header"
     }
@@ -27,31 +29,43 @@ final class HomeViewController: UIViewController {
     
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    var sections = [Section]()
-    
     // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: Navigation Item
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "circle.fill"), style: .plain, target: nil, action: nil)
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
+        navigationItem.rightBarButtonItem?.tintColor = .black
+        
         // MARK: Layout Setup
         collectionView.collectionViewLayout = createLayout()
         
-        // MARK: Cell Register
+        // MARK: Register
+        // Cell Register
         collectionView.register(MainCurationCollectionViewCell.self, forCellWithReuseIdentifier: MainCurationCollectionViewCell.reuseIdentifier)
         collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.reuseIdentifier)
         collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.reuseIdentifier)
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.reuseIdentifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.reuseIdentifier)
         
-        // MARK: Supplementary View Register
+        // Supplementary View Register
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier)
         
         configureDataSource()
         
         // MARK: Delegate
-        
+        collectionView.delegate = self
     }
     
+    // MARK: Navigation Item Method
+    @objc func searchButtonTapped() {
+        print(#function)
+    }
+    
+    // MARK: Layout Method
     // TODO: 유연하게 수정할 필요있음(반응형으로)
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
@@ -200,7 +214,8 @@ final class HomeViewController: UIViewController {
         
         return layout
     }
-
+    
+    // MARK: Data Source Method
     private func configureDataSource() {
         // MARK: Data Source Initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -297,6 +312,27 @@ final class HomeViewController: UIViewController {
         
         sections = snapshot.sectionIdentifiers
         dataSource.apply(snapshot)
+    }
+}
+
+// MARK: - Collection View Delegate
+
+extension HomeViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = sections[indexPath.section]
+        
+        switch section {
+        case .mainCuration:
+            let curationViewController = CurationViewController()
+            present(curationViewController, animated: true)
+//        case .curation:
+//        case .nearByBookstore:
+//        case .bookmarked:
+//        case .region:
+        default:
+            print("default")
+        }
     }
 }
 
