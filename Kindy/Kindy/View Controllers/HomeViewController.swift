@@ -53,7 +53,7 @@ final class HomeViewController: UIViewController {
     }
     
     // TODO: 유연하게 수정할 필요있음(반응형으로)
-    func createLayout() -> UICollectionViewLayout {
+    private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let section = self.sections[sectionIndex]
             
@@ -201,7 +201,7 @@ final class HomeViewController: UIViewController {
         return layout
     }
 
-    func configureDataSource() {
+    private func configureDataSource() {
         // MARK: Data Source Initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             let section = self.sections[indexPath.section]

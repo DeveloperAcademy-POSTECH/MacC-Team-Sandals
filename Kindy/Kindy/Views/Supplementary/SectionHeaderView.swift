@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SectionHeaderView: UICollectionReusableView {
+final class SectionHeaderView: UICollectionReusableView {
     
     static let reuseIdentifier = "SectionHeaderView"
     
@@ -16,62 +16,57 @@ class SectionHeaderView: UICollectionReusableView {
     
     var sectionIndex: Int = 0
     
-    let stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
         stackView.spacing = 8
-        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
-    let topStackView: UIStackView = {
+    private let topStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .center
-        
         return stackView
     }()
     
-    let bottomStackView: UIStackView = {
+    private let bottomStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .center
         stackView.spacing = 4
-        
         return stackView
     }()
     
-    let nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .title2)
-        
         return label
     }()
     
-    let seeAllButton: UIButton = {
+    private let seeAllButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.forward"), for: .normal)
         button.tintColor = .black
         button.setContentHuggingPriority(.required, for: .horizontal)
         button.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
-        
         return button
     }()
     
-    let regionLabel: UILabel = {
+    private let regionLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .footnote)
         label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
         label.text = "포항시, 북구"
-        
         return label
     }()
     
-    let locationImageView: UIImageView = {
+    private let locationImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "location.fill")
         imageView.tintColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
@@ -89,8 +84,6 @@ class SectionHeaderView: UICollectionReusableView {
         topStackView.addArrangedSubview(seeAllButton)
         bottomStackView.addArrangedSubview(regionLabel)
         bottomStackView.addArrangedSubview(locationImageView)
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
