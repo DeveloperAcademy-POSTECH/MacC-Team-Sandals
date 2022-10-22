@@ -22,6 +22,7 @@ class RegionViewController: UIViewController {
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.rowHeight = RegionCell.rowHeight
         tableView.register(RegionCell.self, forCellReuseIdentifier: RegionCell.identifier)   // Cell 등록 (코드 베이스라서)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -53,5 +54,20 @@ extension RegionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
+    }
+}
+
+// MARK: - Delegate
+
+extension RegionViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // TODO: 서점 상세 페이지 연결
+        /* let detailVC = DetailViewController()
+        detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
+        navigationController?.pushViewController(detailVC, animated: true) */
+        
+        print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
