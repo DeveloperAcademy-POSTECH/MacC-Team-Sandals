@@ -5,6 +5,8 @@
 //  Created by Park Kangwook on 2022/10/21.
 //
 
+// TODO: 헤더 패딩값 주기 (셀 시작점 내리는 방법), 지역 이름 분기 처리해서 표시 (regionHeaderView)
+
 import UIKit
 
 class RegionViewController: UIViewController, UISearchResultsUpdating {
@@ -22,6 +24,23 @@ class RegionViewController: UIViewController, UISearchResultsUpdating {
     private var filteredItems: [Dummy] = dummyList
     
     private let searchController = UISearchController()
+    
+    private let regionLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 24)
+        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    private let regionHeaderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
     
     // MARK: - 라이프 사이클
     
@@ -48,6 +67,18 @@ class RegionViewController: UIViewController, UISearchResultsUpdating {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+        
+        setupHeaderView()
+    }
+    
+    private func setupHeaderView() {
+        tableView.tableHeaderView = regionHeaderView
+        regionHeaderView.addSubview(regionLabel)
+        regionLabel.text = "포항"
+
+        NSLayoutConstraint.activate([
+            regionHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
         ])
     }
     
@@ -77,7 +108,13 @@ class RegionViewController: UIViewController, UISearchResultsUpdating {
 
 extension RegionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredItems.count == 0 ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
+        if filteredItems.count == 0 {
+            tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?")
+            regionHeaderView.isHidden = true
+        } else {
+            tableView.restore()
+            regionHeaderView.isHidden = false
+        }
         
         return filteredItems.count
     }
