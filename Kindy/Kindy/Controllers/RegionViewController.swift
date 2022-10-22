@@ -11,7 +11,13 @@ class RegionViewController: UIViewController, UISearchResultsUpdating {
 
     // MARK: - 프로퍼티
     
-    private var tableView = UITableView()
+    private var tableView: UITableView = {
+        let view = UITableView(frame: .zero, style: .grouped)
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
     
     private var filteredItems: [Dummy] = dummyList
     
@@ -36,7 +42,6 @@ class RegionViewController: UIViewController, UISearchResultsUpdating {
         tableView.delegate = self
         tableView.rowHeight = RegionCell.rowHeight
         tableView.register(RegionCell.self, forCellReuseIdentifier: RegionCell.identifier)   // Cell 등록 (코드 베이스라서)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),

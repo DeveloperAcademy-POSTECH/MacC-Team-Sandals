@@ -69,11 +69,10 @@ class RegionCell: UITableViewCell {
     
     private func createLayout() {
         NSLayoutConstraint.activate([
-            photoImageView.widthAnchor.constraint(equalToConstant: 104),
-            photoImageView.heightAnchor.constraint(equalToConstant: 104),
-            
-            photoImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            photoImageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            photoImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            photoImageView.widthAnchor.constraint(equalTo: photoImageView.heightAnchor),
             
             infoStackView.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
             infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
