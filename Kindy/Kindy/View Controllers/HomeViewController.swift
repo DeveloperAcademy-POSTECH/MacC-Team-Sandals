@@ -43,23 +43,24 @@ final class HomeViewController: UIViewController {
         // MARK: Layout Setup
         collectionView.collectionViewLayout = createLayout()
         
-        // MARK: Cell Register
+        // MARK: Register
+        // Cell Register
         collectionView.register(MainCurationCollectionViewCell.self, forCellWithReuseIdentifier: MainCurationCollectionViewCell.reuseIdentifier)
         collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.reuseIdentifier)
         collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.reuseIdentifier)
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.reuseIdentifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.reuseIdentifier)
         
-        // MARK: Supplementary View Register
+        // Supplementary View Register
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier)
         
         configureDataSource()
         
         // MARK: Delegate
-        
+        collectionView.delegate = self
     }
     
-    // MARK: Navigation Item Objc Method
+    // MARK: Navigation Item Method
     @objc func searchButtonTapped() {
         print(#function)
     }
@@ -311,6 +312,27 @@ final class HomeViewController: UIViewController {
         
         sections = snapshot.sectionIdentifiers
         dataSource.apply(snapshot)
+    }
+}
+
+// MARK: - Collection View Delegate
+
+extension HomeViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = sections[indexPath.section]
+        
+        switch section {
+        case .mainCuration:
+            let curationViewController = CurationViewController()
+            present(curationViewController, animated: true)
+//        case .curation:
+//        case .nearByBookstore:
+//        case .bookmarked:
+//        case .region:
+        default:
+            print("default")
+        }
     }
 }
 
