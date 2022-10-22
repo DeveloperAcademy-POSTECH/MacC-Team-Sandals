@@ -9,35 +9,35 @@ import UIKit
 
 // 지역별 서점 섹션의 지역 셀
 // TODO: Line view 클래스도 도 따로 만들어 보면 괜찮을듯?
-class RegionCollectionViewCell: UICollectionViewCell {
+final class RegionCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "RegionCollectionViewCell"
     
-    let regionLabel: UILabel = {
+    private let regionLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)
-        
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let topLineView: UIView = {
+    private let topLineView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
-        
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let bottomLineView: UIView = {
+    private let bottomLineView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
-        
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let rightLineView: UIView = {
+    private let rightLineView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
-        
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -49,11 +49,6 @@ class RegionCollectionViewCell: UICollectionViewCell {
         addSubview(topLineView)
         addSubview(bottomLineView)
         addSubview(rightLineView)
-        
-        regionLabel.translatesAutoresizingMaskIntoConstraints = false
-        topLineView.translatesAutoresizingMaskIntoConstraints = false
-        bottomLineView.translatesAutoresizingMaskIntoConstraints = false
-        rightLineView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             regionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),

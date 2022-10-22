@@ -8,34 +8,34 @@
 import UIKit
 
 // 킨디터 픽 섹션의 큐레이션 셀
-class CurationCollectionViewCell: UICollectionViewCell {
+final class CurationCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "CurationCollectionViewCell"
     
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.backgroundColor = .systemGray2
-        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = .preferredFont(forTextStyle: .title3)
-        
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     // TODO: label의 corner radius는 어떻게 수정하지? 아니면 백그라은드 뷰를 따로 만들어야하나
-    let numberLabel: UILabel = {
+    private let numberLabel: UILabel = {
         let label = UILabel()
         label.layer.cornerRadius = 8
         label.backgroundColor = .black
         label.textColor = .white
         label.font = .preferredFont(forTextStyle: .footnote)
-        
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -46,10 +46,6 @@ class CurationCollectionViewCell: UICollectionViewCell {
         addSubview(imageView)
         addSubview(titleLabel)
         addSubview(numberLabel)
-        
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        numberLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: 326),
