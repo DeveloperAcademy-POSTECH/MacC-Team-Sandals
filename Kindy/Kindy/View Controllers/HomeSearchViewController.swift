@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class HomeSearchViewController: UIViewController {
+final class HomeSearchViewController: UIViewController, UISearchResultsUpdating {
 
     // MARK: - 프로퍼티
     
@@ -19,17 +19,29 @@ final class HomeSearchViewController: UIViewController {
         return view
     }()
     
-    private var filteredItems: [Dummy] = dummyList
+    private var filteredItems: [Dummy] = []
+    
+    private let searchController = UISearchController()
     
     // MARK: - 라이프 사이클
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupSearchController()
         setupTableView()
+        
+        dismissKeyboard()
     }
 
     // MARK: - 메소드
+    
+    private func setupSearchController() {
+        navigationItem.searchController = searchController
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchResultsUpdater = self
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
     
     private func setupTableView() {
         view.addSubview(tableView)
@@ -46,24 +58,52 @@ final class HomeSearchViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+            filteredItems = dummyList.filter{ (item) -> Bool in
+                item.name!.localizedCaseInsensitiveContains(searchString)
+            }
+        } else {
+            filteredItems = dummyList
+        }
+        
+        tableView.reloadData()
+    }
 }
 
 // MARK: - data source
 
 extension HomeSearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        filteredItems.isEmpty ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
+        
+        return filteredItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchCell.identifier, for: indexPath) as? HomeSearchCell else { return UITableViewCell() }
         
+        cell.bookstore = filteredItems[indexPath.row]
         return cell
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
+    }
 }
 
 // MARK: - delegate
+
 extension HomeSearchViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        // TODO: 서점 상세 페이지 연결
+        /* let detailVC = DetailViewController()
+        detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
+        navigationController?.pushViewController(detailVC, animated: true) */
+
+        print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
