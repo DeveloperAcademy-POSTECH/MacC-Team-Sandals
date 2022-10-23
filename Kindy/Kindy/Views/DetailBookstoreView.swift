@@ -91,6 +91,15 @@ final class DetailBookstoreView: UIView {
         return label
     }()
     
+    private lazy var headerStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [nameStackView, shortAddressLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     // 서점 이름과 요약 정보 사이의 디바이더
     private let topDivider: UIView = {
         let view = UIView()
@@ -196,10 +205,20 @@ final class DetailBookstoreView: UIView {
     }()
     
     // 서점의 기본 정보를 담고있는 스택뷰
-    private lazy var summaryStackView: UIStackView = {
+    private lazy var infoSummaryStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [telephoneStackView, instagramStackView, businessHourStackView])
         stackView.axis = .vertical
         stackView.spacing = 8
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    // 서점의 기본 정보와 탑 디바이더를 담고있는 스택뷰
+    private lazy var summaryStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [topDivider, infoSummaryStackView])
+        stackView.axis = .vertical
+        stackView.spacing = padding24
+        stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -221,6 +240,16 @@ final class DetailBookstoreView: UIView {
         label.setLineSpacing(lineSpacing: 6)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    // 서점 상세설명과 미들 디바이더를 담고 있는 스택뷰
+    private lazy var descriptionStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [middleDivider, descriptionLabel])
+        stackView.axis = .vertical
+        stackView.spacing = padding24
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     // 서점 설명과 맵 뷰 사이의 디바이더
@@ -274,6 +303,15 @@ final class DetailBookstoreView: UIView {
         return pin
     }()
     
+    private lazy var bookstoreMapStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [bottomDivider, addressStackView, bookstoreMapView])
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     // MARK: init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -289,19 +327,18 @@ final class DetailBookstoreView: UIView {
     private func setupUI() {
         addSubview(mainScrollView)
         mainScrollView.addSubview(contentView)
-        bookstoreImageScrollView.backgroundColor = .systemGray5
+        bookstoreImageScrollView.backgroundColor = .lightGray
 
         contentView.addSubview(bookstoreImageScrollView)
         contentView.addSubview(imagePageControl)
-        contentView.addSubview(nameStackView)
-        contentView.addSubview(shortAddressLabel)
-        contentView.addSubview(topDivider)
+        contentView.addSubview(headerStackView)
         contentView.addSubview(summaryStackView)
-        contentView.addSubview(middleDivider)
-        contentView.addSubview(descriptionLabel)
-        contentView.addSubview(bottomDivider)
-        contentView.addSubview(addressStackView)
-        contentView.addSubview(bookstoreMapView)
+        contentView.addSubview(descriptionStackView)
+        contentView.addSubview(bookstoreMapStackView)
+        
+        // 고정값 UI들 미리 설정
+        setupDividerConstraints()
+        setupIconConstraints()
         
         NSLayoutConstraint.activate([
             // 메인 스크롤뷰 오토레이아웃 설정
@@ -322,60 +359,63 @@ final class DetailBookstoreView: UIView {
             bookstoreImageScrollView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             bookstoreImageScrollView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.436),
             
-            imagePageControl.topAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: -24),
+            imagePageControl.topAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: -padding24),
             imagePageControl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imagePageControl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imagePageControl.bottomAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: -16),
+            imagePageControl.bottomAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: -padding16),
             
-            nameStackView.topAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: padding24),
-            nameStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            nameStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
+            // 서점 이름, 짧은 주소, 북마크 버튼뷰
             nameStackView.heightAnchor.constraint(equalToConstant: 36),
-            
-            shortAddressLabel.topAnchor.constraint(equalTo: nameStackView.bottomAnchor),
-            shortAddressLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            shortAddressLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
             shortAddressLabel.heightAnchor.constraint(equalToConstant: 25),
-
-            topDivider.topAnchor.constraint(equalTo: shortAddressLabel.bottomAnchor, constant: padding24),
-            topDivider.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            topDivider.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - (padding16 * 2)),
-            topDivider.heightAnchor.constraint(equalToConstant: 1),
+            headerStackView.topAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: padding24),
+            headerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
+            headerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
             
-            telephoneIconImageView.widthAnchor.constraint(equalToConstant: 22),
-            telephoneIconImageView.heightAnchor.constraint(equalToConstant: 22),
-            instagrameIconImageView.widthAnchor.constraint(equalToConstant: 22),
-            instagrameIconImageView.heightAnchor.constraint(equalToConstant: 22),
-            businessHourIconImageView.widthAnchor.constraint(equalToConstant: 22),
-            businessHourIconImageView.heightAnchor.constraint(equalToConstant: 22),
-            
-            summaryStackView.topAnchor.constraint(equalTo: topDivider.bottomAnchor, constant: padding24),
+            // 탑 디바이더와 서점 기본 정보뷰
+            summaryStackView.topAnchor.constraint(equalTo: headerStackView.bottomAnchor, constant: padding24),
             summaryStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
             summaryStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
             
-            middleDivider.topAnchor.constraint(equalTo: summaryStackView.bottomAnchor, constant: padding24),
-            middleDivider.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            // 미들 디바이더와 서점 상세 정보뷰
+            descriptionStackView.topAnchor.constraint(equalTo: summaryStackView.bottomAnchor, constant: padding24),
+            descriptionStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
+            descriptionStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
+            
+            // 바텀 디바이더와 서점 지도뷰
+            bookstoreMapView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.36),
+            bookstoreMapStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: padding24),
+            bookstoreMapStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
+            bookstoreMapStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
+            bookstoreMapStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -100)
+        ])
+    }
+    
+    private func setupDividerConstraints() {
+        NSLayoutConstraint.activate([
+            topDivider.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - (padding16 * 2)),
+            topDivider.heightAnchor.constraint(equalToConstant: 1),
+            
             middleDivider.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - (padding16 * 2)),
             middleDivider.heightAnchor.constraint(equalToConstant: 1),
             
-            descriptionLabel.topAnchor.constraint(equalTo: middleDivider.bottomAnchor, constant: padding24),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
-            
-            bottomDivider.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: padding24),
-            bottomDivider.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             bottomDivider.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - (padding16 * 2)),
             bottomDivider.heightAnchor.constraint(equalToConstant: 1),
+        ])
+    }
+    
+    private func setupIconConstraints() {
+        NSLayoutConstraint.activate([
+            telephoneIconImageView.widthAnchor.constraint(equalToConstant: 22),
+            telephoneIconImageView.heightAnchor.constraint(equalToConstant: 22),
             
-            addressStackView.topAnchor.constraint(equalTo: bottomDivider.bottomAnchor, constant: padding24),
-            addressStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            addressStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
+            instagrameIconImageView.widthAnchor.constraint(equalToConstant: 22),
+            instagrameIconImageView.heightAnchor.constraint(equalToConstant: 22),
             
-            bookstoreMapView.topAnchor.constraint(equalTo: addressStackView.bottomAnchor, constant: padding24),
-            bookstoreMapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            bookstoreMapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
-            bookstoreMapView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.36),
-            bookstoreMapView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -100)
+            businessHourIconImageView.widthAnchor.constraint(equalToConstant: 22),
+            businessHourIconImageView.heightAnchor.constraint(equalToConstant: 22),
+            
+            mapIconImageView.widthAnchor.constraint(equalToConstant: 22),
+            mapIconImageView.widthAnchor.constraint(equalToConstant: 22),
         ])
     }
     
