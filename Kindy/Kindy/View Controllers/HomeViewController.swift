@@ -18,7 +18,7 @@ final class HomeViewController: UIViewController {
         case region
     }
     
-    var sections = [Section]()
+    private var sections = [Section]()
     
     // MARK: Supplementary View Kind Definition
     enum SupplementaryViewKind {
@@ -27,7 +27,30 @@ final class HomeViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    
+    // MARK: Snapshot Definition
+    var snapshot: NSDiffableDataSourceSnapshot<Section, Item> {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        
+        snapshot.appendSections([.mainCuration, .curation])
+        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
+        snapshot.appendItems(Item.curations, toSection: .curation)
+        
+        snapshot.appendSections([.nearByBookstore])
+        snapshot.appendItems(Item.nearByBookStores, toSection: .nearByBookstore)
+        
+        snapshot.appendSections([.bookmarked])
+        snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
+        
+        snapshot.appendSections([.region])
+        snapshot.appendItems(Item.regions, toSection: .region)
+        
+        sections = snapshot.sectionIdentifiers
+        
+        return snapshot
+    }
+    
     
     // MARK: Life Cycle
     override func viewDidLoad() {
@@ -164,6 +187,7 @@ final class HomeViewController: UIViewController {
                 return section
             case .bookmarked:
                 // MARK: Bookmarked Section Layout
+                // 아이템의 개수가 0개면 다른 뷰를 보여줍니다.
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
@@ -171,10 +195,8 @@ final class HomeViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
                 
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .estimated(136),
-                    heightDimension: .estimated(219)
-                )
+                let isEmptySection = self.snapshot.numberOfItems(inSection: .bookmarked) == 0
+                let groupSize = isEmptySection ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(63)) : NSCollectionLayoutSize(widthDimension: .estimated(136), heightDimension: .estimated(219))
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item]
@@ -301,16 +323,6 @@ final class HomeViewController: UIViewController {
             }
         }
         
-        // MARK: Snapshot Definition
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.mainCuration, .curation, .nearByBookstore, .bookmarked, .region])
-        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
-        snapshot.appendItems(Item.curations, toSection: .curation)
-        snapshot.appendItems(Item.nearByBookStores, toSection: .nearByBookstore)
-        snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
-        snapshot.appendItems(Item.regions, toSection: .region)
-        
-        sections = snapshot.sectionIdentifiers
         dataSource.apply(snapshot)
     }
 }
@@ -326,10 +338,10 @@ extension HomeViewController: UICollectionViewDelegate {
         case .mainCuration:
             let curationViewController = CurationViewController()
             present(curationViewController, animated: true)
-//        case .curation:
-//        case .nearByBookstore:
-//        case .bookmarked:
-//        case .region:
+            //        case .curation:
+            //        case .nearByBookstore:
+            //        case .bookmarked:
+            //        case .region:
         default:
             print("default")
         }
@@ -343,15 +355,15 @@ extension HomeViewController: SectionHeaderDelegate {
     // 다음 뷰컨과 연결할 때 이련 형태로 구현하겠습니다
     func segueWithSectionIndex(_ sectionIndex: Int) {
         
-//        switch sectionIndex {
-//        case 2:
-//            let nearByViewController = NearByViewController()
-//            present(nearByViewController, animated: true)
-//        case 3:
-//            let bookmarkViewController = BookmarkViewController()
-//            present(bookmarkViewController, animated: true)
-//        default:
-//            return
-//        }
+        //        switch sectionIndex {
+        //        case 2:
+        //            let nearByViewController = NearByViewController()
+        //            present(nearByViewController, animated: true)
+        //        case 3:
+        //            let bookmarkViewController = BookmarkViewController()
+        //            present(bookmarkViewController, animated: true)
+        //        default:
+        //            return
+        //        }
     }
 }
