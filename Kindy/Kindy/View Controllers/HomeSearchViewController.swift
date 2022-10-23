@@ -7,15 +7,21 @@
 
 import UIKit
 
-class HomeSearchViewController: UIViewController {
+final class HomeSearchViewController: UIViewController {
 
+    // MARK: - 프로퍼티
+    
     private var tableView: UITableView = {
-        let view = UITableView()
+        let view = UITableView(frame: .zero, style: .grouped)
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
     }()
+    
+//    private var homeSearchCell = HomeSearchCell()
+    
+    // MARK: - 라이프 사이클
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,11 +29,15 @@ class HomeSearchViewController: UIViewController {
         setupTableView()
     }
 
+    // MARK: - 메소드
+    
     private func setupTableView() {
         view.addSubview(tableView)
-        
+
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.register(HomeSearchCell.self, forCellReuseIdentifier: HomeSearchCell.identifier)
+        tableView.rowHeight = HomeSearchCell.rowHeight
     }
 }
 
