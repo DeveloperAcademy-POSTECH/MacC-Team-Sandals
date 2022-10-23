@@ -38,6 +38,13 @@ final class HomeSearchViewController: UIViewController {
         tableView.delegate = self
         tableView.register(HomeSearchCell.self, forCellReuseIdentifier: HomeSearchCell.identifier)
         tableView.rowHeight = HomeSearchCell.rowHeight
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 }
 
