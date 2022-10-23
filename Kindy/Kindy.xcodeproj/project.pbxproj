@@ -10,6 +10,7 @@
 		31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */; };
 		31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */; };
 		31F7DD652904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */; };
+		31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */; };
 		6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39A28FD313C00EA7413 /* AppDelegate.swift */; };
 		6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39C28FD313C00EA7413 /* SceneDelegate.swift */; };
 		6EE5E39F28FD313C00EA7413 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */; };
@@ -50,6 +51,7 @@
 		31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCarouselCollectionViewCell.swift; sourceTree = "<group>"; };
+		31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDelegate.swift; sourceTree = "<group>"; };
 		6EE5E39728FD313C00EA7413 /* Kindy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kindy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EE5E39A28FD313C00EA7413 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6EE5E39C28FD313C00EA7413 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				7B404C3029017C7300A24C89 /* SectionHeaderDelegate.swift */,
+				31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 				77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */,
 				6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */,
 				77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */,
+				31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */,
 				77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */,
 				31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */,
 				7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */,

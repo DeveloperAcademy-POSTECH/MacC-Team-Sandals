@@ -16,6 +16,9 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
             pageControl.currentPage = currentPage
         }
     }
+    private var index: Int = -1
+    
+    weak var delegate: BookmarkDelegate?
     
     private let imageCarouselCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
@@ -43,7 +46,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let addrLabel: UILabel = {
+    private let addressLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
         label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
@@ -87,6 +90,8 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         setupPageControlUI()
         setupButtonUI()
         setupLabelStackView()
+        
+        addTarget()
     }
     
     func setupCollectionView() {
@@ -121,7 +126,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     
     func setupLabelStackView() {
         labelStackView.addArrangedSubview(titleLabel)
-        labelStackView.addArrangedSubview(addrLabel)
+        labelStackView.addArrangedSubview(addressLabel)
         NSLayoutConstraint.activate([
             labelStackView.topAnchor.constraint(equalTo: imageCarouselCollectionView.bottomAnchor, constant: 16),
             labelStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
@@ -129,10 +134,26 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
             
         ])
     }
-    // 추후 argument를 Bookstore 타입으로 바꿔 받아, 각 항목에 적용 예정
-    func configureCell(_ title: String) {
+    // MARK: 추후 argument를 Bookstore 타입으로 바꿔 받아, 각 항목에 적용 예정
+    func configureCell(_ title: String, _ index: Int) {
         titleLabel.text = title
-        addrLabel.text = "포항시 남구"
+        addressLabel.text = "포항시 남구"
+        self.index = index
+    }
+    // BookmarkButton, labelStackView에 액션 추가하기
+    private func addTarget() {
+        bookmarkButton.addTarget(self, action: #selector(deleteBookmark), for: .touchUpInside)
+        let tab = UITapGestureRecognizer(target: self, action: #selector(selectLabel))
+        labelStackView.isUserInteractionEnabled = true
+        labelStackView.addGestureRecognizer(tab)
+    }
+    
+    @objc private func deleteBookmark() {
+        delegate?.deleteBookmark(index)
+    }
+    // MARK: 추후 디테일뷰로 넘어가는 NavigationLink Action
+    @objc private func selectLabel() {
+        print("\(titleLabel.text ?? "") 선택 완료")
     }
 }
 

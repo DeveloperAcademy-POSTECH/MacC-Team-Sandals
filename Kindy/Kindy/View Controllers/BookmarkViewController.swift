@@ -82,11 +82,12 @@ final class BookmarkViewController: UIViewController {
         return layout
     }
     
-
+    // MARK: 추후 데이터 전달 타입 변경 필요
     func configureDataSource() {
         dataSource = UICollectionViewDiffableDataSource(collectionView: bookMarkCollectionView) {  collectionView, indexPath, itemIdentifier in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkCollectionViewCell.identifier, for: indexPath) as? BookmarkCollectionViewCell else { return UICollectionViewCell() }
-            cell.configureCell(itemIdentifier.name)
+            cell.delegate = self
+            cell.configureCell(itemIdentifier.name, indexPath.row)
             cell.configureCarouselView(with: ["testImage", "testImage"])
             return cell
         }
@@ -103,6 +104,13 @@ extension BookmarkViewController: UISearchResultsUpdating {
         } else {
             filterdItem = dummyData
         }
+        dataSource.apply(filteredItemSanpshot, animatingDifferences: true)
+    }
+}
+// MARK: 추후 Bookmark 삭제로직 구현 예정
+extension BookmarkViewController: BookmarkDelegate {
+    func deleteBookmark(_ deleteIndex: Int) {
+        filterdItem.remove(at: deleteIndex)
         dataSource.apply(filteredItemSanpshot, animatingDifferences: true)
     }
 }
