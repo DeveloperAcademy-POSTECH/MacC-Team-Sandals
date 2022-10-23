@@ -23,6 +23,8 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     
     private let searchController = UISearchController()
     
+    private var searchText: String? = ""
+    
     // MARK: - 라이프 사이클
     
     override func viewDidLoad() {
@@ -82,11 +84,13 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+            searchText = searchString
             filteredItems = dummyList.filter{ (item) -> Bool in
-                item.name!.localizedCaseInsensitiveContains(searchString)
+                item.name!.localizedCaseInsensitiveContains(searchText!)
             }
         } else {
-            filteredItems = dummyList
+            filteredItems = []
+            searchText = ""
         }
         
         tableView.reloadData()
@@ -97,7 +101,7 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
 
 extension HomeSearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredItems.isEmpty ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
+        filteredItems.isEmpty && searchText != "" ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
         
         return filteredItems.count
     }
