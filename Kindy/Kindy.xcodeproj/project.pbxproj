@@ -193,13 +193,7 @@
 		7B404C0C28FE87DF00A24C89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7B404C2228FFD26100A24C89 /* MainCurationCollectionViewCell.swift */,
-				7B404C2428FFD33500A24C89 /* CurationCollectionViewCell.swift */,
-				7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */,
-				7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */,
-				7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */,
 				36B1B3832904102300C91825 /* DetailBookstoreView.swift */,
-				6EE5E3F228FECEF700EA7413 /* Curation */,
 				7B404C2D29016C7500A24C89 /* Supplementary */,
 				7B404C2C29016BDF00A24C89 /* Home */,
 				77DCB14B290297F100EAB5D5 /* Nearby */,
@@ -253,10 +247,10 @@
 		7B404C2C29016BDF00A24C89 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				7B404C2228FFD26100A24C89 /* MainCurationCollectionViewCell.swift */,
-				7B404C2428FFD33500A24C89 /* CurationCollectionViewCell.swift */,
-				7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */,
 				7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */,
+				7B404C2428FFD33500A24C89 /* CurationCollectionViewCell.swift */,
+				7B404C2228FFD26100A24C89 /* MainCurationCollectionViewCell.swift */,
+				7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */,
 				7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */,
 			);
 			path = Home;
@@ -352,7 +346,6 @@
 				6EE5E3F428FECF1300EA7413 /* CurationMainView.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
-				7B404C1728FE88DC00A24C89 /* ProtocolFile.swift in Sources */,
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
 				77DCB14D2902982700EAB5D5 /* NearbyDummy.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
