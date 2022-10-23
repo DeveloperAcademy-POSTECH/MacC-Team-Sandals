@@ -43,7 +43,7 @@ class BookmarkViewController: UIViewController {
         self.navigationItem.title = "북마크"
         setupSearchController()
         setupCollectionView()
-        
+    
         configureDataSource()
         
     }
@@ -60,6 +60,7 @@ class BookmarkViewController: UIViewController {
         view.addSubview(bookMarkCollectionView)
         bookMarkCollectionView.register(BookmarkCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkCollectionViewCell.identifier)
         bookMarkCollectionView.setCollectionViewLayout(createLayout(), animated: false)
+        bookMarkCollectionView.showsVerticalScrollIndicator = false
         bookMarkCollectionView.frame = view.bounds
     }
     
@@ -69,9 +70,9 @@ class BookmarkViewController: UIViewController {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let spacing: CGFloat = 10.0
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(70.0))
+        let spacing: CGFloat = 0
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.5545))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 1)
         
         group.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: 0, trailing: spacing)
