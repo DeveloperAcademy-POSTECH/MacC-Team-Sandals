@@ -7,9 +7,8 @@
 
 import UIKit
 
-struct CurationMain {
+struct CurationHeader {
     let id: String
-    let mainImage: String
     let title: String
     let subTitle: String?
 }
