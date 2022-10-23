@@ -16,6 +16,8 @@ final class HomeViewController: UIViewController {
         case nearByBookstore
         case bookmarked
         case region
+        case emptyNearby
+        case emptyBookmark
     }
     
     private var sections = [Section]()
@@ -37,11 +39,21 @@ final class HomeViewController: UIViewController {
         snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
         snapshot.appendItems(Item.curations, toSection: .curation)
         
-        snapshot.appendSections([.nearByBookstore])
-        snapshot.appendItems(Item.nearByBookStores, toSection: .nearByBookstore)
+        if Item.nearByBookStores.isEmpty {
+            snapshot.appendSections([.emptyNearby])
+            snapshot.appendItems([Item.emptyNearby], toSection: .emptyNearby)
+        } else {
+            snapshot.appendSections([.nearByBookstore])
+            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]] , toSection: .nearByBookstore)
+        }
         
-        snapshot.appendSections([.bookmarked])
-        snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
+        if Item.bookmarkedBookStores.isEmpty {
+            snapshot.appendSections([.emptyBookmark])
+            snapshot.appendItems([Item.emptyBookmark], toSection: .emptyBookmark)
+        } else {
+            snapshot.appendSections([.bookmarked])
+            snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
+        }
         
         snapshot.appendSections([.region])
         snapshot.appendItems(Item.regions, toSection: .region)
@@ -50,7 +62,6 @@ final class HomeViewController: UIViewController {
         
         return snapshot
     }
-    
     
     // MARK: Life Cycle
     override func viewDidLoad() {
@@ -73,6 +84,9 @@ final class HomeViewController: UIViewController {
         collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.reuseIdentifier)
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.reuseIdentifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.reuseIdentifier)
+        
+        collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.reuseIdentifier)
+        collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.reuseIdentifier)
         
         // Supplementary View Register
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier)
@@ -187,7 +201,6 @@ final class HomeViewController: UIViewController {
                 return section
             case .bookmarked:
                 // MARK: Bookmarked Section Layout
-                // 아이템의 개수가 0개면 다른 뷰를 보여줍니다.
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
@@ -195,8 +208,7 @@ final class HomeViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
                 
-                let isEmptySection = self.snapshot.numberOfItems(inSection: .bookmarked) == 0
-                let groupSize = isEmptySection ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(63)) : NSCollectionLayoutSize(widthDimension: .estimated(136), heightDimension: .estimated(219))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(136), heightDimension: .estimated(219))
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item]
@@ -224,6 +236,52 @@ final class HomeViewController: UIViewController {
                     layoutSize: groupSize,
                     subitem: item,
                     count: 2
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [centerHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                
+                return section
+            case .emptyNearby:
+                // MARK: Empty Nearby Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(336)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 1
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [centerHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                
+                return section
+            case .emptyBookmark:
+                // MARK: Empty Bookmark Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(150)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 1
                 )
                 
                 let section = NSCollectionLayoutSection(group: group)
@@ -275,6 +333,12 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
                 
                 return cell
+            case .emptyNearby:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyNearbyCollectionViewCell.reuseIdentifier, for: indexPath) as! EmptyNearbyCollectionViewCell
+                return cell
+            case .emptyBookmark:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyBookmarkCollectionViewCell.reuseIdentifier, for: indexPath) as! EmptyBookmarkCollectionViewCell
+                return cell
             }
         }
         
@@ -310,6 +374,16 @@ final class HomeViewController: UIViewController {
                     sectionName = "지역별 서점"
                     sectionNameColor = .black
                     hideSeeAllButton = true
+                    hideBottomStackView = true
+                case .emptyNearby:
+                    sectionName = "내 주변 서점"
+                    sectionNameColor = .black
+                    hideSeeAllButton = false
+                    hideBottomStackView = false
+                case .emptyBookmark:
+                    sectionName = "북마크 한 서점"
+                    sectionNameColor = .black
+                    hideSeeAllButton = false
                     hideBottomStackView = true
                 }
                 
