@@ -26,13 +26,6 @@ final class DetailBookstoreView: UIView {
         return scrollView
     }()
     
-    // mainScrollView를 채울 뷰
-    private let contentView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     // 서점 이미지 페이징에서 사용할 스크롤뷰
     let bookstoreImageScrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -326,67 +319,60 @@ final class DetailBookstoreView: UIView {
     
     private func setupUI() {
         addSubview(mainScrollView)
-        mainScrollView.addSubview(contentView)
         bookstoreImageScrollView.backgroundColor = .lightGray
 
-        contentView.addSubview(bookstoreImageScrollView)
-        contentView.addSubview(imagePageControl)
-        contentView.addSubview(headerStackView)
-        contentView.addSubview(summaryStackView)
-        contentView.addSubview(descriptionStackView)
-        contentView.addSubview(bookstoreMapStackView)
+        mainScrollView.addSubview(bookstoreImageScrollView)
+        mainScrollView.addSubview(imagePageControl)
+        mainScrollView.addSubview(headerStackView)
+        mainScrollView.addSubview(summaryStackView)
+        mainScrollView.addSubview(descriptionStackView)
+        mainScrollView.addSubview(bookstoreMapStackView)
         
-        // 고정값 UI들 미리 설정
+        // 고정값 UI들 설정
         setupDividerConstraints()
         setupIconConstraints()
         
         NSLayoutConstraint.activate([
-            // 메인 스크롤뷰 오토레이아웃 설정
+            // 메인 스크롤뷰 설정
             mainScrollView.topAnchor.constraint(equalTo: topAnchor),
             mainScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             mainScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             mainScrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            contentView.topAnchor.constraint(equalTo: mainScrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
-
-            // 컨텐츠뷰 내부 오토레이아웃 설정
-            bookstoreImageScrollView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -100),
-            bookstoreImageScrollView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            bookstoreImageScrollView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            bookstoreImageScrollView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.436),
+            // 서점 이미지뷰 설정
+            bookstoreImageScrollView.topAnchor.constraint(equalTo: mainScrollView.topAnchor, constant: -100),
+            bookstoreImageScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+            bookstoreImageScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+            bookstoreImageScrollView.heightAnchor.constraint(equalToConstant: 368),
             
             imagePageControl.topAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: -padding24),
-            imagePageControl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imagePageControl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imagePageControl.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+            imagePageControl.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
             imagePageControl.bottomAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: -padding16),
             
             // 서점 이름, 짧은 주소, 북마크 버튼뷰
             nameStackView.heightAnchor.constraint(equalToConstant: 36),
             shortAddressLabel.heightAnchor.constraint(equalToConstant: 25),
             headerStackView.topAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: padding24),
-            headerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            headerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
+            headerStackView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor, constant: padding16),
+            headerStackView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor, constant: -padding16),
             
             // 탑 디바이더와 서점 기본 정보뷰
             summaryStackView.topAnchor.constraint(equalTo: headerStackView.bottomAnchor, constant: padding24),
-            summaryStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            summaryStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
+            summaryStackView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor, constant: padding16),
+            summaryStackView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor, constant: -padding16),
             
             // 미들 디바이더와 서점 상세 정보뷰
             descriptionStackView.topAnchor.constraint(equalTo: summaryStackView.bottomAnchor, constant: padding24),
-            descriptionStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            descriptionStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
+            descriptionStackView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor, constant: padding16),
+            descriptionStackView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor, constant: -padding16),
             
             // 바텀 디바이더와 서점 지도뷰
             bookstoreMapView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.36),
             bookstoreMapStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: padding24),
-            bookstoreMapStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding16),
-            bookstoreMapStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding16),
-            bookstoreMapStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -100)
+            bookstoreMapStackView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor, constant: padding16),
+            bookstoreMapStackView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor, constant: -padding16),
+            bookstoreMapStackView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor, constant: -100)
         ])
     }
     
