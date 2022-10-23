@@ -38,9 +38,11 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     
     private func setupSearchController() {
         navigationItem.searchController = searchController
-        searchController.obscuresBackgroundDuringPresentation = false
+        self.navigationItem.hidesBackButton = true
+        searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.obscuresBackgroundDuringPresentation = false
         
         customCancelButton()
     }
@@ -114,5 +116,13 @@ extension HomeSearchViewController: UITableViewDelegate {
 
         print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - 서치바 취소 버튼 delegate
+
+extension HomeSearchViewController: UISearchBarDelegate {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.navigationController?.popToRootViewController(animated: true)
     }
 }
