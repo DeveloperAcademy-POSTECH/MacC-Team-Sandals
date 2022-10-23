@@ -34,6 +34,16 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         dismissKeyboard()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        DispatchQueue.main.async {  // must call from main thread
+            self.searchController.searchBar.becomeFirstResponder()
+        }
+        // 코드 출처 : https://stackoverflow.com/questions/31274058/make-uisearchcontroller-search-bar-automatically-active/
+        // 개념 이해 : https://stackoverflow.com/questions/27951965/cannot-set-searchbar-as-firstresponder
+    }
+    
     // MARK: - 메소드
     
     private func setupSearchController() {
