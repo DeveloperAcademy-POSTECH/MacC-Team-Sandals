@@ -12,6 +12,12 @@ final class HomeSearchCell: UITableViewCell {
     static let identifier = "HomeSearchCell"
     static let rowHeight: CGFloat = 96
     
+    var bookstore: Dummy? {
+        didSet {
+            configureCell(item: bookstore!)
+        }
+    }
+    
     // MARK: - 프로퍼티
     
     private var photoImageView: UIImageView = {
@@ -47,6 +53,10 @@ final class HomeSearchCell: UITableViewCell {
             nameLabel.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16)
         ])
+    }
+    
+    private func configureCell(item: Dummy) {
+        nameLabel.text = item.name
     }
     
     // MARK: - 라이프 사이클

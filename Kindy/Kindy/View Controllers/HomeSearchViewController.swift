@@ -19,7 +19,7 @@ final class HomeSearchViewController: UIViewController {
         return view
     }()
     
-//    private var homeSearchCell = HomeSearchCell()
+    private var filteredItems: [Dummy] = dummyList
     
     // MARK: - 라이프 사이클
     
@@ -49,7 +49,9 @@ extension HomeSearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchCell.identifier, for: indexPath) as? HomeSearchCell else { return UITableViewCell() }
+        
+        return cell
     }
     
 }
