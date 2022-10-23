@@ -41,6 +41,15 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchResultsUpdater = self
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        customCancelButton()
+    }
+    
+    private func customCancelButton() {
+        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
+        searchController.searchBar.tintColor = UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1)
+        searchController.searchBar.placeholder = "서점 이름, 주소 검색"
+        searchController.searchBar.setShowsCancelButton(true, animated: true)
     }
     
     private func setupTableView() {
