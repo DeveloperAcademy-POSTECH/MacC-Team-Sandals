@@ -8,34 +8,34 @@
 import UIKit
 
 // 홈 화면 최상단의 메인 큐레이션 셀
-class MainCurationCollectionViewCell: UICollectionViewCell {
+final class MainCurationCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "MainCurationCollectionViewCell"
     
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.backgroundColor = .systemGray4
-        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    let labelBackgroundView: UIView = {
+    private let labelBackgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
         view.layer.opacity = 0.8
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         view.backgroundColor = .systemGreen
-        
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = .preferredFont(forTextStyle: .title2)
         label.numberOfLines = 0
-        
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -46,10 +46,6 @@ class MainCurationCollectionViewCell: UICollectionViewCell {
         addSubview(imageView)
         addSubview(labelBackgroundView)
         addSubview(titleLabel)
-        
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        labelBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),

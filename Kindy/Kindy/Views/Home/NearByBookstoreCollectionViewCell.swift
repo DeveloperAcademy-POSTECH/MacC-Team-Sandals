@@ -9,56 +9,52 @@ import UIKit
 
 // 내 주변 서점 섹션의 서점 셀
 // TODO: Base class로 쓸 수 있게도 만들어보기
-class NearByBookstoreCollectionViewCell: UICollectionViewCell {
+final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "NearByBookstoreCollectionViewCell"
     
-    let stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .center
         stackView.spacing = 16
-        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
-    let labelStackView: UIStackView = {
+    private let labelStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.spacing = 4
-        
         return stackView
     }()
     
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.backgroundColor = .systemGray6
-        
         return imageView
     }()
     
-    let nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
-        
         return label
     }()
     
-    let distanceLabel: UILabel = {
+    private let distanceLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)
-        
         return label
     }()
     
-    let lineView: UIView = {
+    private let lineView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
-        
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -73,9 +69,6 @@ class NearByBookstoreCollectionViewCell: UICollectionViewCell {
         stackView.addArrangedSubview(labelStackView)
         labelStackView.addArrangedSubview(nameLabel)
         labelStackView.addArrangedSubview(distanceLabel)
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        lineView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),

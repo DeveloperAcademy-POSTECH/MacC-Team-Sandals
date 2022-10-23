@@ -8,49 +8,45 @@
 import UIKit
 
 // 북마크한 서점 섹션의 북마크 셀
-class BookmarkedCollectionViewCell: UICollectionViewCell {
+final class BookmarkedCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "BookmarkedCollectionViewCell"
     
-    let stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .fill
         stackView.spacing = 4
-        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
-    let labelStackView: UIStackView = {
+    private let labelStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
         stackView.spacing = 0
-        
         return stackView
     }()
     
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.backgroundColor = .systemGray6
-        
         return imageView
     }()
     
-    let nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
-        
         return label
     }()
     
-    let addressLabel: UILabel = {
+    private let addressLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .footnote)
-        
         return label
     }()
     
@@ -64,8 +60,6 @@ class BookmarkedCollectionViewCell: UICollectionViewCell {
         stackView.addArrangedSubview(labelStackView)
         labelStackView.addArrangedSubview(nameLabel)
         labelStackView.addArrangedSubview(addressLabel)
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
