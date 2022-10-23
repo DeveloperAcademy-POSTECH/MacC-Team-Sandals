@@ -7,10 +7,10 @@
 
 import UIKit
 
-class BookmarkViewController: UIViewController {
+final class BookmarkViewController: UIViewController {
     
     enum Section: Hashable {
-        case bookMark
+        case bookmark
     }
     
     var dummyData: [Bookstore] = [
@@ -31,9 +31,8 @@ class BookmarkViewController: UIViewController {
     
     private var filteredItemSanpshot: NSDiffableDataSourceSnapshot<Section, Bookstore> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Bookstore>()
-        snapshot.appendSections([.bookMark])
+        snapshot.appendSections([.bookmark])
         snapshot.appendItems(filterdItem)
-        
         return snapshot
     }
     
@@ -43,9 +42,7 @@ class BookmarkViewController: UIViewController {
         self.navigationItem.title = "북마크"
         setupSearchController()
         setupCollectionView()
-    
         configureDataSource()
-        
     }
     // 서치컨트롤러 설정
     private func setupSearchController() {
@@ -90,6 +87,7 @@ class BookmarkViewController: UIViewController {
         dataSource = UICollectionViewDiffableDataSource(collectionView: bookMarkCollectionView) {  collectionView, indexPath, itemIdentifier in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkCollectionViewCell.identifier, for: indexPath) as? BookmarkCollectionViewCell else { return UICollectionViewCell() }
             cell.configureCell(itemIdentifier.name)
+            cell.configureCarouselView(with: ["testImage", "testImage"])
             return cell
         }
         dataSource.apply(filteredItemSanpshot)
@@ -105,7 +103,6 @@ extension BookmarkViewController: UISearchResultsUpdating {
         } else {
             filterdItem = dummyData
         }
-        
         dataSource.apply(filteredItemSanpshot, animatingDifferences: true)
     }
 }
