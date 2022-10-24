@@ -7,9 +7,10 @@
 
 import UIKit
 
-class MyPageViewController: UIViewController, UITableViewDelegate {
+class MyPageViewController: UIViewController {
     
-    let cellTitle: [String] = ["북마크한 서점", "라이선스", "이용약관", "독립서점 제보하기"]
+    let privacy = Privacy()
+    let cellTitle: [String] = ["북마크 한 서점", "이용약관", "라이선스", "독립서점 제보하기"]
     
     private let tableView = UITableView()
 
@@ -20,7 +21,6 @@ class MyPageViewController: UIViewController, UITableViewDelegate {
         setupTableView()
 
         self.navigationController?.navigationBar.topItem?.title = "마이페이지"
-        // Do any additional setup after loading the view.
     }
     
     func setupTableView() {
@@ -28,7 +28,6 @@ class MyPageViewController: UIViewController, UITableViewDelegate {
         tableView.delegate = self
         tableView.rowHeight = 56
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
-                
     }
     
     func setupUI() {
@@ -56,6 +55,37 @@ extension MyPageViewController: UITableViewDataSource {
         cell.myPageCellLabel.text = cellTitle[indexPath.row]
         
         return cell
+    }
+    
+}
+
+extension MyPageViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch cellTitle[indexPath.row] {
+        case "북마크 한 서점":
+            let bookmarkVC = BookmarkViewController()
+            show(bookmarkVC, sender: nil)
+            
+        case "이용약관":
+            let detailMyPageVC = DetailMyPageViewController()
+            detailMyPageVC.titleLabel.text = privacy.termsOfService
+
+            show(detailMyPageVC, sender: nil)
+            
+        case "라이선스":
+            let detailMyPageVC = DetailMyPageViewController()
+            detailMyPageVC.titleLabel.text = privacy.license
+            show(detailMyPageVC, sender: nil)
+            
+        case "독립서점 제보하기":
+            // TODO: 메일 앱 연결하기
+            break
+            
+        default:
+            print("TableView Delegate Error!")
+            break
+        }
     }
     
 }
