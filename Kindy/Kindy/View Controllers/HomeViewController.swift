@@ -16,9 +16,11 @@ final class HomeViewController: UIViewController {
         case nearByBookstore
         case bookmarked
         case region
+        case emptyNearby
+        case emptyBookmark
     }
     
-    var sections = [Section]()
+    private var sections = [Section]()
     
     // MARK: Supplementary View Kind Definition
     enum SupplementaryViewKind {
@@ -27,7 +29,39 @@ final class HomeViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    
+    // MARK: Snapshot Definition
+    var snapshot: NSDiffableDataSourceSnapshot<Section, Item> {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        
+        snapshot.appendSections([.mainCuration, .curation])
+        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
+        snapshot.appendItems(Item.curations, toSection: .curation)
+        
+        if Item.nearByBookStores.isEmpty {
+            snapshot.appendSections([.emptyNearby])
+            snapshot.appendItems([Item.emptyNearby], toSection: .emptyNearby)
+        } else {
+            snapshot.appendSections([.nearByBookstore])
+            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]] , toSection: .nearByBookstore)
+        }
+        
+        if Item.bookmarkedBookStores.isEmpty {
+            snapshot.appendSections([.emptyBookmark])
+            snapshot.appendItems([Item.emptyBookmark], toSection: .emptyBookmark)
+        } else {
+            snapshot.appendSections([.bookmarked])
+            snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
+        }
+        
+        snapshot.appendSections([.region])
+        snapshot.appendItems(Item.regions, toSection: .region)
+        
+        sections = snapshot.sectionIdentifiers
+        
+        return snapshot
+    }
     
     // MARK: Life Cycle
     override func viewDidLoad() {
@@ -50,6 +84,9 @@ final class HomeViewController: UIViewController {
         collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.reuseIdentifier)
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.reuseIdentifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.reuseIdentifier)
+        
+        collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.reuseIdentifier)
+        collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.reuseIdentifier)
         
         // Supplementary View Register
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier)
@@ -171,10 +208,7 @@ final class HomeViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
                 
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .estimated(136),
-                    heightDimension: .estimated(219)
-                )
+                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(136), heightDimension: .estimated(219))
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item]
@@ -202,6 +236,52 @@ final class HomeViewController: UIViewController {
                     layoutSize: groupSize,
                     subitem: item,
                     count: 2
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [centerHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                
+                return section
+            case .emptyNearby:
+                // MARK: Empty Nearby Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(336)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 1
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [centerHeaderItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                
+                return section
+            case .emptyBookmark:
+                // MARK: Empty Bookmark Section Layout
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(150)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 1
                 )
                 
                 let section = NSCollectionLayoutSection(group: group)
@@ -253,6 +333,12 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
                 
                 return cell
+            case .emptyNearby:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyNearbyCollectionViewCell.reuseIdentifier, for: indexPath) as! EmptyNearbyCollectionViewCell
+                return cell
+            case .emptyBookmark:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyBookmarkCollectionViewCell.reuseIdentifier, for: indexPath) as! EmptyBookmarkCollectionViewCell
+                return cell
             }
         }
         
@@ -289,6 +375,16 @@ final class HomeViewController: UIViewController {
                     sectionNameColor = .black
                     hideSeeAllButton = true
                     hideBottomStackView = true
+                case .emptyNearby:
+                    sectionName = "내 주변 서점"
+                    sectionNameColor = .black
+                    hideSeeAllButton = false
+                    hideBottomStackView = false
+                case .emptyBookmark:
+                    sectionName = "북마크 한 서점"
+                    sectionNameColor = .black
+                    hideSeeAllButton = false
+                    hideBottomStackView = true
                 }
                 
                 let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier, for: indexPath) as! SectionHeaderView
@@ -301,16 +397,6 @@ final class HomeViewController: UIViewController {
             }
         }
         
-        // MARK: Snapshot Definition
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.mainCuration, .curation, .nearByBookstore, .bookmarked, .region])
-        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
-        snapshot.appendItems(Item.curations, toSection: .curation)
-        snapshot.appendItems(Item.nearByBookStores, toSection: .nearByBookstore)
-        snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
-        snapshot.appendItems(Item.regions, toSection: .region)
-        
-        sections = snapshot.sectionIdentifiers
         dataSource.apply(snapshot)
     }
 }
@@ -326,10 +412,10 @@ extension HomeViewController: UICollectionViewDelegate {
         case .mainCuration:
             let curationViewController = CurationViewController()
             present(curationViewController, animated: true)
-//        case .curation:
-//        case .nearByBookstore:
-//        case .bookmarked:
-//        case .region:
+            //        case .curation:
+            //        case .nearByBookstore:
+            //        case .bookmarked:
+            //        case .region:
         default:
             print("default")
         }
@@ -343,15 +429,15 @@ extension HomeViewController: SectionHeaderDelegate {
     // 다음 뷰컨과 연결할 때 이련 형태로 구현하겠습니다
     func segueWithSectionIndex(_ sectionIndex: Int) {
         
-//        switch sectionIndex {
-//        case 2:
-//            let nearByViewController = NearByViewController()
-//            present(nearByViewController, animated: true)
-//        case 3:
-//            let bookmarkViewController = BookmarkViewController()
-//            present(bookmarkViewController, animated: true)
-//        default:
-//            return
-//        }
+        //        switch sectionIndex {
+        //        case 2:
+        //            let nearByViewController = NearByViewController()
+        //            present(nearByViewController, animated: true)
+        //        case 3:
+        //            let bookmarkViewController = BookmarkViewController()
+        //            present(bookmarkViewController, animated: true)
+        //        default:
+        //            return
+        //        }
     }
 }
