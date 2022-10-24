@@ -8,7 +8,7 @@
 import UIKit
 
 // 서점 구조체(임시)
-struct BookStore: Hashable {
+struct Bookstore: Hashable {
     
     let id = UUID()
     
@@ -38,7 +38,7 @@ struct BookStore: Hashable {
         return 1
     }
     
-    static func == (lhs: BookStore, rhs: BookStore) -> Bool {
+    static func == (lhs: Bookstore, rhs: Bookstore) -> Bool {
         return lhs.id == rhs.id
     }
     
