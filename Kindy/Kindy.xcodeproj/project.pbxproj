@@ -41,7 +41,6 @@
 		7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1C28FE8E3000A24C89 /* Region.swift */; };
 		7B404C1F28FE90B700A24C89 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1E28FE90B700A24C89 /* Item.swift */; };
 		7B404C2128FFAA7900A24C89 /* TempCuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2028FFAA7900A24C89 /* TempCuration.swift */; };
-		A06954E72905C74100C09D1D /* MyPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */; };
 		7B404C2328FFD26100A24C89 /* MainCurationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2228FFD26100A24C89 /* MainCurationCollectionViewCell.swift */; };
 		7B404C2528FFD33500A24C89 /* CurationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2428FFD33500A24C89 /* CurationCollectionViewCell.swift */; };
 		7B404C2728FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */; };
@@ -51,6 +50,9 @@
 		7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C3029017C7300A24C89 /* SectionHeaderDelegate.swift */; };
 		7BDAE69D290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69C290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift */; };
 		7BDAE69F2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */; };
+		A06954E72905C74100C09D1D /* MyPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */; };
+		A06954ED2906C6CE00C09D1D /* DetailMyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */; };
+		A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954EE2906D9D800C09D1D /* Privacy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -90,7 +92,6 @@
 		7B404C1C28FE8E3000A24C89 /* Region.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Region.swift; sourceTree = "<group>"; };
 		7B404C1E28FE90B700A24C89 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		7B404C2028FFAA7900A24C89 /* TempCuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempCuration.swift; sourceTree = "<group>"; };
-		A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTableViewCell.swift; sourceTree = "<group>"; };
 		7B404C2228FFD26100A24C89 /* MainCurationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCurationCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B404C2428FFD33500A24C89 /* CurationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearByBookstoreCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -100,6 +101,9 @@
 		7B404C3029017C7300A24C89 /* SectionHeaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderDelegate.swift; sourceTree = "<group>"; };
 		7BDAE69C290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyNearbyCollectionViewCell.swift; sourceTree = "<group>"; };
+		A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTableViewCell.swift; sourceTree = "<group>"; };
+		A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyPageViewController.swift; sourceTree = "<group>"; };
+		A06954EE2906D9D800C09D1D /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +209,7 @@
 			children = (
 				6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */,
 				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
+				A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */,
 				6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */,
 				361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */,
 				77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */,
@@ -217,7 +222,6 @@
 		7B404C0C28FE87DF00A24C89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7B404C1828FE898B00A24C89 /* ViewFile.swift */,
 				A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */,
 				31F7DD612904EACE007E6E99 /* Bookmark */,
 				36B1B3832904102300C91825 /* DetailBookstoreView.swift */,
@@ -238,6 +242,7 @@
 				7B404C2028FFAA7900A24C89 /* TempCuration.swift */,
 				7B404C1A28FE89BA00A24C89 /* Bookstore.swift */,
 				7B404C1C28FE8E3000A24C89 /* Region.swift */,
+				A06954EE2906D9D800C09D1D /* Privacy.swift */,
 				7B404C1E28FE90B700A24C89 /* Item.swift */,
 			);
 			path = Models;
@@ -376,6 +381,7 @@
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				7B404C2528FFD33500A24C89 /* CurationCollectionViewCell.swift in Sources */,
 				6EE5E3F428FECF1300EA7413 /* CurationMainView.swift in Sources */,
+				A06954ED2906C6CE00C09D1D /* DetailMyPageViewController.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
@@ -384,6 +390,7 @@
 				7BDAE69D290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
+				A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */,
 				7B404C2328FFD26100A24C89 /* MainCurationCollectionViewCell.swift in Sources */,
 				7B404C2728FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift in Sources */,
 				6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */,
