@@ -21,7 +21,9 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         return view
     }()
 
-    private var filteredItems: [Dummy] = dummyList
+    private var filteredItems = Bookstore.dummyData
+    
+    private var regionName: String = ""
 
     private let searchController = UISearchController()
 
@@ -65,14 +67,18 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
-            filteredItems = dummyList.filter{ (item) -> Bool in
-                item.name!.localizedCaseInsensitiveContains(searchString)
+            filteredItems = Bookstore.dummyData.filter{ (item) -> Bool in
+                item.name.localizedCaseInsensitiveContains(searchString)
             }
         } else {
-            filteredItems = dummyList
+            filteredItems = Bookstore.dummyData
         }
 
         tableView.reloadData()
+    }
+    
+    func setupData(regionName: String) {
+        self.regionName = regionName
     }
 }
 
@@ -109,7 +115,7 @@ extension RegionViewController: UITableViewDelegate {
         detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
         navigationController?.pushViewController(detailVC, animated: true) */
 
-        print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
+        print("\(filteredItems[indexPath.row].name) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
@@ -118,7 +124,7 @@ extension RegionViewController: UITableViewDelegate {
             return UIView()
         }
 
-        headerView.headerLabel.text = "포항"
+        headerView.headerLabel.text = regionName
 
         if filteredItems.count == 0 {
             headerView.isHidden = true

@@ -99,7 +99,8 @@ final class HomeViewController: UIViewController {
     
     // MARK: Navigation Item Method
     @objc func searchButtonTapped() {
-        print(#function)
+        let homeSearchViewController = HomeSearchViewController()
+        show(homeSearchViewController, sender: nil)
     }
     
     // MARK: Layout Method
@@ -412,10 +413,15 @@ extension HomeViewController: UICollectionViewDelegate {
         case .mainCuration:
             let curationViewController = CurationViewController()
             present(curationViewController, animated: true)
-            //        case .curation:
-            //        case .nearByBookstore:
-            //        case .bookmarked:
-            //        case .region:
+//        case .curation:
+//        case .nearByBookstore:
+//        case .bookmarked:
+        case .region:
+            let regionName = Item.regions[indexPath.item].region
+            let regionViewController = RegionViewController()
+            regionViewController.setupData(regionName: regionName!.name)
+            
+            show(regionViewController, sender: nil)
         default:
             print("default")
         }
@@ -429,15 +435,24 @@ extension HomeViewController: SectionHeaderDelegate {
     // 다음 뷰컨과 연결할 때 이련 형태로 구현하겠습니다
     func segueWithSectionIndex(_ sectionIndex: Int) {
         
-        //        switch sectionIndex {
-        //        case 2:
-        //            let nearByViewController = NearByViewController()
-        //            present(nearByViewController, animated: true)
-        //        case 3:
-        //            let bookmarkViewController = BookmarkViewController()
-        //            present(bookmarkViewController, animated: true)
-        //        default:
-        //            return
-        //        }
+        switch sectionIndex {
+        case 2:
+            let items = Item.nearByBookStores.map { $0.bookStore! }
+            let nearbyViewController = NearbyViewController()
+            nearbyViewController.setupData(items: items)
+            
+            show(nearbyViewController, sender: nil)
+        case 3:
+            let bookmarkViewController = BookmarkViewController()
+            present(bookmarkViewController, animated: true)
+//        case 4:
+//            let regionName = "지역"
+//            let regionViewController = RegionViewController()
+//            regionViewController.setupData(regionName: regionName)
+//
+//            show(regionViewController, sender: nil)
+        default:
+            return
+        }
     }
 }

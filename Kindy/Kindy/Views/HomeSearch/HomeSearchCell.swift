@@ -11,7 +11,7 @@ final class HomeSearchCell: UITableViewCell {
 
     static let rowHeight: CGFloat = 96
     
-    var bookstore: Dummy? {
+    var bookstore: Bookstore? {
         didSet {
             configureCell(item: bookstore!)
         }
@@ -54,7 +54,7 @@ final class HomeSearchCell: UITableViewCell {
         ])
     }
     
-    private func configureCell(item: Dummy) {
+    private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
     }
     

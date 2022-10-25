@@ -31,7 +31,6 @@
 		6EE5E42629055A7700EA7413 /* TestCurationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E42529055A7700EA7413 /* TestCurationCell.swift */; };
 		6EE5E4282905661E00EA7413 /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4272905661E00EA7413 /* UIViewController+.swift */; };
 		77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB149290297C100EAB5D5 /* NearbyCell.swift */; };
-		77DCB14D2902982700EAB5D5 /* NearbyDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB14C2902982700EAB5D5 /* NearbyDummy.swift */; };
 		77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */; };
 		77DCB15229029CF500EAB5D5 /* UITableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB15129029CF500EAB5D5 /* UITableView+.swift */; };
 		77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB15329029D1F00EAB5D5 /* UIButton+.swift */; };
@@ -91,7 +90,6 @@
 		6EE5E42529055A7700EA7413 /* TestCurationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCurationCell.swift; sourceTree = "<group>"; };
 		6EE5E4272905661E00EA7413 /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
 		77DCB149290297C100EAB5D5 /* NearbyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyCell.swift; sourceTree = "<group>"; };
-		77DCB14C2902982700EAB5D5 /* NearbyDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyDummy.swift; sourceTree = "<group>"; };
 		77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyViewController.swift; sourceTree = "<group>"; };
 		77DCB15129029CF500EAB5D5 /* UITableView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+.swift"; sourceTree = "<group>"; };
 		77DCB15329029D1F00EAB5D5 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
@@ -208,14 +206,6 @@
 			path = Nearby;
 			sourceTree = "<group>";
 		};
-		77DCB14E2902983100EAB5D5 /* Nearby */ = {
-			isa = PBXGroup;
-			children = (
-				77DCB14C2902982700EAB5D5 /* NearbyDummy.swift */,
-			);
-			path = Nearby;
-			sourceTree = "<group>";
-		};
 		77DCB1642904462D00EAB5D5 /* Region */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,12 +228,12 @@
 			children = (
 				6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */,
 				77DCB1672905397E00EAB5D5 /* HomeSearchViewController.swift */,
-				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
 				6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */,
-				361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */,
 				77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */,
-				77DCB1602904457600EAB5D5 /* RegionViewController.swift */,
 				31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */,
+				77DCB1602904457600EAB5D5 /* RegionViewController.swift */,
+				361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */,
+				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -266,7 +256,6 @@
 		7B404C0D28FE87EA00A24C89 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				77DCB14E2902983100EAB5D5 /* Nearby */,
 				6EE5E3ED28FECEC000EA7413 /* Curation */,
 				7B404C2028FFAA7900A24C89 /* TempCuration.swift */,
 				7B404C1A28FE89BA00A24C89 /* Bookstore.swift */,
@@ -430,7 +419,6 @@
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
-				77DCB14D2902982700EAB5D5 /* NearbyDummy.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,

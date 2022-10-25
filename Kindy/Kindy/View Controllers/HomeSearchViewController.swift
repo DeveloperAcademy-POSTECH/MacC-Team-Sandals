@@ -19,7 +19,7 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         return view
     }()
     
-    private var filteredItems: [Dummy] = []
+    private var filteredItems: [Bookstore] = []
     
     private let searchController = UISearchController()
     
@@ -85,8 +85,8 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
             searchText = searchString
-            filteredItems = dummyList.filter{ (item) -> Bool in
-                item.name!.localizedCaseInsensitiveContains(searchText!)
+            filteredItems = Bookstore.dummyData.filter{ (item) -> Bool in
+                item.name.localizedCaseInsensitiveContains(searchText!)
             }
         } else {
             filteredItems = []
@@ -128,7 +128,7 @@ extension HomeSearchViewController: UITableViewDelegate {
         detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
         navigationController?.pushViewController(detailVC, animated: true) */
 
-        print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
+        print("\(filteredItems[indexPath.row].name) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
