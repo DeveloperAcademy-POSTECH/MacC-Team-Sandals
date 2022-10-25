@@ -7,29 +7,35 @@
 
 import UIKit
 
-class MyPageViewController: UIViewController {
+final class MyPageViewController: UIViewController {
     
-    let privacy = Privacy()
-    let cellTitle: [String] = ["북마크 한 서점", "이용약관", "라이선스", "독립서점 제보하기"]
+    private let privacy = Privacy()
+    private let cellTitle: [String] = ["북마크 한 서점", "이용약관", "라이선스", "독립서점 제보하기"]
     
-    private let tableView = UITableView()
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        //테이블 뷰 셀 separator 왼쪽 여백 없애기
+        tableView.separatorInset.left = 0
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupUI()
-        self.navigationController?.navigationBar.topItem?.title = "마이페이지"
+        navigationController?.navigationBar.topItem?.title = "마이페이지"
     }
     
-    func setupTableView() {
+    private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = 56
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
     }
     
-    func setupUI() {
-        self.view.addSubview(tableView)
+    private func setupUI() {
+        view.addSubview(tableView)
     
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
@@ -37,9 +43,6 @@ class MyPageViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
         ])
-        //테이블 뷰 셀 separator 왼쪽 여백 없애기
-        tableView.separatorInset.left = 0
-        tableView.translatesAutoresizingMaskIntoConstraints = false
     }
 
 }

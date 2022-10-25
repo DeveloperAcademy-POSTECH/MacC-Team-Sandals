@@ -7,15 +7,15 @@
 
 import UIKit
 
-class MyPageTableViewCell: UITableViewCell {
+final class MyPageTableViewCell: UITableViewCell {
     
-    lazy var myPageCellLabel: UILabel = {
+    var myPageCellLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var myPageCellImageView: UIImageView = {
+    private let myPageCellImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "chevron.forward")
         imageView.tintColor = UIColor(named: "kindyGreen")
@@ -24,7 +24,7 @@ class MyPageTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    lazy var myPageCellStackView: UIStackView = {
+    private lazy var myPageCellStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [myPageCellLabel, myPageCellImageView])
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -41,13 +41,13 @@ class MyPageTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupUI() {
-        self.addSubview(myPageCellStackView)
+    private func setupUI() {
+        addSubview(myPageCellStackView)
         
         NSLayoutConstraint.activate([
-            myPageCellStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            myPageCellStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
-            myPageCellStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
+            myPageCellStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            myPageCellStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            myPageCellStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
         ])
     }
     

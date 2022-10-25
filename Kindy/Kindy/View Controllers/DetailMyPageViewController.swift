@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailMyPageViewController: UIViewController {
+final class DetailMyPageViewController: UIViewController {
     
     var navigationBarTitle: String = ""
     
@@ -25,9 +25,9 @@ class DetailMyPageViewController: UIViewController {
         setupNavigation()
     }
     
-    func setupUI() {
-        self.view.backgroundColor = .white
-        self.view.addSubview(titleLabel)
+    private func setupUI() {
+        view.backgroundColor = .white
+        view.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 107),
@@ -37,7 +37,7 @@ class DetailMyPageViewController: UIViewController {
         ])
     }
     
-    func setupNavigation() {
+    private func setupNavigation() {
         navigationItem.title = navigationBarTitle
         navigationController?.navigationBar.tintColor = UIColor(named: "kindyGreen")
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
