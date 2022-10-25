@@ -73,13 +73,13 @@ extension MyPageViewController: UITableViewDelegate {
         case "이용약관":
             let detailMyPageVC = DetailMyPageViewController()
             detailMyPageVC.navigationBarTitle = "이용약관"
-            detailMyPageVC.titleLabel.text = privacy.termsOfService
+            detailMyPageVC.detailString = privacy.termsOfService
             show(detailMyPageVC, sender: nil)
             
         case "라이선스":
             let detailMyPageVC = DetailMyPageViewController()
             detailMyPageVC.navigationBarTitle = "라이선스"
-            detailMyPageVC.titleLabel.text = privacy.license
+            detailMyPageVC.detailString = privacy.license
             show(detailMyPageVC, sender: nil)
             
         case "독립서점 제보하기":
