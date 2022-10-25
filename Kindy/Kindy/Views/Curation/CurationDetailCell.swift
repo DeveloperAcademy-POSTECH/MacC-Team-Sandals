@@ -82,6 +82,7 @@ final class CurationDetailCell: UICollectionViewCell {
             descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 32),
             descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: spacingView.topAnchor, constant: -16),
             
             spacingView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             spacingView.heightAnchor.constraint(equalToConstant: 30),
