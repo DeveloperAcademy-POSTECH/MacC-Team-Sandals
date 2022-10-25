@@ -43,7 +43,7 @@ class PagingCurationViewController: UIViewController {
     private var headerViewHeightConstraint: NSLayoutConstraint!
     
     private lazy var headerView: UIView = {
-        let view = CurationHeaderView2(frame: .zero, curation: curation)
+        let view = CurationHeaderView(frame: .zero, curation: curation)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
