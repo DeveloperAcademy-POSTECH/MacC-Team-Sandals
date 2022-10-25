@@ -63,12 +63,12 @@ final class DetailBookstoreViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        self.navigationController?.navigationBar.tintColor = UIColor(named: "kindyGreen")
-        self.navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.tintColor = UIColor(named: "kindyGreen")
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
     private func setupTabbar() {
-        self.tabBarController?.tabBar.isHidden = true
+        tabBarController?.tabBar.isHidden = true
     }
     
     private func setupAddTarget() {
@@ -122,11 +122,11 @@ extension DetailBookstoreViewController: UIScrollViewDelegate {
             // 서점 이름을 가리는 순간 서점 이름과 북마크 버튼 네비게이션 바에 표시
             if currentScrollYOffset >= 230 {
                 guard let bookstore = bookstore else { return }
-                self.navigationController?.navigationBar.topItem?.title = "\(bookstore.name)"
-                self.navigationItem.rightBarButtonItem = self.navigationBarRightButton
+                navigationController?.navigationBar.topItem?.title = "\(bookstore.name)"
+                navigationItem.rightBarButtonItem = navigationBarRightButton
             } else {
-                self.navigationController?.navigationBar.topItem?.title = ""
-                self.navigationItem.rightBarButtonItem = nil
+                navigationController?.navigationBar.topItem?.title = ""
+                navigationItem.rightBarButtonItem = nil
             }
             
         // 스크롤이 서점 이미지 스크롤이라면 현재 페이지 변경
@@ -142,8 +142,8 @@ extension DetailBookstoreViewController: UIScrollViewDelegate {
     
     // 네비게이션 바 모습 변경
     private func setNavigationBarAppearance() {
-        self.navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        self.navigationController?.navigationBar.compactAppearance = navigationBarAppearance
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
     }
     
     // 현재 이미지의 페이지에 따라 pageControl의 currentPage 변경
