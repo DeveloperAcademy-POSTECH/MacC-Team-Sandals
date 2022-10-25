@@ -419,11 +419,16 @@ extension HomeViewController: UICollectionViewDelegate {
             present(curationViewController, animated: true)
 //        case .curation:
         case .nearByBookstore:
+            let items = Item.nearByBookStores.map { $0.bookStore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
             // TODO: 이후 더미데이터 수정
-            detailBookstoreViewController.bookstore = Bookstore.dummyData[indexPath.row]
+            detailBookstoreViewController.bookstore = items[indexPath.item]
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-//        case .bookmarked:
+        case .bookmarked:
+            let items = Item.bookmarkedBookStores.map { $0.bookStore! }
+            let detailBookstoreViewController = DetailBookstoreViewController()
+            detailBookstoreViewController.bookstore = items[indexPath.item]
+            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .region:
             let regionName = Item.regions[indexPath.item].region
             let regionViewController = RegionViewController()

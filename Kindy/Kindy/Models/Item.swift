@@ -60,11 +60,11 @@ enum Item: Hashable {
     ]
     
     static let bookmarkedBookStores: [Item] = [
-        .bookStore(Bookstore(images: nil, name: "달팽이책방아니다", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
-        .bookStore(Bookstore(images: nil, name: "달팽이책방2", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
-        .bookStore(Bookstore(images: nil, name: "달팽이책방3", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
-        .bookStore(Bookstore(images: nil, name: "달팽이책방4", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true)),
-        .bookStore(Bookstore(images: nil, name: "달팽이책방5", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 123, longitude: 3123), isFavorite: true))
+        .bookStore(Bookstore(images: nil, name: "달팽이책방아니다", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 36.0090456, longitude: 129.3331438), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방2", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 36.0090456, longitude: 129.3331438), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방3", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 36.0090456, longitude: 129.3331438), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방4", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 36.0090456, longitude: 129.3331438), isFavorite: true)),
+        .bookStore(Bookstore(images: nil, name: "달팽이책방5", address: "포항시 북구", telNumber: "010-1234-5678", emailAddress: nil, instagramURL: nil, businessHour: "09:00-18:00", description: "상세 설명", location: Location(latitude: 36.0090456, longitude: 129.3331438), isFavorite: true))
     ]
     
     static let regions: [Item] = [
