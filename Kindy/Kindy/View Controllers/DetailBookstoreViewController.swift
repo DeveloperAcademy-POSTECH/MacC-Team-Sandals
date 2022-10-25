@@ -12,7 +12,9 @@ final class DetailBookstoreViewController: UIViewController {
     
     private var defaultScrollYOffset: CGFloat = 0
     
-    private let detailBookstoreView = DetailBookstoreView()
+    var bookstore: Bookstore?
+    
+    let detailBookstoreView = DetailBookstoreView()
     
     private lazy var mainScrollView = detailBookstoreView.mainScrollView
     private lazy var bookstoreImageScrollView = detailBookstoreView.bookstoreImageScrollView
@@ -45,6 +47,7 @@ final class DetailBookstoreViewController: UIViewController {
     // MARK: viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupBookstore()
         setupNavigationBar()
         setupTabbar()
         setupAddTarget()
@@ -53,6 +56,10 @@ final class DetailBookstoreViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         setupBookstoreImages()
+    }
+    
+    private func setupBookstore() {
+        detailBookstoreView.bookstore = bookstore
     }
     
     private func setupNavigationBar() {
@@ -114,7 +121,8 @@ extension DetailBookstoreViewController: UIScrollViewDelegate {
             
             // 서점 이름을 가리는 순간 서점 이름과 북마크 버튼 네비게이션 바에 표시
             if currentScrollYOffset >= 230 {
-                self.navigationController?.navigationBar.topItem?.title = "달팽이책방"
+                guard let bookstore = bookstore else { return }
+                self.navigationController?.navigationBar.topItem?.title = "\(bookstore.name)"
                 self.navigationItem.rightBarButtonItem = self.navigationBarRightButton
             } else {
                 self.navigationController?.navigationBar.topItem?.title = ""

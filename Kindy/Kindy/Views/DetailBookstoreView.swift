@@ -8,15 +8,39 @@
 import UIKit
 import MapKit
 
-// TODO: didSet 이용하여 값 넘겨받을 프로퍼티 생성
 final class DetailBookstoreView: UIView {
     
     private let padding16: CGFloat = 16
     private let padding24: CGFloat = 24
     
-    var bookstoreImages = [UIImage(named: "testImage"), UIImage(named: "testImage"), UIImage(named: "testImage"), UIImage(named: "testImage")]
+    var bookstore: Bookstore? {
+        didSet {
+            guard let bookstore = self.bookstore else { return }
+            if let bookstoreImages = bookstore.images {
+                self.bookstoreImages = bookstoreImages
+                imagePageControl.numberOfPages = bookstoreImages.count
+            }
+            nameLabel.text = bookstore.name
+            shortAddressLabel.text = bookstore.shortAddress
+            isBookmarked = bookstore.isFavorite
+            telephoneNumberLabel.text = bookstore.telNumber
+            // TODO: 인스타그램 어떻게 할지 논의하기 (링크? 계정 이름만?)
+//            instagramLabel.text = String(bookstore.instagramURL)
+            businessHourLabel.text = bookstore.businessHour
+            descriptionLabel.text = bookstore.description
+            address.text = bookstore.address
+            bookstoreCoordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
+            bookstorePin.title = bookstore.name
+            bookstorePin.coordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
+            setupMapView()
+        }
+    }
+    
+    // 서점 데이터 기본값
+    // 서점 사진이 없을 경우 보여줄 사진도 필요
+    var bookstoreImages: [UIImage] = [UIImage(named: "testImage")!]
     var isBookmarked: Bool = false
-    private let bookstoreCoordinate = CLLocationCoordinate2D(latitude: 36.0090456, longitude: 129.3331438)
+    private var bookstoreCoordinate = CLLocationCoordinate2D(latitude: 36.0090456, longitude: 129.3331438)
     
     // 전체 화면을 덮는 스크롤뷰
     let mainScrollView: UIScrollView = {
@@ -39,13 +63,12 @@ final class DetailBookstoreView: UIView {
     // 서점 이미지 페이지 컨트롤
     lazy var imagePageControl: UIPageControl = {
         let pageControl = UIPageControl()
-        pageControl.numberOfPages = bookstoreImages.count
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
     }()
     
     // 서점 이름 레이블
-    private let nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "달팽이책방"
         label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
@@ -409,4 +432,5 @@ final class DetailBookstoreView: UIView {
         bookstoreMapView.setRegion(MKCoordinateRegion(center: bookstoreCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: true)
         bookstoreMapView.addAnnotation(bookstorePin)
     }
+    
 }
