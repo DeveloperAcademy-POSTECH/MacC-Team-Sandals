@@ -2,7 +2,7 @@
 //  UIView+.swift
 //  Kindy
 //
-//  Created by 정호윤 on 2022/10/25.
+//  Created by rbwo on 2022/10/25.
 //
 
 import UIKit
@@ -14,7 +14,7 @@ extension UIView {
         gradientLayer.colors = colors
         
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.9)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         return gradientLayer
     }
 }
