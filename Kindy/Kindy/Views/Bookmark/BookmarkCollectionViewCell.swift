@@ -8,8 +8,8 @@
 import UIKit
 
 class BookmarkCollectionViewCell: UICollectionViewCell {
-    static let identifier = "BookMarkCollectionViewCell"
     
+    private var bookstore: Bookstore?
     private var imageData: [String] = ["testImage"]
     private var currentPage: Int = 0 {
         didSet {
@@ -135,9 +135,10 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         ])
     }
     // MARK: 추후 argument를 Bookstore 타입으로 바꿔 받아, 각 항목에 적용 예정
-    func configureCell(_ title: String, _ index: Int) {
-        titleLabel.text = title
-        addressLabel.text = "포항시 남구"
+    func configureCell(_ bookstore: Bookstore, _ index: Int) {
+        self.bookstore = bookstore
+        titleLabel.text = bookstore.name
+        addressLabel.text = bookstore.address
         self.index = index
     }
     // BookmarkButton, labelStackView에 액션 추가하기
@@ -151,9 +152,9 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     @objc private func deleteBookmark() {
         delegate?.deleteBookmark(index)
     }
-    // MARK: 추후 디테일뷰로 넘어가는 NavigationLink Action
+
     @objc private func selectLabel() {
-        print("\(titleLabel.text ?? "") 선택 완료")
+        delegate?.selectItem(bookstore!)
     }
 }
 

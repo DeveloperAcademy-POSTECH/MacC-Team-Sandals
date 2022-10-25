@@ -69,7 +69,7 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     
     // MARK: Configure Cell
     // TODO: TempCuration 나중에 바꿔야함
-    func configureCell(_ curation: TempCuration, indexPath: IndexPath, numberOfItems: Int) {
+    func configureCell(_ curation: Curation, indexPath: IndexPath, numberOfItems: Int) {
         titleLabel.text = curation.title
         numberLabel.text = "\(indexPath.item + 1) / \(numberOfItems)"
     }

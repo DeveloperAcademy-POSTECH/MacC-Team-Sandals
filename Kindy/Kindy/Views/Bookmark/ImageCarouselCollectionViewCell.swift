@@ -8,7 +8,6 @@
 import UIKit
 
 class ImageCarouselCollectionViewCell: UICollectionViewCell {
-    static let identifier = "ImageCarouselCollectionViewCell"
     
     private lazy var imageView:UIImageView = {
         let imageView = UIImageView()

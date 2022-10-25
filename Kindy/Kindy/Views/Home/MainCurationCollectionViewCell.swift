@@ -71,7 +71,7 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
     
     // MARK: Configure Cell
     // TODO: TempCuration 나중에 바꿔야함
-    func configureCell(_ mainCuration: TempCuration) {
+    func configureCell(_ mainCuration: Curation) {
         titleLabel.text = mainCuration.title
     }
 }
