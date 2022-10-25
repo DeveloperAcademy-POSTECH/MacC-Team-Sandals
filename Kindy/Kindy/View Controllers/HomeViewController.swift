@@ -414,25 +414,32 @@ extension HomeViewController: UICollectionViewDelegate {
             // CurationViewController 대신에 PagingCurationViewController로 바꿔야합니다(변수명도 마찬가지입니다).
             // modalTransitionStyle도 full screen으로 바꿔야합니다.
             // init id? - 어떻게 이어줄지?
-            let curationViewController = CurationViewController()
+            let curation = Item.mainCuration.map { $0.curation! }.first!
+            let curationViewController = PagingCurationViewController(curation: curation)
+            curationViewController.modalPresentationStyle = .overFullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
             present(curationViewController, animated: true)
-//        case .curation:
+        case .curation:
+            let curation = Item.curations.map { $0.curation! }[indexPath.item]
+            let curationViewController = PagingCurationViewController(curation: curation)
+            curationViewController.modalPresentationStyle = .overFullScreen
+            curationViewController.modalTransitionStyle = .crossDissolve
+            present(curationViewController, animated: true)
         case .nearByBookstore:
-            let items = Item.nearByBookStores.map { $0.bookStore! }
+            let bookstore = Item.nearByBookStores.map { $0.bookStore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
             // TODO: 이후 더미데이터 수정
-            detailBookstoreViewController.bookstore = items[indexPath.item]
+            detailBookstoreViewController.bookstore = bookstore
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .bookmarked:
-            let items = Item.bookmarkedBookStores.map { $0.bookStore! }
+            let bookstore = Item.bookmarkedBookStores.map { $0.bookStore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = items[indexPath.item]
+            detailBookstoreViewController.bookstore = bookstore
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .region:
-            let regionName = Item.regions[indexPath.item].region
+            let regionName = Item.regions[indexPath.item].region!.name
             let regionViewController = RegionViewController()
-            regionViewController.setupData(regionName: regionName!.name)
+            regionViewController.setupData(regionName: regionName)
             
             show(regionViewController, sender: nil)
         default:
