@@ -9,8 +9,39 @@ import UIKit
 
 final class CurationViewController: UIViewController {
     
+    weak var cellDelegate: DynamicCell?
+    
+    private var curationModel: Curation?
+    
+    private var curation = Curation.item
+    
+    private var cellCount = 0
+    
+    private var cellHeight: CGFloat = 0
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(curationModel: Curation) {
+        self.curation = curationModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private lazy var collectionView: UICollectionView = {
-        let view = UICollectionView(frame: .zero, collectionViewLayout: CurationLayout.init())
+        let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init())
+        
+//        let width: CGFloat = UIScreen.main.bounds.width
+//        let height: CGFloat = UIScreen.main.bounds.height
+//        let flowlayout = UICollectionViewFlowLayout()
+//
+//        flowlayout.estimatedItemSize = CGSize(width: width, height: height)
+//        view.collectionViewLayout = flowlayout
+        
         view.backgroundColor = .white
         view.dataSource = self
         view.delegate = self
@@ -27,11 +58,10 @@ final class CurationViewController: UIViewController {
 
 private extension CurationViewController {
     func configureCollectionView() {
+        collectionView.register(CurationStoreCell.self, forCellWithReuseIdentifier: CurationStoreCell.identifier)
         
-        collectionView.register(CurationHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CurationHeaderView.identifier)
+        collectionView.register(CurationTextCell.self, forCellWithReuseIdentifier: CurationTextCell.identifier)
         
-        collectionView.register(TestCurationCell.self, forCellWithReuseIdentifier: TestCurationCell.identifier)
-
         collectionView.register(CurationDetailCell.self, forCellWithReuseIdentifier: CurationDetailCell.identifier)
     }
     
@@ -47,21 +77,11 @@ private extension CurationViewController {
     }
 }
 
+// 데이터 들어오면 configure 바꿔야함
 extension CurationViewController: UICollectionViewDataSource {
-    /// 헤더 셀, 서점 정보셀 큐레이션 내용셀로 나누었습니다.
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CurationHeaderView.identifier, for: indexPath)
-            return headerView
-        default:
-            return UICollectionReusableView()
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == 0 {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TestCurationCell.identifier, for: indexPath) as? TestCurationCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationStoreCell.identifier, for: indexPath) as? CurationStoreCell else {
                 return UICollectionViewCell() }
             cell.configure()
             cell.backgroundColor = .clear
@@ -69,35 +89,67 @@ extension CurationViewController: UICollectionViewDataSource {
             return cell
         }
         
+        else if indexPath.item == 1 || indexPath.item == cellCount {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
+            
+            if indexPath.item == 1 {
+                cell.headConfigure(data: curation)
+            }
+            else {
+                cell.infoConfigure(data: curation)
+            }
+            return cell
+        }
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationDetailCell.identifier, for: indexPath) as? CurationDetailCell else { return UICollectionViewCell() }
-        cell.backgroundColor = .white
-        cell.configure()
-        cell.layer.zPosition = 1
+        
+        // 수정 필요 동적으로 높이를 잡아줘야하는데 ~~
+        cell.configure(imageWithText: curation.imageWithText[indexPath.item - 2])
+
+        cellHeight = cell.cellHeight
+        print(cellHeight)
+        
         return cell
     }
 }
 extension CurationViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        cellCount += 2
+        cellCount += curation.imageWithText.count
+        return cellCount + 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.item == 0 {
+            
+            // TODO: present 서점 정보
+            let vc = DetailBookstoreViewController()
+            // 뷰 합치면 넣어야함
+            // vc.bookstore = Bookstore
+            show(vc, sender: nil)
+             
+            // present(vc, animated: false)
+        }
     }
 }
 
 extension CurationViewController: UICollectionViewDelegateFlowLayout {
     /// 셀 크기
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width: CGFloat = self.view.frame.width
-        let height: CGFloat = self.view.frame.height
+
+        let width: CGFloat = UIScreen.main.bounds.width
+        let height: CGFloat = UIScreen.main.bounds.height
 
         if indexPath.item == 0 {
             return CGSize(width: width, height: height / 5)
-        } else {
-            guard let collectionViewLayout = collectionViewLayout as? CurationLayout else { return CGSize() }
-            collectionViewLayout.headerReferenceSize = CGSize(width: width, height: height * 0.44)
-            collectionViewLayout.estimatedItemSize = CGSize(width: width, height: 950)
-            return collectionViewLayout.estimatedItemSize
-            }
+        } else if indexPath.item == 1 || indexPath.item == cellCount {
+            return CGSize(width: width, height: 200)
         }
-    
+        else {
+            return CGSize(width: width, height: 600)
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: -30, left: 0, bottom: 0, right: 0)
     }
