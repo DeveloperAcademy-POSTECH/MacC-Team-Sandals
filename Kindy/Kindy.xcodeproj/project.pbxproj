@@ -24,7 +24,6 @@
 		6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */; };
 		6EE5E3EF28FECECE00EA7413 /* Curation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3EE28FECECE00EA7413 /* Curation.swift */; };
 		6EE5E3F128FECEE900EA7413 /* CurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */; };
-		6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3F528FECF4200EA7413 /* CurationDetail.swift */; };
 		6EE5E3F828FECFA300EA7413 /* CurationDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3F728FECFA300EA7413 /* CurationDetailCell.swift */; };
 		6EE5E42029027F5D00EA7413 /* NSObject+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E41F29027F5D00EA7413 /* NSObject+.swift */; };
 		6EE5E4222902A8D300EA7413 /* CurationLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4212902A8D300EA7413 /* CurationLayout.swift */; };
@@ -87,7 +86,6 @@
 		6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		6EE5E3EE28FECECE00EA7413 /* Curation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Curation.swift; sourceTree = "<group>"; };
 		6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationViewController.swift; sourceTree = "<group>"; };
-		6EE5E3F528FECF4200EA7413 /* CurationDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationDetail.swift; sourceTree = "<group>"; };
 		6EE5E3F728FECFA300EA7413 /* CurationDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationDetailCell.swift; sourceTree = "<group>"; };
 		6EE5E41F29027F5D00EA7413 /* NSObject+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+.swift"; sourceTree = "<group>"; };
 		6EE5E4212902A8D300EA7413 /* CurationLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationLayout.swift; sourceTree = "<group>"; };
@@ -190,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				6EE5E3EE28FECECE00EA7413 /* Curation.swift */,
-				6EE5E3F528FECF4200EA7413 /* CurationDetail.swift */,
 			);
 			path = Curation;
 			sourceTree = "<group>";
@@ -442,11 +439,9 @@
 				6EE5E430290571C900EA7413 /* UIView+.swift in Sources */,
 				7B404C1F28FE90B700A24C89 /* Item.swift in Sources */,
 				6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */,
-				6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */,
 				6EE5E42029027F5D00EA7413 /* NSObject+.swift in Sources */,
 				36BD7D64290404C200CBC879 /* UILabel+.swift in Sources */,
 				77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */,
-				6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */,
 				77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */,
 				31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */,
 				7BA7320E2907B91200381869 /* UIView+.swift in Sources */,

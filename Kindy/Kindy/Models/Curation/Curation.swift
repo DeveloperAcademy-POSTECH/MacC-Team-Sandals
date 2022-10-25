@@ -7,7 +7,8 @@
 
 import UIKit
 
-struct Curation {
+struct Curation: Hashable {
+    
     let id: String
     let title: String
     let subTitle: String?
@@ -19,6 +20,14 @@ struct Curation {
     let infoText: String
     
     let bookStore: Bookstore
+    
+    static func == (lhs: Curation, rhs: Curation) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 extension Curation {
