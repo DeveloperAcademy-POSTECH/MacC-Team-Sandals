@@ -61,6 +61,11 @@ final class BookmarkViewController: UIViewController {
         bookMarkCollectionView.frame = view.bounds
     }
     
+    func setupData(items: [Bookstore]) {
+        dummyData = items
+        filterdItem = items
+    }
+    
     // CollectionView layout 지정
     func createLayout() -> UICollectionViewLayout {
         // fractionalSize -> Group과 아이템의 비율

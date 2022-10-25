@@ -443,8 +443,10 @@ extension HomeViewController: SectionHeaderDelegate {
             
             show(nearbyViewController, sender: nil)
         case 3:
+            let items = Item.bookmarkedBookStores.map { $0.bookStore! }
             let bookmarkViewController = BookmarkViewController()
-            present(bookmarkViewController, animated: true)
+            bookmarkViewController.setupData(items: items)
+            show(bookmarkViewController, sender: nil)
 //        case 4:
 //            let regionName = "지역"
 //            let regionViewController = RegionViewController()
