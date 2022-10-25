@@ -22,7 +22,9 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
     }()
     
     // 검색된 프로퍼티 담을 배열 생성 (초기값은 전체가 담겨있는 배열) -> 이 기준으로 cell 나타낼 것이기 때문에 DataSource, Delegate에 이 프로퍼티 적용
-    private var filteredItems: [Dummy] = dummyList
+    private var filteredItems = Bookstore.dummyData
+    
+    private var receivedData = Bookstore.dummyData
     
     private let searchController = UISearchController()
     
@@ -67,14 +69,19 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
-            filteredItems = dummyList.filter{ (item) -> Bool in
-                item.name!.localizedCaseInsensitiveContains(searchString)
+            filteredItems = receivedData.filter{ (item) -> Bool in
+                item.name.localizedCaseInsensitiveContains(searchString)
             }
         } else {
-            filteredItems = dummyList
+            filteredItems = receivedData
         }
         
         tableView.reloadData()
+    }
+    
+    func setupData(items: [Bookstore]) {
+        receivedData = items
+        filteredItems = items
     }
 }
 
@@ -104,12 +111,10 @@ extension NearbyViewController: UITableViewDataSource {
 extension NearbyViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // TODO: 서점 상세 페이지 연결
-        /* let detailVC = DetailViewController()
-        detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
-        navigationController?.pushViewController(detailVC, animated: true) */
+        let detailBookstoreViewController = DetailBookstoreViewController()
+        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+        show(detailBookstoreViewController, sender: nil)
         
-        print("\(filteredItems[indexPath.row].name!) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

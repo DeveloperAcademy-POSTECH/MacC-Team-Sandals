@@ -2,7 +2,7 @@
 //  UIView+.swift
 //  Kindy
 //
-//  Created by rbwo on 2022/10/23.
+//  Created by 정호윤 on 2022/10/25.
 //
 
 import UIKit
