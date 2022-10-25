@@ -10,4 +10,5 @@ import Foundation
 // 북마크 삭제시 BookmarkCollectionViewCell 에 전달할 함수
 protocol BookmarkDelegate: AnyObject {
     func deleteBookmark(_ deleteIndex: Int)
+    func selectItem(_ bookstore: Bookstore)
 }

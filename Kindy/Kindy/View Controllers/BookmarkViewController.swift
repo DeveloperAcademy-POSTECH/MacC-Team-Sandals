@@ -92,7 +92,7 @@ final class BookmarkViewController: UIViewController {
         dataSource = UICollectionViewDiffableDataSource(collectionView: bookMarkCollectionView) {  collectionView, indexPath, itemIdentifier in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkCollectionViewCell.identifier, for: indexPath) as? BookmarkCollectionViewCell else { return UICollectionViewCell() }
             cell.delegate = self
-            cell.configureCell(itemIdentifier.name, indexPath.row)
+            cell.configureCell(itemIdentifier, indexPath.row)
             cell.configureCarouselView(with: ["testImage", "testImage"])
             return cell
         }
@@ -117,5 +117,12 @@ extension BookmarkViewController: BookmarkDelegate {
     func deleteBookmark(_ deleteIndex: Int) {
         filterdItem.remove(at: deleteIndex)
         dataSource.apply(filteredItemSanpshot, animatingDifferences: true)
+    }
+    
+    
+    func selectItem(_ bookstore: Bookstore) {
+        let detailBookstoreViewController = DetailBookstoreViewController()
+        detailBookstoreViewController.bookstore = bookstore
+        navigationController?.pushViewController(detailBookstoreViewController, animated: true)
     }
 }
