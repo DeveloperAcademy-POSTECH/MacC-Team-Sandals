@@ -18,6 +18,7 @@ class MyPageTableViewCell: UITableViewCell {
     lazy var myPageCellImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "chevron.forward")
+        imageView.tintColor = UIColor(named: "kindyGreen")
         imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -40,16 +41,14 @@ class MyPageTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     func setupUI() {
         self.addSubview(myPageCellStackView)
         
-        myPageCellStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        myPageCellStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8).isActive = true
-        myPageCellStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
-        
-    
-
+        NSLayoutConstraint.activate([
+            myPageCellStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            myPageCellStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
+            myPageCellStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
+        ])
     }
     
 }

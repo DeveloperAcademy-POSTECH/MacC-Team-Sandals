@@ -16,10 +16,8 @@ class MyPageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupUI()
         setupTableView()
-
+        setupUI()
         self.navigationController?.navigationBar.topItem?.title = "마이페이지"
     }
     
@@ -32,14 +30,16 @@ class MyPageViewController: UIViewController {
     
     func setupUI() {
         self.view.addSubview(tableView)
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
-        //테이블 뷰 라인 왼쪽 여백 없애기
+    
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+        ])
+        //테이블 뷰 셀 separator 왼쪽 여백 없애기
         tableView.separatorInset.left = 0
+        tableView.translatesAutoresizingMaskIntoConstraints = false
     }
 
 }
@@ -53,7 +53,6 @@ extension MyPageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyPageTableViewCell", for: indexPath) as! MyPageTableViewCell
         cell.myPageCellLabel.text = cellTitle[indexPath.row]
-        
         return cell
     }
     
@@ -62,6 +61,7 @@ extension MyPageViewController: UITableViewDataSource {
 extension MyPageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         switch cellTitle[indexPath.row] {
         case "북마크 한 서점":
             let bookmarkVC = BookmarkViewController()
@@ -69,12 +69,13 @@ extension MyPageViewController: UITableViewDelegate {
             
         case "이용약관":
             let detailMyPageVC = DetailMyPageViewController()
+            detailMyPageVC.navigationBarTitle = "이용약관"
             detailMyPageVC.titleLabel.text = privacy.termsOfService
-
             show(detailMyPageVC, sender: nil)
             
         case "라이선스":
             let detailMyPageVC = DetailMyPageViewController()
+            detailMyPageVC.navigationBarTitle = "라이선스"
             detailMyPageVC.titleLabel.text = privacy.license
             show(detailMyPageVC, sender: nil)
             
@@ -86,6 +87,7 @@ extension MyPageViewController: UITableViewDelegate {
             print("TableView Delegate Error!")
             break
         }
+        
     }
     
 }
