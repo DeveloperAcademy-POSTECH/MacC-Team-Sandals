@@ -414,7 +414,11 @@ extension HomeViewController: UICollectionViewDelegate {
             let curationViewController = CurationViewController()
             present(curationViewController, animated: true)
 //        case .curation:
-//        case .nearByBookstore:
+        case .nearByBookstore:
+            let detailBookstoreViewController = DetailBookstoreViewController()
+            // TODO: 이후 더미데이터 수정
+            detailBookstoreViewController.bookstore = Bookstore.dummyData[indexPath.row]
+            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
 //        case .bookmarked:
         case .region:
             let regionName = Item.regions[indexPath.item].region

@@ -110,12 +110,10 @@ extension RegionViewController: UITableViewDataSource {
 extension RegionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        // TODO: 서점 상세 페이지 연결
-        /* let detailVC = DetailViewController()
-        detailVC.bookstoreLbl.text = filteredItems[indexPath.row].name!
-        navigationController?.pushViewController(detailVC, animated: true) */
+        let detailBookstoreViewController = DetailBookstoreViewController()
+        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+        show(detailBookstoreViewController, sender: nil)
 
-        print("\(filteredItems[indexPath.row].name) 상세 페이지 연결")
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
