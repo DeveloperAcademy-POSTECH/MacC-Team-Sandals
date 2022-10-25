@@ -10,7 +10,6 @@ final class RegionHeaderView: UITableViewHeaderFooterView {
 
     // MARK: - 프로퍼티
     
-    static let identifier = "RegionHeaderView"
 
     var headerLabel: UILabel = {
         let label = UILabel()
