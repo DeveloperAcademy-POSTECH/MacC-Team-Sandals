@@ -45,6 +45,14 @@ struct Bookstore: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    static let dummyData: [Bookstore] = [
+        Bookstore(images: nil, name: "달팽이 책방1", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: "10:00 - 20:00", description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방2", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: "10:00 - 20:00", description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방3", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: "10:00 - 20:00", description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방4", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: "10:00 - 20:00", description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방5", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: "10:00 - 20:00", description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10))
+    ]
 }
 
 // 서점의 위도와 경도를 표현하는 구조체
@@ -52,3 +60,4 @@ struct Location {
     let latitude: Double
     let longitude: Double
 }
+

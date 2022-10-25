@@ -12,7 +12,7 @@ final class NearbyCell: UITableViewCell {
     static let reuseID = "NearMeListCell"
     static let rowHeight: CGFloat = 136     // Cell 길이
     
-    var bookstore: Dummy? {
+    var bookstore: Bookstore? {
         didSet {
             configureCell(item: bookstore!)
         }
@@ -96,10 +96,10 @@ final class NearbyCell: UITableViewCell {
         ])
     }
     
-    private func configureCell(item: Dummy) {
+    private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
         addressLabel.text = item.address
-        distanceLabel.text = "\(item.meterDistance!)m"
+        distanceLabel.text = "\(item.meterDistance)m"
 //        photoImageView.image = item.image?[0] ?? nil   // 첫번째 사진이 대표 사진
     }
     

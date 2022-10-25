@@ -10,7 +10,7 @@ final class RegionCell: UITableViewCell {
 
     static let rowHeight: CGFloat = 104     // Cell 길이
     
-    var bookstore: Dummy? {
+    var bookstore: Bookstore? {
         didSet {
             configureCell(item: bookstore!)
         }
@@ -75,7 +75,7 @@ final class RegionCell: UITableViewCell {
         ])
     }
 
-    private func configureCell(item: Dummy) {
+    private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
         addressLabel.text = item.address
 //        photoImageView.image = item.image?[0] ?? nil   // 첫번째 사진이 대표 사진
