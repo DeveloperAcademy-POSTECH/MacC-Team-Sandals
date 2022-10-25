@@ -9,7 +9,6 @@ import UIKit
 
 final class HomeSearchCell: UITableViewCell {
 
-    static let identifier = "HomeSearchCell"
     static let rowHeight: CGFloat = 96
     
     var bookstore: Dummy? {

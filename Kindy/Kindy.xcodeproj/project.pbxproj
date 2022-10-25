@@ -58,6 +58,7 @@
 		7B9D70C4290799AB0004AAD6 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 7B9D70C3290799AB0004AAD6 /* FirebaseFirestore */; };
 		7B9D70C6290799AB0004AAD6 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7B9D70C5290799AB0004AAD6 /* FirebaseFirestoreSwift */; };
 		7B9D70C8290799AB0004AAD6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 7B9D70C7290799AB0004AAD6 /* FirebaseStorage */; };
+		7BA7320E2907B91200381869 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA7320D2907B91200381869 /* UIView+.swift */; };
 		7BD11B9A2907B6A90013285B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BD11B992907B6A90013285B /* GoogleService-Info.plist */; };
 		7BDAE69D290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69C290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift */; };
 		7BDAE69F2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */; };
@@ -112,6 +113,7 @@
 		7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B404C2E29016CAF00A24C89 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		7B404C3029017C7300A24C89 /* SectionHeaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderDelegate.swift; sourceTree = "<group>"; };
+		7BA7320D2907B91200381869 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		7BD11B992907B6A90013285B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7BDAE69C290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyNearbyCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				36BD7D63290404C200CBC879 /* UILabel+.swift */,
 				77DCB15129029CF500EAB5D5 /* UITableView+.swift */,
 				77DCB15329029D1F00EAB5D5 /* UIButton+.swift */,
+				7BA7320D2907B91200381869 /* UIView+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */,
 				77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */,
 				31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */,
+				7BA7320E2907B91200381869 /* UIView+.swift in Sources */,
 				77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */,
 				31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */,
 				7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */,

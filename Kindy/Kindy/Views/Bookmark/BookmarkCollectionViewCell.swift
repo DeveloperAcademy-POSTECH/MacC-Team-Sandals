@@ -8,7 +8,6 @@
 import UIKit
 
 class BookmarkCollectionViewCell: UICollectionViewCell {
-    static let identifier = "BookMarkCollectionViewCell"
     
     private var imageData: [String] = ["testImage"]
     private var currentPage: Int = 0 {
