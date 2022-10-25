@@ -11,16 +11,16 @@ final class DetailMyPageView: UIView {
 
     var detailString: String? {
         didSet {
-            detailLabel.text = detailString
+            detailTextView.text = detailString
         }
     }
     
-    private var detailLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private var detailTextView: UITextView = {
+        let textView = UITextView()
+        textView.text = ""
+        textView.isEditable = false
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
     }()
     
     override init(frame: CGRect) {
@@ -34,13 +34,13 @@ final class DetailMyPageView: UIView {
     
     private func setupUI() {
         backgroundColor = .white
-        addSubview(detailLabel)
+        addSubview(detailTextView)
         
         NSLayoutConstraint.activate([
-            detailLabel.topAnchor.constraint(equalTo: topAnchor, constant: 107),
-            detailLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            detailLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            detailLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100)
+            detailTextView.topAnchor.constraint(equalTo: topAnchor, constant: 107),
+            detailTextView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            detailTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            detailTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100)
         ])
     }
     
