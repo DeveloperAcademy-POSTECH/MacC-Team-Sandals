@@ -411,7 +411,11 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch section {
         case .mainCuration:
+            // CurationViewController 대신에 PagingCurationViewController로 바꿔야합니다(변수명도 마찬가지입니다).
+            // modalTransitionStyle도 full screen으로 바꿔야합니다.
+            // init id? - 어떻게 이어줄지?
             let curationViewController = CurationViewController()
+            curationViewController.modalTransitionStyle = .crossDissolve
             present(curationViewController, animated: true)
 //        case .curation:
 //        case .nearByBookstore:
