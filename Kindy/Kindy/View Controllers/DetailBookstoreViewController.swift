@@ -41,6 +41,8 @@ final class DetailBookstoreViewController: UIViewController {
     }()
     
     override func loadView() {
+        
+        bookstore?.isFavorite ?? false ? detailBookstoreView.bookmarkButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal) : detailBookstoreView.bookmarkButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
         view = detailBookstoreView
     }
     
