@@ -14,6 +14,7 @@
 		361D54CF2901CABB00ACA11E /* DetailBookstoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */; };
 		36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1B3832904102300C91825 /* DetailBookstoreView.swift */; };
 		36BD7D64290404C200CBC879 /* UILabel+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BD7D63290404C200CBC879 /* UILabel+.swift */; };
+		6E2AA45D290791480049E445 /* CurationTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2AA45C290791480049E445 /* CurationTextCell.swift */; };
 		6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39A28FD313C00EA7413 /* AppDelegate.swift */; };
 		6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39C28FD313C00EA7413 /* SceneDelegate.swift */; };
 		6EE5E39F28FD313C00EA7413 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */; };
@@ -21,15 +22,20 @@
 		6EE5E3A428FD313D00EA7413 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EE5E3A328FD313D00EA7413 /* Assets.xcassets */; };
 		6EE5E3A728FD313D00EA7413 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6EE5E3A528FD313D00EA7413 /* LaunchScreen.storyboard */; };
 		6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */; };
-		6EE5E3EF28FECECE00EA7413 /* CurationHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3EE28FECECE00EA7413 /* CurationHeader.swift */; };
+		6EE5E3EF28FECECE00EA7413 /* Curation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3EE28FECECE00EA7413 /* Curation.swift */; };
 		6EE5E3F128FECEE900EA7413 /* CurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */; };
 		6EE5E3F428FECF1300EA7413 /* CurationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3F328FECF1300EA7413 /* CurationHeaderView.swift */; };
 		6EE5E3F628FECF4200EA7413 /* CurationDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3F528FECF4200EA7413 /* CurationDetail.swift */; };
 		6EE5E3F828FECFA300EA7413 /* CurationDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E3F728FECFA300EA7413 /* CurationDetailCell.swift */; };
 		6EE5E42029027F5D00EA7413 /* NSObject+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E41F29027F5D00EA7413 /* NSObject+.swift */; };
 		6EE5E4222902A8D300EA7413 /* CurationLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4212902A8D300EA7413 /* CurationLayout.swift */; };
-		6EE5E42629055A7700EA7413 /* TestCurationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E42529055A7700EA7413 /* TestCurationCell.swift */; };
+		6EE5E42629055A7700EA7413 /* CurationStoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E42529055A7700EA7413 /* CurationStoreCell.swift */; };
 		6EE5E4282905661E00EA7413 /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4272905661E00EA7413 /* UIViewController+.swift */; };
+		6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */; };
+		6EE5E430290571C900EA7413 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E42F290571C900EA7413 /* UIView+.swift */; };
+		6EE5E4322905733900EA7413 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */; };
+		6EE5E4342905777C00EA7413 /* CurationHeaderView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4332905777C00EA7413 /* CurationHeaderView2.swift */; };
+		6EE5E4382906B42F00EA7413 /* TestModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4372906B42F00EA7413 /* TestModalViewController.swift */; };
 		77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB149290297C100EAB5D5 /* NearbyCell.swift */; };
 		77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */; };
 		77DCB15229029CF500EAB5D5 /* UITableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB15129029CF500EAB5D5 /* UITableView+.swift */; };
@@ -75,6 +81,7 @@
 		361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookstoreViewController.swift; sourceTree = "<group>"; };
 		36B1B3832904102300C91825 /* DetailBookstoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookstoreView.swift; sourceTree = "<group>"; };
 		36BD7D63290404C200CBC879 /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
+		6E2AA45C290791480049E445 /* CurationTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationTextCell.swift; sourceTree = "<group>"; };
 		6EE5E39728FD313C00EA7413 /* Kindy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kindy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EE5E39A28FD313C00EA7413 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6EE5E39C28FD313C00EA7413 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -84,15 +91,20 @@
 		6EE5E3A628FD313D00EA7413 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6EE5E3A828FD313D00EA7413 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
-		6EE5E3EE28FECECE00EA7413 /* CurationHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationHeader.swift; sourceTree = "<group>"; };
+		6EE5E3EE28FECECE00EA7413 /* Curation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Curation.swift; sourceTree = "<group>"; };
 		6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationViewController.swift; sourceTree = "<group>"; };
 		6EE5E3F328FECF1300EA7413 /* CurationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationHeaderView.swift; sourceTree = "<group>"; };
 		6EE5E3F528FECF4200EA7413 /* CurationDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationDetail.swift; sourceTree = "<group>"; };
 		6EE5E3F728FECFA300EA7413 /* CurationDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationDetailCell.swift; sourceTree = "<group>"; };
 		6EE5E41F29027F5D00EA7413 /* NSObject+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+.swift"; sourceTree = "<group>"; };
 		6EE5E4212902A8D300EA7413 /* CurationLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationLayout.swift; sourceTree = "<group>"; };
-		6EE5E42529055A7700EA7413 /* TestCurationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCurationCell.swift; sourceTree = "<group>"; };
+		6EE5E42529055A7700EA7413 /* CurationStoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationStoreCell.swift; sourceTree = "<group>"; };
 		6EE5E4272905661E00EA7413 /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
+		6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingCurationViewController.swift; sourceTree = "<group>"; };
+		6EE5E42F290571C900EA7413 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
+		6EE5E4332905777C00EA7413 /* CurationHeaderView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationHeaderView2.swift; sourceTree = "<group>"; };
+		6EE5E4372906B42F00EA7413 /* TestModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModalViewController.swift; sourceTree = "<group>"; };
 		77DCB149290297C100EAB5D5 /* NearbyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyCell.swift; sourceTree = "<group>"; };
 		77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyViewController.swift; sourceTree = "<group>"; };
 		77DCB15129029CF500EAB5D5 /* UITableView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+.swift"; sourceTree = "<group>"; };
@@ -189,7 +201,7 @@
 		6EE5E3ED28FECEC000EA7413 /* Curation */ = {
 			isa = PBXGroup;
 			children = (
-				6EE5E3EE28FECECE00EA7413 /* CurationHeader.swift */,
+				6EE5E3EE28FECECE00EA7413 /* Curation.swift */,
 				6EE5E3F528FECF4200EA7413 /* CurationDetail.swift */,
 			);
 			path = Curation;
@@ -199,9 +211,11 @@
 			isa = PBXGroup;
 			children = (
 				6EE5E3F328FECF1300EA7413 /* CurationHeaderView.swift */,
+				6EE5E4332905777C00EA7413 /* CurationHeaderView2.swift */,
+				6EE5E42529055A7700EA7413 /* CurationStoreCell.swift */,
+				6E2AA45C290791480049E445 /* CurationTextCell.swift */,
 				6EE5E3F728FECFA300EA7413 /* CurationDetailCell.swift */,
 				6EE5E4212902A8D300EA7413 /* CurationLayout.swift */,
-				6EE5E42529055A7700EA7413 /* TestCurationCell.swift */,
 			);
 			path = Curation;
 			sourceTree = "<group>";
@@ -242,6 +256,9 @@
 				77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */,
 				31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */,
 				77DCB1602904457600EAB5D5 /* RegionViewController.swift */,
+				6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */,
+				6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */,
+				6EE5E4372906B42F00EA7413 /* TestModalViewController.swift */,
 				361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */,
 				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
 			);
@@ -421,7 +438,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6EE5E42629055A7700EA7413 /* TestCurationCell.swift in Sources */,
+				6EE5E42629055A7700EA7413 /* CurationStoreCell.swift in Sources */,
+				6EE5E4342905777C00EA7413 /* CurationHeaderView2.swift in Sources */,
 				361D54CF2901CABB00ACA11E /* DetailBookstoreViewController.swift in Sources */,
 				7B404C2128FFAA7900A24C89 /* TempCuration.swift in Sources */,
 				6EE5E39F28FD313C00EA7413 /* HomeViewController.swift in Sources */,
@@ -446,11 +464,14 @@
 				A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
+				6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */,
+				6E2AA45D290791480049E445 /* CurationTextCell.swift in Sources */,
 				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
 				A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */,
 				7B404C2328FFD26100A24C89 /* MainCurationCollectionViewCell.swift in Sources */,
 				7B404C2728FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift in Sources */,
 				6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */,
+				6EE5E430290571C900EA7413 /* UIView+.swift in Sources */,
 				7B404C1F28FE90B700A24C89 /* Item.swift in Sources */,
 				A06954E72905C74100C09D1D /* MyPageTableViewCell.swift in Sources */,
 				6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */,
@@ -465,14 +486,16 @@
 				77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */,
 				31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */,
 				7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */,
+				6EE5E4382906B42F00EA7413 /* TestModalViewController.swift in Sources */,
 				6EE5E4282905661E00EA7413 /* UIViewController+.swift in Sources */,
 				6EE5E3F828FECFA300EA7413 /* CurationDetailCell.swift in Sources */,
+				6EE5E4322905733900EA7413 /* BottomSheetViewController.swift in Sources */,
 				7B404C2F29016CAF00A24C89 /* SectionHeaderView.swift in Sources */,
 				77DCB1662904467B00EAB5D5 /* RegionHeaderView.swift in Sources */,
 				6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */,
 				77DCB16A29053B9900EAB5D5 /* HomeSearchCell.swift in Sources */,
 				7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */,
-				6EE5E3EF28FECECE00EA7413 /* CurationHeader.swift in Sources */,
+				6EE5E3EF28FECECE00EA7413 /* Curation.swift in Sources */,
 				6EE5E3F128FECEE900EA7413 /* CurationViewController.swift in Sources */,
 				77DCB1632904462300EAB5D5 /* RegionCell.swift in Sources */,
 				31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */,

@@ -7,12 +7,12 @@
 
 import UIKit
 
-class TestCurationCell: UICollectionViewCell {
+class CurationStoreCell: UICollectionViewCell {
     private lazy var roundedView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 30
-        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner] // Top right corner, Top left corner respectively
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -27,7 +27,9 @@ class TestCurationCell: UICollectionViewCell {
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "testImage")
-        view.contentMode = .scaleAspectFit
+        view.contentMode = .scaleAspectFill
+        view.layer.masksToBounds = false
+        view.layer.cornerRadius = 8
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
