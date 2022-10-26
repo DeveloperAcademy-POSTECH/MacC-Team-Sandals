@@ -143,7 +143,7 @@ final class HomeViewController: UIViewController {
                 )
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
-                    repeatingSubitem: item,
+                    subitem: item,
                     count: 1
                 )
                 
