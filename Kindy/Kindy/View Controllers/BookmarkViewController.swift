@@ -13,13 +13,13 @@ final class BookmarkViewController: UIViewController {
         case bookmark
     }
     
-//    var dummyData: [Bookstore] = [
-//        Bookstore(images: nil, name: "달팽이 책방1", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-//        Bookstore(images: nil, name: "달팽이 책방2", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-//        Bookstore(images: nil, name: "달팽이 책방3", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-//        Bookstore(images: nil, name: "달팽이 책방4", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-//        Bookstore(images: nil, name: "달팽이 책방5", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10))
-//    ]
+    var dummyData: [Bookstore] = [
+        Bookstore(images: nil, name: "달팽이 책방1", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: BusinessHour(), description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방2", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: BusinessHour(), description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방3", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: BusinessHour(), description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방4", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: BusinessHour(), description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+        Bookstore(images: nil, name: "달팽이 책방5", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: BusinessHour(), description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10))
+    ]
     
     private var filterdItem = [Bookstore]()
     
