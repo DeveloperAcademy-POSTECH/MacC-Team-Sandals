@@ -24,8 +24,7 @@ final class CurationDetailCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "testImage")
-        view.contentMode = .scaleAspectFit
+        view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -34,9 +33,10 @@ final class CurationDetailCell: UICollectionViewCell {
     private lazy var descriptionLabel: UILabel = {
         let view = UILabel()
         view.textColor = .black
-        view.font = .systemFont(ofSize: 17, weight: .light)
+        view.font = .systemFont(ofSize: 15)
         view.numberOfLines = 0
         view.textAlignment = .left
+        view.adjustsFontSizeToFitWidth = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -44,7 +44,6 @@ final class CurationDetailCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
-        cellHeight = calHeight()
     }
     
     required init?(coder: NSCoder) {
@@ -62,8 +61,6 @@ final class CurationDetailCell: UICollectionViewCell {
 
         layoutAttributes.frame = frame
         
-        cellHeight = calHeight()
-        
         return layoutAttributes
     }
     
@@ -75,17 +72,18 @@ final class CurationDetailCell: UICollectionViewCell {
         self.addSubview(spacingView)
 
         NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: 326),
             imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
- 
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            
             descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 32),
             descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: spacingView.topAnchor, constant: -16),
             
             spacingView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            spacingView.heightAnchor.constraint(equalToConstant: 30),
+            spacingView.heightAnchor.constraint(equalToConstant: 20),
             spacingView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             spacingView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
         ])

@@ -26,7 +26,6 @@ class CurationStoreCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "testImage")
         view.contentMode = .scaleAspectFill
         view.layer.masksToBounds = false
         view.layer.cornerRadius = 8
@@ -48,7 +47,7 @@ class CurationStoreCell: UICollectionViewCell {
     private lazy var descriptionLabel: UILabel = {
         let view = UILabel()
         view.textColor = .secondaryLabel
-        view.font = .systemFont(ofSize: 15, weight: .light)
+        view.font = .systemFont(ofSize: 15)
         view.numberOfLines = 0
         view.textAlignment = .left
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -66,7 +65,6 @@ class CurationStoreCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.configure()
     }
     
     override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
@@ -114,9 +112,10 @@ class CurationStoreCell: UICollectionViewCell {
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
         ])
     }
-
-    func configure() {
-        titleLabel.text = "달팽이 책방"
-        descriptionLabel.text = "포항시, 남구 지곡로 222"
+    
+    func configure(curation: Curation) {
+        imageView.image = UIImage(named: curation.mainImage)
+        titleLabel.text = curation.bookStore.name
+        descriptionLabel.text = curation.bookStore.address
     }
 }
