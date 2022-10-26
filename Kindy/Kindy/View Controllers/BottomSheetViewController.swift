@@ -113,11 +113,16 @@ final class BottomSheetViewController: UIViewController {
             let bottomPadding = view.safeAreaInsets.bottom
             let defaultPadding = safeAreaHeight+bottomPadding - defaultHeight
             
-            let nearestValue = nearest(to: bottomSheetViewTopConstraint.constant, inValues: [bottomSheetPanMinTopConstant, 250, defaultPadding, safeAreaHeight + bottomPadding])
+            let standardHeight = UIScreen.main.bounds.height * 0.3
+            
+            let nearestValue = nearest(to: bottomSheetViewTopConstraint.constant, inValues: [bottomSheetPanMinTopConstant, standardHeight, defaultPadding, safeAreaHeight + bottomPadding])
           
-            if nearestValue == bottomSheetPanMinTopConstant || nearestValue == 250 {
+            if nearestValue == bottomSheetPanMinTopConstant || (translation.y < 0 && nearestValue == standardHeight) {
                 showBottomSheet(atState: .expanded)
                 delegate?.setTopHeaderLayout()
+            } else if translation.y > 0 && nearestValue == standardHeight {
+                showBottomSheet(atState: .normal)
+                delegate?.defaultHeaderLayout()
             } else if nearestValue == defaultPadding {
                 showBottomSheet(atState: .normal)
                 delegate?.defaultHeaderLayout()
