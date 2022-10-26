@@ -26,7 +26,7 @@ final class DetailBookstoreView: UIView {
             telephoneNumberLabel.text = bookstore.telNumber
             // TODO: 인스타그램 어떻게 할지 논의하기 (링크? 계정 이름만?)
 //            instagramLabel.text = String(bookstore.instagramURL)
-            businessHourLabel.text = bookstore.businessHour
+//            businessHourLabel.text = bookstore.businessHour
             descriptionLabel.text = bookstore.description
             address.text = bookstore.address
             bookstoreCoordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
