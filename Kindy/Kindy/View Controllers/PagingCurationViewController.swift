@@ -100,7 +100,7 @@ class PagingCurationViewController: UIViewController {
         bottomVC.view.alpha = 0
         
         // 뷰를 같이 띄우고 싶어서 잠시 시간을 줬슴니당
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.27) {
             UIView.transition(with: self.view, duration: 0.3, options: .curveEaseIn) {
                 self.present(bottomVC, animated: false)
                 bottomVC.view.alpha = 1
