@@ -93,8 +93,12 @@ final class BottomSheetViewController: UIViewController {
             // 바텀 시트가 위에 고정 되어 있을때 드래그를 위로해도 아무런 일이 일어나지 않게 하는 코드
             if bottomSheetPanStartingTopConstant == bottomSheetPanMinTopConstant && bottomSheetPanStartingTopConstant + translation.y > UIScreen.main.bounds.height * 0.65 { }
             // 바텀 시트 화면을 일정거리이상 밑으로 드래그 하는것을 방지
-            else if bottomSheetPanStartingTopConstant + translation.y > UIScreen.main.bounds.height * 0.7 && bottomSheetViewTopConstraint.constant != bottomSheetPanMinTopConstant {
+            else if bottomSheetPanStartingTopConstant + translation.y > UIScreen.main.bounds.height * 0.65 && bottomSheetViewTopConstraint.constant != bottomSheetPanMinTopConstant {
                 bottomSheetViewTopConstraint.constant = bottomSheetPanStartingTopConstant
+                
+                self.dismiss(animated: false)
+                popDelegate?.dismissHeaderView()
+                
                 delegate?.defaultHeaderLayout()
                 showBottomSheet(atState: .normal)
             }

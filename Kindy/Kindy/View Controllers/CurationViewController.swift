@@ -11,20 +11,14 @@ final class CurationViewController: UIViewController {
     
     weak var cellDelegate: DynamicCell?
     
-    private var curationModel: Curation?
-    
-    private var curation = Curation.item
+    private var curation: Curation
     
     private var cellCount = 0
     
     private var cellHeight: CGFloat = 0
     
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    init(curationModel: Curation) {
-        self.curation = curationModel
+    init(curation: Curation) {
+        self.curation = curation
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -34,14 +28,6 @@ final class CurationViewController: UIViewController {
     
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init())
-        
-//        let width: CGFloat = UIScreen.main.bounds.width
-//        let height: CGFloat = UIScreen.main.bounds.height
-//        let flowlayout = UICollectionViewFlowLayout()
-//
-//        flowlayout.estimatedItemSize = CGSize(width: width, height: height)
-//        view.collectionViewLayout = flowlayout
-        
         view.backgroundColor = .white
         view.dataSource = self
         view.delegate = self
@@ -103,12 +89,7 @@ extension CurationViewController: UICollectionViewDataSource {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationDetailCell.identifier, for: indexPath) as? CurationDetailCell else { return UICollectionViewCell() }
         
-        // 수정 필요 동적으로 높이를 잡아줘야하는데 ~~
         cell.configure(imageWithText: curation.imageWithText[indexPath.item - 2])
-
-        cellHeight = cell.cellHeight
-        print(cellHeight)
-        
         return cell
     }
 }
@@ -121,13 +102,9 @@ extension CurationViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == 0 {
-            
-            // TODO: present 서점 정보
             let vc = DetailBookstoreViewController()
-            // 뷰 합치면 넣어야함
-            // vc.bookstore = Bookstore
+            vc.bookstore = curation.bookStore
             show(vc, sender: nil)
-             
             // present(vc, animated: false)
         }
     }
@@ -139,14 +116,16 @@ extension CurationViewController: UICollectionViewDelegateFlowLayout {
 
         let width: CGFloat = UIScreen.main.bounds.width
         let height: CGFloat = UIScreen.main.bounds.height
-
+    
         if indexPath.item == 0 {
             return CGSize(width: width, height: height / 5)
         } else if indexPath.item == 1 || indexPath.item == cellCount {
             return CGSize(width: width, height: 200)
         }
         else {
-            return CGSize(width: width, height: 600)
+            let height: Double = Double(curation.imageWithText[indexPath.row - 2].1.count) / 27.2 * 20
+            // image height를 고정한다면 밑에 더해주면 댐다
+            return CGSize(width: width, height: height + 550)
         }
     }
 
