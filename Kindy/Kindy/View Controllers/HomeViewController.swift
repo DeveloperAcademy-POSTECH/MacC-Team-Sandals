@@ -13,7 +13,7 @@ final class HomeViewController: UIViewController {
     enum Section: Hashable {
         case mainCuration
         case curation
-        case nearByBookstore
+        case nearby
         case bookmarked
         case region
         case emptyNearby
@@ -43,8 +43,8 @@ final class HomeViewController: UIViewController {
             snapshot.appendSections([.emptyNearby])
             snapshot.appendItems([Item.emptyNearby], toSection: .emptyNearby)
         } else {
-            snapshot.appendSections([.nearByBookstore])
-            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]] , toSection: .nearByBookstore)
+            snapshot.appendSections([.nearby])
+            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]] , toSection: .nearby)
         }
         
         if Item.bookmarkedBookStores.isEmpty {
@@ -117,33 +117,28 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: Layout Method
-    // TODO: 유연하게 수정할 필요있음(반응형으로)
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let section = self.sections[sectionIndex]
             
+            let padding8: CGFloat = 8
             let padding16: CGFloat = 16
             let padding32: CGFloat = 32
             
             // MARK: Section Header
             let headerItemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(0.92),
+                widthDimension: .fractionalWidth(1),
                 heightDimension: .estimated(36)
             )
-            let leadingHeaderItem = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerItemSize,
-                elementKind: SupplementaryViewKind.header,
-                alignment: .topLeading
-            )
-            let centerHeaderItem = NSCollectionLayoutBoundarySupplementaryItem(
+            let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: headerItemSize,
                 elementKind: SupplementaryViewKind.header,
                 alignment: .top
             )
+            headerItem.contentInsets = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: padding16)
             
             switch section {
             case .mainCuration:
-                // MARK: Main Curation Layout
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
@@ -162,17 +157,16 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding16, leading: 0, bottom: padding32, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding16, leading: .zero, bottom: padding32, trailing: .zero)
                 
                 return section
             case .curation:
-                // MARK: Curation Section Layout
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
+                item.contentInsets = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: .zero)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .estimated(326),
@@ -185,12 +179,11 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPaging
-                section.boundarySupplementaryItems = [leadingHeaderItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: padding16, bottom: padding32, trailing: 0)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
                 
                 return section
-            case .nearByBookstore:
-                // MARK: Nearby Bookstore Section Layout
+            case .nearby:
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1/3)
@@ -209,18 +202,17 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
-                section.boundarySupplementaryItems = [centerHeaderItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
                 
                 return section
             case .bookmarked:
-                // MARK: Bookmarked Section Layout
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
+                item.contentInsets = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: .zero)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(2/5),
@@ -233,12 +225,11 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-                section.boundarySupplementaryItems = [leadingHeaderItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: padding16, bottom: padding32, trailing: 0)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
                 
                 return section
             case .region:
-                // MARK: Region Section Layout
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1/2),
                     heightDimension: .fractionalHeight(1)
@@ -256,12 +247,11 @@ final class HomeViewController: UIViewController {
                 )
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [centerHeaderItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
                 
                 return section
             case .emptyNearby:
-                // MARK: Empty Nearby Section Layout
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
@@ -279,12 +269,11 @@ final class HomeViewController: UIViewController {
                 )
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [centerHeaderItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
                 
                 return section
             case .emptyBookmark:
-                // MARK: Empty Bookmark Section Layout
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)
@@ -302,8 +291,8 @@ final class HomeViewController: UIViewController {
                 )
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [centerHeaderItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: padding32, trailing: 0)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
                 
                 return section
             }
@@ -331,7 +320,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.curation!, indexPath: indexPath, numberOfItems: numberOfItems)
                 
                 return cell
-            case .nearByBookstore:
+            case .nearby:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NearByBookstoreCollectionViewCell.identifier, for: indexPath) as! NearByBookstoreCollectionViewCell
                 cell.configureCell(item.bookStore!)
                 
@@ -377,7 +366,7 @@ final class HomeViewController: UIViewController {
                     sectionNameColor = UIColor(red: 0.146, green: 0.454, blue: 0.343, alpha: 1)
                     hideSeeAllButton = true
                     hideBottomStackView = true
-                case .nearByBookstore:
+                case .nearby:
                     sectionName = "내 주변 서점"
                     sectionNameColor = .black
                     hideSeeAllButton = false
@@ -441,7 +430,7 @@ extension HomeViewController: UICollectionViewDelegate {
             curationViewController.modalPresentationStyle = .overFullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
             present(curationViewController, animated: true)
-        case .nearByBookstore:
+        case .nearby:
             let bookstore = Item.nearByBookStores.map { $0.bookStore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
             // TODO: 이후 더미데이터 수정
