@@ -9,14 +9,11 @@ import UIKit
 
 class CurationHeaderView: UIView {
     
-    // let mockData = Curation(id: "testData", title: "바쁜 일상,", subTitle: "잠시 쉬어갈 장소가 필요한 분들에게")
-    
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        // view.image = UIImage(named: "testImage")
         return view
     }()
     

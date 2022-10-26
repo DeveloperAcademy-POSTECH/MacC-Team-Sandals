@@ -48,7 +48,7 @@ class CurationStoreCell: UICollectionViewCell {
     private lazy var descriptionLabel: UILabel = {
         let view = UILabel()
         view.textColor = .secondaryLabel
-        view.font = .systemFont(ofSize: 15, weight: .light)
+        view.font = .systemFont(ofSize: 15)
         view.numberOfLines = 0
         view.textAlignment = .left
         view.translatesAutoresizingMaskIntoConstraints = false
