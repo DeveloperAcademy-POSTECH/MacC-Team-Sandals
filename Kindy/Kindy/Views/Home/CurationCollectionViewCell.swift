@@ -22,8 +22,8 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
-        label.font = .preferredFont(forTextStyle: .title3)
+        label.textColor = .black
+        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -32,9 +32,10 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     private let numberLabel: UILabel = {
         let label = UILabel()
         label.layer.cornerRadius = 8
-        label.backgroundColor = .black
+        label.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).cgColor
         label.textColor = .white
         label.font = .preferredFont(forTextStyle: .footnote)
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -48,8 +49,6 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         addSubview(numberLabel)
         
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 326),
-            imageView.heightAnchor.constraint(equalToConstant: 152),
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -57,7 +56,10 @@ final class CurationCollectionViewCell: UICollectionViewCell {
             
             titleLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -12),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -16),
             
+            numberLabel.widthAnchor.constraint(equalToConstant: 55),
+            numberLabel.heightAnchor.constraint(equalToConstant: 20),
             numberLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 8),
             numberLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -8),
         ])
@@ -70,7 +72,7 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     // MARK: Configure Cell
     // TODO: TempCuration 나중에 바꿔야함
     func configureCell(_ curation: Curation, indexPath: IndexPath, numberOfItems: Int) {
-        titleLabel.text = curation.title
+        titleLabel.text = curation.subTitle
         numberLabel.text = "\(indexPath.item + 1) / \(numberOfItems)"
     }
 }

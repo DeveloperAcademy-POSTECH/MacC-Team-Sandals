@@ -97,6 +97,19 @@ final class HomeViewController: UIViewController {
         collectionView.delegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        // MARK: Navigation Appearance
+        let customNavBarAppearance = UINavigationBarAppearance()
+        customNavBarAppearance.backgroundColor = .white
+        
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.standardAppearance = customNavBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
+        navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+    }
+    
     // MARK: Navigation Item Method
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
@@ -209,7 +222,10 @@ final class HomeViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: padding16)
                 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(136), heightDimension: .estimated(219))
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(2/5),
+                    heightDimension: .estimated(219)
+                )
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item]
@@ -254,7 +270,7 @@ final class HomeViewController: UIViewController {
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
-                    heightDimension: .estimated(336)
+                    heightDimension: .estimated(150)
                 )
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
@@ -358,7 +374,7 @@ final class HomeViewController: UIViewController {
                     return nil
                 case .curation:
                     sectionName = "킨디터 PICK"
-                    sectionNameColor = .systemGreen
+                    sectionNameColor = UIColor(red: 0.146, green: 0.454, blue: 0.343, alpha: 1)
                     hideSeeAllButton = true
                     hideBottomStackView = true
                 case .nearByBookstore:
@@ -430,6 +446,7 @@ extension HomeViewController: UICollectionViewDelegate {
             let detailBookstoreViewController = DetailBookstoreViewController()
             // TODO: 이후 더미데이터 수정
             detailBookstoreViewController.bookstore = bookstore
+//            detailBookstoreViewController.navigationBarAppearance = .configureWithTransparentBackground()
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .bookmarked:
             let bookstore = Item.bookmarkedBookStores.map { $0.bookStore! }[indexPath.item]

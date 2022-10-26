@@ -24,7 +24,7 @@ final class DetailBookstoreViewController: UIViewController {
     private lazy var bookmarkButton = detailBookstoreView.bookmarkButton
     private lazy var isBookmarked = detailBookstoreView.isBookmarked
     
-    private var navigationBarAppearance: UINavigationBarAppearance = {
+    var navigationBarAppearance: UINavigationBarAppearance = {
         let navigationBarAppearance = UINavigationBarAppearance()
         // 네비게이션 바의 색을 수동으로 주기 위해 배경색, 그림자 제거
         navigationBarAppearance.configureWithTransparentBackground()

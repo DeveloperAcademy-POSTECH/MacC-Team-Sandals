@@ -48,6 +48,7 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     private let distanceLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)
+        label.textColor = UIColor(red: 0.146, green: 0.454, blue: 0.343, alpha: 1)
         return label
     }()
     
