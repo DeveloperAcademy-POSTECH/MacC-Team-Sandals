@@ -69,7 +69,7 @@ extension CurationViewController: UICollectionViewDataSource {
         if indexPath.item == 0 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationStoreCell.identifier, for: indexPath) as? CurationStoreCell else {
                 return UICollectionViewCell() }
-            cell.configure()
+            cell.configure(curation: curation)
             cell.backgroundColor = .clear
             cell.layer.zPosition = 1
             return cell
@@ -125,7 +125,7 @@ extension CurationViewController: UICollectionViewDelegateFlowLayout {
         else {
             let height: Double = Double(curation.imageWithText[indexPath.row - 2].1.count) / 27.2 * 20
             // image height를 고정한다면 밑에 더해주면 댐다
-            return CGSize(width: width, height: height + 550)
+            return CGSize(width: width, height: height + 400)
         }
     }
 

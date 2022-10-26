@@ -24,8 +24,7 @@ final class CurationDetailCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "testImage")
-        view.contentMode = .scaleAspectFit
+        view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -73,10 +72,11 @@ final class CurationDetailCell: UICollectionViewCell {
         self.addSubview(spacingView)
 
         NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: 326),
             imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
- 
+            
             descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 32),
             descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
