@@ -10,8 +10,6 @@ import UIKit
 // 북마크한 서점 섹션의 북마크 셀
 final class BookmarkedCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "BookmarkedCollectionViewCell"
-    
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical

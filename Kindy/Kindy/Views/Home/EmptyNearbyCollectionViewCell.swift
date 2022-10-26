@@ -10,8 +10,6 @@ import UIKit
 // 내 주변 서점 섹션이 비었을때의 셀
 final class EmptyNearbyCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "EmptyNearbyCollectionViewCell"
-    
     private let label: UILabel = {
         let label = UILabel()
         label.textColor = .gray

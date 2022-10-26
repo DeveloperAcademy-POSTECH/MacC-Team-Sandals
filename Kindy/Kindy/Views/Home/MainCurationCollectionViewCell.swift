@@ -10,8 +10,6 @@ import UIKit
 // 홈 화면 최상단의 메인 큐레이션 셀
 final class MainCurationCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "MainCurationCollectionViewCell"
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8

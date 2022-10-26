@@ -79,17 +79,17 @@ final class HomeViewController: UIViewController {
         
         // MARK: Register
         // Cell Register
-        collectionView.register(MainCurationCollectionViewCell.self, forCellWithReuseIdentifier: MainCurationCollectionViewCell.reuseIdentifier)
-        collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.reuseIdentifier)
-        collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.reuseIdentifier)
-        collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.reuseIdentifier)
-        collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.reuseIdentifier)
+        collectionView.register(MainCurationCollectionViewCell.self, forCellWithReuseIdentifier: MainCurationCollectionViewCell.identifier)
+        collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.identifier)
+        collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.identifier)
+        collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.identifier)
+        collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.identifier)
         
-        collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.reuseIdentifier)
-        collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.reuseIdentifier)
+        collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.identifier)
+        collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier)
         
         // Supplementary View Register
-        collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier)
+        collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier)
         
         configureDataSource()
         
@@ -320,29 +320,29 @@ final class HomeViewController: UIViewController {
             
             switch section {
             case .mainCuration:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.reuseIdentifier, for: indexPath) as! MainCurationCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.identifier, for: indexPath) as! MainCurationCollectionViewCell
                 cell.configureCell(item.curation!)
                 
                 return cell
             case .curation:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.reuseIdentifier, for: indexPath) as! CurationCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as! CurationCollectionViewCell
                 
                 let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
                 cell.configureCell(item.curation!, indexPath: indexPath, numberOfItems: numberOfItems)
                 
                 return cell
             case .nearByBookstore:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NearByBookstoreCollectionViewCell.reuseIdentifier, for: indexPath) as! NearByBookstoreCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NearByBookstoreCollectionViewCell.identifier, for: indexPath) as! NearByBookstoreCollectionViewCell
                 cell.configureCell(item.bookStore!)
                 
                 return cell
             case .bookmarked:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.reuseIdentifier, for: indexPath) as! BookmarkedCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as! BookmarkedCollectionViewCell
                 cell.configureCell(item.bookStore!)
                 
                 return cell
             case .region:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RegionCollectionViewCell.reuseIdentifier, for: indexPath) as! RegionCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RegionCollectionViewCell.identifier, for: indexPath) as! RegionCollectionViewCell
                 
                 let isTopCell = !(indexPath.item < 2)
                 let isOddNumber = indexPath.item % 2 == 1
@@ -351,10 +351,10 @@ final class HomeViewController: UIViewController {
                 
                 return cell
             case .emptyNearby:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyNearbyCollectionViewCell.reuseIdentifier, for: indexPath) as! EmptyNearbyCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyNearbyCollectionViewCell.identifier, for: indexPath) as! EmptyNearbyCollectionViewCell
                 return cell
             case .emptyBookmark:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyBookmarkCollectionViewCell.reuseIdentifier, for: indexPath) as! EmptyBookmarkCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier, for: indexPath) as! EmptyBookmarkCollectionViewCell
                 return cell
             }
         }
@@ -404,7 +404,7 @@ final class HomeViewController: UIViewController {
                     hideBottomStackView = true
                 }
                 
-                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.reuseIdentifier, for: indexPath) as! SectionHeaderView
+                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as! SectionHeaderView
                 headerView.delegate = self
                 headerView.setTitle(sectionName, color: sectionNameColor, hideSeeAllButton: hideSeeAllButton, hideBottomStackView: hideBottomStackView, sectionIndex: indexPath.section)
                 

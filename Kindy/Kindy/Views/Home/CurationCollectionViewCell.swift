@@ -10,8 +10,6 @@ import UIKit
 // 킨디터 픽 섹션의 큐레이션 셀
 final class CurationCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "CurationCollectionViewCell"
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8

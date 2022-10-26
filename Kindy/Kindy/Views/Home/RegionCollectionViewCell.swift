@@ -11,8 +11,6 @@ import UIKit
 // TODO: Line view 클래스도 도 따로 만들어 보면 괜찮을듯?
 final class RegionCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "RegionCollectionViewCell"
-    
     private let regionLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)

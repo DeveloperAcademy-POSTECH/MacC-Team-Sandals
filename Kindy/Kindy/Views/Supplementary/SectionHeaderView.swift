@@ -9,8 +9,6 @@ import UIKit
 
 final class SectionHeaderView: UICollectionReusableView {
     
-    static let reuseIdentifier = "SectionHeaderView"
-    
     // MARK: Delegate Definition
     weak var delegate: SectionHeaderDelegate?
     

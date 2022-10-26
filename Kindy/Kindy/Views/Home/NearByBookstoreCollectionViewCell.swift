@@ -11,8 +11,6 @@ import UIKit
 // TODO: Base class로 쓸 수 있게도 만들어보기
 final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "NearByBookstoreCollectionViewCell"
-    
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
