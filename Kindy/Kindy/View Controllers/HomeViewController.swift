@@ -9,7 +9,6 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
-    // MARK: Section Definition
     enum Section: Hashable {
         case mainCuration
         case curation
@@ -22,7 +21,6 @@ final class HomeViewController: UIViewController {
     
     private var sections = [Section]()
     
-    // MARK: Supplementary View Kind Definition
     enum SupplementaryViewKind {
         static let header = "header"
     }
@@ -31,7 +29,6 @@ final class HomeViewController: UIViewController {
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    // MARK: Snapshot Definition
     var snapshot: NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
@@ -62,45 +59,46 @@ final class HomeViewController: UIViewController {
         
         return snapshot
     }
+
+    // MARK: - Life Cycle
     
-    // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // MARK: Navigation Item
+        // MARK: Navigation Bar Button Item
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "circle.fill"), style: .plain, target: nil, action: nil)
         navigationItem.leftBarButtonItem?.tintColor = .black
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .black
         
-        // MARK: Layout Setup
+        // MARK: Configure Layout
         collectionView.collectionViewLayout = createLayout()
         
-        // MARK: Register
-        // Cell Register
+        // MARK: Configure Data Source
+        configureDataSource()
+        
+        // MARK: Delegate
+        collectionView.delegate = self
+        
+        // MARK: Registeration
+        // Cell Registeration
         collectionView.register(MainCurationCollectionViewCell.self, forCellWithReuseIdentifier: MainCurationCollectionViewCell.identifier)
         collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.identifier)
         collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.identifier)
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.identifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.identifier)
-        
         collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.identifier)
         collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier)
         
-        // Supplementary View Register
+        // Supplementary View Registeration
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier)
-        
-        configureDataSource()
-        
-        // MARK: Delegate
-        collectionView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // MARK: Navigation Appearance
+        // MARK: Navigation Bar Appearance
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줘야합니다.
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
@@ -110,17 +108,19 @@ final class HomeViewController: UIViewController {
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
     }
     
-    // MARK: Navigation Item Method
+    // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
         show(homeSearchViewController, sender: nil)
     }
     
-    // MARK: Layout Method
+    // MARK: - Compositional Layout Method
+    
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let section = self.sections[sectionIndex]
             
+            // 재사용되는 edge inset을 정의했습니다.
             let padding8: CGFloat = 8
             let padding16: CGFloat = 16
             let padding32: CGFloat = 32
@@ -137,13 +137,19 @@ final class HomeViewController: UIViewController {
             )
             headerItem.contentInsets = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: padding16)
             
+            // MARK: Item Size
+            let fullItemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .fractionalHeight(1)
+            )
+            
+            // MARK: Content Insets
+            let leading16ContentInsetsForItem = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: .zero)
+            let top8Bottom32ContentInsetsForSection = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+            
             switch section {
             case .mainCuration:
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(0.92),
@@ -161,12 +167,8 @@ final class HomeViewController: UIViewController {
                 
                 return section
             case .curation:
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: .zero)
+                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
+                item.contentInsets = leading16ContentInsetsForItem
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .estimated(326),
@@ -180,7 +182,7 @@ final class HomeViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPaging
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+                section.contentInsets = top8Bottom32ContentInsetsForSection
                 
                 return section
             case .nearby:
@@ -203,16 +205,12 @@ final class HomeViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+                section.contentInsets = top8Bottom32ContentInsetsForSection
                 
                 return section
             case .bookmarked:
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: .zero)
+                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
+                item.contentInsets = leading16ContentInsetsForItem
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(2/5),
@@ -226,7 +224,7 @@ final class HomeViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+                section.contentInsets = top8Bottom32ContentInsetsForSection
                 
                 return section
             case .region:
@@ -248,15 +246,11 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+                section.contentInsets = top8Bottom32ContentInsetsForSection
                 
                 return section
             case .emptyNearby:
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
@@ -270,15 +264,11 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+                section.contentInsets = top8Bottom32ContentInsetsForSection
                 
                 return section
             case .emptyBookmark:
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
@@ -292,7 +282,7 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+                section.contentInsets = top8Bottom32ContentInsetsForSection
                 
                 return section
             }
@@ -301,7 +291,8 @@ final class HomeViewController: UIViewController {
         return layout
     }
     
-    // MARK: Data Source Method
+    // MARK: - Diffable Data Source Method
+    
     private func configureDataSource() {
         // MARK: Data Source Initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -416,8 +407,6 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch section {
         case .mainCuration:
-            // CurationViewController 대신에 PagingCurationViewController로 바꿔야합니다(변수명도 마찬가지입니다).
-            // modalTransitionStyle도 full screen으로 바꿔야합니다.
             // init id? - 어떻게 이어줄지?
             let curation = Item.mainCuration.map { $0.curation! }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
@@ -458,27 +447,18 @@ extension HomeViewController: UICollectionViewDelegate {
 
 extension HomeViewController: SectionHeaderDelegate {
     
-    // 다음 뷰컨과 연결할 때 이련 형태로 구현하겠습니다
     func segueWithSectionIndex(_ sectionIndex: Int) {
-        
         switch sectionIndex {
         case 2:
             let items = Item.nearByBookStores.map { $0.bookStore! }
             let nearbyViewController = NearbyViewController()
             nearbyViewController.setupData(items: items)
-            
             show(nearbyViewController, sender: nil)
         case 3:
             let items = Item.bookmarkedBookStores.map { $0.bookStore! }
             let bookmarkViewController = BookmarkViewController()
             bookmarkViewController.setupData(items: items)
             show(bookmarkViewController, sender: nil)
-//        case 4:
-//            let regionName = "지역"
-//            let regionViewController = RegionViewController()
-//            regionViewController.setupData(regionName: regionName)
-//
-//            show(regionViewController, sender: nil)
         default:
             return
         }
