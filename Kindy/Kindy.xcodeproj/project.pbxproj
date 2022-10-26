@@ -229,7 +229,6 @@
 			isa = PBXGroup;
 			children = (
 				6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */,
-				A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */,
 				77DCB1672905397E00EAB5D5 /* HomeSearchViewController.swift */,
 				6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */,
 				77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */,
@@ -239,6 +238,7 @@
 				6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */,
 				361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */,
 				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
+				A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -246,15 +246,15 @@
 		7B404C0C28FE87DF00A24C89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A06954F02907C81600C09D1D /* MyPage */,
-				31F7DD612904EACE007E6E99 /* Bookmark */,
-				36B1B3832904102300C91825 /* DetailBookstoreView.swift */,
 				7B404C2D29016C7500A24C89 /* Supplementary */,
 				7B404C2C29016BDF00A24C89 /* Home */,
 				77DCB16B29053B9D00EAB5D5 /* HomeSearch */,
-				77DCB14B290297F100EAB5D5 /* Nearby */,
 				6EE5E3F228FECEF700EA7413 /* Curation */,
+				77DCB14B290297F100EAB5D5 /* Nearby */,
+				31F7DD612904EACE007E6E99 /* Bookmark */,
 				77DCB1642904462D00EAB5D5 /* Region */,
+				7BF9AACE2909743400C80F72 /* Detail */,
+				A06954F02907C81600C09D1D /* MyPage */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -265,8 +265,8 @@
 				6EE5E3EE28FECECE00EA7413 /* Curation.swift */,
 				7B404C1A28FE89BA00A24C89 /* Bookstore.swift */,
 				7B404C1C28FE8E3000A24C89 /* Region.swift */,
-				A06954EE2906D9D800C09D1D /* Privacy.swift */,
 				7B404C1E28FE90B700A24C89 /* Item.swift */,
+				A06954EE2906D9D800C09D1D /* Privacy.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -322,6 +322,14 @@
 				7B404C2E29016CAF00A24C89 /* SectionHeaderView.swift */,
 			);
 			path = Supplementary;
+			sourceTree = "<group>";
+		};
+		7BF9AACE2909743400C80F72 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				36B1B3832904102300C91825 /* DetailBookstoreView.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		A06954F02907C81600C09D1D /* MyPage */ = {
