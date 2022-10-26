@@ -20,14 +20,8 @@ protocol PopView: AnyObject {
 
 class PagingCurationViewController: UIViewController {
     
-    // private var curationModel: Curation?
-    
-    private var curation = Curation.item
+    private var curation: Curation
 
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
     init(curation: Curation) {
         self.curation = curation
         super.init(nibName: nil, bundle: nil)
@@ -99,7 +93,7 @@ class PagingCurationViewController: UIViewController {
         
         dimmingView.alpha = 1
         
-        let bottomVC = BottomSheetViewController(contentViewController: CurationViewController())
+        let bottomVC = BottomSheetViewController(contentViewController: CurationViewController(curation: curation))
         bottomVC.modalPresentationStyle = .overFullScreen
         bottomVC.delegate = self
         bottomVC.popDelegate = self
