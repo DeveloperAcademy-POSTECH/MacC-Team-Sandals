@@ -13,13 +13,13 @@ final class BookmarkViewController: UIViewController {
         case bookmark
     }
     
-    var dummyData: [Bookstore] = [
-        Bookstore(images: nil, name: "달팽이 책방1", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-        Bookstore(images: nil, name: "달팽이 책방2", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-        Bookstore(images: nil, name: "달팽이 책방3", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-        Bookstore(images: nil, name: "달팽이 책방4", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
-        Bookstore(images: nil, name: "달팽이 책방5", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10))
-    ]
+//    var dummyData: [Bookstore] = [
+//        Bookstore(images: nil, name: "달팽이 책방1", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+//        Bookstore(images: nil, name: "달팽이 책방2", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+//        Bookstore(images: nil, name: "달팽이 책방3", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+//        Bookstore(images: nil, name: "달팽이 책방4", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10)),
+//        Bookstore(images: nil, name: "달팽이 책방5", address: "포항시 남구", telNumber: "020202020", emailAddress: "ㅁㄴㅇㄹㅁㄴㅇㄹ", instagramURL: nil, businessHour: "ㅁㄴㅇㄹㅁㄴㅇㄹ", description: "ㅁㄴㅇㄹㅁㄴㅇㄹ", location: Location(latitude: 10, longitude: 10))
+//    ]
     
     private var filterdItem = [Bookstore]()
     
@@ -29,17 +29,16 @@ final class BookmarkViewController: UIViewController {
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Bookstore>!
     
-    private var filteredItemSanpshot: NSDiffableDataSourceSnapshot<Section, Bookstore> {
+    private var filteredItemSanpshot: NSDiffableDataSourceSnapshot<Section, Bookstore> = {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Bookstore>()
-        snapshot.appendSections([.bookmark])
-        snapshot.appendItems(filterdItem)
         return snapshot
-    }
+    }()
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "북마크"
+        self.navigationController?.navigationBar.barTintColor = .white
         setupSearchController()
         setupCollectionView()
         configureDataSource()
@@ -62,8 +61,10 @@ final class BookmarkViewController: UIViewController {
     }
     
     func setupData(items: [Bookstore]) {
-        dummyData = items
+//        dummyData = items
         filterdItem = items
+        filteredItemSanpshot.appendSections([.bookmark])
+        filteredItemSanpshot.appendItems(filterdItem)
     }
     
     // CollectionView layout 지정
@@ -105,18 +106,36 @@ final class BookmarkViewController: UIViewController {
 extension BookmarkViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let findString = searchController.searchBar.text, !findString.isEmpty {
-            filterdItem = dummyData.filter{ $0.name.lowercased().contains(findString.lowercased()) }
+            print("heheheheheh\(findString)")
+            filterdItem = filteredItemSanpshot.itemIdentifiers.filter{ $0.name.lowercased().contains(findString.lowercased()) }
         } else {
-            filterdItem = dummyData
+            filterdItem = filteredItemSanpshot.itemIdentifiers
         }
-        dataSource.apply(filteredItemSanpshot, animatingDifferences: true)
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Bookstore>()
+        snapshot.appendSections([.bookmark])
+        snapshot.appendItems(filterdItem)
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 // MARK: 추후 Bookmark 삭제로직 구현 예정
 extension BookmarkViewController: BookmarkDelegate {
-    func deleteBookmark(_ deleteIndex: Int) {
-        filterdItem.remove(at: deleteIndex)
-        dataSource.apply(filteredItemSanpshot, animatingDifferences: true)
+    func deleteBookmark(_ deleteItem: Bookstore) {
+        var snapshot = filteredItemSanpshot
+        snapshot.deleteItems([deleteItem])
+//        dummyData = snapshot.itemIdentifiers
+        filteredItemSanpshot = snapshot
+        if let findString = searchController.searchBar.text, !findString.isEmpty {
+            print("heheheheheh\(findString)")
+            filterdItem = filteredItemSanpshot.itemIdentifiers.filter{ $0.name.lowercased().contains(findString.lowercased()) }
+        } else {
+            filterdItem = filteredItemSanpshot.itemIdentifiers
+        }
+        var filteredsnapshot = NSDiffableDataSourceSnapshot<Section, Bookstore>()
+        filteredsnapshot.appendSections([.bookmark])
+        filteredsnapshot.appendItems(filterdItem)
+        
+        
+        dataSource.apply(filteredsnapshot, animatingDifferences: true)
     }
     
     
