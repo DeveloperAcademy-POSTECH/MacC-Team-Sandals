@@ -17,4 +17,14 @@ extension UIView {
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.9)
         return gradientLayer
     }
+    
+    func findViewController() -> UIViewController? {
+        if let nextResponder = self.next as? UIViewController {
+            return nextResponder
+        } else if let nextResponder = self.next as? UIView {
+            return nextResponder.findViewController()
+        } else {
+            return nil
+        }
+    }
 }
