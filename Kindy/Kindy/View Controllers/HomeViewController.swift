@@ -302,7 +302,7 @@ final class HomeViewController: UIViewController {
             case .mainCuration:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.identifier, for: indexPath) as! MainCurationCollectionViewCell
                 cell.configureCell(item.curation!)
-                
+
                 return cell
             case .curation:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as! CurationCollectionViewCell
@@ -332,9 +332,11 @@ final class HomeViewController: UIViewController {
                 return cell
             case .emptyNearby:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyNearbyCollectionViewCell.identifier, for: indexPath) as! EmptyNearbyCollectionViewCell
+                
                 return cell
             case .emptyBookmark:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier, for: indexPath) as! EmptyBookmarkCollectionViewCell
+                
                 return cell
             }
         }
@@ -385,8 +387,16 @@ final class HomeViewController: UIViewController {
                 }
                 
                 let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as! SectionHeaderView
+                
                 headerView.delegate = self
-                headerView.setTitle(sectionName, color: sectionNameColor, hideSeeAllButton: hideSeeAllButton, hideBottomStackView: hideBottomStackView, sectionIndex: indexPath.section)
+                
+                headerView.setTitle(
+                    sectionName,
+                    color: sectionNameColor,
+                    hideSeeAllButton: hideSeeAllButton,
+                    hideBottomStackView: hideBottomStackView,
+                    sectionIndex: indexPath.section
+                )
                 
                 return headerView
             default:
@@ -407,29 +417,30 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch section {
         case .mainCuration:
-            // init id? - 어떻게 이어줄지?
             let curation = Item.mainCuration.map { $0.curation! }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
             curationViewController.modalPresentationStyle = .overFullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
+            
             present(curationViewController, animated: true)
         case .curation:
             let curation = Item.curations.map { $0.curation! }[indexPath.item]
             let curationViewController = PagingCurationViewController(curation: curation)
             curationViewController.modalPresentationStyle = .overFullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
+            
             present(curationViewController, animated: true)
         case .nearby:
             let bookstore = Item.nearByBookStores.map { $0.bookStore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
-            // TODO: 이후 더미데이터 수정
             detailBookstoreViewController.bookstore = bookstore
-//            detailBookstoreViewController.navigationBarAppearance = .configureWithTransparentBackground()
+            
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .bookmarked:
             let bookstore = Item.bookmarkedBookStores.map { $0.bookStore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookstore
+            
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .region:
             let regionName = Item.regions[indexPath.item].region!.name
@@ -438,7 +449,7 @@ extension HomeViewController: UICollectionViewDelegate {
             
             show(regionViewController, sender: nil)
         default:
-            print("default")
+            return
         }
     }
 }
