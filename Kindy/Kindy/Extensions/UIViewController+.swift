@@ -49,7 +49,7 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
             sheet.message = "제보 메일이 저장되었습니다."
         case .cancelled:
             sheet.title = "제보 취소"
-            sheet.message = "다음에 꼭 제보해주세요 :)"
+            sheet.message = "독립서점 제보하기를 취소했습니다."
         @unknown default:
             fatalError()
         }
