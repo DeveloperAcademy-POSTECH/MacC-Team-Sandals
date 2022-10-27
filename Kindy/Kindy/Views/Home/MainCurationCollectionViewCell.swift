@@ -13,6 +13,8 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .systemGray4
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -83,9 +85,9 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: Configure Cell
-    // TODO: TempCuration 나중에 바꿔야함
     func configureCell(_ mainCuration: Curation) {
         titleLabel.text = mainCuration.title
         subTitleLabel.text = mainCuration.subTitle
+        imageView.image = UIImage(named: mainCuration.mainImage)
     }
 }

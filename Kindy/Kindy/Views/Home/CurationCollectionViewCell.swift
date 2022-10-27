@@ -13,6 +13,8 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .systemGray2
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -72,5 +74,6 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     func configureCell(_ curation: Curation, indexPath: IndexPath, numberOfItems: Int) {
         titleLabel.text = curation.subTitle
         numberLabel.text = "\(indexPath.item + 1) / \(numberOfItems)"
+        imageView.image = UIImage(named: curation.mainImage)
     }
 }

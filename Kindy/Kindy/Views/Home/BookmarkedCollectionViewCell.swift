@@ -32,6 +32,8 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .systemGray6
         return imageView
     }()
@@ -64,7 +66,10 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor)
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            
+            imageView.widthAnchor.constraint(equalToConstant: 136),
+            imageView.heightAnchor.constraint(equalToConstant: 168)
         ])
     }
     
@@ -76,5 +81,6 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
         addressLabel.text = bookstore.shortAddress
+        imageView.image = bookstore.images?.first!
     }
 }

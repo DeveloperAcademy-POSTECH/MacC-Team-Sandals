@@ -138,7 +138,7 @@ final class HomeViewController: UIViewController {
             headerItem.contentInsets = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: padding16)
             
             // MARK: Item Size
-            let fullItemSize = NSCollectionLayoutSize(
+            let fullSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
                 heightDimension: .fractionalHeight(1)
             )
@@ -149,7 +149,7 @@ final class HomeViewController: UIViewController {
             
             switch section {
             case .mainCuration:
-                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(0.92),
@@ -167,7 +167,7 @@ final class HomeViewController: UIViewController {
                 
                 return section
             case .curation:
-                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 item.contentInsets = leading16ContentInsetsForItem
                 
                 let groupSize = NSCollectionLayoutSize(
@@ -209,7 +209,7 @@ final class HomeViewController: UIViewController {
                 
                 return section
             case .bookmarked:
-                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 item.contentInsets = leading16ContentInsetsForItem
                 
                 let groupSize = NSCollectionLayoutSize(
@@ -250,7 +250,7 @@ final class HomeViewController: UIViewController {
                 
                 return section
             case .emptyNearby:
-                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
@@ -268,7 +268,7 @@ final class HomeViewController: UIViewController {
                 
                 return section
             case .emptyBookmark:
-                let item = NSCollectionLayoutItem(layoutSize: fullItemSize)
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
