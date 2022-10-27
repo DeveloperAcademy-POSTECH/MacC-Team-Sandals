@@ -79,6 +79,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
     
     func setupData(regionName: String) {
         self.regionName = regionName
+        filteredItems = NewItems().getBookstoreByRegion(regionName)
     }
 }
 
