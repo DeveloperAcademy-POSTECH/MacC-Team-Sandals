@@ -82,6 +82,7 @@ enum Item: Hashable {
     ]
     
     static func updateBookmarkedData() {
+        nearByBookStores = NewItems.bookstoreDummy.sorted{ $0.name > $1.name }.map{ .bookStore($0) }
         bookmarkedBookStores = NewItems.bookstoreDummy.filter{ $0.isFavorite }.map{ .bookmarkedBookStore($0) }
     }
     

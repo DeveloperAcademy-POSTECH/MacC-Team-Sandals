@@ -50,7 +50,6 @@ final class HomeViewController: UIViewController {
         } else {
             snapshot.appendSections([.bookmarked])
             snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
-            print(Item.bookmarkedBookStores)
         }
         
         snapshot.appendSections([.region])
