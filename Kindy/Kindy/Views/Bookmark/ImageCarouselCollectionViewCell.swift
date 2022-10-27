@@ -36,8 +36,8 @@ class ImageCarouselCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate(imageViewConstraint)
     }
     
-    public func configureCell(image: String) {
-        imageView.image = UIImage(named: image)
+    public func configureCell(image: UIImage) {
+        imageView.image = image
     }
 }
 
