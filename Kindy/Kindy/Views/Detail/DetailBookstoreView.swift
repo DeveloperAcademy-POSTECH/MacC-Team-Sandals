@@ -25,7 +25,10 @@ final class DetailBookstoreView: UIView {
             isBookmarked = bookstore.isFavorite
             isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
             telephoneNumberLabel.text = bookstore.telNumber
-            instagramButton.setTitle(bookstore.instagramURL, for: .normal)
+            let optionalInstagramID = bookstore.instagramURL?.components(separatedBy: "/")[3]
+            guard let instagramID = optionalInstagramID else { return }
+            instagramButton.setTitle("@\(instagramID)", for: .normal)
+            instagramButton.setUnderline()
             businessHourLabel.text = """
             월 \(bookstore.businessHour.monday)
             화 \(bookstore.businessHour.tuesday)
@@ -173,7 +176,7 @@ final class DetailBookstoreView: UIView {
     // 인스타그램 주소 버튼
     private lazy var instagramButton: UIButton = {
         let button = UIButton()
-        button.setTitle("https://www.instagram.com/bookshopsnail/", for: .normal)
+//        button.setTitle("https://www.instagram.com/bookshopsnail/", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         button.contentHorizontalAlignment = .left
@@ -447,7 +450,8 @@ final class DetailBookstoreView: UIView {
     }
     
     @objc private func instagramButtonTapped() {
-        guard let instagramAddress = instagramButton.currentTitle else { return }
+        
+        guard let instagramAddress = bookstore?.instagramURL else { return }
         guard let url = URL(string: instagramAddress) else { return }
         UIApplication.shared.open(url, options: [:])
     }
