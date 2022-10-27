@@ -20,19 +20,28 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
+    private let labelBackgroundView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 8
+        view.layer.opacity = 0.8
+        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        view.backgroundColor = UIColor(red: 0.149, green: 0.258, blue: 0.232, alpha: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .white
         label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    // TODO: label의 corner radius는 어떻게 수정하지? 아니면 백그라은드 뷰를 따로 만들어야하나
     private let numberLabel: UILabel = {
         let label = UILabel()
         label.layer.cornerRadius = 8
-        label.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).cgColor
+        label.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.7).cgColor
         label.textColor = .white
         label.font = .preferredFont(forTextStyle: .footnote)
         label.textAlignment = .center
@@ -45,6 +54,7 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         addSubview(imageView)
+        addSubview(labelBackgroundView)
         addSubview(titleLabel)
         addSubview(numberLabel)
         
@@ -53,6 +63,11 @@ final class CurationCollectionViewCell: UICollectionViewCell {
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            labelBackgroundView.heightAnchor.constraint(equalToConstant: 44),
+            labelBackgroundView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
+            labelBackgroundView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            labelBackgroundView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
             
             titleLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -12),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16),
