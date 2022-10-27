@@ -23,10 +23,18 @@ final class DetailBookstoreView: UIView {
             nameLabel.text = bookstore.name
             shortAddressLabel.text = bookstore.shortAddress
             isBookmarked = bookstore.isFavorite
+            isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
             telephoneNumberLabel.text = bookstore.telNumber
-            // TODO: 인스타그램 어떻게 할지 논의하기 (링크? 계정 이름만?)
-//            instagramLabel.text = String(bookstore.instagramURL)
-//            businessHourLabel.text = bookstore.businessHour
+            instagramButton.setTitle(bookstore.instagramURL, for: .normal)
+            businessHourLabel.text = """
+            월 \(bookstore.businessHour.monday)
+            화 \(bookstore.businessHour.tuesday)
+            수 \(bookstore.businessHour.wednesday)
+            목 \(bookstore.businessHour.thursday)
+            금 \(bookstore.businessHour.friday)
+            토 \(bookstore.businessHour.saturday)
+            일 \(bookstore.businessHour.sunday)
+            """
             descriptionLabel.text = bookstore.description
             address.text = bookstore.address
             bookstoreCoordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
@@ -76,11 +84,9 @@ final class DetailBookstoreView: UIView {
         return label
     }()
     
-    // TODO: 버튼 키우기
-    // 북마크 버튼
     lazy var bookmarkButton: UIButton = {
         let button = UIButton()
-        isBookmarked ? button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal) : button.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        isBookmarked ? button.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : button.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
         button.tintColor = UIColor(named: "kindyGreen")
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -164,18 +170,22 @@ final class DetailBookstoreView: UIView {
         return imageView
     }()
     
-    // 인스타그램 레이블
-    private let instagramLabel: UILabel = {
-        let label = UILabel()
-        label.text = "@bookshopsnail"
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    // 인스타그램 주소 버튼
+    private lazy var instagramButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("https://www.instagram.com/bookshopsnail/", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.contentHorizontalAlignment = .left
+        button.setUnderline()
+        button.addTarget(self, action: #selector(instagramButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     // 인스타그램 스택뷰
     private lazy var instagramStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [instagrameIconImageView, instagramLabel])
+        let stackView = UIStackView(arrangedSubviews: [instagrameIconImageView, instagramButton])
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .center
@@ -343,7 +353,7 @@ final class DetailBookstoreView: UIView {
     private func setupUI() {
         addSubview(mainScrollView)
         bookstoreImageScrollView.backgroundColor = .lightGray
-
+        
         mainScrollView.addSubview(bookstoreImageScrollView)
         mainScrollView.addSubview(imagePageControl)
         mainScrollView.addSubview(headerStackView)
@@ -361,7 +371,7 @@ final class DetailBookstoreView: UIView {
             mainScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             mainScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             mainScrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
-
+            
             // 서점 이미지뷰 설정
             bookstoreImageScrollView.topAnchor.constraint(equalTo: mainScrollView.topAnchor, constant: -100),
             bookstoreImageScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
@@ -414,6 +424,9 @@ final class DetailBookstoreView: UIView {
     
     private func setupIconConstraints() {
         NSLayoutConstraint.activate([
+            bookmarkButton.heightAnchor.constraint(equalToConstant: 36),
+            bookmarkButton.widthAnchor.constraint(equalToConstant: 32),
+            
             telephoneIconImageView.widthAnchor.constraint(equalToConstant: 22),
             telephoneIconImageView.heightAnchor.constraint(equalToConstant: 22),
             
@@ -431,6 +444,12 @@ final class DetailBookstoreView: UIView {
     private func setupMapView() {
         bookstoreMapView.setRegion(MKCoordinateRegion(center: bookstoreCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: true)
         bookstoreMapView.addAnnotation(bookstorePin)
+    }
+    
+    @objc private func instagramButtonTapped() {
+        guard let instagramAddress = instagramButton.currentTitle else { return }
+        guard let url = URL(string: instagramAddress) else { return }
+        UIApplication.shared.open(url, options: [:])
     }
     
 }

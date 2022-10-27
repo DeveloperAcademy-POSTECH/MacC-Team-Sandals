@@ -41,8 +41,6 @@ final class DetailBookstoreViewController: UIViewController {
     }()
     
     override func loadView() {
-        
-        bookstore?.isFavorite ?? false ? detailBookstoreView.bookmarkButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal) : detailBookstoreView.bookmarkButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
         view = detailBookstoreView
     }
     
@@ -95,7 +93,7 @@ final class DetailBookstoreViewController: UIViewController {
     
     @objc private func bookmarkButtonTapped() {
         isBookmarked.toggle()
-        isBookmarked ? bookmarkButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
         navigationBarRightButton.image = isBookmarked ? UIImage(systemName: "bookmark.fill") : UIImage(systemName: "bookmark")
     }
     
@@ -146,6 +144,7 @@ extension DetailBookstoreViewController: UIScrollViewDelegate {
     private func setNavigationBarAppearance() {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
     }
     
     // 현재 이미지의 페이지에 따라 pageControl의 currentPage 변경
