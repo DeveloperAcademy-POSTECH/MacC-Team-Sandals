@@ -49,7 +49,7 @@ final class HomeViewController: UIViewController {
             snapshot.appendItems([Item.emptyBookmark], toSection: .emptyBookmark)
         } else {
             snapshot.appendSections([.bookmarked])
-            snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
+            snapshot.appendItems(NewItems.bookstoreDummy.filter{ $0.isFavorite }.map{ .bookStore($0) }, toSection: .bookmarked)
         }
         
         snapshot.appendSections([.region])
@@ -66,8 +66,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         // MARK: Navigation Bar Button Item
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "circle.fill"), style: .plain, target: nil, action: nil)
-        navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "KindyLogo"), style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .black
         
@@ -110,6 +109,8 @@ final class HomeViewController: UIViewController {
         // MARK: Tab Bar Appearance
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 탭 바 설정이 적용되기에 재설정 해줬습니다.
         tabBarController?.tabBar.isHidden = false
+        
+        dataSource.apply(snapshot)
     }
     
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
@@ -322,6 +323,7 @@ final class HomeViewController: UIViewController {
                 return cell
             case .bookmarked:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as? BookmarkedCollectionViewCell else { return UICollectionViewCell() }
+                print(item.bookStore)
                 cell.configureCell(item.bookStore!)
                 
                 return cell
@@ -441,7 +443,7 @@ extension HomeViewController: UICollectionViewDelegate {
             
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .bookmarked:
-            let bookstore = Item.bookmarkedBookStores.map { $0.bookStore! }[indexPath.item]
+            let bookstore = NewItems.bookstoreDummy.filter{ $0.isFavorite }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookstore
             
@@ -472,7 +474,7 @@ extension HomeViewController: SectionHeaderDelegate {
         case 3:
             let items = Item.bookmarkedBookStores.map { $0.bookStore! }
             let bookmarkViewController = BookmarkViewController()
-            bookmarkViewController.setupData(items: items)
+            bookmarkViewController.setupData(items: NewItems.bookstoreDummy.filter{ $0.isFavorite })
             show(bookmarkViewController, sender: nil)
         default:
             return
