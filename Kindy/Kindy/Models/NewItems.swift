@@ -129,4 +129,30 @@ class NewItems {
 """, bookStore: bookstoreDummy[9])
     ]
     
+    
+    func getBookstoreByRegion(_ region: String) -> [Bookstore] {
+        
+        switch region{
+        case "전체":
+            return NewItems.bookstoreDummy
+        case "서울":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("서울특별시") }
+        case "강원":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("강원도") }
+        case "경기/인천":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("경기도") || $0.address.contains("인천광역시") }
+        case "충청/대전":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("충청도") || $0.address.contains("대전광역시") || $0.address.contains("세종특별자치시") }
+        case "경북/대구":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("경상북도") || $0.address.contains("대구광역시")}
+        case "전라/광주":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("전라남도") || $0.address.contains("광주광역시") || $0.address.contains("전라북도") }
+        case "경남/울산/부산":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("경상남도") || $0.address.contains("울산광역시") || $0.address.contains("부산광역시") }
+        case "제주":
+            return NewItems.bookstoreDummy.filter{ $0.address.contains("제주특별자치도") }
+        default:
+            return []
+        }
+    }
 }
