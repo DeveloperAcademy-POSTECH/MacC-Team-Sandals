@@ -71,7 +71,8 @@ final class RegionCell: UITableViewCell {
             photoImageView.widthAnchor.constraint(equalTo: photoImageView.heightAnchor),
 
             infoStackView.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
-            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            infoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
 

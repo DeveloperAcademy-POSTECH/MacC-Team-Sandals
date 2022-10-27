@@ -92,7 +92,8 @@ final class NearbyCell: UITableViewCell {
             photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
             infoStackView.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
-            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            infoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
     
