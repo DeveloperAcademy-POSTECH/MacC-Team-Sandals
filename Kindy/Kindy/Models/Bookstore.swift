@@ -53,17 +53,18 @@ struct Bookstore: Hashable {
         Bookstore(images: nil, name: "달팽이 책방4", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10)),
         Bookstore(images: nil, name: "달팽이 책방5", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10))
     ]
+    
 }
 
 struct BusinessHour {
-    let monday: String = ""
-    let tuesday: String = ""
-    let wednesday: String = ""
-    let thursday: String = ""
-    let friday: String = ""
-    let saturday: String = ""
-    let sunday: String = ""
-    let etc: String? = ""
+    var monday: String = ""
+    var tuesday: String = ""
+    var wednesday: String = ""
+    var thursday: String = ""
+    var friday: String = ""
+    var saturday: String = ""
+    var sunday: String = ""
+    var etc: String? = ""
 }
 
 // 서점의 위도와 경도를 표현하는 구조체
