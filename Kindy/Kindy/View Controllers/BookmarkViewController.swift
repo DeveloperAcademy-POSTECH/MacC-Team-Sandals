@@ -39,6 +39,12 @@ final class BookmarkViewController: UIViewController {
         setupCollectionView()
         configureDataSource()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     // 서치컨트롤러 설정
     private func setupSearchController() {
         navigationItem.searchController = searchController

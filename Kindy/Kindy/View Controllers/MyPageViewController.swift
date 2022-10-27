@@ -73,7 +73,9 @@ extension MyPageViewController: UITableViewDelegate {
         switch cellTitle[indexPath.row] {
         case "북마크 한 서점":
             let bookmarkVC = BookmarkViewController()
+            bookmarkVC.setupData(items: NewItems.bookstoreDummy.filter{ $0.isFavorite })
             show(bookmarkVC, sender: nil)
+            tableView.deselectRow(at: indexPath, animated: true)
             
         case "개인정보 처리방침":
             let detailMyPageVC = DetailMyPageViewController()
@@ -88,8 +90,8 @@ extension MyPageViewController: UITableViewDelegate {
             show(detailMyPageVC, sender: nil)
             
         case "독립서점 제보하기":
-            // TODO: 메일 앱 연결하기
-            break
+            tableView.deselectRow(at: indexPath, animated: true)
+            tableView.reportButtonTapped()
             
         default:
             print("TableView Delegate Error!")
