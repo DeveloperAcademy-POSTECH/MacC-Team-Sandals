@@ -66,7 +66,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         // MARK: Navigation Bar Button Item
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "KindyLogo"), style: .plain, target: nil, action: nil)
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "KindyLogo"), style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .black
         
