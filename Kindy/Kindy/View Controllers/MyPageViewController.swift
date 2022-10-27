@@ -10,7 +10,8 @@ import UIKit
 final class MyPageViewController: UIViewController {
     
     private let privacy = Privacy()
-    private let cellTitle: [String] = ["북마크 한 서점", "이용약관", "라이선스", "독립서점 제보하기"]
+    // 라이선스를 추가해야하는 경우 라이선스랑 제보하기의 배열 내부 위치를 바꿔주시면 됩니다
+    private let cellTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스"]
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -56,6 +57,10 @@ extension MyPageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyPageTableViewCell", for: indexPath) as? MyPageTableViewCell else { return UITableViewCell() }
         cell.myPageCellLabel.text = cellTitle[indexPath.row]
+        
+        if cell.myPageCellLabel.text == "개인정보 처리방침" || cell.myPageCellLabel.text == "라이선스"  {
+            cell.isHidden = true
+        }
         return cell
     }
     
@@ -70,9 +75,9 @@ extension MyPageViewController: UITableViewDelegate {
             let bookmarkVC = BookmarkViewController()
             show(bookmarkVC, sender: nil)
             
-        case "이용약관":
+        case "개인정보 처리방침":
             let detailMyPageVC = DetailMyPageViewController()
-            detailMyPageVC.navigationBarTitle = "이용약관"
+            detailMyPageVC.navigationBarTitle = "개인정보 처리방침"
             detailMyPageVC.detailString = privacy.termsOfService
             show(detailMyPageVC, sender: nil)
             

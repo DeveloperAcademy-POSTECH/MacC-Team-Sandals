@@ -11,8 +11,6 @@ import UIKit
 // TODO: Base class로 쓸 수 있게도 만들어보기
 final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "NearByBookstoreCollectionViewCell"
-    
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -48,6 +46,7 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     private let distanceLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)
+        label.textColor = UIColor(red: 0.146, green: 0.454, blue: 0.343, alpha: 1)
         return label
     }()
     

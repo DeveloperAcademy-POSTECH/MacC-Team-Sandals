@@ -10,8 +10,6 @@ import UIKit
 // 북마크 섹션이 비었을때의 셀
 final class EmptyBookmarkCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "EmptyBookmarkCollectionViewCell"
-    
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
