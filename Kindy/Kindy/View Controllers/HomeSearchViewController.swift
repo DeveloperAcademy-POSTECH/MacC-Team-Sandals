@@ -46,6 +46,19 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         // 개념 이해 : https://stackoverflow.com/questions/27951965/cannot-set-searchbar-as-firstresponder
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // MARK: Navigation Bar Appearance
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
+        let customNavBarAppearance = UINavigationBarAppearance()
+        customNavBarAppearance.backgroundColor = .white
+        
+        navigationController?.navigationBar.standardAppearance = customNavBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
+        navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+    }
+    
     // MARK: - 메소드
     
     private func setupSearchController() {
