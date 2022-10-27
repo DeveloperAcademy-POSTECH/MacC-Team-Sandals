@@ -323,7 +323,6 @@ final class HomeViewController: UIViewController {
                 return cell
             case .bookmarked:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as? BookmarkedCollectionViewCell else { return UICollectionViewCell() }
-                print(item.bookStore)
                 cell.configureCell(item.bookStore!)
                 
                 return cell

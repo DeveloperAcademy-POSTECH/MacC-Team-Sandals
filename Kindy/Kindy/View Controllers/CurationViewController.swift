@@ -120,7 +120,8 @@ extension CurationViewController: UICollectionViewDelegateFlowLayout {
         if indexPath.item == 0 {
             return CGSize(width: width, height: height / 5)
         } else if indexPath.item == 1 || indexPath.item == cellCount {
-            return CGSize(width: width, height: 200)
+            let height: Double = Double(curation.headText.count) / 27.2 * 20
+            return CGSize(width: width, height: height + 100)
         }
         else {
             let height: Double = Double(curation.imageWithText[indexPath.row - 2].1.count) / 27.2 * 20
