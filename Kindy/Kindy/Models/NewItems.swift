@@ -93,7 +93,7 @@ class NewItems {
     
     
     static let curationDummy: [Curation] = [
-        Curation(id: "1", title: "B급 취향,", subTitle: "감각적인 인테리어, 세심한 디저트 메뉴가 돋보이는 독립서점", mainImage: "B급취향_Curation1", headText: """
+        Curation(id: "1", title: "B급 취향,", subTitle: "감각적인 인테리어와 디저트 메뉴가 돋보이는 독립서점", mainImage: "B급취향_Curation1", headText: """
         누구도 배제하지 않고 누구나 머무를 수 있는 공간을 제공하고 싶다는 슬로건으로 책방을 운영하고 계십니다.\n
         책 큐레이션은 물론이고 비건을 위한 디저트도 준비되어 사장님이 책방에 진심이라는 것이 모든 곳에서 느껴진다.\n
         덧붙이자면 사장님께서 너무 유쾌하셔서 서점에서 주최하는 클래스 프로그램에 참여해보시길 꼭 추천드리고 싶다.\n
@@ -155,7 +155,7 @@ class NewItems {
     }
     
     static let mainDummy: [Curation] = [
-        Curation(id: "1", title: "B급 취향,", subTitle: "감각적인 인테리어, 세심한 디저트 메뉴가 돋보이는 독립서점", mainImage: "B급취향_Curation1", headText: """
+        Curation(id: "1", title: "B급 취향,", subTitle: "감각적인 인테리어와 디저트 메뉴가 돋보이는 곳", mainImage: "B급취향_Curation1", headText: """
         누구도 배제하지 않고 누구나 머무를 수 있는 공간을 제공하고 싶다는 슬로건으로 책방을 운영하고 계십니다.\n
         책 큐레이션은 물론이고 비건을 위한 디저트도 준비되어 사장님이 책방에 진심이라는 것이 모든 곳에서 느껴진다.\n
         덧붙이자면 사장님께서 너무 유쾌하셔서 서점에서 주최하는 클래스 프로그램에 참여해보시길 꼭 추천드리고 싶다.\n

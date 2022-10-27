@@ -49,7 +49,7 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
     private let subTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .preferredFont(forTextStyle: .title3)
+        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
         return label
     }()
     
