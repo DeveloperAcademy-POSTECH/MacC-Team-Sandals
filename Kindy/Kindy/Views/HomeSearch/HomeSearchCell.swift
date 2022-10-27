@@ -57,6 +57,7 @@ final class HomeSearchCell: UITableViewCell {
     
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
+        photoImageView.image = item.images?[0]
     }
     
     // MARK: - 라이프 사이클
