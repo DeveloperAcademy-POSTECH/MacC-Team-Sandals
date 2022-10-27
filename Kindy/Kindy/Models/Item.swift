@@ -41,10 +41,10 @@ enum Item: Hashable {
     
     // 같은 값이 들어가면 안됨(unique 해야함) -> 어떻게 구별? 다른 큐레이션 구조체(큐레이션 프로토콜 만들어도 괜찮으려나)를 만들어야하나 아니면 아이템의 케이스 하나 더 추가
     static let mainCuration: [Item] = [
-        .curation(NewItems.curationDummy[Int.random(in: 0..<NewItems.curationDummy.count)])
+        .curation(NewItems.mainDummy[0])
     ]
     
-    static let curations: [Item] = NewItems.curationDummy.map{ .curation($0) }
+    static let curations: [Item] = NewItems.curationDummy.filter{ $0.id != "1" }.map{ .curation($0) }
     
     // MARK 추후 데이터 로직으로 filter와 sort를 이용해 거리순으로 제거 후 입력 받는다
     static let nearByBookStores: [Item] = NewItems.bookstoreDummy.sorted{ $0.name > $1.name }.map{ .bookStore($0) }
