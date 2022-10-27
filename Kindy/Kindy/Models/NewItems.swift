@@ -188,4 +188,20 @@ class NewItems {
                  #밤산책방#부산#수영구#독립서점#무인서점#24시간서점#주말#공휴일
                 """, bookStore: bookstoreDummy[9])
     ]
+    
+    
+    
+    static func bookmarkToggle(_ item: Bookstore) {
+        var index = -1
+        for i in 0..<NewItems.bookstoreDummy.count {
+            if item.id == NewItems.bookstoreDummy[i].id {
+                index = i
+                break
+            }
+        }
+        print(NewItems.bookstoreDummy[index].isFavorite)
+        NewItems.bookstoreDummy[index].isFavorite.toggle()
+        print(NewItems.bookstoreDummy[index].isFavorite)
+        print("success toggle")
+    }
 }

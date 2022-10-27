@@ -10,7 +10,6 @@ import UIKit
 class BookmarkCollectionViewCell: UICollectionViewCell {
     
     private var bookstore: Bookstore?
-    private var imageData: [String] = ["testImage"]
     private var currentPage: Int = 0 {
         didSet {
             pageControl.currentPage = currentPage
@@ -160,16 +159,15 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
 
 extension BookmarkCollectionViewCell {
     // ImageCarousel 의 데이터가 입력되면 Layout 재설정 및 컬렉션뷰 리로드
-    public func configureCarouselView(with data: [String]) {
+    public func configureCarouselView() {
         let carouselLayout = UICollectionViewFlowLayout()
         carouselLayout.scrollDirection = .horizontal
-        carouselLayout.itemSize = .init(width: frame.width, height: frame.height)
+        carouselLayout.itemSize = .init(width: frame.width - 32, height: frame.height)
         carouselLayout.sectionInset = .zero
         carouselLayout.minimumLineSpacing = .zero
         imageCarouselCollectionView.collectionViewLayout = carouselLayout
-        imageData = data
         imageCarouselCollectionView.reloadData()
-        setupPageControl(data.count)
+        setupPageControl(bookstore!.images!.count)
     }
     // Image 갯수에 따라 PageControl이 표현해야할 총 갯수 변환해준다
     func setupPageControl(_ totalCount: Int) {
@@ -183,12 +181,12 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageData.count
+        return bookstore!.images!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCarouselCollectionViewCell.identifier, for: indexPath) as? ImageCarouselCollectionViewCell else {return UICollectionViewCell()}
-        cell.configureCell(image: imageData[indexPath.row])
+        cell.configureCell(image: (bookstore!.images![indexPath.row]))
         return cell
     }
     // PageControl과 ImageCarouselView와 싱크를 맞추기 위해 스크롤 추적
