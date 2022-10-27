@@ -25,7 +25,7 @@ struct Bookstore: Hashable {
     
     // 짧은 주소
     var shortAddress: String {
-        return address
+        return address.components(separatedBy: " ")[0] + " " + address.components(separatedBy: " ")[1]
     }
     
     // 내 주변 서점과 떨어진 거리(m)
