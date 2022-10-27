@@ -10,8 +10,6 @@ import UIKit
 // 북마크한 서점 섹션의 북마크 셀
 final class BookmarkedCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "BookmarkedCollectionViewCell"
-    
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -47,6 +45,7 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
     private let addressLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .footnote)
+        label.textColor = .gray
         return label
     }()
     
@@ -65,10 +64,7 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            
-            imageView.widthAnchor.constraint(equalToConstant: 136),
-            imageView.heightAnchor.constraint(equalToConstant: 168)
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor)
         ])
     }
     

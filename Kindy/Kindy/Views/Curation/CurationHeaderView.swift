@@ -1,22 +1,19 @@
 //
-//  CurationMainView.swift
+//  CurationHeaderView2.swift
 //  Kindy
 //
-//  Created by rbwo on 2022/10/18.
+//  Created by rbwo on 2022/10/23.
 //
 
 import UIKit
 
-final class CurationHeaderView: UICollectionViewCell {
-    
-    let mockData = CurationHeader(id: "testData", title: "바쁜 일상,", subTitle: "잠시 쉬어갈 장소가 필요한 분들에게")
+class CurationHeaderView: UIView {
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.image = UIImage(named: "testImage")
         return view
     }()
     
@@ -37,12 +34,11 @@ final class CurationHeaderView: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
-    override init(frame: CGRect) {
+   
+    init(frame: CGRect, curation: Curation) {
         super.init(frame: frame)
         self.configureUI()
-        self.createGradient()
-        self.configureData()
+        self.configureData(curationData: curation)
     }
     
     required init?(coder: NSCoder) {
@@ -55,29 +51,23 @@ final class CurationHeaderView: UICollectionViewCell {
         self.addSubview(subtitleLabel)
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: self.topAnchor),
-            imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -100),
-            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 14),
             subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
         ])
     }
     
-    private func createGradient() {
-        let gradientSize = CGRect(x: 0, y: 0 , width: self.bounds.width , height: self.bounds.height + 200)
-        let gradient = gradientView(bounds: gradientSize ,colors: [UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor, UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor])
-        self.layer.insertSublayer(gradient, at: 1)
-    }
-    
     // TODO: Model이 들어오면 수정해야함
-    private func configureData() {
-        self.titleLabel.text = mockData.title
-        self.subtitleLabel.text = mockData.subTitle
+    private func configureData(curationData: Curation) {
+        self.imageView.image = UIImage(named: curationData.mainImage)
+        self.titleLabel.text = curationData.title
+        self.subtitleLabel.text = curationData.subTitle
     }
 }
-

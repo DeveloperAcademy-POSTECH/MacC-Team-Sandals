@@ -150,7 +150,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func deleteBookmark() {
-        delegate?.deleteBookmark(index)
+        delegate?.deleteBookmark(bookstore!)
     }
 
     @objc private func selectLabel() {

@@ -9,8 +9,6 @@ import UIKit
 
 final class SectionHeaderView: UICollectionReusableView {
     
-    static let reuseIdentifier = "SectionHeaderView"
-    
     // MARK: Delegate Definition
     weak var delegate: SectionHeaderDelegate?
     
@@ -45,7 +43,7 @@ final class SectionHeaderView: UICollectionReusableView {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .title2)
+        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 24)
         return label
     }()
     
@@ -91,6 +89,8 @@ final class SectionHeaderView: UICollectionReusableView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             
+            seeAllButton.widthAnchor.constraint(equalToConstant: 28),
+            seeAllButton.heightAnchor.constraint(equalToConstant: 28),
             seeAllButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             locationImageView.widthAnchor.constraint(equalToConstant: 13),

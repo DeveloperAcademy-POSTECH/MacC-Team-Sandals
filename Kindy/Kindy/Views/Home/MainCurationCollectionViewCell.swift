@@ -10,8 +10,6 @@ import UIKit
 // 홈 화면 최상단의 메인 큐레이션 셀
 final class MainCurationCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "MainCurationCollectionViewCell"
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
@@ -25,17 +23,31 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
         view.layer.cornerRadius = 8
         view.layer.opacity = 0.8
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        view.backgroundColor = .systemGreen
+        view.backgroundColor = UIColor(red: 0.149, green: 0.258, blue: 0.232, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    private let titleStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .leading
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .preferredFont(forTextStyle: .title2)
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 24)
+        return label
+    }()
+    
+    private let subTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = .preferredFont(forTextStyle: .title3)
         return label
     }()
     
@@ -45,7 +57,9 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
         
         addSubview(imageView)
         addSubview(labelBackgroundView)
-        addSubview(titleLabel)
+        addSubview(titleStack)
+        titleStack.addArrangedSubview(titleLabel)
+        titleStack.addArrangedSubview(subTitleLabel)
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),
@@ -58,10 +72,9 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
             labelBackgroundView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             labelBackgroundView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
             
-            titleLabel.widthAnchor.constraint(equalTo: labelBackgroundView.widthAnchor, multiplier: 0.85),
-            titleLabel.heightAnchor.constraint(equalTo: labelBackgroundView.heightAnchor, multiplier: 0.25),
-            titleLabel.centerXAnchor.constraint(equalTo: labelBackgroundView.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: labelBackgroundView.centerYAnchor)
+            titleStack.leadingAnchor.constraint(equalTo: labelBackgroundView.leadingAnchor, constant: 16),
+            titleStack.trailingAnchor.constraint(equalTo: labelBackgroundView.trailingAnchor, constant: 16),
+            titleStack.centerYAnchor.constraint(equalTo: labelBackgroundView.centerYAnchor)
         ])
     }
     
@@ -71,7 +84,8 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
     
     // MARK: Configure Cell
     // TODO: TempCuration 나중에 바꿔야함
-    func configureCell(_ mainCuration: TempCuration) {
+    func configureCell(_ mainCuration: Curation) {
         titleLabel.text = mainCuration.title
+        subTitleLabel.text = mainCuration.subTitle
     }
 }
