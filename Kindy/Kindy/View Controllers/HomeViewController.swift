@@ -98,7 +98,7 @@ final class HomeViewController: UIViewController {
         super.viewWillAppear(animated)
 
         // MARK: Navigation Bar Appearance
-        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줘야합니다.
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
@@ -106,6 +106,10 @@ final class HomeViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+        
+        // MARK: Tab Bar Appearance
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 탭 바 설정이 적용되기에 재설정 해줬습니다.
+        tabBarController?.tabBar.isHidden = false
     }
     
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
