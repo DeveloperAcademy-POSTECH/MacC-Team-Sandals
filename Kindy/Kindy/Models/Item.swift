@@ -82,6 +82,10 @@ enum Item: Hashable {
     ]
     
     static func updateBookmarkedData() {
+        mainCuration = [
+            .mainCuration(NewItems.curationDummy[Int.random(in: 0..<NewItems.curationDummy.count)])
+        ]
+        curations = NewItems.curationDummy.filter{ $0.id != "1" }.map{ .curation($0) }
         nearByBookStores = NewItems.bookstoreDummy.sorted{ $0.name > $1.name }.map{ .bookStore($0) }
         bookmarkedBookStores = NewItems.bookstoreDummy.filter{ $0.isFavorite }.map{ .bookmarkedBookStore($0) }
     }
