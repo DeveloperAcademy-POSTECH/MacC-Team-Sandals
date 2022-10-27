@@ -92,7 +92,8 @@ final class NearbyCell: UITableViewCell {
             photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
             infoStackView.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
-            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            infoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
     
@@ -100,7 +101,7 @@ final class NearbyCell: UITableViewCell {
         nameLabel.text = item.name
         addressLabel.text = item.address
         distanceLabel.text = "\(item.meterDistance)m"
-//        photoImageView.image = item.image?[0] ?? nil   // 첫번째 사진이 대표 사진
+        photoImageView.image = item.images?[0] ?? nil   // 첫번째 사진이 대표 사진
     }
     
     // MARK: - 라이프 사이클

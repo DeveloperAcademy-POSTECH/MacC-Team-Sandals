@@ -85,7 +85,7 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
             searchText = searchString
-            filteredItems = Bookstore.dummyData.filter{ (item) -> Bool in
+            filteredItems = NewItems.bookstoreDummy.filter{ (item) -> Bool in
                 item.name.localizedCaseInsensitiveContains(searchText!)
             }
         } else {

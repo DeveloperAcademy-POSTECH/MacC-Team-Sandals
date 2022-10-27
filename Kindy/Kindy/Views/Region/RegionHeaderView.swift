@@ -41,7 +41,7 @@ final class RegionHeaderView: UITableViewHeaderFooterView {
     private func configureLayout() {
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
         ])
     }
 }

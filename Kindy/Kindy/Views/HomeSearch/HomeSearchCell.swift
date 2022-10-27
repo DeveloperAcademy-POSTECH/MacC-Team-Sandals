@@ -50,12 +50,14 @@ final class HomeSearchCell: UITableViewCell {
             photoImageView.widthAnchor.constraint(equalTo: photoImageView.heightAnchor),
             
             nameLabel.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16)
+            nameLabel.leadingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: 16),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
     
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
+        photoImageView.image = item.images?[0]
     }
     
     // MARK: - 라이프 사이클
