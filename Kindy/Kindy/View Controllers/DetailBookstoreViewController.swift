@@ -54,6 +54,10 @@ final class DetailBookstoreViewController: UIViewController {
         setupDelegate()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         setupBookstoreImages()
     }

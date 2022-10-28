@@ -59,14 +59,15 @@ final class HomeViewController: UIViewController {
         
         return snapshot
     }
-
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // MARK: Navigation Bar Button Item
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "KindyLogo"), style: .plain, target: nil, action: nil)
+        let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = UIColor(named: "kindyGreen")
         
@@ -95,7 +96,7 @@ final class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         // MARK: Navigation Bar Appearance
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
         let customNavBarAppearance = UINavigationBarAppearance()
@@ -307,7 +308,7 @@ final class HomeViewController: UIViewController {
             case .mainCuration:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.identifier, for: indexPath) as? MainCurationCollectionViewCell else { return UICollectionViewCell() }
                 cell.configureCell(item.curation!)
-
+                
                 return cell
             case .curation:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as? CurationCollectionViewCell else { return UICollectionViewCell() }
@@ -479,4 +480,19 @@ extension HomeViewController: SectionHeaderDelegate {
             return
         }
     }
+}
+
+
+// MARK: Scroll View Delegate
+
+extension HomeViewController: UIScrollViewDelegate {
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if (velocity.y > 0) {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+        } else {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+    }
+    
 }
