@@ -199,9 +199,6 @@ class NewItems {
                 break
             }
         }
-        print(NewItems.bookstoreDummy[index].isFavorite)
         NewItems.bookstoreDummy[index].isFavorite.toggle()
-        print(NewItems.bookstoreDummy[index].isFavorite)
-        print("success toggle")
     }
 }

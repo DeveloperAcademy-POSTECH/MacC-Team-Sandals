@@ -41,7 +41,7 @@ final class HomeViewController: UIViewController {
             snapshot.appendItems([Item.emptyNearby], toSection: .emptyNearby)
         } else {
             snapshot.appendSections([.nearby])
-            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]] , toSection: .nearby)
+            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]], toSection: .nearby)
         }
         
         if Item.bookmarkedBookStores.isEmpty {
@@ -49,7 +49,7 @@ final class HomeViewController: UIViewController {
             snapshot.appendItems([Item.emptyBookmark], toSection: .emptyBookmark)
         } else {
             snapshot.appendSections([.bookmarked])
-            snapshot.appendItems(NewItems.bookstoreDummy.filter{ $0.isFavorite }.map{ .bookStore($0) }, toSection: .bookmarked)
+            snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
         }
         
         snapshot.appendSections([.region])
@@ -109,7 +109,7 @@ final class HomeViewController: UIViewController {
         // MARK: Tab Bar Appearance
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 탭 바 설정이 적용되기에 재설정 해줬습니다.
         tabBarController?.tabBar.isHidden = false
-        
+        Item.updateBookmarkedData()
         dataSource.apply(snapshot)
     }
     
@@ -306,7 +306,7 @@ final class HomeViewController: UIViewController {
             switch section {
             case .mainCuration:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.identifier, for: indexPath) as? MainCurationCollectionViewCell else { return UICollectionViewCell() }
-                cell.configureCell(item.curation!)
+                cell.configureCell(item.mainCuration!)
 
                 return cell
             case .curation:
@@ -323,7 +323,7 @@ final class HomeViewController: UIViewController {
                 return cell
             case .bookmarked:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as? BookmarkedCollectionViewCell else { return UICollectionViewCell() }
-                cell.configureCell(item.bookStore!)
+                cell.configureCell(item.bookmarkedBookStore!)
                 
                 return cell
             case .region:
@@ -422,7 +422,7 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch section {
         case .mainCuration:
-            let curation = Item.mainCuration.map { $0.curation! }.first!
+            let curation = Item.mainCuration.map { $0.mainCuration! }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
             curationViewController.modalPresentationStyle = .overFullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
@@ -442,7 +442,7 @@ extension HomeViewController: UICollectionViewDelegate {
             
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .bookmarked:
-            let bookstore = NewItems.bookstoreDummy.filter{ $0.isFavorite }[indexPath.item]
+            let bookstore = Item.bookmarkedBookStores.map { $0.bookmarkedBookStore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookstore
             
@@ -471,9 +471,9 @@ extension HomeViewController: SectionHeaderDelegate {
             nearbyViewController.setupData(items: items)
             show(nearbyViewController, sender: nil)
         case 3:
-            let items = Item.bookmarkedBookStores.map { $0.bookStore! }
+            let items = Item.bookmarkedBookStores.map { $0.bookmarkedBookStore! }
             let bookmarkViewController = BookmarkViewController()
-            bookmarkViewController.setupData(items: NewItems.bookstoreDummy.filter{ $0.isFavorite })
+            bookmarkViewController.setupData(items: items)
             show(bookmarkViewController, sender: nil)
         default:
             return
