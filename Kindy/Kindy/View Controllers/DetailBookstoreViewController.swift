@@ -99,6 +99,7 @@ final class DetailBookstoreViewController: UIViewController {
         isBookmarked.toggle()
         isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
         navigationBarRightButton.image = isBookmarked ? UIImage(systemName: "bookmark.fill") : UIImage(systemName: "bookmark")
+        NewItems.bookmarkToggle(bookstore!)
     }
     
 }
