@@ -197,6 +197,7 @@
 				7B404C0B28FE87D300A24C89 /* View Controllers */,
 				7B404C0F28FE882D00A24C89 /* Protocols */,
 				7B404C1028FE883900A24C89 /* Extensions */,
+				7B7E2137290E605200B6723D /* Resources */,
 			);
 			path = Kindy;
 			sourceTree = "<group>";
@@ -286,7 +287,6 @@
 				7B404C1C28FE8E3000A24C89 /* Region.swift */,
 				7B404C1E28FE90B700A24C89 /* Item.swift */,
 				31AAD147290948E0004A993C /* NewItems.swift */,
-				A06954EE2906D9D800C09D1D /* Privacy.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -366,6 +366,15 @@
 				6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */,
 			);
 			path = Curation;
+			sourceTree = "<group>";
+		};
+		7B7E2137290E605200B6723D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A06954EE2906D9D800C09D1D /* Privacy.swift */,
+			);
+			name = Resources;
+			path = Extensions/Resources;
 			sourceTree = "<group>";
 		};
 		7BF9AACE2909743400C80F72 /* Detail */ = {
