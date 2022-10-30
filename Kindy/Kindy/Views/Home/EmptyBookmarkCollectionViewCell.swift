@@ -17,13 +17,15 @@ final class EmptyBookmarkCollectionViewCell: UICollectionViewCell {
         stackView.alignment = .fill
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         return stackView
     }()
     
     private let label: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = .body2
         label.text = "북마크한 서점이 아직 없어요"
+        
         return label
     }()
     
@@ -31,17 +33,25 @@ final class EmptyBookmarkCollectionViewCell: UICollectionViewCell {
         let button = UIButton()
         button.setTitle("서점 큐레이션 보러가기", for: .normal)
         button.setTitleColor(UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1), for: .normal)
-        button.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
+        button.titleLabel?.font = .headline
         button.setUnderline()
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
+        
         return button
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(stackView)
         stackView.addArrangedSubview(label)
         stackView.addArrangedSubview(button)
@@ -50,10 +60,6 @@ final class EmptyBookmarkCollectionViewCell: UICollectionViewCell {
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     @objc func buttonTapped() {

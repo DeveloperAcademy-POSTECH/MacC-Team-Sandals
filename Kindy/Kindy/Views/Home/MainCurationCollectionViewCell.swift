@@ -15,8 +15,9 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemGray4
+        imageView.backgroundColor = .kindyLightGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         return imageView
     }()
     
@@ -27,6 +28,7 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         view.backgroundColor = UIColor(red: 0.149, green: 0.258, blue: 0.232, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
+        
         return view
     }()
     
@@ -36,27 +38,37 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
         stackView.distribution = .fill
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         return stackView
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 24)
+        label.font = .title2
+        
         return label
     }()
     
     private let subTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
+        label.font = .title3
+        
         return label
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(imageView)
         addSubview(labelBackgroundView)
         addSubview(titleStack)
@@ -78,10 +90,6 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
             titleStack.trailingAnchor.constraint(equalTo: labelBackgroundView.trailingAnchor, constant: 16),
             titleStack.centerYAnchor.constraint(equalTo: labelBackgroundView.centerYAnchor)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: Configure Cell

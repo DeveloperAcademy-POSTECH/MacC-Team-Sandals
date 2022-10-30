@@ -17,30 +17,40 @@ final class NoPermissionCollectionViewCell: UICollectionViewCell {
         stackView.alignment = .center
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         return stackView
     }()
     
     private let topLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = .body2
         label.text = "위치정보 접근 권한을 설정해주시면\n현재 내위치 주변의 서점을 찾아드릴게요!"
         label.numberOfLines = 2
         label.textAlignment = .center
+        
         return label
     }()
     
     private let bottomLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .footnote)
+        label.font = .footnote
         label.text = "휴대폰 설정 > 킨디 > 위치정보 접근 허용"
-        label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
+        label.textColor = .kindyGray
+        
         return label
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(stackView)
         stackView.addArrangedSubview(topLabel)
         stackView.addArrangedSubview(bottomLabel)
@@ -49,10 +59,6 @@ final class NoPermissionCollectionViewCell: UICollectionViewCell {
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

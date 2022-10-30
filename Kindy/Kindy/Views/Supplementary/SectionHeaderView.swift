@@ -21,6 +21,7 @@ final class SectionHeaderView: UICollectionReusableView {
         stackView.alignment = .leading
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         return stackView
     }()
     
@@ -29,6 +30,7 @@ final class SectionHeaderView: UICollectionReusableView {
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .center
+        
         return stackView
     }()
     
@@ -38,12 +40,14 @@ final class SectionHeaderView: UICollectionReusableView {
         stackView.distribution = .fill
         stackView.alignment = .center
         stackView.spacing = 4
+        
         return stackView
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 24)
+        label.font = .title2
+        
         return label
     }()
     
@@ -53,28 +57,38 @@ final class SectionHeaderView: UICollectionReusableView {
         button.tintColor = .black
         button.setContentHuggingPriority(.required, for: .horizontal)
         button.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
+        
         return button
     }()
     
     private let regionLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .footnote)
-        label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
+        label.font = .footnote
+        label.textColor = .kindyGray
         label.text = "포항시, 북구"
+        
         return label
     }()
     
     private let locationImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "location.fill")
-        imageView.tintColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
+        imageView.tintColor = .kindyGray
+        
         return imageView
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(stackView)
         stackView.addArrangedSubview(topStackView)
         stackView.addArrangedSubview(bottomStackView)
@@ -96,10 +110,6 @@ final class SectionHeaderView: UICollectionReusableView {
             locationImageView.widthAnchor.constraint(equalToConstant: 13),
             locationImageView.heightAnchor.constraint(equalToConstant: 13)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     func setTitle(_ title: String, color: UIColor, hideSeeAllButton: Bool, hideBottomStackView: Bool, sectionIndex: Int) {

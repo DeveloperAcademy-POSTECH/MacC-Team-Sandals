@@ -15,8 +15,9 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemGray2
+        imageView.backgroundColor = .kindyLightGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         return imageView
     }()
     
@@ -27,14 +28,16 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         view.backgroundColor = UIColor(red: 0.149, green: 0.258, blue: 0.232, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
+        
         return view
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
+        label.font = .title3
         label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
@@ -46,13 +49,21 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         label.font = .preferredFont(forTextStyle: .footnote)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(imageView)
         addSubview(labelBackgroundView)
         addSubview(titleLabel)
@@ -80,12 +91,7 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     // MARK: Configure Cell
-    // TODO: TempCuration 나중에 바꿔야함
     func configureCell(_ curation: Curation, indexPath: IndexPath, numberOfItems: Int) {
         titleLabel.text = curation.subTitle
         numberLabel.text = "\(indexPath.item + 1) / \(numberOfItems)"
