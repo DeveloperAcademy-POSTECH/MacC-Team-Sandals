@@ -21,11 +21,11 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     
     private let imageCarouselCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
-        collectionView.layer.cornerRadius = 8
-        collectionView.clipsToBounds = true
         collectionView.showsHorizontalScrollIndicator =  false
         collectionView.backgroundColor = .clear
         collectionView.isPagingEnabled = true
+        collectionView.layer.cornerRadius = 8
+        collectionView.clipsToBounds = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -40,23 +40,25 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-SemiBold", size: 28)
+        label.tintColor = .black
+        label.font = UIFont.title2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let addressLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
+        label.textColor = UIColor.kindyGray
+//        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
+        label.font = UIFont.body1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     lazy var bookmarkButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
-        button.tintColor = UIColor(named: "kindyGreen")
+        button.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+        button.tintColor = UIColor.kindyPrimaryGreen
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
      }()
@@ -94,7 +96,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     }
     
     func setupCollectionView() {
-        let height = (frame.width - 32) * 1.0558
+        let height = (frame.width - 32) * 1.02793296
         imageCarouselCollectionView.register(ImageCarouselCollectionViewCell.self, forCellWithReuseIdentifier: ImageCarouselCollectionViewCell.identifier)
         imageCarouselCollectionView.delegate = self
         imageCarouselCollectionView.dataSource = self
@@ -116,8 +118,8 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     
     func setupButtonUI() {
         NSLayoutConstraint.activate([
-            bookmarkButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -23),
-            bookmarkButton.topAnchor.constraint(equalTo: imageCarouselCollectionView.bottomAnchor, constant: 24),
+            bookmarkButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            bookmarkButton.topAnchor.constraint(equalTo: imageCarouselCollectionView.bottomAnchor, constant: 16),
             bookmarkButton.widthAnchor.constraint(equalToConstant: 23),
             bookmarkButton.heightAnchor.constraint(equalToConstant: 36)
         ])
@@ -160,9 +162,10 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
 extension BookmarkCollectionViewCell {
     // ImageCarousel 의 데이터가 입력되면 Layout 재설정 및 컬렉션뷰 리로드
     public func configureCarouselView() {
+        let imageSize: CGFloat = (frame.width - 32 ) * 1.02793296
         let carouselLayout = UICollectionViewFlowLayout()
         carouselLayout.scrollDirection = .horizontal
-        carouselLayout.itemSize = .init(width: frame.width - 32, height: frame.height)
+        carouselLayout.itemSize = .init(width: frame.width - 32, height: imageSize)
         carouselLayout.sectionInset = .zero
         carouselLayout.minimumLineSpacing = .zero
         imageCarouselCollectionView.collectionViewLayout = carouselLayout

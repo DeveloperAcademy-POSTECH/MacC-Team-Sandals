@@ -13,6 +13,10 @@ final class BookmarkViewController: UIViewController {
         case bookmark
     }
     
+    enum SupplementaryViewKind {
+        static let header = "header"
+    }
+    
     var totalData: [Bookstore] = []
 
     private var filterdItem = [Bookstore]()
@@ -26,7 +30,9 @@ final class BookmarkViewController: UIViewController {
     private var filteredItemSnapshot: NSDiffableDataSourceSnapshot<Section, Bookstore> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Bookstore>()
         snapshot.appendSections([.bookmark])
-        snapshot.appendItems(filterdItem)
+        snapshot.appendItems(filterdItem, toSection: .bookmark)
+        // Section Header 의 Count 수의 변화를 반영하기 위함
+        snapshot.reloadSections([.bookmark])
         return snapshot
     }
     
@@ -34,7 +40,6 @@ final class BookmarkViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "북마크"
-        self.navigationController?.navigationBar.barTintColor = .white
         setupSearchController()
         setupCollectionView()
         configureDataSource()
@@ -51,7 +56,7 @@ final class BookmarkViewController: UIViewController {
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
-        navigationController?.navigationBar.tintColor = UIColor(named: "kindyGreen")
+        navigationController?.navigationBar.tintColor = UIColor.kindyPrimaryGreen
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
@@ -69,6 +74,8 @@ final class BookmarkViewController: UIViewController {
     private func setupCollectionView() {
         view.addSubview(bookMarkCollectionView)
         bookMarkCollectionView.register(BookmarkCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkCollectionViewCell.identifier)
+        // SectionHeaderCell 추가
+        bookMarkCollectionView.register(BookmarkSectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: BookmarkSectionHeaderView.identifier)
         bookMarkCollectionView.setCollectionViewLayout(createLayout(), animated: false)
         bookMarkCollectionView.showsVerticalScrollIndicator = false
         bookMarkCollectionView.frame = view.bounds
@@ -82,19 +89,28 @@ final class BookmarkViewController: UIViewController {
     // CollectionView layout 지정
     func createLayout() -> UICollectionViewLayout {
         // fractionalSize -> Group과 아이템의 비율
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let imageSize: CGFloat = (view.frame.width - 32 ) * 1.02793296
+        let labelSize: CGFloat = 77
         
-        let spacing: CGFloat = 0
+        //SectionHeader Size
+        let headerItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(16))
+        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerItemSize, elementKind: SupplementaryViewKind.header, alignment: .top)
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(imageSize + labelSize))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.5545))
+
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(imageSize + labelSize + 48))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         
-        group.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: 0, trailing: spacing)
+        group.contentInsets = .zero
         
         
         let section = NSCollectionLayoutSection(group: group)
-        
+        // Header와 Group의 Padding
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0)
+        section.boundarySupplementaryItems = [headerItem]
         let layout = UICollectionViewCompositionalLayout(section: section)
         
         return layout
@@ -102,13 +118,25 @@ final class BookmarkViewController: UIViewController {
     
     // MARK: 추후 데이터 전달 타입 변경 필요
     func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource(collectionView: bookMarkCollectionView) {  collectionView, indexPath, itemIdentifier in
+        dataSource = .init(collectionView: bookMarkCollectionView) {  collectionView, indexPath, itemIdentifier in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkCollectionViewCell.identifier, for: indexPath) as? BookmarkCollectionViewCell else { return UICollectionViewCell() }
             cell.delegate = self
             cell.configureCell(itemIdentifier, indexPath.row)
             cell.configureCarouselView()
             return cell
         }
+        
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case SupplementaryViewKind.header:
+                guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: BookmarkSectionHeaderView.identifier, for: indexPath) as? BookmarkSectionHeaderView else { return UICollectionReusableView() }
+                headerView.setTitle(self.filterdItem.count)
+                return headerView
+            default:
+                return nil
+            }
+        }
+        
         dataSource.apply(filteredItemSnapshot)
     }
 
