@@ -9,5 +9,5 @@ import Foundation
 
 // 홈 화면에서 지역별 서점 섹션을 위한 구조체
 struct Region: Hashable {
-    let name :String
+    let name: String
 }

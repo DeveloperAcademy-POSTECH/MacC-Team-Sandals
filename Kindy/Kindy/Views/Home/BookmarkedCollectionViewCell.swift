@@ -17,6 +17,7 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
         stackView.alignment = .fill
         stackView.spacing = 4
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         return stackView
     }()
     
@@ -26,6 +27,7 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
         stackView.distribution = .fill
         stackView.alignment = .leading
         stackView.spacing = 0
+        
         return stackView
     }()
     
@@ -34,27 +36,37 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemGray6
+        imageView.backgroundColor = .kindyLightGray
+        
         return imageView
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .headline)
+        label.font = .headline
+        
         return label
     }()
     
     private let addressLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .footnote)
-        label.textColor = .gray
+        label.font = .footnote
+        label.textColor = .kindyGray
+        
         return label
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(stackView)
         
         stackView.addArrangedSubview(imageView)
@@ -71,10 +83,6 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
             imageView.widthAnchor.constraint(equalToConstant: 136),
             imageView.heightAnchor.constraint(equalToConstant: 168)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: Configure Cell

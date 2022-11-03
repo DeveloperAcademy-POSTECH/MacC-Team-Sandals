@@ -18,6 +18,7 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
         stackView.alignment = .center
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         return stackView
     }()
     
@@ -27,6 +28,7 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
         stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.spacing = 4
+        
         return stackView
     }()
     
@@ -35,34 +37,45 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemGray6
+        imageView.backgroundColor = .kindyLightGray
+        
         return imageView
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .headline)
+        label.font = .headline
+        
         return label
     }()
     
     private let distanceLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .body)
-        label.textColor = UIColor(red: 0.146, green: 0.454, blue: 0.343, alpha: 1)
+        label.font = .body1
+        label.textColor = .kindyPrimaryGreen
+        
         return label
     }()
     
     private let lineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
+        
         return view
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(stackView)
         addSubview(lineView)
         
@@ -85,10 +98,6 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
             lineView.leadingAnchor.constraint(equalTo: leadingAnchor),
             lineView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: Configure Cell

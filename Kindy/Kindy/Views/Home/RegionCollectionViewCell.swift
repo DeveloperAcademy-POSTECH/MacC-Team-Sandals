@@ -13,36 +13,47 @@ final class RegionCollectionViewCell: UICollectionViewCell {
     
     private let regionLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = .body1
         label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
     private let topLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
+        
         return view
     }()
     
     private let bottomLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
+        
         return view
     }()
     
     private let rightLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
+        
         return view
     }()
     
     // MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         addSubview(regionLabel)
         addSubview(topLineView)
         addSubview(bottomLineView)
@@ -68,10 +79,6 @@ final class RegionCollectionViewCell: UICollectionViewCell {
             rightLineView.bottomAnchor.constraint(equalTo: bottomAnchor),
             rightLineView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: Configure Cell

@@ -69,7 +69,7 @@ final class HomeViewController: UIViewController {
         let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
-        navigationItem.rightBarButtonItem?.tintColor = UIColor(named: "kindyGreen")
+        navigationItem.rightBarButtonItem?.tintColor = .black
         
         // MARK: Configure Layout
         collectionView.collectionViewLayout = createLayout()
