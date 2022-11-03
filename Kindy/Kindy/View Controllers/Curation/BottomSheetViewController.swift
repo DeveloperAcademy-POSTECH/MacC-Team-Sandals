@@ -42,7 +42,7 @@ final class BottomSheetViewController: UIViewController {
         return view
     }()
     
-    private var bottomSheetPanMinTopConstant: CGFloat = UIScreen.main.bounds.height * 0.13
+    private lazy var bottomSheetPanMinTopConstant: CGFloat = dismissButton.frame.height + 66.5
     
     private lazy var bottomSheetPanStartingTopConstant: CGFloat = bottomSheetPanMinTopConstant
     
@@ -166,9 +166,11 @@ final class BottomSheetViewController: UIViewController {
         
         bottomSheetViewTopConstraint = bottomSheetView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topConstant)
         
+        let buttonConstant = UIScreen.main.bounds.height * 0.05
+        
         NSLayoutConstraint.activate([
-            dismissButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -34),
+            dismissButton.topAnchor.constraint(equalTo: view.topAnchor, constant: buttonConstant),
+            dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             
             bottomSheetView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomSheetView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),

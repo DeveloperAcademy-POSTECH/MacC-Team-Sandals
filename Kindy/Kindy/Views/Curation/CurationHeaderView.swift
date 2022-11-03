@@ -50,13 +50,15 @@ class CurationHeaderView: UIView {
         self.addSubview(titleLabel)
         self.addSubview(subtitleLabel)
         
+        let defaultHeight: CGFloat = (0.65 * UIScreen.main.bounds.height + 96.5) - (0.52 * UIScreen.main.bounds.height)
+        
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -defaultHeight),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 14),
