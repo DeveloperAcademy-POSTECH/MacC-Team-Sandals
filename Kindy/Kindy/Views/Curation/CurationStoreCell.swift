@@ -19,7 +19,7 @@ class CurationStoreCell: UICollectionViewCell {
     
     private lazy var lineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -37,7 +37,7 @@ class CurationStoreCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .black
-        view.font = .systemFont(ofSize: 17, weight: .bold)
+        view.font = .headline
         view.numberOfLines = 0
         view.textAlignment = .left
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -47,7 +47,7 @@ class CurationStoreCell: UICollectionViewCell {
     private lazy var descriptionLabel: UILabel = {
         let view = UILabel()
         view.textColor = .secondaryLabel
-        view.font = .systemFont(ofSize: 15)
+        view.font = .body2
         view.numberOfLines = 0
         view.textAlignment = .left
         view.translatesAutoresizingMaskIntoConstraints = false

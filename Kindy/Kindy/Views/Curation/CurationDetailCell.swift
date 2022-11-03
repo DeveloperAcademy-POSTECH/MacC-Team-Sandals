@@ -33,7 +33,7 @@ final class CurationDetailCell: UICollectionViewCell {
     private lazy var descriptionLabel: UILabel = {
         let view = UILabel()
         view.textColor = .black
-        view.font = .systemFont(ofSize: 15)
+        view.font = .body2
         view.numberOfLines = 0
         view.textAlignment = .left
         view.adjustsFontSizeToFitWidth = true
