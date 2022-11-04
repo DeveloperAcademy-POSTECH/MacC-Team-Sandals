@@ -43,6 +43,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationItem.title = "지역별 서점"
         
         navigationController?.setNavigationBarHidden(false, animated: false)
         
@@ -51,6 +52,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
+        navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
