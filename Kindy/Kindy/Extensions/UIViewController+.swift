@@ -58,3 +58,9 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
         present(sheet, animated: true)
     }
 }
+
+extension UIViewController {
+    var screenHeight: CGFloat {
+        return UIScreen.main.bounds.height
+    }
+}

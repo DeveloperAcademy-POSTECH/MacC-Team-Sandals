@@ -18,3 +18,9 @@ extension UIView {
         }
     }
 }
+
+extension UIView {
+    var screenHeight: CGFloat {
+        return UIScreen.main.bounds.height
+    }
+}
