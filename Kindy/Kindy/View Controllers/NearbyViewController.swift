@@ -34,6 +34,7 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
         super.viewDidLoad()
         
         setupSearchController()
+        setupCustomCancelButton(of: searchController)
         setupTableView()
         
         dismissKeyboard()

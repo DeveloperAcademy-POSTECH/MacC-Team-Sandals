@@ -35,6 +35,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         super.viewDidLoad()
 
         setupSearchController()
+        setupCustomCancelButton(of: searchController)
         setupTableView()
 
         dismissKeyboard()
