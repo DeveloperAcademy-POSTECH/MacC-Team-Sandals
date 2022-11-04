@@ -20,7 +20,7 @@ class CurationHeaderView: UIView {
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = .systemFont(ofSize: 25, weight: .bold)
+        view.font = .title2
         view.numberOfLines = 2
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -29,7 +29,7 @@ class CurationHeaderView: UIView {
     private lazy var subtitleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .white
-        view.font = .systemFont(ofSize: 17, weight: .light)
+        view.font = .title3
         view.numberOfLines = 2
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -50,13 +50,15 @@ class CurationHeaderView: UIView {
         self.addSubview(titleLabel)
         self.addSubview(subtitleLabel)
         
+        let defaultHeight: CGFloat = (0.65 * screenHeight + 96.5) - (0.52 * screenHeight)
+        
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -defaultHeight),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 14),

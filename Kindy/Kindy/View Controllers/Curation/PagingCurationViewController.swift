@@ -113,7 +113,7 @@ class PagingCurationViewController: UIViewController {
         view.addSubview(headerView)
         view.addSubview(dimmingView)
         
-        headerViewHeightConstraint = headerView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.65)
+        headerViewHeightConstraint = headerView.heightAnchor.constraint(equalToConstant: screenHeight * 0.65)
         headerViewHeightConstant = headerViewHeightConstraint.constant
         headerViewDefaultHeightConstant = headerViewHeightConstraint.constant
         
@@ -165,7 +165,9 @@ extension PagingCurationViewController: ChangeLayout {
     }
     
     func setTopHeaderLayout() {
-        headerViewHeightConstant = UIScreen.main.bounds.height * 0.36
+        let defaultHeight: CGFloat = (0.65 * screenHeight + 96.5) - (0.52 * screenHeight)
+                
+        headerViewHeightConstant = screenHeight * 0.05 + 30 + defaultHeight
         headerViewHeightConstraint.constant = headerViewHeightConstant
         UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseIn, animations: {
             self.view.layoutIfNeeded()

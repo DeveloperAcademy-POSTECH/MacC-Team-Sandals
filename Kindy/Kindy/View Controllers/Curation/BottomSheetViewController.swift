@@ -42,11 +42,11 @@ final class BottomSheetViewController: UIViewController {
         return view
     }()
     
-    private var bottomSheetPanMinTopConstant: CGFloat = UIScreen.main.bounds.height * 0.13
+    private lazy var bottomSheetPanMinTopConstant: CGFloat = dismissButton.frame.height + 66.5
     
     private lazy var bottomSheetPanStartingTopConstant: CGFloat = bottomSheetPanMinTopConstant
     
-    private var defaultHeight: CGFloat = UIScreen.main.bounds.height * 0.52
+    private lazy var defaultHeight: CGFloat = screenHeight * 0.52
     
     private let bottomSheetView: UIView = {
         let view = UIView()
@@ -91,9 +91,9 @@ final class BottomSheetViewController: UIViewController {
             bottomSheetPanStartingTopConstant = bottomSheetViewTopConstraint.constant
         case .changed:
             // 바텀 시트가 위에 고정 되어 있을때 드래그를 위로해도 아무런 일이 일어나지 않게 하는 코드
-            if bottomSheetPanStartingTopConstant == bottomSheetPanMinTopConstant && bottomSheetPanStartingTopConstant + translation.y > UIScreen.main.bounds.height * 0.65 { }
+            if bottomSheetPanStartingTopConstant == bottomSheetPanMinTopConstant && bottomSheetPanStartingTopConstant + translation.y > screenHeight * 0.65 { }
             // 바텀 시트 화면을 일정거리이상 밑으로 드래그 하는것을 방지
-            else if bottomSheetPanStartingTopConstant + translation.y > UIScreen.main.bounds.height * 0.65 && bottomSheetViewTopConstraint.constant != bottomSheetPanMinTopConstant {
+            else if bottomSheetPanStartingTopConstant + translation.y > screenHeight * 0.65 && bottomSheetViewTopConstraint.constant != bottomSheetPanMinTopConstant {
                 bottomSheetViewTopConstraint.constant = bottomSheetPanStartingTopConstant
                 
                 self.dismiss(animated: false)
@@ -113,7 +113,7 @@ final class BottomSheetViewController: UIViewController {
             let bottomPadding = view.safeAreaInsets.bottom
             let defaultPadding = safeAreaHeight+bottomPadding - defaultHeight
             
-            let standardHeight = UIScreen.main.bounds.height * 0.3
+            let standardHeight = screenHeight * 0.3
             
             let nearestValue = nearest(to: bottomSheetViewTopConstraint.constant, inValues: [bottomSheetPanMinTopConstant, standardHeight, defaultPadding, safeAreaHeight + bottomPadding])
           
@@ -166,9 +166,11 @@ final class BottomSheetViewController: UIViewController {
         
         bottomSheetViewTopConstraint = bottomSheetView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topConstant)
         
+        let buttonConstant = screenHeight * 0.05
+        
         NSLayoutConstraint.activate([
-            dismissButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -34),
+            dismissButton.topAnchor.constraint(equalTo: view.topAnchor, constant: buttonConstant),
+            dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             
             bottomSheetView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomSheetView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
