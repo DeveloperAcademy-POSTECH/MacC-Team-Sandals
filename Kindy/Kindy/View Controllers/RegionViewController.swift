@@ -21,7 +21,9 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         return view
     }()
 
-    private var filteredItems = Bookstore.dummyData
+    private var filteredItems = NewItems.bookstoreDummy
+    
+    private var regionItems: [Bookstore] = []
     
     private var regionName: String = ""
 
@@ -82,11 +84,11 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
-            filteredItems = Bookstore.dummyData.filter{ (item) -> Bool in
+            filteredItems = regionItems.filter{ (item) -> Bool in
                 item.name.localizedCaseInsensitiveContains(searchString)
             }
         } else {
-            filteredItems = Bookstore.dummyData
+            filteredItems = regionItems
         }
 
         tableView.reloadData()
@@ -95,6 +97,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
     func setupData(regionName: String) {
         self.regionName = regionName
         filteredItems = NewItems().getBookstoreByRegion(regionName)
+        regionItems = NewItems().getBookstoreByRegion(regionName)
     }
 }
 
