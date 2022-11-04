@@ -24,9 +24,9 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     private let labelBackgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
-        view.layer.opacity = 0.8
+        view.layer.opacity = 0.9
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        view.backgroundColor = UIColor(red: 0.149, green: 0.258, blue: 0.232, alpha: 1)
+        view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -34,7 +34,7 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .black
         label.font = .title3
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -67,7 +67,7 @@ final class CurationCollectionViewCell: UICollectionViewCell {
         addSubview(imageView)
         addSubview(labelBackgroundView)
         addSubview(titleLabel)
-        addSubview(numberLabel)
+//        addSubview(numberLabel)
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),
@@ -84,10 +84,10 @@ final class CurationCollectionViewCell: UICollectionViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -16),
             
-            numberLabel.widthAnchor.constraint(equalToConstant: 55),
-            numberLabel.heightAnchor.constraint(equalToConstant: 20),
-            numberLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 8),
-            numberLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -8),
+//            numberLabel.widthAnchor.constraint(equalToConstant: 55),
+//            numberLabel.heightAnchor.constraint(equalToConstant: 20),
+//            numberLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 8),
+//            numberLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -8),
         ])
     }
     
