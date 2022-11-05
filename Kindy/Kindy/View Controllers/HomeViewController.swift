@@ -65,11 +65,7 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // MARK: Navigation Bar Button Item
-        let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
-        navigationItem.rightBarButtonItem?.tintColor = .black
+        createBarButtonItems()
         
         // MARK: Configure Layout
         collectionView.collectionViewLayout = createLayout()
@@ -114,10 +110,30 @@ final class HomeViewController: UIViewController {
         dataSource.apply(snapshot)
     }
     
+    // MARK:  - Navigation Bar
+    
+    func createBarButtonItems() {
+        let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
+        
+        let bellButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(bellButtonTapped))
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
+        
+        bellButton.tintColor = .black
+        searchButton.tintColor = .black
+        
+        navigationItem.rightBarButtonItems = [bellButton, searchButton]
+    }
+    
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
         show(homeSearchViewController, sender: nil)
+    }
+    
+    // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수입니다.
+    @objc func bellButtonTapped() {
+        
     }
     
     // MARK: - Compositional Layout Method
@@ -151,7 +167,7 @@ final class HomeViewController: UIViewController {
             
             // MARK: Content Insets
             let leading16ContentInsetsForItem = NSDirectionalEdgeInsets(top: .zero, leading: padding16, bottom: .zero, trailing: .zero)
-            let top8Bottom32ContentInsetsForSection = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding32, trailing: .zero)
+            let sectionContentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding8, trailing: .zero)
             
             switch section {
             case .mainCuration:
@@ -169,7 +185,8 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
-                section.contentInsets = NSDirectionalEdgeInsets(top: padding16, leading: .zero, bottom: padding32, trailing: .zero)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = sectionContentInsets
                 
                 return section
             case .curation:
@@ -178,7 +195,7 @@ final class HomeViewController: UIViewController {
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .estimated(326),
-                    heightDimension: .estimated(152)
+                    heightDimension: .estimated(168)
                 )
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
@@ -188,7 +205,7 @@ final class HomeViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPaging
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = top8Bottom32ContentInsetsForSection
+                section.contentInsets = sectionContentInsets
                 
                 return section
             case .nearby:
@@ -211,7 +228,7 @@ final class HomeViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = top8Bottom32ContentInsetsForSection
+                section.contentInsets = sectionContentInsets
                 
                 return section
             case .bookmarked:
@@ -230,7 +247,7 @@ final class HomeViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = top8Bottom32ContentInsetsForSection
+                section.contentInsets = sectionContentInsets
                 
                 return section
             case .region:
@@ -252,7 +269,7 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = top8Bottom32ContentInsetsForSection
+                section.contentInsets = sectionContentInsets
                 
                 return section
             case .emptyNearby:
@@ -270,7 +287,7 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = top8Bottom32ContentInsetsForSection
+                section.contentInsets = sectionContentInsets
                 
                 return section
             case .emptyBookmark:
@@ -288,7 +305,7 @@ final class HomeViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = top8Bottom32ContentInsetsForSection
+                section.contentInsets = sectionContentInsets
                 
                 return section
             }
@@ -307,9 +324,9 @@ final class HomeViewController: UIViewController {
             switch section {
             case .mainCuration:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.identifier, for: indexPath) as? MainCurationCollectionViewCell else { return UICollectionViewCell() }
-
+                
                 cell.configureCell(item.mainCuration!)
-
+                
                 return cell
             case .curation:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as? CurationCollectionViewCell else { return UICollectionViewCell() }
@@ -354,41 +371,36 @@ final class HomeViewController: UIViewController {
             case SupplementaryViewKind.header:
                 let section = self.sections[indexPath.section]
                 let sectionName: String
-                let sectionNameColor: UIColor
                 let hideSeeAllButton: Bool
                 let hideBottomStackView: Bool
                 
                 switch section {
                 case .mainCuration:
-                    return nil
+                    sectionName = "이런 서점은 어때요"
+                    hideSeeAllButton = true
+                    hideBottomStackView = true
                 case .curation:
-                    sectionName = "킨디터 PICK"
-                    sectionNameColor = UIColor(red: 0.146, green: 0.454, blue: 0.343, alpha: 1)
+                    sectionName = "킨디터 추천 서점"
                     hideSeeAllButton = true
                     hideBottomStackView = true
                 case .nearby:
                     sectionName = "내 주변 서점"
-                    sectionNameColor = .black
                     hideSeeAllButton = false
                     hideBottomStackView = false
                 case .bookmarked:
                     sectionName = "북마크 한 서점"
-                    sectionNameColor = .black
                     hideSeeAllButton = false
                     hideBottomStackView = true
                 case .region:
                     sectionName = "지역별 서점"
-                    sectionNameColor = .black
                     hideSeeAllButton = true
                     hideBottomStackView = true
                 case .emptyNearby:
                     sectionName = "내 주변 서점"
-                    sectionNameColor = .black
                     hideSeeAllButton = false
                     hideBottomStackView = false
                 case .emptyBookmark:
                     sectionName = "북마크 한 서점"
-                    sectionNameColor = .black
                     hideSeeAllButton = false
                     hideBottomStackView = true
                 }
@@ -397,9 +409,8 @@ final class HomeViewController: UIViewController {
                 
                 headerView.delegate = self
                 
-                headerView.setTitle(
-                    sectionName,
-                    color: sectionNameColor,
+                headerView.configure(
+                    title: sectionName,
                     hideSeeAllButton: hideSeeAllButton,
                     hideBottomStackView: hideBottomStackView,
                     sectionIndex: indexPath.section

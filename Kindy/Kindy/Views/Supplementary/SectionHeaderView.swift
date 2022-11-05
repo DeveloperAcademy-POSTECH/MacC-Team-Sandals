@@ -29,7 +29,7 @@ final class SectionHeaderView: UICollectionReusableView {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fill
-        stackView.alignment = .center
+        stackView.alignment = .bottom
         
         return stackView
     }()
@@ -103,6 +103,8 @@ final class SectionHeaderView: UICollectionReusableView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             
+            topStackView.heightAnchor.constraint(equalToConstant: 60),
+            
             seeAllButton.widthAnchor.constraint(equalToConstant: 28),
             seeAllButton.heightAnchor.constraint(equalToConstant: 28),
             seeAllButton.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -112,12 +114,10 @@ final class SectionHeaderView: UICollectionReusableView {
         ])
     }
     
-    func setTitle(_ title: String, color: UIColor, hideSeeAllButton: Bool, hideBottomStackView: Bool, sectionIndex: Int) {
+    func configure(title: String, hideSeeAllButton: Bool, hideBottomStackView: Bool, sectionIndex: Int) {
         nameLabel.text = title
-        nameLabel.textColor = color
         seeAllButton.isHidden = hideSeeAllButton
         bottomStackView.isHidden = hideBottomStackView
-        
         self.sectionIndex = sectionIndex
     }
     
