@@ -10,11 +10,9 @@ final class RegionHeaderView: UITableViewHeaderFooterView {
 
     // MARK: - 프로퍼티
     
-
     var headerLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 24)
-        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        label.font = .title2
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label

@@ -23,7 +23,7 @@ final class RegionCell: UITableViewCell {
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 8
         view.clipsToBounds = true      // radius를 imageView에 적용
-        view.backgroundColor = .lightGray      // 사진 없을 경우 default 색
+        view.backgroundColor = .kindyLightGray      // 사진 없을 경우 default 색
         view.translatesAutoresizingMaskIntoConstraints = false
 
         return view
@@ -41,7 +41,7 @@ final class RegionCell: UITableViewCell {
 
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
+        label.font = .headline
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -49,8 +49,8 @@ final class RegionCell: UITableViewCell {
 
     private let addressLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
-        label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
+        label.font = .body2
+        label.textColor = .kindyGray
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
