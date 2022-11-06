@@ -118,12 +118,11 @@ extension CurationViewController: UICollectionViewDelegateFlowLayout {
         let height: CGFloat = UIScreen.main.bounds.height
     
         if indexPath.item == 0 {
-            return CGSize(width: width, height: height / 5)
+            return CGSize(width: width, height: height / 7)
         } else if indexPath.item == 1 || indexPath.item == cellCount {
             let height: Double = Double(curation.headText.count) / 27.2 * 20
             return CGSize(width: width, height: height + 100)
-        }
-        else {
+        } else {
             let height: Double = Double(curation.imageWithText[indexPath.row - 2].1.count) / 27.2 * 20
             // image height를 고정한다면 밑에 더해주면 댐다
             return CGSize(width: width, height: height + 400)
@@ -131,7 +130,7 @@ extension CurationViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: -30, left: 0, bottom: 0, right: 0)
+        UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
