@@ -29,8 +29,8 @@ final class MyPageViewController: UIViewController {
     }
     
     private func setupTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView.delegate = self
         tableView.rowHeight = 56
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
     }
@@ -66,38 +66,38 @@ extension MyPageViewController: UITableViewDataSource {
     
 }
 
-extension MyPageViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        switch cellTitle[indexPath.row] {
-        case "북마크 한 서점":
-            let bookmarkVC = BookmarkViewController()
-            bookmarkVC.setupData(items: NewItems.bookstoreDummy.filter{ $0.isFavorite })
-            show(bookmarkVC, sender: nil)
-            tableView.deselectRow(at: indexPath, animated: true)
-            
-        case "개인정보 처리방침":
-            let detailMyPageVC = DetailMyPageViewController()
-            detailMyPageVC.navigationBarTitle = "개인정보 처리방침"
-            detailMyPageVC.detailString = privacy.termsOfService
-            show(detailMyPageVC, sender: nil)
-            
-        case "라이선스":
-            let detailMyPageVC = DetailMyPageViewController()
-            detailMyPageVC.navigationBarTitle = "라이선스"
-            detailMyPageVC.detailString = privacy.license
-            show(detailMyPageVC, sender: nil)
-            
-        case "독립서점 제보하기":
-            tableView.deselectRow(at: indexPath, animated: true)
-            tableView.reportButtonTapped()
-            
-        default:
-            print("TableView Delegate Error!")
-            break
-        }
-        
-    }
-    
-}
+//extension MyPageViewController: UITableViewDelegate {
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//
+//        switch cellTitle[indexPath.row] {
+//        case "북마크 한 서점":
+//            let bookmarkVC = BookmarkViewController()
+//            bookmarkVC.setupData(items: NewItems.bookstoreDummy.filter{ $0.isFavorite })
+//            show(bookmarkVC, sender: nil)
+//            tableView.deselectRow(at: indexPath, animated: true)
+//
+//        case "개인정보 처리방침":
+//            let detailMyPageVC = DetailMyPageViewController()
+//            detailMyPageVC.navigationBarTitle = "개인정보 처리방침"
+//            detailMyPageVC.detailString = privacy.termsOfService
+//            show(detailMyPageVC, sender: nil)
+//
+//        case "라이선스":
+//            let detailMyPageVC = DetailMyPageViewController()
+//            detailMyPageVC.navigationBarTitle = "라이선스"
+//            detailMyPageVC.detailString = privacy.license
+//            show(detailMyPageVC, sender: nil)
+//
+//        case "독립서점 제보하기":
+//            tableView.deselectRow(at: indexPath, animated: true)
+//            tableView.reportButtonTapped()
+//
+//        default:
+//            print("TableView Delegate Error!")
+//            break
+//        }
+//
+//    }
+//
+//}

@@ -62,6 +62,6 @@ class CurationTextCell: UICollectionViewCell {
     }
     
     func infoConfigure(data: Curation) {
-        textLabel.text = data.infoText
+//        textLabel.text = data.infoText
     }
 }

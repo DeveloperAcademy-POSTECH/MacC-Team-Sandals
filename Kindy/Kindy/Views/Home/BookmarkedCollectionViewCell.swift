@@ -89,6 +89,5 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
         addressLabel.text = bookstore.shortAddress
-        imageView.image = bookstore.images?.first!
     }
 }

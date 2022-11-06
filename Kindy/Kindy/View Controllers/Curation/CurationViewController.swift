@@ -29,8 +29,8 @@ final class CurationViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init())
         view.backgroundColor = .white
-        view.dataSource = self
-        view.delegate = self
+//        view.dataSource = self
+//        view.delegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -64,77 +64,77 @@ private extension CurationViewController {
 }
 
 // 데이터 들어오면 configure 바꿔야함
-extension CurationViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == 0 {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationStoreCell.identifier, for: indexPath) as? CurationStoreCell else {
-                return UICollectionViewCell() }
-            cell.configure(curation: curation)
-            cell.backgroundColor = .clear
-            cell.layer.zPosition = 1
-            return cell
-        }
-        
-        else if indexPath.item == 1 || indexPath.item == cellCount {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
-            
-            if indexPath.item == 1 {
-                cell.headConfigure(data: curation)
-            }
-            else {
-                cell.infoConfigure(data: curation)
-            }
-            return cell
-        }
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationDetailCell.identifier, for: indexPath) as? CurationDetailCell else { return UICollectionViewCell() }
-        
-        cell.configure(imageWithText: curation.imageWithText[indexPath.item - 2])
-        return cell
-    }
-}
-extension CurationViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        cellCount += 2
-        cellCount += curation.imageWithText.count
-        return cellCount + 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item == 0 {
-            let vc = DetailBookstoreViewController()
-            vc.bookstore = curation.bookStore
-            show(vc, sender: nil)
-            // present(vc, animated: false)
-        }
-    }
-}
+//extension CurationViewController: UICollectionViewDataSource {
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        if indexPath.item == 0 {
+//            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationStoreCell.identifier, for: indexPath) as? CurationStoreCell else {
+//                return UICollectionViewCell() }
+//            cell.configure(curation: curation)
+//            cell.backgroundColor = .clear
+//            cell.layer.zPosition = 1
+//            return cell
+//        }
+//
+//        else if indexPath.item == 1 || indexPath.item == cellCount {
+//            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
+//
+//            if indexPath.item == 1 {
+//                cell.headConfigure(data: curation)
+//            }
+//            else {
+//                cell.infoConfigure(data: curation)
+//            }
+//            return cell
+//        }
+//
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationDetailCell.identifier, for: indexPath) as? CurationDetailCell else { return UICollectionViewCell() }
+//
+//        cell.configure(imageWithText: curation.imageWithText[indexPath.item - 2])
+//        return cell
+//    }
+//}
+//extension CurationViewController: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        cellCount += 2
+//        cellCount += curation.imageWithText.count
+//        return cellCount + 1
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        if indexPath.item == 0 {
+//            let vc = DetailBookstoreViewController()
+//            vc.bookstore = curation.bookstore
+//            show(vc, sender: nil)
+//            // present(vc, animated: false)
+//        }
+//    }
+//}
 
-extension CurationViewController: UICollectionViewDelegateFlowLayout {
-    /// 셀 크기
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let width: CGFloat = UIScreen.main.bounds.width
-        let height: CGFloat = UIScreen.main.bounds.height
-    
-        if indexPath.item == 0 {
-            return CGSize(width: width, height: height / 5)
-        } else if indexPath.item == 1 || indexPath.item == cellCount {
-            let height: Double = Double(curation.headText.count) / 27.2 * 20
-            return CGSize(width: width, height: height + 100)
-        }
-        else {
-            let height: Double = Double(curation.imageWithText[indexPath.row - 2].1.count) / 27.2 * 20
-            // image height를 고정한다면 밑에 더해주면 댐다
-            return CGSize(width: width, height: height + 400)
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: -30, left: 0, bottom: 0, right: 0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(0)
-    }
-}
+//extension CurationViewController: UICollectionViewDelegateFlowLayout {
+//    /// 셀 크기
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//        let width: CGFloat = UIScreen.main.bounds.width
+//        let height: CGFloat = UIScreen.main.bounds.height
+//    
+//        if indexPath.item == 0 {
+//            return CGSize(width: width, height: height / 5)
+//        } else if indexPath.item == 1 || indexPath.item == cellCount {
+//            let height: Double = Double(curation.headText.count) / 27.2 * 20
+//            return CGSize(width: width, height: height + 100)
+//        }
+//        else {
+//            let height: Double = Double(curation.imageWithText[indexPath.row - 2].1.count) / 27.2 * 20
+//            // image height를 고정한다면 밑에 더해주면 댐다
+//            return CGSize(width: width, height: height + 400)
+//        }
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        UIEdgeInsets(top: -30, left: 0, bottom: 0, right: 0)
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return CGFloat(0)
+//    }
+//}

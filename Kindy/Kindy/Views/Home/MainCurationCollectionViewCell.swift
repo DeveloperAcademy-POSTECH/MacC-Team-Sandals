@@ -96,6 +96,5 @@ final class MainCurationCollectionViewCell: UICollectionViewCell {
     func configureCell(_ mainCuration: Curation) {
         titleLabel.text = mainCuration.title
         subTitleLabel.text = mainCuration.subTitle
-        imageView.image = UIImage(named: mainCuration.mainImage)
     }
 }

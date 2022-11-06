@@ -6,56 +6,56 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 final class HomeViewController: UIViewController {
     
-    enum Section: Hashable {
-        case mainCuration
-        case curation
-        case nearby
-        case bookmarked
-        case region
-        case emptyNearby
-        case emptyBookmark
-    }
+    var bookstoresRequestTask: Task<Void, Never>? = nil
+    deinit { bookstoresRequestTask?.cancel() }
     
-    private var sections = [Section]()
+    var model = Model()
     
     enum SupplementaryViewKind {
         static let header = "header"
     }
     
+    // MARK: - Collection View
+    
     @IBOutlet weak var collectionView: UICollectionView!
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
     
-    var snapshot: NSDiffableDataSourceSnapshot<Section, Item> {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+    var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
+        var snapshot = NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item>()
         
-        snapshot.appendSections([.mainCuration, .curation])
-        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
-        snapshot.appendItems(Item.curations, toSection: .curation)
+        snapshot.appendSections([.nearby])
+        snapshot.appendItems(model.bookstores)
         
-        if Item.nearByBookStores.isEmpty {
-            snapshot.appendSections([.emptyNearby])
-            snapshot.appendItems([Item.emptyNearby], toSection: .emptyNearby)
-        } else {
-            snapshot.appendSections([.nearby])
-            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]], toSection: .nearby)
-        }
-        
-        if Item.bookmarkedBookStores.isEmpty {
-            snapshot.appendSections([.emptyBookmark])
-            snapshot.appendItems([Item.emptyBookmark], toSection: .emptyBookmark)
-        } else {
-            snapshot.appendSections([.bookmarked])
-            snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
-        }
-        
-        snapshot.appendSections([.region])
-        snapshot.appendItems(Item.regions, toSection: .region)
-        
-        sections = snapshot.sectionIdentifiers
+        //        snapshot.appendSections([.mainCuration, .curation])
+        //        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
+        //        snapshot.appendItems(Item.curations, toSection: .curation)
+        //
+        //        if Item.nearByBookStores.isEmpty {
+        //            snapshot.appendSections([.emptyNearby])
+        //            snapshot.appendItems([Item.emptyNearby], toSection: .emptyNearby)
+        //        } else {
+        //            snapshot.appendSections([.nearby])
+        //            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]], toSection: .nearby)
+        //        }
+        //
+        //        if Item.bookmarkedBookStores.isEmpty {
+        //            snapshot.appendSections([.emptyBookmark])
+        //            snapshot.appendItems([Item.emptyBookmark], toSection: .emptyBookmark)
+        //        } else {
+        //            snapshot.appendSections([.bookmarked])
+        //            snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
+        //        }
+        //
+        //        snapshot.appendSections([.region])
+        //        snapshot.appendItems(Item.regions, toSection: .region)
+        //
+        //        sections = snapshot.sectionIdentifiers
         
         return snapshot
     }
@@ -74,7 +74,7 @@ final class HomeViewController: UIViewController {
         configureDataSource()
         
         // MARK: Delegate
-        collectionView.delegate = self
+        //        collectionView.delegate = self
         
         // MARK: Registeration
         // Cell Registeration
@@ -93,7 +93,9 @@ final class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // MARK: Navigation Bar Appearance
+        update()
+        
+        // MARK: Nav Bar Appearance
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
@@ -106,7 +108,7 @@ final class HomeViewController: UIViewController {
         // MARK: Tab Bar Appearance
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 탭 바 설정이 적용되기에 재설정 해줬습니다.
         tabBarController?.tabBar.isHidden = false
-        Item.updateBookmarkedData()
+        
         dataSource.apply(snapshot)
     }
     
@@ -136,16 +138,31 @@ final class HomeViewController: UIViewController {
         
     }
     
+    // MARK: - Update
+    
+    func update() {
+        bookstoresRequestTask?.cancel()
+        bookstoresRequestTask = Task {
+            if let bookstores = try? await FirestoreManager().fetchBookstores() {
+                model.bookstores = bookstores
+            } else {
+                model.bookstores = []
+            }
+            dataSource.apply(snapshot)
+            
+            bookstoresRequestTask = nil
+        }
+    }
+    
     // MARK: - Compositional Layout Method
     
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            let section = self.sections[sectionIndex]
+            let section = self.dataSource.snapshot().sectionIdentifiers[sectionIndex]
             
             // 재사용되는 edge inset을 정의했습니다.
             let padding8: CGFloat = 8
             let padding16: CGFloat = 16
-            let padding32: CGFloat = 32
             
             // MARK: Section Header
             let headerItemSize = NSCollectionLayoutSize(
@@ -170,7 +187,7 @@ final class HomeViewController: UIViewController {
             let sectionContentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding8, trailing: .zero)
             
             switch section {
-            case .mainCuration:
+            case .curation:
                 let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 
                 let groupSize = NSCollectionLayoutSize(
@@ -189,25 +206,25 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-            case .curation:
-                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-                item.contentInsets = leading16ContentInsetsForItem
-                
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .estimated(326),
-                    heightDimension: .estimated(168)
-                )
-                let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: groupSize,
-                    subitems: [item]
-                )
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .groupPaging
-                section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = sectionContentInsets
-                
-                return section
+                //            case .curation:
+                //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+                //                item.contentInsets = leading16ContentInsetsForItem
+                //
+                //                let groupSize = NSCollectionLayoutSize(
+                //                    widthDimension: .estimated(326),
+                //                    heightDimension: .estimated(168)
+                //                )
+                //                let group = NSCollectionLayoutGroup.horizontal(
+                //                    layoutSize: groupSize,
+                //                    subitems: [item]
+                //                )
+                //
+                //                let section = NSCollectionLayoutSection(group: group)
+                //                section.orthogonalScrollingBehavior = .groupPaging
+                //                section.boundarySupplementaryItems = [headerItem]
+                //                section.contentInsets = sectionContentInsets
+                //
+                //                return section
             case .nearby:
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
@@ -272,42 +289,42 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-            case .emptyNearby:
-                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-                
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .estimated(150)
-                )
-                let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: groupSize,
-                    subitem: item,
-                    count: 1
-                )
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = sectionContentInsets
-                
-                return section
-            case .emptyBookmark:
-                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-                
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .estimated(150)
-                )
-                let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: groupSize,
-                    subitem: item,
-                    count: 1
-                )
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [headerItem]
-                section.contentInsets = sectionContentInsets
-                
-                return section
+//            case .emptyNearby:
+//                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+//
+//                let groupSize = NSCollectionLayoutSize(
+//                    widthDimension: .fractionalWidth(1),
+//                    heightDimension: .estimated(150)
+//                )
+//                let group = NSCollectionLayoutGroup.horizontal(
+//                    layoutSize: groupSize,
+//                    subitem: item,
+//                    count: 1
+//                )
+//
+//                let section = NSCollectionLayoutSection(group: group)
+//                section.boundarySupplementaryItems = [headerItem]
+//                section.contentInsets = sectionContentInsets
+//
+//                return section
+//            case .emptyBookmark:
+//                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+//
+//                let groupSize = NSCollectionLayoutSize(
+//                    widthDimension: .fractionalWidth(1),
+//                    heightDimension: .estimated(150)
+//                )
+//                let group = NSCollectionLayoutGroup.horizontal(
+//                    layoutSize: groupSize,
+//                    subitem: item,
+//                    count: 1
+//                )
+//
+//                let section = NSCollectionLayoutSection(group: group)
+//                section.boundarySupplementaryItems = [headerItem]
+//                section.contentInsets = sectionContentInsets
+//
+//                return section
             }
         }
         
@@ -316,33 +333,34 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Diffable Data Source Method
     
+    // TODO: item 강제 언래핑 대신 더미 넘겨주기
     private func configureDataSource() {
         // MARK: Data Source Initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
-            let section = self.sections[indexPath.section]
+            let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             
             switch section {
-            case .mainCuration:
+            case .curation:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.identifier, for: indexPath) as? MainCurationCollectionViewCell else { return UICollectionViewCell() }
                 
-                cell.configureCell(item.mainCuration!)
+                cell.configureCell(item.curation!)
                 
                 return cell
-            case .curation:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as? CurationCollectionViewCell else { return UICollectionViewCell() }
-                
-                let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
-                cell.configureCell(item.curation!, indexPath: indexPath, numberOfItems: numberOfItems)
-                
-                return cell
+                //            case .curation:
+                //                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as? CurationCollectionViewCell else { return UICollectionViewCell() }
+                //
+                //                let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
+                //                cell.configureCell(item.curation!, indexPath: indexPath, numberOfItems: numberOfItems)
+                //
+                //                return cell
             case .nearby:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NearByBookstoreCollectionViewCell.identifier, for: indexPath) as? NearByBookstoreCollectionViewCell else { return UICollectionViewCell() }
-                cell.configureCell(item.bookStore!)
+                cell.configureCell(item.bookstore!)
                 
                 return cell
             case .bookmarked:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as? BookmarkedCollectionViewCell else { return UICollectionViewCell() }
-                cell.configureCell(item.bookmarkedBookStore!)
+                cell.configureCell(item.bookstore!)
                 
                 return cell
             case .region:
@@ -351,15 +369,7 @@ final class HomeViewController: UIViewController {
                 let isTopCell = !(indexPath.item < 2)
                 let isOddNumber = indexPath.item % 2 == 1
                 
-                cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
-                
-                return cell
-            case .emptyNearby:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyNearbyCollectionViewCell.identifier, for: indexPath) as? EmptyNearbyCollectionViewCell else { return UICollectionViewCell() }
-                
-                return cell
-            case .emptyBookmark:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier, for: indexPath) as? EmptyBookmarkCollectionViewCell else { return UICollectionViewCell() }
+                //                cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
                 
                 return cell
             }
@@ -369,20 +379,20 @@ final class HomeViewController: UIViewController {
         dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
             switch kind {
             case SupplementaryViewKind.header:
-                let section = self.sections[indexPath.section]
+                let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
                 let sectionName: String
                 let hideSeeAllButton: Bool
                 let hideBottomStackView: Bool
                 
                 switch section {
-                case .mainCuration:
+                case .curation:
                     sectionName = "이런 서점은 어때요"
                     hideSeeAllButton = true
                     hideBottomStackView = true
-                case .curation:
-                    sectionName = "킨디터 추천 서점"
-                    hideSeeAllButton = true
-                    hideBottomStackView = true
+                    //                case .curation:
+                    //                    sectionName = "킨디터 추천 서점"
+                    //                    hideSeeAllButton = true
+                    //                    hideBottomStackView = true
                 case .nearby:
                     sectionName = "내 주변 서점"
                     hideSeeAllButton = false
@@ -395,19 +405,11 @@ final class HomeViewController: UIViewController {
                     sectionName = "지역별 서점"
                     hideSeeAllButton = true
                     hideBottomStackView = true
-                case .emptyNearby:
-                    sectionName = "내 주변 서점"
-                    hideSeeAllButton = false
-                    hideBottomStackView = false
-                case .emptyBookmark:
-                    sectionName = "북마크 한 서점"
-                    hideSeeAllButton = false
-                    hideBottomStackView = true
                 }
                 
                 guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
                 
-                headerView.delegate = self
+                //                headerView.delegate = self
                 
                 headerView.configure(
                     title: sectionName,
@@ -428,71 +430,72 @@ final class HomeViewController: UIViewController {
 
 // MARK: - Collection View Delegate
 
-extension HomeViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let section = sections[indexPath.section]
-        
-        switch section {
-        case .mainCuration:
-            let curation = Item.mainCuration.map { $0.mainCuration! }.first!
-            let curationViewController = PagingCurationViewController(curation: curation)
-            curationViewController.modalPresentationStyle = .overFullScreen
-            curationViewController.modalTransitionStyle = .crossDissolve
-            
-            present(curationViewController, animated: true)
-        case .curation:
-            let curation = Item.curations.map { $0.curation! }[indexPath.item]
-            let curationViewController = PagingCurationViewController(curation: curation)
-            curationViewController.modalPresentationStyle = .overFullScreen
-            curationViewController.modalTransitionStyle = .crossDissolve
-            
-            present(curationViewController, animated: true)
-        case .nearby:
-            let bookstore = Item.nearByBookStores.map { $0.bookStore! }[indexPath.item]
-            let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = bookstore
-            
-            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-        case .bookmarked:
-            let bookstore = Item.bookmarkedBookStores.map { $0.bookmarkedBookStore! }[indexPath.item]
-            let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = bookstore
-            
-            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-        case .region:
-            let regionName = Item.regions[indexPath.item].region!.name
-            let regionViewController = RegionViewController()
-            regionViewController.setupData(regionName: regionName)
-            
-            show(regionViewController, sender: nil)
-        default:
-            return
-        }
-    }
-}
+//extension HomeViewController: UICollectionViewDelegate {
+//
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let section = sections[indexPath.section]
+//
+//        switch section {
+//        case .mainCuration:
+//            let curation = Item.mainCuration.map { $0.mainCuration! }.first!
+//            let curationViewController = PagingCurationViewController(curation: curation)
+//            curationViewController.modalPresentationStyle = .overFullScreen
+//            curationViewController.modalTransitionStyle = .crossDissolve
+//
+//            present(curationViewController, animated: true)
+//        case .curation:
+//            let curation = Item.curations.map { $0.curation! }[indexPath.item]
+//            let curationViewController = PagingCurationViewController(curation: curation)
+//            curationViewController.modalPresentationStyle = .overFullScreen
+//            curationViewController.modalTransitionStyle = .crossDissolve
+//
+//            present(curationViewController, animated: true)
+//        case .nearby:
+//            let bookstore = Item.nearByBookStores.map { $0.bookstore! }[indexPath.item]
+//            let detailBookstoreViewController = DetailBookstoreViewController()
+//            detailBookstoreViewController.bookstore = bookstore
+//
+//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+//        case .bookmarked:
+//            let bookstore = Item.bookmarkedBookStores.map { $0.bookstore! }[indexPath.item]
+//            let detailBookstoreViewController = DetailBookstoreViewController()
+//            detailBookstoreViewController.bookstore = bookstore
+//
+//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+//        case .region:
+//            let regionName = Item.regions[indexPath.item].region!.name
+//            let regionViewController = RegionViewController()
+//            regionViewController.setupData(regionName: regionName)
+//
+//            show(regionViewController, sender: nil)
+//        default:
+//            return
+//        }
+//    }
+//}
 
 // MARK: - Section Header Delegate
 
-extension HomeViewController: SectionHeaderDelegate {
-    
-    func segueWithSectionIndex(_ sectionIndex: Int) {
-        switch sectionIndex {
-        case 2:
-            let items = Item.nearByBookStores.map { $0.bookStore! }
-            let nearbyViewController = NearbyViewController()
-            nearbyViewController.setupData(items: items)
-            show(nearbyViewController, sender: nil)
-        case 3:
-            let items = Item.bookmarkedBookStores.map { $0.bookmarkedBookStore! }
-            let bookmarkViewController = BookmarkViewController()
-            bookmarkViewController.setupData(items: items)
-            show(bookmarkViewController, sender: nil)
-        default:
-            return
-        }
-    }
-}
+// TODO: 0번째 섹션 추가해야함
+//extension HomeViewController: SectionHeaderDelegate {
+//
+//    func segueWithSectionIndex(_ sectionIndex: Int) {
+//        switch sectionIndex {
+//        case 2:
+//            let items = Item.nearByBookStores.map { $0.bookstore! }
+//            let nearbyViewController = NearbyViewController()
+//            nearbyViewController.setupData(items: items)
+//            show(nearbyViewController, sender: nil)
+//        case 3:
+//            let items = Item.bookmarkedBookStores.map { $0.bookstore! }
+//            let bookmarkViewController = BookmarkViewController()
+//            bookmarkViewController.setupData(items: items)
+//            show(bookmarkViewController, sender: nil)
+//        default:
+//            return
+//        }
+//    }
+//}
 
 
 // MARK: Scroll View Delegate

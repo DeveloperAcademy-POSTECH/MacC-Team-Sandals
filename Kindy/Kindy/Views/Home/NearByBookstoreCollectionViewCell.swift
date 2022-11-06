@@ -104,6 +104,5 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
         distanceLabel.text = "\(bookstore.meterDistance)m"
-        imageView.image = bookstore.images?.first!
     }
 }

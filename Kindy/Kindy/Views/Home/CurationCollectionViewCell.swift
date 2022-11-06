@@ -95,6 +95,5 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     func configureCell(_ curation: Curation, indexPath: IndexPath, numberOfItems: Int) {
         titleLabel.text = curation.subTitle
         numberLabel.text = "\(indexPath.item + 1) / \(numberOfItems)"
-        imageView.image = UIImage(named: curation.mainImage)
     }
 }
