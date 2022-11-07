@@ -26,8 +26,10 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let from = manager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
         
         for i in 0..<filteredData.count {
-            fetchLocationData(index: i ,latitude: filteredData[i].location.latitude, longitude: filteredData[i].location.longitude)
-            
+            fetchLocationData(latitude: filteredData[i].location.latitude, longitude: filteredData[i].location.longitude) { address in
+                filteredData[i].address = address
+            }
+
             filteredData[i].meterDistance = Int(from.distance(from: CLLocationCoordinate2D(latitude: filteredData[i].location.latitude, longitude: filteredData[i].location.longitude)))
         }
         
@@ -59,7 +61,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         print("error")
     }
     
-    private func fetchLocationData(index: Int, latitude: Double, longitude: Double) {
+    private func fetchLocationData(latitude: Double, longitude: Double, completion: @escaping (String) -> ()) {
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let geocoder = CLGeocoder()
         let locale = Locale(identifier: "Ko-kr")
@@ -70,7 +72,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
                   let subAddress = placemarks.first?.subThoroughfare
             else { return }
             
-            Bookstore.filteredData[index].address = address + " " + subAddress
+            completion(address + " " + subAddress)
         }
     }
 }
