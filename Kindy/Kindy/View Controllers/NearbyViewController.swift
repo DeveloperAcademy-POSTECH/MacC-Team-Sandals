@@ -34,6 +34,7 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
         super.viewDidLoad()
         
         setupSearchController()
+        setupCustomCancelButton(of: searchController)
         setupTableView()
         
         dismissKeyboard()
@@ -41,6 +42,7 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationItem.title = "내 주변 서점"
         
         navigationController?.setNavigationBarHidden(false, animated: false)
         
@@ -49,6 +51,7 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
+        navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance

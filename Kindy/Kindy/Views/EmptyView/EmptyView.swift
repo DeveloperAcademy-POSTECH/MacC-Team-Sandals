@@ -17,8 +17,7 @@ final class EmptyView: UIView {
     
     private let messageLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
+        label.font = .body2
         label.textAlignment = .center
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -29,8 +28,8 @@ final class EmptyView: UIView {
     let reportButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("독립서점 제보하기", for: .normal)
-        btn.setTitleColor(UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1), for: .normal)
-        btn.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
+        btn.setTitleColor(.kindyPrimaryGreen, for: .normal)
+        btn.titleLabel?.font = .headline
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.setUnderline()
         
