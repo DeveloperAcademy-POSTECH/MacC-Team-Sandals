@@ -14,7 +14,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     
     let manager = CLLocationManager()
     
-    override init() {
+    private override init() {
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
