@@ -39,6 +39,9 @@ final class HomeViewController: UIViewController {
         snapshot.appendSections([.nearby])
         snapshot.appendItems(model.bookstores)
         
+        snapshot.appendSections([.region])
+        snapshot.appendItems(model.regions)
+        
         return snapshot
     }
     
@@ -117,12 +120,13 @@ final class HomeViewController: UIViewController {
     
     // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수입니다.
     @objc func bellButtonTapped() {
-
+        
     }
     
     // MARK: - Update
     
     func update() {
+        // TODO: Task들이 너무 많아지는데 어떡하나
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await FirestoreManager().fetchCurations() {
@@ -283,42 +287,42 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-//            case .emptyNearby:
-//                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-//
-//                let groupSize = NSCollectionLayoutSize(
-//                    widthDimension: .fractionalWidth(1),
-//                    heightDimension: .estimated(150)
-//                )
-//                let group = NSCollectionLayoutGroup.horizontal(
-//                    layoutSize: groupSize,
-//                    subitem: item,
-//                    count: 1
-//                )
-//
-//                let section = NSCollectionLayoutSection(group: group)
-//                section.boundarySupplementaryItems = [headerItem]
-//                section.contentInsets = sectionContentInsets
-//
-//                return section
-//            case .emptyBookmark:
-//                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-//
-//                let groupSize = NSCollectionLayoutSize(
-//                    widthDimension: .fractionalWidth(1),
-//                    heightDimension: .estimated(150)
-//                )
-//                let group = NSCollectionLayoutGroup.horizontal(
-//                    layoutSize: groupSize,
-//                    subitem: item,
-//                    count: 1
-//                )
-//
-//                let section = NSCollectionLayoutSection(group: group)
-//                section.boundarySupplementaryItems = [headerItem]
-//                section.contentInsets = sectionContentInsets
-//
-//                return section
+                //            case .emptyNearby:
+                //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+                //
+                //                let groupSize = NSCollectionLayoutSize(
+                //                    widthDimension: .fractionalWidth(1),
+                //                    heightDimension: .estimated(150)
+                //                )
+                //                let group = NSCollectionLayoutGroup.horizontal(
+                //                    layoutSize: groupSize,
+                //                    subitem: item,
+                //                    count: 1
+                //                )
+                //
+                //                let section = NSCollectionLayoutSection(group: group)
+                //                section.boundarySupplementaryItems = [headerItem]
+                //                section.contentInsets = sectionContentInsets
+                //
+                //                return section
+                //            case .emptyBookmark:
+                //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+                //
+                //                let groupSize = NSCollectionLayoutSize(
+                //                    widthDimension: .fractionalWidth(1),
+                //                    heightDimension: .estimated(150)
+                //                )
+                //                let group = NSCollectionLayoutGroup.horizontal(
+                //                    layoutSize: groupSize,
+                //                    subitem: item,
+                //                    count: 1
+                //                )
+                //
+                //                let section = NSCollectionLayoutSection(group: group)
+                //                section.boundarySupplementaryItems = [headerItem]
+                //                section.contentInsets = sectionContentInsets
+                //
+                //                return section
             }
         }
         
@@ -363,7 +367,7 @@ final class HomeViewController: UIViewController {
                 let isTopCell = !(indexPath.item < 2)
                 let isOddNumber = indexPath.item % 2 == 1
                 
-                //                cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
+                cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
                 
                 return cell
             }

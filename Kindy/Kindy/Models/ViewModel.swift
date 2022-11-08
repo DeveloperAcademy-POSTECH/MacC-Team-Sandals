@@ -19,7 +19,7 @@ enum ViewModel {
         case curation(Curation)
         case bookstore(Bookstore)
         case bookmarkedBookstore(Bookstore)
-        case region
+        case region(String)
         
         var curation: Curation? {
             if case .curation(let curation) = self {
@@ -36,6 +36,14 @@ enum ViewModel {
             case .bookmarkedBookstore(let bookstore):
                 return bookstore
             default:
+                return nil
+            }
+        }
+        
+        var region: String? {
+            if case .region(let region) = self {
+                return region
+            } else {
                 return nil
             }
         }
