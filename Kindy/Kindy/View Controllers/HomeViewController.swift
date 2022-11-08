@@ -9,6 +9,8 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
+    private let locationManger = LocationManager.shared
+    
     enum Section: Hashable {
         case mainCuration
         case curation
@@ -35,6 +37,13 @@ final class HomeViewController: UIViewController {
         snapshot.appendSections([.mainCuration, .curation])
         snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
         snapshot.appendItems(Item.curations, toSection: .curation)
+        
+        // MARK: 아래 값이 0 이랑 2가 나오면 위치 정보를 불러 올 수 없으므로 해당하는 뷰를 띄우면 댑니당
+        // locationManager.manager.authorizationStatus.rawValue
+        
+        // if locationManager.manager.authorizationStatus.rawValue == 0 || locationManager.manager.authorizationStatus.rawValue == 2 {
+        //    요기 작성하면 댈거가튼디 스템 쿤 확인점
+        //}
         
         if Item.nearByBookStores.isEmpty {
             snapshot.appendSections([.emptyNearby])

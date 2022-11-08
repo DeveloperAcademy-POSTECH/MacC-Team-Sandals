@@ -9,14 +9,11 @@ import UIKit
 
 class CurationTextCell: UICollectionViewCell {
     
-    private lazy var textLabel: UILabel = {
-        let view = UILabel()
+    private lazy var textView: UITextView = {
+        let view = UITextView()
         view.textColor = .black
         view.font = .body2
-        view.numberOfLines = 0
         view.textAlignment = .left
-        view.adjustsFontSizeToFitWidth = true
-        // view.setLineSpacing(lineSpacing: 6)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -47,21 +44,21 @@ class CurationTextCell: UICollectionViewCell {
     private func setupUI() {
         self.backgroundColor = .white
         
-        self.addSubview(textLabel)
+        self.addSubview(textView)
      
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            textLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+            textView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            textView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            textView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     
     func headConfigure(data: Curation) {
-        textLabel.text = data.headText
+        textView.text = data.headText
     }
     
     func infoConfigure(data: Curation) {
-        textLabel.text = data.infoText
+        textView.text = data.infoText
     }
 }

@@ -14,7 +14,7 @@ struct Bookstore {
     
     let images: [UIImage]?
     let name: String
-    let address: String
+    var address: String
     let telNumber: String?
     let emailAddress: String?
     let instagramURL: String?
@@ -29,9 +29,7 @@ struct Bookstore {
     }
     
     // 내 주변 서점과 떨어진 거리(m)
-    var meterDistance: Int {
-        return 1
-    }
+    var meterDistance: Int = 1
     
     // 내 주변 서점까지 도보로 걸리는 시간(분)
     var timeDistance: Int {
@@ -45,6 +43,15 @@ struct Bookstore {
         Bookstore(images: nil, name: "달팽이 책방4", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10)),
         Bookstore(images: nil, name: "달팽이 책방5", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 10, longitude: 10))
     ]
+    
+    static let locationDummyData: [Bookstore] = [
+        Bookstore(images: nil, name: "투 썸 ", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 36.014295, longitude: 129.325791)),
+        Bookstore(images: nil, name: "멀티패쓰 ", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 36.008379, longitude: 129.330679)),
+        Bookstore(images: nil, name: "현대 음식", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location: Location(latitude: 36.005573, longitude: 129.324763)),
+        Bookstore(images: nil, name: "시외터미널", address: "포항시 남구", telNumber: "020202020", emailAddress: "teamsandalsofficial@gmail.com", instagramURL: nil, businessHour: BusinessHour(), description: "내 손 안의 독립서점, 킨디", location:  Location(latitude: 36.012628, longitude: 129.349983))
+    ]
+    
+    static var filteredData: [Bookstore] = []
 }
 
 extension Bookstore: Hashable {
