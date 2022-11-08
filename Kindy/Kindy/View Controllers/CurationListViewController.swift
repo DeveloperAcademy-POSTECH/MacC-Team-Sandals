@@ -10,7 +10,13 @@ import UIKit
 final class CurationListViewController: UIViewController {
 
     // MARK: - 프로퍼티
-
+    
+    private var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.backgroundColor = .white
+        
+        return tableView
+    }()
     
     // MARK: - 라이프 사이클
     
@@ -18,6 +24,7 @@ final class CurationListViewController: UIViewController {
         super.viewDidLoad()
 
         createBarButtonItems()
+        setupTableView()
     }
     
     // MARK: - 메소드
@@ -42,6 +49,24 @@ final class CurationListViewController: UIViewController {
     
     @objc func bellButtonTapped() {
         
+    }
+    
+    private func setupTableView() {
+        view.addSubview(tableView)
+        
+//        tableView.dataSource = self
+//        tableView.delegate = self
+        
+//        tableView.register(NearbyCell.self, forCellReuseIdentifier: NearbyCell.reuseID)   // Cell 등록 (코드 베이스라서)
+//        tableView.rowHeight = NearbyCell.rowHeight
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
     }
     
 }
