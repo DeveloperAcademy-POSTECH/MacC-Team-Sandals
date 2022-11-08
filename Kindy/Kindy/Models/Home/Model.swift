@@ -10,6 +10,8 @@ import Foundation
 struct Model {
     var curations = [ViewModel.Item]()
     var bookstores = [ViewModel.Item]()
+    var featuredBookstores = [ViewModel.Item]()
+    
     var regions: [ViewModel.Item] = [
         .region("전체"),
         .region("서울"),

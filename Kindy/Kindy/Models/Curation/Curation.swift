@@ -13,7 +13,7 @@ struct Curation {
     let bookstoreID: String
     let title: String
     let subTitle: String?
-    let createdAt: String
+    var createdAt: Date? = Date()
     let headText: String
     let descriptions: [Description]
     let likes: [String]

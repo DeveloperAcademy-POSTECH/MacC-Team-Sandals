@@ -27,7 +27,12 @@ extension Bookstore {
     
     // 내 주변 서점과 떨어진 거리(m)
     var meterDistance: Int {
-        return 1
+        get {
+            return 1
+        }
+        set {
+//            self.meterDistance = newValue
+        }
     }
     
     // 내 주변 서점까지 도보로 걸리는 시간(분)

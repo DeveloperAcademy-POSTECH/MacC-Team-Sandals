@@ -22,9 +22,9 @@ struct FirestoreManager {
 
 extension FirestoreManager {
     // 모든 큐레이션 fetch
-    func fetchCurations() async throws -> [ViewModel.Item] {
+    func fetchCurations() async throws -> [Curation] {
         let querySnapshot = try await Reference.curations.getDocuments()
-        let curations = try querySnapshot.documents.map { try $0.data(as: Curation.self) }.map { ViewModel.Item.curation($0) }
+        let curations = try querySnapshot.documents.map { try $0.data(as: Curation.self) }
         return curations
     }
     
@@ -33,15 +33,20 @@ extension FirestoreManager {
         let curation = try await Reference.curations.document(id).getDocument(as: Curation.self)
         return curation
     }
+    
+    // 큐레이션 추가
+    func add(curation: Curation) throws {
+        try Reference.curations.document(curation.id).setData(from: curation)
+    }
 }
 
 // MARK: -  서점
 
 extension FirestoreManager {
     // 모든 서점 fetch
-    func fetchBookstores() async throws -> [ViewModel.Item] {
+    func fetchBookstores() async throws -> [Bookstore] {
         let querySnapshot = try await Reference.bookstores.getDocuments()
-        let bookstores = try querySnapshot.documents.map { try $0.data(as: Bookstore.self) }.map { ViewModel.Item.bookstore($0) }
+        let bookstores = try querySnapshot.documents.map { try $0.data(as: Bookstore.self) }
         return bookstores
     }
     
@@ -56,7 +61,7 @@ extension FirestoreManager {
 
 extension FirestoreManager {
     // 유저 추가
-    func addUser(with id: String, nickName: String) async throws {
+    func add(user id: String, nickName: String) throws {
         let user = User(id: id, nickName: nickName, bookmarkedBookstores: [])
         try Reference.users.document(user.id).setData(from: user)
     }

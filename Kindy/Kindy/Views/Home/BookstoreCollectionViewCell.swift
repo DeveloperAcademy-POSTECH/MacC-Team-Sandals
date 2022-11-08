@@ -10,7 +10,7 @@ import UIKit
 // 킨디터 추천 서점 섹션의 셀
 final class BookstoreCollectionViewCell: UICollectionViewCell {
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true

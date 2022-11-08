@@ -1,5 +1,5 @@
 //
-//  Item.swift
+//  ViewModel.swift
 //  Kindy
 //
 //  Created by 정호윤 on 2022/10/18.
@@ -18,7 +18,8 @@ enum ViewModel {
 
     enum Item: Hashable {
         case curation(Curation)
-        case bookstore(Bookstore)
+        case featuredBookstore(Bookstore)
+        case nearByBookstore(Bookstore)
         case bookmarkedBookstore(Bookstore)
         case region(String)
         
@@ -32,7 +33,9 @@ enum ViewModel {
         
         var bookstore: Bookstore? {
             switch self {
-            case .bookstore(let bookstore):
+            case .featuredBookstore(let bookstore):
+                return bookstore
+            case .nearByBookstore(let bookstore):
                 return bookstore
             case .bookmarkedBookstore(let bookstore):
                 return bookstore

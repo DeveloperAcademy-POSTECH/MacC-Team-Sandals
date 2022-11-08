@@ -20,10 +20,9 @@ final class HomeViewController: UIViewController {
         bookstoresRequestTask?.cancel()
         curationsRequestTask?.cancel()
         imageRequestTask?.cancel()
-        
-    private let locationManger = LocationManager.shared
-
     }
+    
+    let firestoreManager = FirestoreManager()
     
     var model = Model()
     
@@ -42,6 +41,7 @@ final class HomeViewController: UIViewController {
         
         snapshot.appendSections([.curations])
         snapshot.appendItems(model.curations)
+        
         // MARK: 아래 값이 0 이랑 2가 나오면 위치 정보를 불러 올 수 없으므로 해당하는 뷰를 띄우면 댑니당
         // locationManager.manager.authorizationStatus.rawValue
         
@@ -49,8 +49,8 @@ final class HomeViewController: UIViewController {
         //    요기 작성하면 댈거가튼디 스템 쿤 확인점
         //}
         
-//        snapshot.appendSections([.bookstores])
-//        snapshot.appendItems([])
+        snapshot.appendSections([.bookstores])
+        snapshot.appendItems(model.featuredBookstores)
         
         snapshot.appendSections([.nearbys])
         snapshot.appendItems(model.bookstores)
@@ -97,20 +97,25 @@ final class HomeViewController: UIViewController {
         update()
         
         // MARK: Nav Bar Appearance
-        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
-        navigationController?.navigationBar.tintColor = UIColor(named: "kindyGreen")
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
         
         // MARK: Tab Bar Appearance
-        // 서점 상세화면으로 넘어갔다 오면 상세화면의 탭 바 설정이 적용되기에 재설정 해줬습니다.
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 탭 바 설정이 적용되기에 재설정
         tabBarController?.tabBar.isHidden = false
         
         dataSource.apply(snapshot)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // TODO: Task cancellation
     }
     
     // MARK:  - Navigation Bar
@@ -125,11 +130,12 @@ final class HomeViewController: UIViewController {
         bellButton.tintColor = .black
         searchButton.tintColor = .black
         
-        navigationItem.rightBarButtonItems = [bellButton, searchButton]
+        // TODO: 알림 버튼 추가
+        navigationItem.rightBarButtonItems = [searchButton]
     }
     
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
-    @objc func searchButtonTapped() {
+    @objc func searchButtonTapped() {        
         let homeSearchViewController = HomeSearchViewController()
         show(homeSearchViewController, sender: nil)
     }
@@ -142,11 +148,11 @@ final class HomeViewController: UIViewController {
     // MARK: - Update
     
     func update() {
-        // TODO: Task들이 너무 많아지는데 어떡하나
+        // TODO: Task들이 너무 많아지면 어떡하나
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
-            if let curations = try? await FirestoreManager().fetchCurations() {
-                model.curations = curations
+            if let curations = try? await firestoreManager.fetchCurations() {
+                model.curations = curations.map { .curation($0) }
             } else {
                 model.curations = []
             }
@@ -157,10 +163,14 @@ final class HomeViewController: UIViewController {
         
         bookstoresRequestTask?.cancel()
         bookstoresRequestTask = Task {
-            if let bookstores = try? await FirestoreManager().fetchBookstores() {
-                model.bookstores = bookstores
+            if var bookstores = try? await firestoreManager.fetchBookstores() {
+                model.bookstores = bookstores.map { .nearByBookstore($0) }
+                
+                // TODO: 지금은 3개라 2개만 제거했지만 많아지면 반복문으로 교체
+                model.featuredBookstores = [bookstores.removeLast(), bookstores.removeLast()].map { .featuredBookstore($0) }
             } else {
                 model.bookstores = []
+                model.featuredBookstores = []
             }
             dataSource.apply(snapshot)
             
@@ -359,7 +369,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.curation!)
                 
                 self.imageRequestTask = Task {
-                    if let image = try? await FirestoreManager().fetchImage(with: item.curation?.descriptions[indexPath.item].image) {
+                    if let image = try? await firestoreManager.fetchImage(with: item.curation?.descriptions[indexPath.item].image) {
                         cell.imageView.image = image
                     }
                     imageRequestTask = nil
@@ -372,13 +382,20 @@ final class HomeViewController: UIViewController {
                 let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
                 cell.configureCell(item.bookstore!, indexPath: indexPath, numberOfItems: numberOfItems)
                 
+                self.imageRequestTask = Task {
+                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
+                        cell.imageView.image = image
+                    }
+                    imageRequestTask = nil
+                }
+                
                 return cell
             case .nearbys:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NearByBookstoreCollectionViewCell.identifier, for: indexPath) as? NearByBookstoreCollectionViewCell else { return UICollectionViewCell() }
                 cell.configureCell(item.bookstore!)
                 
                 self.imageRequestTask = Task {
-                    if let image = try? await FirestoreManager().fetchImage(with: item.bookstore?.images?[0]) {
+                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?[0]) {
                         cell.imageView.image = image
                     }
                     imageRequestTask = nil
@@ -458,7 +475,7 @@ final class HomeViewController: UIViewController {
 // MARK: - Collection View Delegate
 
 extension HomeViewController: UICollectionViewDelegate {
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
 
@@ -497,6 +514,12 @@ extension HomeViewController: UICollectionViewDelegate {
         default:
             return
         }
+    }
+    
+    
+    // TODO: 셀 별로 안보이면 Task cancel 해줘야함
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
     }
 }
 
