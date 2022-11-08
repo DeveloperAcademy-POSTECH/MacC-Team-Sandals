@@ -12,93 +12,94 @@ import UIKit
 
 // FIXME: UISearchResultUpdating 프로토콜을 다시 채택해주세용 ㅠ ㅠ 에러나서 일단 프로토콜 채택만 지워놨습니다
 final class NearbyViewController: UIViewController {
-//
-//    // MARK: - 프로퍼티
-//
-//    private var tableView: UITableView = {
-//        let tableView = UITableView(frame: .zero, style: .grouped)
-//        tableView.backgroundColor = .white
-//
-//        return tableView
-//    }()
-//
-//    // 검색된 프로퍼티 담을 배열 생성 (초기값은 전체가 담겨있는 배열) -> 이 기준으로 cell 나타낼 것이기 때문에 DataSource, Delegate에 이 프로퍼티 적용
-//    private var filteredItems = Bookstore.dummyData
-//
-//    private var receivedData = Bookstore.dummyData
-//
-//    private let searchController = UISearchController()
-//
-//    // MARK: - 라이프 사이클
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        setupSearchController()
-//        setupTableView()
-//
-//        dismissKeyboard()
-//    }
-//
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        navigationController?.setNavigationBarHidden(false, animated: false)
-//
-//        // MARK: Navigation Bar Appearance
-//        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
-//        let customNavBarAppearance = UINavigationBarAppearance()
-//        customNavBarAppearance.backgroundColor = .white
-//
-//        navigationController?.navigationBar.standardAppearance = customNavBarAppearance
-//        navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
-//        navigationController?.navigationBar.compactAppearance = customNavBarAppearance
-//    }
-//
-//    // MARK: - 메소드
-//
-//    private func setupTableView() {
-//        view.addSubview(tableView)
-//        tableView.dataSource = self
-//        tableView.delegate = self
-//
-//        tableView.register(NearbyCell.self, forCellReuseIdentifier: NearbyCell.reuseID)   // Cell 등록 (코드 베이스라서)
-//        tableView.rowHeight = NearbyCell.rowHeight
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//        ])
-//    }
-//
-//    // SearchController에 대한 설정들
-//    private func setupSearchController() {
-//        navigationItem.searchController = searchController
-//        searchController.obscuresBackgroundDuringPresentation = false
-//        searchController.searchResultsUpdater = self
-//        navigationItem.hidesSearchBarWhenScrolling = false
-//    }
-//
-//    // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
-//    func updateSearchResults(for searchController: UISearchController) {
-//        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
-//            filteredItems = receivedData.filter{ (item) -> Bool in
-//                item.name.localizedCaseInsensitiveContains(searchString)
-//            }
-//        } else {
-//            filteredItems = receivedData
-//        }
-//
-//        tableView.reloadData()
-//    }
-//
-//    func setupData(items: [Bookstore]) {
-//        receivedData = items
-//        filteredItems = items
-//    }
+    //
+    //    // MARK: - 프로퍼티
+    //
+    //    private var tableView: UITableView = {
+    //        let tableView = UITableView(frame: .zero, style: .grouped)
+    //        tableView.backgroundColor = .white
+    //
+    //        return tableView
+    //    }()
+    //
+    //    // 검색된 프로퍼티 담을 배열 생성 (초기값은 전체가 담겨있는 배열) -> 이 기준으로 cell 나타낼 것이기 때문에 DataSource, Delegate에 이 프로퍼티 적용
+    //    private var filteredItems = Bookstore.dummyData
+    //
+    //    private var receivedData = Bookstore.dummyData
+    //
+    //    private let searchController = UISearchController()
+    //
+    //    // MARK: - 라이프 사이클
+    //
+    //    override func viewDidLoad() {
+    //        super.viewDidLoad()
+    //
+    //        setupSearchController()
+    //        setupTableView()
+    //
+    //        dismissKeyboard()
+    //    }
+    //
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        super.viewWillAppear(animated)
+    //
+    //        navigationController?.setNavigationBarHidden(false, animated: false)
+    //
+    //        // MARK: Navigation Bar Appearance
+    //        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
+    //        let customNavBarAppearance = UINavigationBarAppearance()
+    //        customNavBarAppearance.backgroundColor = .white
+    //
+    //        navigationController?.navigationBar.standardAppearance = customNavBarAppearance
+    //        navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
+    //        navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+    //    }
+    //
+    //    // MARK: - 메소드
+    //
+    //    private func setupTableView() {
+    //        view.addSubview(tableView)
+    //        tableView.dataSource = self
+    //        tableView.delegate = self
+    //
+    //        tableView.register(NearbyCell.self, forCellReuseIdentifier: NearbyCell.reuseID)   // Cell 등록 (코드 베이스라서)
+    //        tableView.rowHeight = NearbyCell.rowHeight
+    //        tableView.translatesAutoresizingMaskIntoConstraints = false
+    //
+    //        NSLayoutConstraint.activate([
+    //            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+    //            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+    //            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+    //            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+    //        ])
+    //    }
+    //
+    //    // SearchController에 대한 설정들
+    //    private func setupSearchController() {
+    //        navigationItem.searchController = searchController
+    //        searchController.obscuresBackgroundDuringPresentation = false
+    //        searchController.searchResultsUpdater = self
+    //        navigationItem.hidesSearchBarWhenScrolling = false
+    //    }
+    //
+    //    // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
+    //    func updateSearchResults(for searchController: UISearchController) {
+    //        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+    //            filteredItems = receivedData.filter{ (item) -> Bool in
+    //                item.name.localizedCaseInsensitiveContains(searchString)
+    //            }
+    //        } else {
+    //            filteredItems = receivedData
+    //        }
+    //
+    //        tableView.reloadData()
+    //    }
+    //
+    //    func setupData(items: [Bookstore]) {
+    //        receivedData = items
+    //        filteredItems = items
+    //    }
+}
 
 // MARK: - DataSource
 //
