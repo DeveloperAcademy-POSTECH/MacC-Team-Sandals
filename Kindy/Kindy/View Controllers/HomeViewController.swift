@@ -11,8 +11,12 @@ import FirebaseFirestoreSwift
 
 final class HomeViewController: UIViewController {
     
-    var bookstoresRequestTask: Task<Void, Never>? = nil
-    deinit { bookstoresRequestTask?.cancel() }
+    var bookstoresRequestTask: Task<Void, Never>?
+    var curationsRequestTask: Task<Void, Never>?
+    deinit {
+        bookstoresRequestTask?.cancel()
+        curationsRequestTask?.cancel()
+    }
     
     var model = Model()
     
@@ -29,33 +33,11 @@ final class HomeViewController: UIViewController {
     var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
         var snapshot = NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item>()
         
+        snapshot.appendSections([.curation])
+        snapshot.appendItems(model.curations)
+        
         snapshot.appendSections([.nearby])
         snapshot.appendItems(model.bookstores)
-        
-        //        snapshot.appendSections([.mainCuration, .curation])
-        //        snapshot.appendItems(Item.mainCuration, toSection: .mainCuration)
-        //        snapshot.appendItems(Item.curations, toSection: .curation)
-        //
-        //        if Item.nearByBookStores.isEmpty {
-        //            snapshot.appendSections([.emptyNearby])
-        //            snapshot.appendItems([Item.emptyNearby], toSection: .emptyNearby)
-        //        } else {
-        //            snapshot.appendSections([.nearby])
-        //            snapshot.appendItems([Item.nearByBookStores[0], Item.nearByBookStores[1], Item.nearByBookStores[2]], toSection: .nearby)
-        //        }
-        //
-        //        if Item.bookmarkedBookStores.isEmpty {
-        //            snapshot.appendSections([.emptyBookmark])
-        //            snapshot.appendItems([Item.emptyBookmark], toSection: .emptyBookmark)
-        //        } else {
-        //            snapshot.appendSections([.bookmarked])
-        //            snapshot.appendItems(Item.bookmarkedBookStores, toSection: .bookmarked)
-        //        }
-        //
-        //        snapshot.appendSections([.region])
-        //        snapshot.appendItems(Item.regions, toSection: .region)
-        //
-        //        sections = snapshot.sectionIdentifiers
         
         return snapshot
     }
@@ -141,6 +123,18 @@ final class HomeViewController: UIViewController {
     // MARK: - Update
     
     func update() {
+        curationsRequestTask?.cancel()
+        curationsRequestTask = Task {
+            if let curations = try? await FirestoreManager().fetchCurations() {
+                model.curations = curations
+            } else {
+                model.curations = []
+            }
+            dataSource.apply(snapshot)
+            
+            curationsRequestTask = nil
+        }
+        
         bookstoresRequestTask?.cancel()
         bookstoresRequestTask = Task {
             if let bookstores = try? await FirestoreManager().fetchBookstores() {

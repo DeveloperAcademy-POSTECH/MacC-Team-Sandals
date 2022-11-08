@@ -8,6 +8,7 @@
 import UIKit
 
 struct Curation {
+    var id: String = UUID().uuidString
     let userID: String
     let bookstoreID: String
     let title: String

@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import FirebaseFirestoreSwift
 
 struct Bookstore {
-    let userID: String
+    var id: String = UUID().uuidString
     let images: [String]?
     let name: String
     var address: String

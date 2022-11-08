@@ -8,8 +8,8 @@
 import Foundation
 
 struct Description {
-    let image: String
-    let content: String
+    let image: String?
+    let content: String?
 }
 
 extension Description: Codable { }

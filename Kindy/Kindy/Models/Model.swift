@@ -9,4 +9,5 @@ import Foundation
 
 struct Model {
     var bookstores = [ViewModel.Item]()
+    var curations = [ViewModel.Item]()
 }
