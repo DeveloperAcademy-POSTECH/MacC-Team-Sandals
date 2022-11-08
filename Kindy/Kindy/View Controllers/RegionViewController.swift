@@ -86,14 +86,14 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
 
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
-        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+        if let searchString = searchController.searchBar.text?.components(separatedBy: " ").joined(separator: ""), searchString.isEmpty == false {
             filteredItems = regionItems.filter{ (item) -> Bool in
-                item.name.localizedCaseInsensitiveContains(searchString)
+                item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
             }
         } else {
             filteredItems = regionItems
         }
-
+        
         tableView.reloadData()
     }
     

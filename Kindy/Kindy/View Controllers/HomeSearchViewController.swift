@@ -88,11 +88,10 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+        if let searchString = searchController.searchBar.text?.components(separatedBy: " ").joined(separator: ""), searchString.isEmpty == false {
             searchText = searchString
             filteredItems = NewItems.bookstoreDummy.filter{ (item) -> Bool in
-                item.name.localizedCaseInsensitiveContains(searchText!)
-            }
+                item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)            }
         } else {
             filteredItems = []
             searchText = ""
