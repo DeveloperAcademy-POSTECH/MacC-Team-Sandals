@@ -48,6 +48,7 @@
 		77DCB185290A5D9700EAB5D5 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB184290A5D9700EAB5D5 /* UIView+.swift */; };
 		77DCB191291A2FDF00EAB5D5 /* CurationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB190291A2FDF00EAB5D5 /* CurationListViewController.swift */; };
 		77DCB193291A357E00EAB5D5 /* CurationListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB192291A357E00EAB5D5 /* CurationListCell.swift */; };
+		77DCB198291A706400EAB5D5 /* CurationListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB197291A706400EAB5D5 /* CurationListHeaderView.swift */; };
 		7B10E564290B8FEA009F543B /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B10E563290B8FEA009F543B /* UIImage+.swift */; };
 		7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1228FE889200A24C89 /* UIColor+.swift */; };
 		7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1A28FE89BA00A24C89 /* Bookstore.swift */; };
@@ -123,6 +124,7 @@
 		77DCB184290A5D9700EAB5D5 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		77DCB190291A2FDF00EAB5D5 /* CurationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationListViewController.swift; sourceTree = "<group>"; };
 		77DCB192291A357E00EAB5D5 /* CurationListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationListCell.swift; sourceTree = "<group>"; };
+		77DCB197291A706400EAB5D5 /* CurationListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationListHeaderView.swift; sourceTree = "<group>"; };
 		7B10E563290B8FEA009F543B /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		7B404C1228FE889200A24C89 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		7B404C1A28FE89BA00A24C89 /* Bookstore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookstore.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				77DCB192291A357E00EAB5D5 /* CurationListCell.swift */,
+				77DCB197291A706400EAB5D5 /* CurationListHeaderView.swift */,
 			);
 			path = CurationList;
 			sourceTree = "<group>";
@@ -541,6 +544,7 @@
 				A06954E72905C74100C09D1D /* MyPageTableViewCell.swift in Sources */,
 				6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */,
 				6EE5E42029027F5D00EA7413 /* NSObject+.swift in Sources */,
+				77DCB198291A706400EAB5D5 /* CurationListHeaderView.swift in Sources */,
 				36BD7D64290404C200CBC879 /* UILabel+.swift in Sources */,
 				77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */,
 				6E471CBA291775FE00AB2120 /* LocationManager.swift in Sources */,

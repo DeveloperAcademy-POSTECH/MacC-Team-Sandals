@@ -61,6 +61,7 @@ final class CurationListViewController: UIViewController {
         tableView.delegate = self
         tableView.rowHeight = CurationListCell.rowHeight
         tableView.register(CurationListCell.self, forCellReuseIdentifier: CurationListCell.identifier)
+        tableView.register(CurationListHeaderView.self, forHeaderFooterViewReuseIdentifier: CurationListHeaderView.identifier)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -86,9 +87,9 @@ extension CurationListViewController: UITableViewDataSource {
         
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return mainDummy.count == 0 ? nil : "총 \(mainDummy.count)개"
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 64
     }
 }
 
@@ -102,5 +103,21 @@ extension CurationListViewController: UITableViewDelegate {
 //        show(detailBookstoreViewController, sender: nil)
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else {
+            return UIView()
+        }
+
+        headerView.headerLabel.text = "카테고리"
+
+        if mainDummy.count == 0 {
+            headerView.isHidden = true
+        } else {
+            headerView.isHidden = false
+        }
+
+        return headerView
     }
 }
