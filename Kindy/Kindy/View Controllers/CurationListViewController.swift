@@ -14,9 +14,12 @@ final class CurationListViewController: UIViewController {
     private var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.backgroundColor = .white
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         
         return tableView
     }()
+    
+    private var mainDummy = NewItems.mainDummy
     
     // MARK: - 라이프 사이클
     
@@ -54,12 +57,10 @@ final class CurationListViewController: UIViewController {
     private func setupTableView() {
         view.addSubview(tableView)
         
-//        tableView.dataSource = self
-//        tableView.delegate = self
-        
-//        tableView.register(NearbyCell.self, forCellReuseIdentifier: NearbyCell.reuseID)   // Cell 등록 (코드 베이스라서)
-//        tableView.rowHeight = NearbyCell.rowHeight
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.rowHeight = CurationListCell.rowHeight
+        tableView.register(CurationListCell.self, forCellReuseIdentifier: CurationListCell.identifier)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -69,4 +70,37 @@ final class CurationListViewController: UIViewController {
         ])
     }
     
+}
+
+// MARK: - DataSource
+
+extension CurationListViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        return mainDummy.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
+        cell.curation = mainDummy[indexPath.row]
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return mainDummy.count == 0 ? nil : "총 \(mainDummy.count)개"
+    }
+}
+
+// MARK: - Delegate
+
+extension CurationListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+//        let detailBookstoreViewController = DetailBookstoreViewController()
+//        detailBookstoreViewController.bookstore = mainDummy[indexPath.row]
+//        show(detailBookstoreViewController, sender: nil)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }

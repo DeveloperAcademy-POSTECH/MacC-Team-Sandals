@@ -34,7 +34,7 @@ final class CurationListCell: UITableViewCell {
         let view = UIStackView()
         view.alignment = .leading
         view.axis = .vertical
-        view.spacing = 3
+        view.spacing = 5
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -62,8 +62,8 @@ final class CurationListCell: UITableViewCell {
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .footnote
-        label.textColor = .kindyGray
+        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 20)
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -71,8 +71,8 @@ final class CurationListCell: UITableViewCell {
     
     private let subTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .footnote
-        label.textColor = .kindyGray
+        label.font = .body1
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
