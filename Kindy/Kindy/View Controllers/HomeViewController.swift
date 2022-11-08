@@ -11,11 +11,15 @@ import FirebaseFirestoreSwift
 
 final class HomeViewController: UIViewController {
     
+    // MARK: Task
     var bookstoresRequestTask: Task<Void, Never>?
     var curationsRequestTask: Task<Void, Never>?
+    var imageRequestTask: Task<Void, Never>?
+    
     deinit {
         bookstoresRequestTask?.cancel()
         curationsRequestTask?.cancel()
+        imageRequestTask?.cancel()
     }
     
     var model = Model()
@@ -33,13 +37,16 @@ final class HomeViewController: UIViewController {
     var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
         var snapshot = NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item>()
         
-        snapshot.appendSections([.curation])
+        snapshot.appendSections([.curations])
         snapshot.appendItems(model.curations)
         
-        snapshot.appendSections([.nearby])
+//        snapshot.appendSections([.bookstores])
+//        snapshot.appendItems([])
+        
+        snapshot.appendSections([.nearbys])
         snapshot.appendItems(model.bookstores)
         
-        snapshot.appendSections([.region])
+        snapshot.appendSections([.regions])
         snapshot.appendItems(model.regions)
         
         return snapshot
@@ -59,12 +66,12 @@ final class HomeViewController: UIViewController {
         configureDataSource()
         
         // MARK: Delegate
-        //        collectionView.delegate = self
+        collectionView.delegate = self
         
         // MARK: Registeration
         // Cell Registeration
-        collectionView.register(MainCurationCollectionViewCell.self, forCellWithReuseIdentifier: MainCurationCollectionViewCell.identifier)
         collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.identifier)
+        collectionView.register(BookstoreCollectionViewCell.self, forCellWithReuseIdentifier: BookstoreCollectionViewCell.identifier)
         collectionView.register(NearByBookstoreCollectionViewCell.self, forCellWithReuseIdentifier: NearByBookstoreCollectionViewCell.identifier)
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.identifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.identifier)
@@ -185,7 +192,7 @@ final class HomeViewController: UIViewController {
             let sectionContentInsets = NSDirectionalEdgeInsets(top: padding8, leading: .zero, bottom: padding8, trailing: .zero)
             
             switch section {
-            case .curation:
+            case .curations:
                 let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 
                 let groupSize = NSCollectionLayoutSize(
@@ -204,26 +211,26 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-                //            case .curation:
-                //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-                //                item.contentInsets = leading16ContentInsetsForItem
-                //
-                //                let groupSize = NSCollectionLayoutSize(
-                //                    widthDimension: .estimated(326),
-                //                    heightDimension: .estimated(168)
-                //                )
-                //                let group = NSCollectionLayoutGroup.horizontal(
-                //                    layoutSize: groupSize,
-                //                    subitems: [item]
-                //                )
-                //
-                //                let section = NSCollectionLayoutSection(group: group)
-                //                section.orthogonalScrollingBehavior = .groupPaging
-                //                section.boundarySupplementaryItems = [headerItem]
-                //                section.contentInsets = sectionContentInsets
-                //
-                //                return section
-            case .nearby:
+            case .bookstores:
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+                item.contentInsets = leading16ContentInsetsForItem
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .estimated(326),
+                    heightDimension: .estimated(168)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [item]
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .groupPaging
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = sectionContentInsets
+                
+                return section
+            case .nearbys:
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1/3)
@@ -246,7 +253,7 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-            case .bookmarked:
+            case .bookmarks:
                 let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 item.contentInsets = leading16ContentInsetsForItem
                 
@@ -265,7 +272,7 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-            case .region:
+            case .regions:
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1/2),
                     heightDimension: .fractionalHeight(1)
@@ -331,37 +338,50 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Diffable Data Source Method
     
-    // TODO: item 강제 언래핑 대신 더미 넘겨주기
     private func configureDataSource() {
         // MARK: Data Source Initialization
-        dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
+        dataSource = .init(collectionView: collectionView) { [self] collectionView, indexPath, item in
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             
             switch section {
-            case .curation:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCurationCollectionViewCell.identifier, for: indexPath) as? MainCurationCollectionViewCell else { return UICollectionViewCell() }
+            case .curations:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as? CurationCollectionViewCell else { return UICollectionViewCell() }
                 
                 cell.configureCell(item.curation!)
                 
+                self.imageRequestTask = Task {
+                    if let image = try? await FirestoreManager().fetchImage(with: item.curation?.descriptions[indexPath.item].image) {
+                        cell.imageView.image = image
+                    }
+                    imageRequestTask = nil
+                }
+                
                 return cell
-                //            case .curation:
-                //                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCollectionViewCell.identifier, for: indexPath) as? CurationCollectionViewCell else { return UICollectionViewCell() }
-                //
-                //                let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
-                //                cell.configureCell(item.curation!, indexPath: indexPath, numberOfItems: numberOfItems)
-                //
-                //                return cell
-            case .nearby:
+            case .bookstores:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookstoreCollectionViewCell.identifier, for: indexPath) as? BookstoreCollectionViewCell else { return UICollectionViewCell() }
+                
+                let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
+                cell.configureCell(item.bookstore!, indexPath: indexPath, numberOfItems: numberOfItems)
+                
+                return cell
+            case .nearbys:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NearByBookstoreCollectionViewCell.identifier, for: indexPath) as? NearByBookstoreCollectionViewCell else { return UICollectionViewCell() }
                 cell.configureCell(item.bookstore!)
                 
+                self.imageRequestTask = Task {
+                    if let image = try? await FirestoreManager().fetchImage(with: item.bookstore?.images?[0]) {
+                        cell.imageView.image = image
+                    }
+                    imageRequestTask = nil
+                }
+                
                 return cell
-            case .bookmarked:
+            case .bookmarks:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as? BookmarkedCollectionViewCell else { return UICollectionViewCell() }
                 cell.configureCell(item.bookstore!)
                 
                 return cell
-            case .region:
+            case .regions:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RegionCollectionViewCell.identifier, for: indexPath) as? RegionCollectionViewCell else { return UICollectionViewCell() }
                 
                 let isTopCell = !(indexPath.item < 2)
@@ -383,23 +403,23 @@ final class HomeViewController: UIViewController {
                 let hideBottomStackView: Bool
                 
                 switch section {
-                case .curation:
+                case .curations:
                     sectionName = "이런 서점은 어때요"
                     hideSeeAllButton = true
                     hideBottomStackView = true
-                    //                case .curation:
-                    //                    sectionName = "킨디터 추천 서점"
-                    //                    hideSeeAllButton = true
-                    //                    hideBottomStackView = true
-                case .nearby:
+                case .bookstores:
+                    sectionName = "킨디터 추천 서점"
+                    hideSeeAllButton = true
+                    hideBottomStackView = true
+                case .nearbys:
                     sectionName = "내 주변 서점"
                     hideSeeAllButton = false
                     hideBottomStackView = false
-                case .bookmarked:
+                case .bookmarks:
                     sectionName = "북마크 한 서점"
                     hideSeeAllButton = false
                     hideBottomStackView = true
-                case .region:
+                case .regions:
                     sectionName = "지역별 서점"
                     hideSeeAllButton = true
                     hideBottomStackView = true
@@ -407,7 +427,7 @@ final class HomeViewController: UIViewController {
                 
                 guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
                 
-                //                headerView.delegate = self
+//                headerView.delegate = self
                 
                 headerView.configure(
                     title: sectionName,
@@ -428,49 +448,48 @@ final class HomeViewController: UIViewController {
 
 // MARK: - Collection View Delegate
 
-//extension HomeViewController: UICollectionViewDelegate {
-//
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let section = sections[indexPath.section]
-//
-//        switch section {
-//        case .mainCuration:
-//            let curation = Item.mainCuration.map { $0.mainCuration! }.first!
-//            let curationViewController = PagingCurationViewController(curation: curation)
-//            curationViewController.modalPresentationStyle = .overFullScreen
-//            curationViewController.modalTransitionStyle = .crossDissolve
-//
-//            present(curationViewController, animated: true)
-//        case .curation:
-//            let curation = Item.curations.map { $0.curation! }[indexPath.item]
-//            let curationViewController = PagingCurationViewController(curation: curation)
-//            curationViewController.modalPresentationStyle = .overFullScreen
-//            curationViewController.modalTransitionStyle = .crossDissolve
-//
-//            present(curationViewController, animated: true)
-//        case .nearby:
-//            let bookstore = Item.nearByBookStores.map { $0.bookstore! }[indexPath.item]
+extension HomeViewController: UICollectionViewDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+
+        switch section {
+        case .curations:
+            let curation = model.curations.map { $0.curation! }.first!
+            let curationViewController = PagingCurationViewController(curation: curation)
+            curationViewController.modalPresentationStyle = .overFullScreen
+            curationViewController.modalTransitionStyle = .crossDissolve
+
+            present(curationViewController, animated: true)
+//        case .bookstores:
+//            let bookstore = model.bookstores.map { $0.bookstore! }
 //            let detailBookstoreViewController = DetailBookstoreViewController()
 //            detailBookstoreViewController.bookstore = bookstore
 //
 //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-//        case .bookmarked:
-//            let bookstore = Item.bookmarkedBookStores.map { $0.bookstore! }[indexPath.item]
+//        case .nearbys:
+//            let bookstore = model.bookstores.map { $0.bookstore! }
 //            let detailBookstoreViewController = DetailBookstoreViewController()
 //            detailBookstoreViewController.bookstore = bookstore
 //
 //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-//        case .region:
-//            let regionName = Item.regions[indexPath.item].region!.name
+//        case .bookmarks:
+//
+//            let detailBookstoreViewController = DetailBookstoreViewController()
+//            detailBookstoreViewController.bookstore = bookstore
+//
+//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+//        case .regions:
+//            let regionName = model.regions[indexPath.item]
 //            let regionViewController = RegionViewController()
 //            regionViewController.setupData(regionName: regionName)
 //
 //            show(regionViewController, sender: nil)
-//        default:
-//            return
-//        }
-//    }
-//}
+        default:
+            return
+        }
+    }
+}
 
 // MARK: - Section Header Delegate
 
