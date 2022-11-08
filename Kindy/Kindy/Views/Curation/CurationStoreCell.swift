@@ -8,15 +8,6 @@
 import UIKit
 
 class CurationStoreCell: UICollectionViewCell {
-    private lazy var roundedView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 30
-        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     private lazy var lineView: UIView = {
         let view = UIView()
         view.backgroundColor = .kindyLightGray
@@ -82,25 +73,18 @@ class CurationStoreCell: UICollectionViewCell {
     
     private func configureUI() {
         self.backgroundColor = .white
-        self.addSubview(roundedView)
-        roundedView.addSubview(imageView)
-        roundedView.addSubview(lineView)
-        roundedView.addSubview(titleLabel)
-        roundedView.addSubview(descriptionLabel)
+        self.addSubview(imageView)
+        self.addSubview(lineView)
+        self.addSubview(titleLabel)
+        self.addSubview(descriptionLabel)
         
-
         NSLayoutConstraint.activate([
-            roundedView.topAnchor.constraint(equalTo: topAnchor),
-            roundedView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            roundedView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            roundedView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 48),
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             imageView.widthAnchor.constraint(equalToConstant: 72),
             imageView.heightAnchor.constraint(equalToConstant: 72),
             
-            lineView.heightAnchor.constraint(equalToConstant: 1),
+            lineView.heightAnchor.constraint(equalToConstant: 0.5),
             lineView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
             lineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             lineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),

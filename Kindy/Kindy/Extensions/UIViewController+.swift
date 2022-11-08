@@ -64,3 +64,14 @@ extension UIViewController {
         return UIScreen.main.bounds.height
     }
 }
+
+// MARK: - 서치바
+
+extension UIViewController {
+    func setupCustomCancelButton(of searchController: UISearchController) {
+        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
+        searchController.searchBar.tintColor = .black
+        searchController.searchBar.placeholder = "서점 이름, 주소 검색"
+        searchController.searchBar.setShowsCancelButton(true, animated: true)
+    }
+}

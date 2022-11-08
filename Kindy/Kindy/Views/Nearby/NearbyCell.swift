@@ -33,7 +33,7 @@ final class NearbyCell: UITableViewCell {
         
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true      // radius를 imageView에 적용
-        imageView.backgroundColor = .lightGray      // 사진 없을 경우 default 색
+        imageView.backgroundColor = .kindyLightGray      // 사진 없을 경우 default 색
         
         return imageView
     }()
@@ -42,8 +42,7 @@ final class NearbyCell: UITableViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
-        label.text = ""
+        label.font = .headline
 
         return label
     }()
@@ -52,8 +51,8 @@ final class NearbyCell: UITableViewCell {
     private let addressLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
-        label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
+        label.font = .body2
+        label.textColor = .kindyGray
         label.text = ""
         
         return label
@@ -63,8 +62,8 @@ final class NearbyCell: UITableViewCell {
     private let distanceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 17)
-        label.textColor = UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1)
+        label.font = .body1
+        label.textColor = .kindyPrimaryGreen
         label.text = ""
         
         return label

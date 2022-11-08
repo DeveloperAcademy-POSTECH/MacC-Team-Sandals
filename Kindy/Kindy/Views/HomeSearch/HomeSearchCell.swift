@@ -24,7 +24,7 @@ final class HomeSearchCell: UITableViewCell {
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 8
         view.clipsToBounds = true      // radius를 imageView에 적용
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -32,7 +32,7 @@ final class HomeSearchCell: UITableViewCell {
     
     private var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 17)
+        label.font = .body1
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label

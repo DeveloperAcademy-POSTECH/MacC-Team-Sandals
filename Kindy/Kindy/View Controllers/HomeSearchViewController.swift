@@ -109,7 +109,6 @@ final class HomeSearchViewController: UIViewController {
 //
 //        tableView.reloadData()
 //    }
-}
 
 // MARK: - data source
 

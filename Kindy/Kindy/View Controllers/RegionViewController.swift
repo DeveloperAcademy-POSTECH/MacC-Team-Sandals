@@ -97,7 +97,6 @@ final class RegionViewController: UIViewController {
 //        self.regionName = regionName
 //        filteredItems = NewItems().getBookstoreByRegion(regionName)
 //    }
-}
 
 // MARK: - DataSource
 //extension RegionViewController: UITableViewDataSource {

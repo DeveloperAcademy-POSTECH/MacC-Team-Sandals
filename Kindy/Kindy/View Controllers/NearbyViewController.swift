@@ -99,7 +99,6 @@ final class NearbyViewController: UIViewController {
 //        receivedData = items
 //        filteredItems = items
 //    }
-}
 
 // MARK: - DataSource
 //
