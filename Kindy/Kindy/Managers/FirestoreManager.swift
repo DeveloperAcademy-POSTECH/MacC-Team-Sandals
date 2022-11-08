@@ -14,23 +14,42 @@ struct FirestoreManager {
         static let db = Firestore.firestore()
         static let bookstores = db.collection("Bookstores")
         static let curations = db.collection("Curations")
+        static let users = db.collection("Users")
     }
     
-    // Bookstores 콜렉션의 모든 도큐먼트를 불러오는 함수
-    func fetchBookstores() async throws -> [ViewModel.Item] {
-        let querySnapshot = try await Reference.bookstores.getDocuments()
-        let bookstores = try querySnapshot.documents.map { try $0.data(as: Bookstore.self) }.map { ViewModel.Item.bookstore($0) }
-        return bookstores
-    }
+    // TODO: 유저 데이터 저장하는 함수
     
-    // Curations 콜렉션의 모든 도큐먼트를 불러오는 함수
+    // TODO: 서점, 큐레이션 id로 도큐먼트 가져오기(쿼리 대신)
+}
+
+// MARK: - 큐레이션
+
+extension FirestoreManager {
+    // 모든 큐레이션 fetch
     func fetchCurations() async throws -> [ViewModel.Item] {
         let querySnapshot = try await Reference.curations.getDocuments()
         let curations = try querySnapshot.documents.map { try $0.data(as: Curation.self) }.map { ViewModel.Item.curation($0) }
         return curations
     }
-    
-    // TODO: 서점, 큐레이션 id로 도큐먼트 가져오기(쿼리 대신)
-    
-    // TODO: 유저 데이터 저장하는 함수 + 유저 struct 만들기
+}
+
+// MARK: -  서점
+
+extension FirestoreManager {
+    // 모든 서점 fetch
+    func fetchBookstores() async throws -> [ViewModel.Item] {
+        let querySnapshot = try await Reference.bookstores.getDocuments()
+        let bookstores = try querySnapshot.documents.map { try $0.data(as: Bookstore.self) }.map { ViewModel.Item.bookstore($0) }
+        return bookstores
+    }
+}
+
+// MARK: -  유저
+
+extension FirestoreManager {
+    // 유저 추가
+    func addUser(with id: String) async throws {
+        let user = User(id: id, nickName: "", bookmarkedBookstores: [])
+        try Reference.users.document(user.id).setData(from: user)
+    }
 }

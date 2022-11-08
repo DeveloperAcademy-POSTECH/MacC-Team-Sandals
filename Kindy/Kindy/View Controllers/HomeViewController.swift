@@ -117,7 +117,7 @@ final class HomeViewController: UIViewController {
     
     // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수입니다.
     @objc func bellButtonTapped() {
-        
+
     }
     
     // MARK: - Update
