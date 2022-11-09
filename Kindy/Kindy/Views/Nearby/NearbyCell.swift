@@ -99,7 +99,7 @@ final class NearbyCell: UITableViewCell {
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
         addressLabel.text = item.address
-        distanceLabel.text = "\(item.meterDistance)m"
+        distanceLabel.text = "\(item.distance)m"
 //        photoImageView.image = item.images?[0] ?? nil   // 첫번째 사진이 대표 사진
     }
     
