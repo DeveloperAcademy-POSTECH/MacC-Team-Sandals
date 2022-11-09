@@ -579,6 +579,7 @@ extension HomeViewController: UIScrollViewDelegate {
 
 extension HomeViewController: CLLocationManagerDelegate {
     
+    // 내 위치를 기준으로 서점 정렬
     private func sortBookstoresByMyLocation(bookstores: [Bookstore]) -> [Bookstore] {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
         var sortedBookstores = bookstores
@@ -592,6 +593,7 @@ extension HomeViewController: CLLocationManagerDelegate {
         return sortedBookstores
     }
     
+    // 내 위치의 지역을 문자열로 반환
     private func fetchMyLocation() async throws -> String {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return "" }
         
