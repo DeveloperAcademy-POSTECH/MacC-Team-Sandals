@@ -44,18 +44,17 @@ final class HomeViewController: UIViewController {
         snapshot.appendSections([.curations])
         snapshot.appendItems(model.curations)
         
-        // MARK: 아래 값이 0 이랑 2가 나오면 위치 정보를 불러 올 수 없으므로 해당하는 뷰를 띄우면 댑니당
-        // locationManager.manager.authorizationStatus.rawValue
-        
-        // if locationManager.manager.authorizationStatus.rawValue == 0 || locationManager.manager.authorizationStatus.rawValue == 2 {
-        //    요기 작성하면 댈거가튼디 스템 쿤 확인점
-        //}
-        
         snapshot.appendSections([.bookstores])
         snapshot.appendItems(model.featuredBookstores)
         
-        snapshot.appendSections([.nearbys])
-        snapshot.appendItems(model.bookstores)
+        switch locationManager.authorizationStatus {
+        case .notDetermined, .denied, .restricted:
+            snapshot.appendSections([.noPermission])
+            snapshot.appendItems([ViewModel.Item.noPermission])
+        @unknown default:
+            snapshot.appendSections([.nearbys])
+            snapshot.appendItems(model.bookstores)
+        }
         
         snapshot.appendSections([.regions])
         snapshot.appendItems(model.regions)
@@ -88,6 +87,7 @@ final class HomeViewController: UIViewController {
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.identifier)
         collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.identifier)
         collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier)
+        collectionView.register(NoPermissionCollectionViewCell.self, forCellWithReuseIdentifier: NoPermissionCollectionViewCell.identifier)
         
         // Supplementary View Registeration
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier)
@@ -328,24 +328,24 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-                //            case .emptyNearby:
-                //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-                //
-                //                let groupSize = NSCollectionLayoutSize(
-                //                    widthDimension: .fractionalWidth(1),
-                //                    heightDimension: .estimated(150)
-                //                )
-                //                let group = NSCollectionLayoutGroup.horizontal(
-                //                    layoutSize: groupSize,
-                //                    subitem: item,
-                //                    count: 1
-                //                )
-                //
-                //                let section = NSCollectionLayoutSection(group: group)
-                //                section.boundarySupplementaryItems = [headerItem]
-                //                section.contentInsets = sectionContentInsets
-                //
-                //                return section
+            case .noPermission:
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(150)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 1
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = sectionContentInsets
+                
+                return section
                 //            case .emptyBookmark:
                 //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 //
@@ -431,6 +431,10 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
                 
                 return cell
+            case .noPermission:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoPermissionCollectionViewCell.identifier, for: indexPath) as? NoPermissionCollectionViewCell else { return UICollectionViewCell() }
+                
+                return cell
             }
         }
         
@@ -457,7 +461,7 @@ final class HomeViewController: UIViewController {
                     sectionName = "킨디터 추천 서점"
                     hideSeeAllButton = true
                     hideBottomStackView = true
-                case .nearbys:
+                case .nearbys, .noPermission:
                     sectionName = "내 주변 서점"
                     hideSeeAllButton = false
                     hideBottomStackView = false
@@ -586,7 +590,7 @@ extension HomeViewController: CLLocationManagerDelegate {
         for i in 0..<bookstores.count {
             sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude))) / 1000
         }
-        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
+        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요 + prefix(3)으로 3개만 보여주기
         sortedBookstores = sortedBookstores.filter { $0.distance < 500 }.sorted { $0.distance < $1.distance }
         
         return sortedBookstores

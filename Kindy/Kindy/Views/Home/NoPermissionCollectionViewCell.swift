@@ -34,7 +34,7 @@ final class NoPermissionCollectionViewCell: UICollectionViewCell {
     private let bottomLabel: UILabel = {
         let label = UILabel()
         label.font = .footnote
-        label.text = "휴대폰 설정 > 킨디 > 위치정보 접근 허용"
+        label.text = "휴대폰 설정 > Kindy > 위치정보 접근 허용"
         label.textColor = .kindyGray
         
         return label
