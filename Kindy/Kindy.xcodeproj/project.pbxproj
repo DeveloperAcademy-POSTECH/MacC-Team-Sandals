@@ -471,7 +471,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1400;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1410;
 				TargetAttributes = {
 					6EE5E39628FD313C00EA7413 = {
 						CreatedOnToolsVersion = 14.0;
@@ -533,19 +533,16 @@
 				7BDAE69F2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift in Sources */,
 				7B404C2B28FFD3CF00A24C89 /* RegionCollectionViewCell.swift in Sources */,
 				7BCB1A0A29163D7400B357D5 /* Description.swift in Sources */,
-				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				77DCB1682905397E00EAB5D5 /* HomeSearchViewController.swift in Sources */,
 				7B404C2528FFD33500A24C89 /* BookstoreCollectionViewCell.swift in Sources */,
 				77DCB185290A5D9700EAB5D5 /* UIView+.swift in Sources */,
 				7BCB1A0F291646B700B357D5 /* FirestoreManager.swift in Sources */,
 				A06954ED2906C6CE00C09D1D /* DetailMyPageViewController.swift in Sources */,
-				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
 				A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift in Sources */,
-				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */,
 				6E2AA45D290791480049E445 /* CurationTextCell.swift in Sources */,
 				A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */,
