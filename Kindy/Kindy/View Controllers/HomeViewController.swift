@@ -439,7 +439,7 @@ final class HomeViewController: UIViewController {
             
             guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
             
-            //                headerView.delegate = self
+            headerView.delegate = self
             
             switch kind {
             case SupplementaryViewKind.header:
@@ -507,30 +507,30 @@ extension HomeViewController: UICollectionViewDelegate {
             curationViewController.modalTransitionStyle = .crossDissolve
             
             present(curationViewController, animated: true)
-            //        case .bookstores:
-            //            let bookstore = model.bookstores.map { $0.bookstore! }
-            //            let detailBookstoreViewController = DetailBookstoreViewController()
-            //            detailBookstoreViewController.bookstore = bookstore
-            //
-            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-            //        case .nearbys:
-            //            let bookstore = model.bookstores.map { $0.bookstore! }
-            //            let detailBookstoreViewController = DetailBookstoreViewController()
-            //            detailBookstoreViewController.bookstore = bookstore
-            //
-            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-            //        case .bookmarks:
-            //
-            //            let detailBookstoreViewController = DetailBookstoreViewController()
-            //            detailBookstoreViewController.bookstore = bookstore
-            //
-            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-            //        case .regions:
-            //            let regionName = model.regions[indexPath.item]
-            //            let regionViewController = RegionViewController()
-            //            regionViewController.setupData(regionName: regionName)
-            //
-            //            show(regionViewController, sender: nil)
+        case .bookstores:
+            let bookstore = model.bookstores.map { $0.bookstore! }[indexPath.item]
+            let detailBookstoreViewController = DetailBookstoreViewController()
+            detailBookstoreViewController.bookstore = bookstore
+            
+            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+        case .nearbys:
+            let bookstore = model.bookstores.map { $0.bookstore! }[indexPath.item]
+            let detailBookstoreViewController = DetailBookstoreViewController()
+            detailBookstoreViewController.bookstore = bookstore
+            
+            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+//        case .bookmarks:
+//
+//            let detailBookstoreViewController = DetailBookstoreViewController()
+//            detailBookstoreViewController.bookstore = bookstore
+//
+//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+        case .regions:
+            let model = model.regions[indexPath.item]
+            let regionViewController = RegionViewController()
+            regionViewController.setupData(regionName: model.region!)
+            
+            show(regionViewController, sender: nil)
         default:
             return
         }
@@ -539,26 +539,25 @@ extension HomeViewController: UICollectionViewDelegate {
 
 // MARK: - Section Header Delegate
 
-// TODO: 0번째 섹션 추가해야함
-//extension HomeViewController: SectionHeaderDelegate {
-//
-//    func segueWithSectionIndex(_ sectionIndex: Int) {
-//        switch sectionIndex {
-//        case 2:
-//            let items = Item.nearByBookStores.map { $0.bookstore! }
-//            let nearbyViewController = NearbyViewController()
-//            nearbyViewController.setupData(items: items)
-//            show(nearbyViewController, sender: nil)
+extension HomeViewController: SectionHeaderDelegate {
+
+    func segueWithSectionIndex(_ sectionIndex: Int) {
+        switch sectionIndex {
+        case 2:
+            let nearbyBookstores = model.bookstores.map { $0.bookstore! }
+            let nearbyViewController = NearbyViewController()
+            nearbyViewController.setupData(items: nearbyBookstores)
+            show(nearbyViewController, sender: nil)
 //        case 3:
 //            let items = Item.bookmarkedBookStores.map { $0.bookstore! }
 //            let bookmarkViewController = BookmarkViewController()
 //            bookmarkViewController.setupData(items: items)
 //            show(bookmarkViewController, sender: nil)
-//        default:
-//            return
-//        }
-//    }
-//}
+        default:
+            return
+        }
+    }
+}
 
 
 // MARK: - Scroll View Delegate
@@ -585,10 +584,10 @@ extension HomeViewController: CLLocationManagerDelegate {
         var sortedBookstores = bookstores
         
         for i in 0..<bookstores.count {
-            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude)))
+            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude))) / 1000
         }
         // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
-        sortedBookstores = sortedBookstores.filter { $0.distance < 200000 }.sorted { $0.distance < $1.distance }
+        sortedBookstores = sortedBookstores.filter { $0.distance < 500 }.sorted { $0.distance < $1.distance }
         
         return sortedBookstores
     }
