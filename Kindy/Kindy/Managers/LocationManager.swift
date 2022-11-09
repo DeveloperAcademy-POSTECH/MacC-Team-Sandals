@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-final class LocationManager: NSObject, CLLocationManagerDelegate {
+final class LocationManager: NSObject {
     
     static let shared = LocationManager()
     
@@ -20,16 +20,12 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         manager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
-    private func nearFilter(datas: [Bookstore]) -> [Bookstore] {
-        var filteredData: [Bookstore] = datas
+    private func sortByCurrentLocation(bookstores: [Bookstore]) -> [Bookstore] {
+        var filteredData: [Bookstore] = bookstores
         
         guard let from = manager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
         
         for i in 0..<filteredData.count {
-            fetchLocationData(latitude: filteredData[i].location.latitude, longitude: filteredData[i].location.longitude) { address in
-                filteredData[i].address = address
-            }
-
             filteredData[i].meterDistance = Int(from.distance(from: CLLocationCoordinate2D(latitude: filteredData[i].location.latitude, longitude: filteredData[i].location.longitude)))
         }
         
@@ -37,14 +33,16 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
             first.meterDistance < second.meterDistance
         }
     }
-    
+}
+
+extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .notDetermined :
             manager.requestWhenInUseAuthorization()
             break
         case .authorizedWhenInUse:
-            Bookstore.filteredData = nearFilter(datas: Bookstore.locationDummyData)
+            //Bookstore.filteredData = nearFilter(datas: bookstores)
             break
         case .authorizedAlways:
             break
@@ -58,22 +56,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("error")
-    }
-    
-    private func fetchLocationData(latitude: Double, longitude: Double, completion: @escaping (String) -> ()) {
-        let location = CLLocation(latitude: latitude, longitude: longitude)
-        let geocoder = CLGeocoder()
-        let locale = Locale(identifier: "Ko-kr")
-
-        geocoder.reverseGeocodeLocation(location, preferredLocale: locale) { placemarks, _ in
-            guard let placemarks = placemarks,
-                  let address = placemarks.first?.thoroughfare,
-                  let subAddress = placemarks.first?.subThoroughfare
-            else { return }
-            
-            completion(address + " " + subAddress)
-        }
+        print(error)
     }
 }
 

@@ -20,8 +20,9 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
 
         return view
     }()
-
-    private var filteredItems = NewItems.bookstoreDummy
+    
+    // TODO: 파이어베이스 데이터 연결
+    private var filteredItems: [Bookstore] = []
     
     private var regionItems: [Bookstore] = []
     
@@ -86,25 +87,28 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
 
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
-        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+        if let searchString = searchController.searchBar.text?.components(separatedBy: " ").joined(separator: ""), searchString.isEmpty == false {
             filteredItems = regionItems.filter{ (item) -> Bool in
-                item.name.localizedCaseInsensitiveContains(searchString)
+                item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
             }
         } else {
             filteredItems = regionItems
         }
-
+        
         tableView.reloadData()
     }
     
     func setupData(regionName: String) {
         self.regionName = regionName
-        filteredItems = NewItems().getBookstoreByRegion(regionName)
-        regionItems = NewItems().getBookstoreByRegion(regionName)
+        
+        // TODO: 파이어베이스 데이터 연결
+//        filteredItems = NewItems().getBookstoreByRegion(regionName)
+//        regionItems = NewItems().getBookstoreByRegion(regionName)
     }
 }
 
 // MARK: - DataSource
+
 extension RegionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         filteredItems.count == 0 ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
@@ -133,7 +137,7 @@ extension RegionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let detailBookstoreViewController = DetailBookstoreViewController()
-        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         show(detailBookstoreViewController, sender: nil)
 
         tableView.deselectRow(at: indexPath, animated: true)

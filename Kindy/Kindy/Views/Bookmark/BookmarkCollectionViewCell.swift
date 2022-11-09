@@ -189,7 +189,7 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCarouselCollectionViewCell.identifier, for: indexPath) as? ImageCarouselCollectionViewCell else {return UICollectionViewCell()}
-        cell.configureCell(image: (bookstore!.images![indexPath.row]))
+//        cell.configureCell(image: (bookstore!.images![indexPath.row]))
         return cell
     }
     // PageControl과 ImageCarouselView와 싱크를 맞추기 위해 스크롤 추적

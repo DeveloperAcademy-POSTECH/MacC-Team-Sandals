@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+   
 final class HomeSearchViewController: UIViewController, UISearchResultsUpdating {
 
     // MARK: - 프로퍼티
@@ -18,6 +18,8 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         
         return view
     }()
+    // TODO: 파이어베이스 데이터 연결
+    private var firebaseData: [Bookstore] = []
     
     private var filteredItems: [Bookstore] = []
     
@@ -88,10 +90,12 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+        if let searchString = searchController.searchBar.text?.components(separatedBy: " ").joined(separator: ""), searchString.isEmpty == false {
             searchText = searchString
-            filteredItems = NewItems.bookstoreDummy.filter{ (item) -> Bool in
-                item.name.localizedCaseInsensitiveContains(searchText!)
+            
+            // TODO: 파이어베이스 데이터 연결
+            filteredItems = firebaseData.filter{ (item) -> Bool in
+                item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
             }
         } else {
             filteredItems = []
@@ -129,7 +133,7 @@ extension HomeSearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let detailBookstoreViewController = DetailBookstoreViewController()
-        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         
     }

@@ -94,14 +94,6 @@
                     <view key="view" contentMode="scaleToFill" id="Etf-8L-eSI">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="idX-kQ-j98">
-                                <rect key="frame" x="134" y="426" width="122" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="MyPageView"/>
-                            </button>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="uX1-rl-loI"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
