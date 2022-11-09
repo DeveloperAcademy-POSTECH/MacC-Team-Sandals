@@ -12,7 +12,7 @@ import FirebaseFirestoreSwift
 
 final class HomeViewController: UIViewController {
     
-    // MARK: Task
+    // MARK: Tasks
     var bookstoresRequestTask: Task<Void, Never>?
     var curationsRequestTask: Task<Void, Never>?
     var imageRequestTask: Task<Void, Never>?
@@ -23,6 +23,7 @@ final class HomeViewController: UIViewController {
         imageRequestTask?.cancel()
     }
     
+    // MARK: Managers
     let firestoreManager = FirestoreManager()
     let locationManager = CLLocationManager()
     
@@ -62,23 +63,21 @@ final class HomeViewController: UIViewController {
         return snapshot
     }
     
-    // MARK: - Life Cycle
+    // MARK: - Life Cycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createBarButtonItems()
+        createNavBarButtonItems()
         
-        // MARK: Configure Layout
+        // MARK: Configuration
         collectionView.collectionViewLayout = createLayout()
-        
-        // MARK: Configure Data Source
         configureDataSource()
         
         // MARK: Delegate
         collectionView.delegate = self
         
-        // MARK: Registeration
+        // MARK: Registerations
         // Cell Registeration
         collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.identifier)
         collectionView.register(BookstoreCollectionViewCell.self, forCellWithReuseIdentifier: BookstoreCollectionViewCell.identifier)
@@ -122,7 +121,7 @@ final class HomeViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        // TODO: Task cancellation
+        // MARK: Task cancellation
         curationsRequestTask?.cancel()
         bookstoresRequestTask?.cancel()
         imageRequestTask?.cancel()
@@ -130,7 +129,7 @@ final class HomeViewController: UIViewController {
     
     // MARK:  - Navigation Bar
     
-    func createBarButtonItems() {
+    func createNavBarButtonItems() {
         let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
         
@@ -144,13 +143,13 @@ final class HomeViewController: UIViewController {
         navigationItem.rightBarButtonItems = [searchButton]
     }
     
-    // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
+    // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
         show(homeSearchViewController, sender: nil)
     }
     
-    // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수입니다.
+    // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수
     @objc func bellButtonTapped() {
         
     }
@@ -158,7 +157,6 @@ final class HomeViewController: UIViewController {
     // MARK: - Update
     
     func update() {
-        // TODO: Task들이 너무 많아지면 어떡하나
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await firestoreManager.fetchCurations() {
@@ -479,12 +477,7 @@ final class HomeViewController: UIViewController {
                     hideBottomStackView = true
                 }
                 
-                headerView.configure(
-                    title: sectionName,
-                    hideSeeAllButton: hideSeeAllButton,
-                    hideBottomStackView: hideBottomStackView,
-                    sectionIndex: indexPath.section
-                )
+                headerView.configure(title: sectionName, hideSeeAllButton: hideSeeAllButton, hideBottomStackView: hideBottomStackView, sectionIndex: indexPath.section)
                 
                 return headerView
             default:

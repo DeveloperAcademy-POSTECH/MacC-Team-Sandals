@@ -7,7 +7,7 @@
 
 import UIKit
 
-// 위치 정보 수집 권한 없을때 내 주변 서점에 보여줄 셀
+// 위치 정보 수집 권한 없을때 내 주변 서점 섹션에 보여줄 셀
 final class NoPermissionCollectionViewCell: UICollectionViewCell {
     
     private let stackView: UIStackView = {
