@@ -73,6 +73,7 @@ final class HomeViewController: UIViewController {
         // MARK: Configuration
         collectionView.collectionViewLayout = createLayout()
         configureDataSource()
+        configureRefreshControl()
         
         // MARK: Delegate
         collectionView.delegate = self
@@ -152,6 +153,21 @@ final class HomeViewController: UIViewController {
     // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수
     @objc func bellButtonTapped() {
         
+    }
+    
+    // MARK: - Refresh Control
+    
+    func configureRefreshControl() {
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+    
+    @objc func handleRefreshControl() {
+        update()
+        
+        DispatchQueue.main.async {
+            self.collectionView.refreshControl?.endRefreshing()
+        }
     }
     
     // MARK: - Update
