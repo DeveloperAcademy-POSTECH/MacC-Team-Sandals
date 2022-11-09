@@ -1,8 +1,8 @@
 //
-//  ViewController.swift
+//  HomeViewController.swift
 //  Kindy
 //
-//  Created by rbwo on 2022/10/17.
+//  Created by 정호윤 on 2022/10/17.
 //
 
 import UIKit
