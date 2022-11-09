@@ -79,7 +79,7 @@ final class RegionCell: UITableViewCell {
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
         addressLabel.text = item.address
-        photoImageView.image = item.images?[0]   // 첫번째 사진이 대표 사진
+//        photoImageView.image = item.images?[0]   // 첫번째 사진이 대표 사진
     }
 
     // MARK: - 라이프 사이클

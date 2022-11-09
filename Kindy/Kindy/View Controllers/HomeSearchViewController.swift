@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+   
 final class HomeSearchViewController: UIViewController, UISearchResultsUpdating {
 
     // MARK: - 프로퍼티
@@ -103,41 +103,41 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
 
 // MARK: - data source
 
-extension HomeSearchViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredItems.isEmpty && searchText != "" ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
-        
-        return filteredItems.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchCell.identifier, for: indexPath) as? HomeSearchCell else { return UITableViewCell() }
-        
-        cell.bookstore = filteredItems[indexPath.row]
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
-    }
-}
-
-// MARK: - delegate
-
-extension HomeSearchViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-        let detailBookstoreViewController = DetailBookstoreViewController()
-        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
-        navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-        
-    }
-}
-
-// MARK: - 서치바 취소 버튼 delegate
-
-extension HomeSearchViewController: UISearchBarDelegate {
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.navigationController?.popToRootViewController(animated: true)
-    }
-}
+//extension HomeSearchViewController: UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        filteredItems.isEmpty && searchText != "" ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
+//        
+//        return filteredItems.count
+//    }
+//    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchCell.identifier, for: indexPath) as? HomeSearchCell else { return UITableViewCell() }
+//        
+//        cell.bookstore = filteredItems[indexPath.row]
+//        return cell
+//    }
+//    
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
+//    }
+//}
+//
+//// MARK: - delegate
+//
+//extension HomeSearchViewController: UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//
+//        let detailBookstoreViewController = DetailBookstoreViewController()
+//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+//        navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+//        
+//    }
+//}
+//
+//// MARK: - 서치바 취소 버튼 delegate
+//
+//extension HomeSearchViewController: UISearchBarDelegate {
+//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//        self.navigationController?.popToRootViewController(animated: true)
+//    }
+//}

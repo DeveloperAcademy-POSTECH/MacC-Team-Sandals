@@ -9,7 +9,7 @@
 // 이외 ToDoList는 코드 속에 있으니 참조
 
 import UIKit
-
+   
 final class NearbyViewController: UIViewController, UISearchResultsUpdating {
     
     // MARK: - 프로퍼티
@@ -104,35 +104,35 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
 }
 
 // MARK: - DataSource
-
-extension NearbyViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredItems.count == 0 ? tableView.setEmptyView(text: "현재 계신 곳 주변에 독립서점 정보가 없어요") : tableView.restore()
-        
-        return filteredItems.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: NearbyCell.reuseID, for: indexPath) as? NearbyCell else { return UITableViewCell() }
-        cell.bookstore = filteredItems[indexPath.row]
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
-    }
-}
-
-// MARK: - Delegate
-
-extension NearbyViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let detailBookstoreViewController = DetailBookstoreViewController()
-        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
-        show(detailBookstoreViewController, sender: nil)
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
+//
+//extension NearbyViewController: UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        filteredItems.count == 0 ? tableView.setEmptyView(text: "현재 계신 곳 주변에 독립서점 정보가 없어요") : tableView.restore()
+//
+//        return filteredItems.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: NearbyCell.reuseID, for: indexPath) as? NearbyCell else { return UITableViewCell() }
+//        cell.bookstore = filteredItems[indexPath.row]
+//
+//        return cell
+//    }
+//
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
+//    }
+//}
+//
+//// MARK: - Delegate
+//
+//extension NearbyViewController: UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//
+//        let detailBookstoreViewController = DetailBookstoreViewController()
+//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+//        show(detailBookstoreViewController, sender: nil)
+//
+//        tableView.deselectRow(at: indexPath, animated: true)
+//    }
+//}

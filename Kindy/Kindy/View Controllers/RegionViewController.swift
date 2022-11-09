@@ -105,53 +105,53 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
 }
 
 // MARK: - DataSource
-extension RegionViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredItems.count == 0 ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
-
-        return filteredItems.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: RegionCell.identifier, for: indexPath) as? RegionCell else { return UITableViewCell() }
-        cell.bookstore = filteredItems[indexPath.row]
-
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 65
-    }
-}
-
-// MARK: - Delegate
-extension RegionViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-        let detailBookstoreViewController = DetailBookstoreViewController()
-        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
-        show(detailBookstoreViewController, sender: nil)
-
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RegionHeaderView.identifier) as? RegionHeaderView else {
-            return UIView()
-        }
-
-        headerView.headerLabel.text = regionName
-
-        if filteredItems.count == 0 {
-            headerView.isHidden = true
-        } else {
-            headerView.isHidden = false
-        }
-
-        return headerView
-    }
-}
+//extension RegionViewController: UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        filteredItems.count == 0 ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
+//
+//        return filteredItems.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: RegionCell.identifier, for: indexPath) as? RegionCell else { return UITableViewCell() }
+//        cell.bookstore = filteredItems[indexPath.row]
+//
+//        return cell
+//    }
+//
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
+//    }
+//
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 65
+//    }
+//}
+//
+//// MARK: - Delegate
+//extension RegionViewController: UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//
+//        let detailBookstoreViewController = DetailBookstoreViewController()
+//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+//        show(detailBookstoreViewController, sender: nil)
+//
+//        tableView.deselectRow(at: indexPath, animated: true)
+//    }
+//
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RegionHeaderView.identifier) as? RegionHeaderView else {
+//            return UIView()
+//        }
+//
+//        headerView.headerLabel.text = regionName
+//
+//        if filteredItems.count == 0 {
+//            headerView.isHidden = true
+//        } else {
+//            headerView.isHidden = false
+//        }
+//
+//        return headerView
+//    }
+//}

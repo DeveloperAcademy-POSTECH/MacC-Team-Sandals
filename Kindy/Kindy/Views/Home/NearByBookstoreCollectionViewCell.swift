@@ -32,7 +32,7 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
         return stackView
     }()
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
@@ -104,6 +104,5 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
         distanceLabel.text = "\(bookstore.meterDistance)m"
-        imageView.image = bookstore.images?.first!
     }
 }

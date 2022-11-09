@@ -12,3 +12,7 @@ struct Location {
     let latitude: Double
     let longitude: Double
 }
+
+extension Location: Codable { }
+
+extension Location: Hashable { }

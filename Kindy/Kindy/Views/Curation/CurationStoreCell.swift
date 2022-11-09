@@ -98,8 +98,7 @@ class CurationStoreCell: UICollectionViewCell {
     }
     
     func configure(curation: Curation) {
-        imageView.image = UIImage(named: curation.mainImage)
-        titleLabel.text = curation.bookStore.name
-        descriptionLabel.text = curation.bookStore.shortAddress
+//        titleLabel.text = curation.bookstore.name
+//        descriptionLabel.text = curation.bookstore.shortAddress
     }
 }

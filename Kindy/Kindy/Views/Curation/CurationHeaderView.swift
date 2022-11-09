@@ -66,9 +66,7 @@ class CurationHeaderView: UIView {
         ])
     }
     
-    // TODO: Model이 들어오면 수정해야함
     private func configureData(curationData: Curation) {
-        self.imageView.image = UIImage(named: curationData.mainImage)
         self.titleLabel.text = curationData.title
         self.subtitleLabel.text = curationData.subTitle
     }

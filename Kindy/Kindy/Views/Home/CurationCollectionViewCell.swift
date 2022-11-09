@@ -7,10 +7,10 @@
 
 import UIKit
 
-// 킨디터 픽 섹션의 큐레이션 셀
+// 홈 화면 최상단의 메인 큐레이션 셀
 final class CurationCollectionViewCell: UICollectionViewCell {
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
@@ -24,31 +24,36 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     private let labelBackgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
-        view.layer.opacity = 0.9
+        view.layer.opacity = 0.8
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.149, green: 0.258, blue: 0.232, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
     }()
     
+    private let titleStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .leading
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
-        label.font = .title3
-        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.font = .title2
         
         return label
     }()
     
-    private let numberLabel: UILabel = {
+    private let subTitleLabel: UILabel = {
         let label = UILabel()
-        label.layer.cornerRadius = 8
-        label.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.7).cgColor
         label.textColor = .white
-        label.font = .preferredFont(forTextStyle: .footnote)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .title3
         
         return label
     }()
@@ -66,8 +71,9 @@ final class CurationCollectionViewCell: UICollectionViewCell {
     private func setupView() {
         addSubview(imageView)
         addSubview(labelBackgroundView)
-        addSubview(titleLabel)
-//        addSubview(numberLabel)
+        addSubview(titleStack)
+        titleStack.addArrangedSubview(titleLabel)
+        titleStack.addArrangedSubview(subTitleLabel)
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),
@@ -75,26 +81,20 @@ final class CurationCollectionViewCell: UICollectionViewCell {
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            labelBackgroundView.heightAnchor.constraint(equalToConstant: 44),
+            labelBackgroundView.heightAnchor.constraint(equalToConstant: 99),
             labelBackgroundView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
             labelBackgroundView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             labelBackgroundView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
             
-            titleLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -12),
-            titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -16),
-            
-//            numberLabel.widthAnchor.constraint(equalToConstant: 55),
-//            numberLabel.heightAnchor.constraint(equalToConstant: 20),
-//            numberLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 8),
-//            numberLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -8),
+            titleStack.leadingAnchor.constraint(equalTo: labelBackgroundView.leadingAnchor, constant: 16),
+            titleStack.trailingAnchor.constraint(equalTo: labelBackgroundView.trailingAnchor, constant: 16),
+            titleStack.centerYAnchor.constraint(equalTo: labelBackgroundView.centerYAnchor)
         ])
     }
     
     // MARK: Configure Cell
-    func configureCell(_ curation: Curation, indexPath: IndexPath, numberOfItems: Int) {
-        titleLabel.text = curation.subTitle
-        numberLabel.text = "\(indexPath.item + 1) / \(numberOfItems)"
-        imageView.image = UIImage(named: curation.mainImage)
+    func configureCell(_ mainCuration: Curation) {
+        titleLabel.text = mainCuration.title
+        subTitleLabel.text = mainCuration.subTitle
     }
 }
