@@ -6,109 +6,99 @@
 //
 
 import UIKit
+   
+final class HomeSearchViewController: UIViewController, UISearchResultsUpdating {
 
-// FIXME: UISearchResultUpdating 프로토콜을 다시 채택해주세용 ㅠ ㅠ 에러나서 일단 프로토콜 채택만 지워놨습니다
-final class HomeSearchViewController: UIViewController {
-    //
-    //    // MARK: - 프로퍼티
-    //
-    //    private var tableView: UITableView = {
-    //        let view = UITableView(frame: .zero, style: .grouped)
-    //        view.backgroundColor = .white
-    //        view.translatesAutoresizingMaskIntoConstraints = false
-    //
-    //        return view
-    //    }()
-    //
-    //    private var filteredItems: [Bookstore] = []
-    //
-    //    private let searchController = UISearchController()
-    //
-    //    private var searchText: String? = ""
-    //
-    //    // MARK: - 라이프 사이클
-    //
-    //    override func viewDidLoad() {
-    //        super.viewDidLoad()
-    //
-    //        setupSearchController()
-    //        setupTableView()
-    //
-    //        dismissKeyboard()
-    //    }
-    //
-    //    override func viewDidAppear(_ animated: Bool) {
-    //        super.viewDidAppear(animated)
-    //
-    //        DispatchQueue.main.async {  // must call from main thread
-    //            self.searchController.searchBar.becomeFirstResponder()
-    //        }
-    //        // 코드 출처 : https://stackoverflow.com/questions/31274058/make-uisearchcontroller-search-bar-automatically-active/
-    //        // 개념 이해 : https://stackoverflow.com/questions/27951965/cannot-set-searchbar-as-firstresponder
-    //    }
-    //
-    //    override func viewWillAppear(_ animated: Bool) {
-    //        super.viewWillAppear(animated)
-    //
-    //        // MARK: Navigation Bar Appearance
-    //        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
-    //        let customNavBarAppearance = UINavigationBarAppearance()
-    //        customNavBarAppearance.backgroundColor = .white
-    //
-    //        navigationController?.navigationBar.standardAppearance = customNavBarAppearance
-    //        navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
-    //        navigationController?.navigationBar.compactAppearance = customNavBarAppearance
-    //    }
-    //
-    //    // MARK: - 메소드
-    //
-    //    private func setupSearchController() {
-    //        navigationItem.searchController = searchController
-    //        self.navigationItem.hidesBackButton = true
-    //        searchController.searchBar.delegate = self
-    //        searchController.searchResultsUpdater = self
-    //        navigationItem.hidesSearchBarWhenScrolling = false
-    //        searchController.obscuresBackgroundDuringPresentation = false
-    //
-    //        customCancelButton()
-    //    }
-    //
-    //    private func customCancelButton() {
-    //        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
-    //        searchController.searchBar.tintColor = UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1)
-    //        searchController.searchBar.placeholder = "서점 이름, 주소 검색"
-    //        searchController.searchBar.setShowsCancelButton(true, animated: true)
-    //    }
-    //
-    //    private func setupTableView() {
-    //        view.addSubview(tableView)
-    //
-    //        tableView.dataSource = self
-    //        tableView.delegate = self
-    //        tableView.register(HomeSearchCell.self, forCellReuseIdentifier: HomeSearchCell.identifier)
-    //        tableView.rowHeight = HomeSearchCell.rowHeight
-    //
-    //        NSLayoutConstraint.activate([
-    //            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-    //            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-    //            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-    //            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-    //        ])
-    //    }
-    //
-    //    func updateSearchResults(for searchController: UISearchController) {
-    //        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
-    //            searchText = searchString
-    //            filteredItems = NewItems.bookstoreDummy.filter{ (item) -> Bool in
-    //                item.name.localizedCaseInsensitiveContains(searchText!)
-    //            }
-    //        } else {
-    //            filteredItems = []
-    //            searchText = ""
-    //        }
-    //
-    //        tableView.reloadData()
-    //    }
+    // MARK: - 프로퍼티
+    
+    private var tableView: UITableView = {
+        let view = UITableView(frame: .zero, style: .grouped)
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    private var filteredItems: [Bookstore] = []
+    
+    private let searchController = UISearchController()
+    
+    private var searchText: String? = ""
+    
+    // MARK: - 라이프 사이클
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupSearchController()
+        setupCustomCancelButton(of: searchController)
+        setupTableView()
+        
+        dismissKeyboard()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        DispatchQueue.main.async {  // must call from main thread
+            self.searchController.searchBar.becomeFirstResponder()
+        }
+        // 코드 출처 : https://stackoverflow.com/questions/31274058/make-uisearchcontroller-search-bar-automatically-active/
+        // 개념 이해 : https://stackoverflow.com/questions/27951965/cannot-set-searchbar-as-firstresponder
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // MARK: Navigation Bar Appearance
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
+        let customNavBarAppearance = UINavigationBarAppearance()
+        customNavBarAppearance.backgroundColor = .white
+        
+        navigationController?.navigationBar.standardAppearance = customNavBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
+        navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+    }
+    
+    // MARK: - 메소드
+    
+    private func setupSearchController() {
+        navigationItem.searchController = searchController
+        self.navigationItem.hidesBackButton = true
+        searchController.searchBar.delegate = self
+        searchController.searchResultsUpdater = self
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.obscuresBackgroundDuringPresentation = false
+    }
+    
+    private func setupTableView() {
+        view.addSubview(tableView)
+
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(HomeSearchCell.self, forCellReuseIdentifier: HomeSearchCell.identifier)
+        tableView.rowHeight = HomeSearchCell.rowHeight
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchString = searchController.searchBar.text?.components(separatedBy: " ").joined(separator: ""), searchString.isEmpty == false {
+            searchText = searchString
+            filteredItems = NewItems.bookstoreDummy.filter{ (item) -> Bool in
+                item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)            }
+        } else {
+            filteredItems = []
+            searchText = ""
+        }
+        
+        tableView.reloadData()
+    }
 }
 
 // MARK: - data source
