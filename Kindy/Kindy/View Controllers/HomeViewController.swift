@@ -176,7 +176,7 @@ final class HomeViewController: UIViewController {
             if var bookstores = try? await firestoreManager.fetchBookstores() {
                 switch locationManager.authorizationStatus {
                 case .authorizedWhenInUse, .authorizedAlways:
-                    model.bookstores = sortBookstoresByMyLocation(bookstores: bookstores).map { .nearByBookstore($0) }
+                    model.bookstores = sortBookstoresByMyLocation(bookstores).map { .nearByBookstore($0) }
                 default:
                     model.bookstores = bookstores.map { .nearByBookstore($0) }
                 }
@@ -580,7 +580,7 @@ extension HomeViewController: UIScrollViewDelegate {
 extension HomeViewController: CLLocationManagerDelegate {
     
     // 내 위치를 기준으로 서점 정렬
-    private func sortBookstoresByMyLocation(bookstores: [Bookstore]) -> [Bookstore] {
+    private func sortBookstoresByMyLocation(_ bookstores: [Bookstore]) -> [Bookstore] {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
         var sortedBookstores = bookstores
         
@@ -614,7 +614,7 @@ extension HomeViewController: CLLocationManagerDelegate {
             manager.requestWhenInUseAuthorization()
             return
         case .authorizedWhenInUse, .authorizedAlways:
-            model.bookstores = sortBookstoresByMyLocation(bookstores: model.bookstores.map { $0.bookstore! }).map { .nearByBookstore($0) }
+            model.bookstores = sortBookstoresByMyLocation(model.bookstores.map { $0.bookstore! }).map { .nearByBookstore($0) }
             dataSource.apply(snapshot)
             return
         case .restricted, .denied:
