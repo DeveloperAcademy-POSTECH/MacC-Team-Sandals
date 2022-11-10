@@ -162,7 +162,7 @@ class SignUpViewController: UIViewController {
     
     @objc func signUp() {
         
-        db.collection("users").getDocuments(completion: { (documents, error) in
+        db.collection("Users").getDocuments(completion: { (documents, error) in
             self.nickNameArray = documents?.documents.map{ $0.data() }.map{ String(describing: $0["nickName"]!) }
         })
         

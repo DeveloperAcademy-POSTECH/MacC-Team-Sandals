@@ -137,7 +137,7 @@ class SignInViewController: UIViewController {
                                                            accessToken: authentication.accessToken)
             
             
-            db.collection("users").document(user?.profile?.email ?? "").getDocument{ (document, error) in
+            db.collection("Users").document(user?.profile?.email ?? "").getDocument{ (document, error) in
                 if let document = document, document.exists {
                         let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
                     print("Document data: \(dataDescription)")
@@ -264,7 +264,7 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
       // Sign in with Firebase.
 //        print(nonce)
         let checkEmail: String = self.decode(jwt:idTokenString) ?? ""
-        db.collection("users").document(self.decode(jwt:idTokenString) ?? "").getDocument{ (document, error) in
+        db.collection("Users").document(self.decode(jwt:idTokenString) ?? "").getDocument{ (document, error) in
             if let document = document, document.exists {
                     let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
                     print("Document data: \(dataDescription)")
