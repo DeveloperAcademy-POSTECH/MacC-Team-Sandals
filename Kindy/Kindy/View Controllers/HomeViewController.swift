@@ -1,8 +1,8 @@
 //
-//  ViewController.swift
+//  HomeViewController.swift
 //  Kindy
 //
-//  Created by rbwo on 2022/10/17.
+//  Created by 정호윤 on 2022/10/17.
 //
 
 import UIKit
@@ -12,10 +12,10 @@ import FirebaseFirestoreSwift
 
 final class HomeViewController: UIViewController {
     
-    // MARK: Task
-    var bookstoresRequestTask: Task<Void, Never>?
-    var curationsRequestTask: Task<Void, Never>?
-    var imageRequestTask: Task<Void, Never>?
+    // MARK: Tasks
+    private var bookstoresRequestTask: Task<Void, Never>?
+    private var curationsRequestTask: Task<Void, Never>?
+    private var imageRequestTask: Task<Void, Never>?
     
     deinit {
         bookstoresRequestTask?.cancel()
@@ -23,10 +23,11 @@ final class HomeViewController: UIViewController {
         imageRequestTask?.cancel()
     }
     
-    let firestoreManager = FirestoreManager()
-    let locationManager = CLLocationManager()
+    // MARK: Managers
+    private let firestoreManager = FirestoreManager()
+    private let locationManager = CLLocationManager()
     
-    var model = Model()
+    private var model = Model()
     
     enum SupplementaryViewKind {
         static let header = "header"
@@ -38,24 +39,23 @@ final class HomeViewController: UIViewController {
     
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
     
-    var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
+    private var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
         var snapshot = NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item>()
         
         snapshot.appendSections([.curations])
         snapshot.appendItems(model.curations)
         
-        // MARK: 아래 값이 0 이랑 2가 나오면 위치 정보를 불러 올 수 없으므로 해당하는 뷰를 띄우면 댑니당
-        // locationManager.manager.authorizationStatus.rawValue
-        
-        // if locationManager.manager.authorizationStatus.rawValue == 0 || locationManager.manager.authorizationStatus.rawValue == 2 {
-        //    요기 작성하면 댈거가튼디 스템 쿤 확인점
-        //}
-        
         snapshot.appendSections([.bookstores])
         snapshot.appendItems(model.featuredBookstores)
         
-        snapshot.appendSections([.nearbys])
-        snapshot.appendItems(model.bookstores)
+        switch locationManager.authorizationStatus {
+        case .notDetermined, .denied, .restricted:
+            snapshot.appendSections([.noPermission])
+            snapshot.appendItems([ViewModel.Item.noPermission])
+        default:
+            snapshot.appendSections([.nearbys])
+            snapshot.appendItems(model.bookstores)
+        }
         
         snapshot.appendSections([.regions])
         snapshot.appendItems(model.regions)
@@ -63,23 +63,22 @@ final class HomeViewController: UIViewController {
         return snapshot
     }
     
-    // MARK: - Life Cycle
+    // MARK: - Life Cycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createBarButtonItems()
+        createNavBarButtonItems()
         
-        // MARK: Configure Layout
+        // MARK: Configuration
         collectionView.collectionViewLayout = createLayout()
-        
-        // MARK: Configure Data Source
         configureDataSource()
+        configureRefreshControl()
         
         // MARK: Delegate
         collectionView.delegate = self
         
-        // MARK: Registeration
+        // MARK: Registerations
         // Cell Registeration
         collectionView.register(CurationCollectionViewCell.self, forCellWithReuseIdentifier: CurationCollectionViewCell.identifier)
         collectionView.register(BookstoreCollectionViewCell.self, forCellWithReuseIdentifier: BookstoreCollectionViewCell.identifier)
@@ -88,6 +87,7 @@ final class HomeViewController: UIViewController {
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.identifier)
         collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.identifier)
         collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier)
+        collectionView.register(NoPermissionCollectionViewCell.self, forCellWithReuseIdentifier: NoPermissionCollectionViewCell.identifier)
         
         // Supplementary View Registeration
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier)
@@ -122,7 +122,7 @@ final class HomeViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        // TODO: Task cancellation
+        // MARK: Task cancellation
         curationsRequestTask?.cancel()
         bookstoresRequestTask?.cancel()
         imageRequestTask?.cancel()
@@ -130,7 +130,7 @@ final class HomeViewController: UIViewController {
     
     // MARK:  - Navigation Bar
     
-    func createBarButtonItems() {
+    func createNavBarButtonItems() {
         let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
         
@@ -144,21 +144,35 @@ final class HomeViewController: UIViewController {
         navigationItem.rightBarButtonItems = [searchButton]
     }
     
-    // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
+    // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
         show(homeSearchViewController, sender: nil)
     }
     
-    // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수입니다.
+    // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수
     @objc func bellButtonTapped() {
         
+    }
+    
+    // MARK: - Refresh Control
+    
+    func configureRefreshControl() {
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+    
+    @objc func handleRefreshControl() {
+        update()
+        
+        DispatchQueue.main.async {
+            self.collectionView.refreshControl?.endRefreshing()
+        }
     }
     
     // MARK: - Update
     
     func update() {
-        // TODO: Task들이 너무 많아지면 어떡하나
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await firestoreManager.fetchCurations() {
@@ -328,24 +342,24 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-                //            case .emptyNearby:
-                //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-                //
-                //                let groupSize = NSCollectionLayoutSize(
-                //                    widthDimension: .fractionalWidth(1),
-                //                    heightDimension: .estimated(150)
-                //                )
-                //                let group = NSCollectionLayoutGroup.horizontal(
-                //                    layoutSize: groupSize,
-                //                    subitem: item,
-                //                    count: 1
-                //                )
-                //
-                //                let section = NSCollectionLayoutSection(group: group)
-                //                section.boundarySupplementaryItems = [headerItem]
-                //                section.contentInsets = sectionContentInsets
-                //
-                //                return section
+            case .noPermission:
+                let item = NSCollectionLayoutItem(layoutSize: fullSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(150)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitem: item,
+                    count: 1
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = sectionContentInsets
+                
+                return section
                 //            case .emptyBookmark:
                 //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 //
@@ -431,6 +445,10 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
                 
                 return cell
+            case .noPermission:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoPermissionCollectionViewCell.identifier, for: indexPath) as? NoPermissionCollectionViewCell else { return UICollectionViewCell() }
+                
+                return cell
             }
         }
         
@@ -439,7 +457,7 @@ final class HomeViewController: UIViewController {
             
             guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
             
-            //                headerView.delegate = self
+            headerView.delegate = self
             
             switch kind {
             case SupplementaryViewKind.header:
@@ -457,7 +475,7 @@ final class HomeViewController: UIViewController {
                     sectionName = "킨디터 추천 서점"
                     hideSeeAllButton = true
                     hideBottomStackView = true
-                case .nearbys:
+                case .nearbys, .noPermission:
                     sectionName = "내 주변 서점"
                     hideSeeAllButton = false
                     hideBottomStackView = false
@@ -475,12 +493,7 @@ final class HomeViewController: UIViewController {
                     hideBottomStackView = true
                 }
                 
-                headerView.configure(
-                    title: sectionName,
-                    hideSeeAllButton: hideSeeAllButton,
-                    hideBottomStackView: hideBottomStackView,
-                    sectionIndex: indexPath.section
-                )
+                headerView.configure(title: sectionName, hideSeeAllButton: hideSeeAllButton, hideBottomStackView: hideBottomStackView, sectionIndex: indexPath.section)
                 
                 return headerView
             default:
@@ -507,30 +520,30 @@ extension HomeViewController: UICollectionViewDelegate {
             curationViewController.modalTransitionStyle = .crossDissolve
             
             present(curationViewController, animated: true)
-            //        case .bookstores:
-            //            let bookstore = model.bookstores.map { $0.bookstore! }
-            //            let detailBookstoreViewController = DetailBookstoreViewController()
-            //            detailBookstoreViewController.bookstore = bookstore
-            //
-            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-            //        case .nearbys:
-            //            let bookstore = model.bookstores.map { $0.bookstore! }
-            //            let detailBookstoreViewController = DetailBookstoreViewController()
-            //            detailBookstoreViewController.bookstore = bookstore
-            //
-            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-            //        case .bookmarks:
-            //
-            //            let detailBookstoreViewController = DetailBookstoreViewController()
-            //            detailBookstoreViewController.bookstore = bookstore
-            //
-            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-            //        case .regions:
-            //            let regionName = model.regions[indexPath.item]
-            //            let regionViewController = RegionViewController()
-            //            regionViewController.setupData(regionName: regionName)
-            //
-            //            show(regionViewController, sender: nil)
+        case .bookstores:
+            let bookstore = model.bookstores.map { $0.bookstore! }[indexPath.item]
+            let detailBookstoreViewController = DetailBookstoreViewController()
+            detailBookstoreViewController.bookstore = bookstore
+            
+            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+        case .nearbys:
+            let bookstore = model.bookstores.map { $0.bookstore! }[indexPath.item]
+            let detailBookstoreViewController = DetailBookstoreViewController()
+            detailBookstoreViewController.bookstore = bookstore
+            
+            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+//        case .bookmarks:
+//
+//            let detailBookstoreViewController = DetailBookstoreViewController()
+//            detailBookstoreViewController.bookstore = bookstore
+//
+//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+        case .regions:
+            let model = model.regions[indexPath.item]
+            let regionViewController = RegionViewController()
+            regionViewController.setupData(regionName: model.region!)
+            
+            show(regionViewController, sender: nil)
         default:
             return
         }
@@ -539,26 +552,25 @@ extension HomeViewController: UICollectionViewDelegate {
 
 // MARK: - Section Header Delegate
 
-// TODO: 0번째 섹션 추가해야함
-//extension HomeViewController: SectionHeaderDelegate {
-//
-//    func segueWithSectionIndex(_ sectionIndex: Int) {
-//        switch sectionIndex {
-//        case 2:
-//            let items = Item.nearByBookStores.map { $0.bookstore! }
-//            let nearbyViewController = NearbyViewController()
-//            nearbyViewController.setupData(items: items)
-//            show(nearbyViewController, sender: nil)
+extension HomeViewController: SectionHeaderDelegate {
+
+    func segueWithSectionIndex(_ sectionIndex: Int) {
+        switch sectionIndex {
+        case 2:
+            let nearbyBookstores = model.bookstores.map { $0.bookstore! }
+            let nearbyViewController = NearbyViewController()
+            nearbyViewController.setupData(items: nearbyBookstores)
+            show(nearbyViewController, sender: nil)
 //        case 3:
 //            let items = Item.bookmarkedBookStores.map { $0.bookstore! }
 //            let bookmarkViewController = BookmarkViewController()
 //            bookmarkViewController.setupData(items: items)
 //            show(bookmarkViewController, sender: nil)
-//        default:
-//            return
-//        }
-//    }
-//}
+        default:
+            return
+        }
+    }
+}
 
 
 // MARK: - Scroll View Delegate
@@ -585,10 +597,10 @@ extension HomeViewController: CLLocationManagerDelegate {
         var sortedBookstores = bookstores
         
         for i in 0..<bookstores.count {
-            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude)))
+            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude))) / 1000
         }
-        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
-        sortedBookstores = sortedBookstores.filter { $0.distance < 200000 }.sorted { $0.distance < $1.distance }
+        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요 + prefix(3)으로 3개만 보여주기
+        sortedBookstores = sortedBookstores.filter { $0.distance < 500 }.sorted { $0.distance < $1.distance }
         
         return sortedBookstores
     }

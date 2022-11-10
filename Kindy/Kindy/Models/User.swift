@@ -8,8 +8,9 @@
 import Foundation
 
 struct User {
-    let id: String
+    let email: String
     let nickName: String
+    let provider: String
     let bookmarkedBookstores: [String]
 }
 

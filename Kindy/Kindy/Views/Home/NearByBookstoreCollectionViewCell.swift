@@ -103,6 +103,6 @@ final class NearByBookstoreCollectionViewCell: UICollectionViewCell {
     // MARK: Configure Cell
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
-        distanceLabel.text = "\(bookstore.distance / 1000)km"
+        distanceLabel.text = "\(bookstore.distance)km"
     }
 }

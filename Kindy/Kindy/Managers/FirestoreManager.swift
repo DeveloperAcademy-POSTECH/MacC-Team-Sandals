@@ -66,9 +66,15 @@ extension FirestoreManager {
 
 extension FirestoreManager {
     // 유저 추가
-    func add(user id: String, nickName: String) throws {
-        let user = User(id: id, nickName: nickName, bookmarkedBookstores: [])
-        try Reference.users.document(user.id).setData(from: user)
+    func add(user email: String, nickName: String) throws {
+        let user = User(email: email, nickName: nickName, provider: "", bookmarkedBookstores: [])
+        try Reference.users.document(user.email).setData(from: user)
+    }
+    
+    // 이메일로 유저 fetch
+    func fetchUser(with email: String) async throws -> User {
+        let user = try await Reference.users.document(email).getDocument(as: User.self)
+        return user
     }
 }
 
