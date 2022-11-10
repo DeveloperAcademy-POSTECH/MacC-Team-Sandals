@@ -98,12 +98,35 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         tableView.reloadData()
     }
     
-    func setupData(regionName: String) {
+    func setupData(regionName: String, item: [Bookstore]) {
         self.regionName = regionName
-        
-        // TODO: 파이어베이스 데이터 연결
-//        filteredItems = NewItems().getBookstoreByRegion(regionName)
-//        regionItems = NewItems().getBookstoreByRegion(regionName)
+        self.regionItems = getBookstoreByRegion(item: item, region: regionName)
+        self.filteredItems = getBookstoreByRegion(item: item, region: regionName)
+    }
+    
+    private func getBookstoreByRegion(item: [Bookstore], region: String) -> [Bookstore] {
+        switch region{
+        case "전체":
+            return item
+        case "서울":
+            return item.filter{ $0.address.contains("서울특별시") }
+        case "강원":
+            return item.filter{ $0.address.contains("강원도") }
+        case "경기/인천":
+            return item.filter{ $0.address.contains("경기도") || $0.address.contains("인천광역시") }
+        case "충청/대전":
+            return item.filter{ $0.address.contains("충청도") || $0.address.contains("대전광역시") || $0.address.contains("세종특별자치시") }
+        case "경북/대구":
+            return item.filter{ $0.address.contains("경상북도") || $0.address.contains("대구광역시")}
+        case "전라/광주":
+            return item.filter{ $0.address.contains("전라남도") || $0.address.contains("광주광역시") || $0.address.contains("전라북도") }
+        case "경남/울산/부산":
+            return item.filter{ $0.address.contains("경상남도") || $0.address.contains("울산광역시") || $0.address.contains("부산광역시") }
+        case "제주":
+            return item.filter{ $0.address.contains("제주특별자치도") }
+        default:
+            return []
+        }
     }
 }
 
