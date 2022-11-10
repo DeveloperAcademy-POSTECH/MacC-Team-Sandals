@@ -19,7 +19,7 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         return view
     }()
     // TODO: 파이어베이스 데이터 연결
-    private var firebaseData: [Bookstore] = []
+    private var receivedData: [Bookstore] = []
     
     private var filteredItems: [Bookstore] = []
     
@@ -94,7 +94,7 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
             searchText = searchString
             
             // TODO: 파이어베이스 데이터 연결
-            filteredItems = firebaseData.filter{ (item) -> Bool in
+            filteredItems = receivedData.filter{ (item) -> Bool in
                 item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
             }
         } else {
@@ -103,6 +103,10 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         }
         
         tableView.reloadData()
+    }
+    
+    func setupData(items: [Bookstore]) {
+        self.receivedData = items
     }
 }
 
