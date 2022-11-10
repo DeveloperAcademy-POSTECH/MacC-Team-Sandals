@@ -29,6 +29,8 @@ final class HomeViewController: UIViewController {
     
     private var model = Model()
     
+    private var bookstores: [Bookstore] = []
+    
     enum SupplementaryViewKind {
         static let header = "header"
     }
@@ -147,6 +149,9 @@ final class HomeViewController: UIViewController {
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
+        
+        // MARK : add by X
+        homeSearchViewController.setupData(items: self.bookstores)
         show(homeSearchViewController, sender: nil)
     }
     
@@ -188,6 +193,10 @@ final class HomeViewController: UIViewController {
         bookstoresRequestTask?.cancel()
         bookstoresRequestTask = Task {
             if var bookstores = try? await firestoreManager.fetchBookstores() {
+                
+                // 전체 데이터 add by X
+                self.bookstores = bookstores
+                
                 switch locationManager.authorizationStatus {
                 case .authorizedWhenInUse, .authorizedAlways:
                     model.bookstores = sortBookstoresByMyLocation(bookstores).map { .nearByBookstore($0) }
@@ -197,6 +206,8 @@ final class HomeViewController: UIViewController {
                 
                 // TODO: 지금은 전체 데이터 수가 3개라 2개만 제거했지만 많아지면 반복문으로 교체(랜덤 로직도 추가)
                 model.featuredBookstores = [bookstores.removeLast(), bookstores.removeLast()].map { .featuredBookstore($0) }
+                
+                
             } else {
                 model.bookstores = []
                 model.featuredBookstores = []
@@ -541,7 +552,9 @@ extension HomeViewController: UICollectionViewDelegate {
         case .regions:
             let model = model.regions[indexPath.item]
             let regionViewController = RegionViewController()
-            regionViewController.setupData(regionName: model.region!)
+            
+            //
+            regionViewController.setupData(regionName: model.region!, items: self.bookstores)
             
             show(regionViewController, sender: nil)
         default:

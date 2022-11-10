@@ -11,7 +11,7 @@ struct User {
     let email: String
     let nickName: String
     let provider: String
-    let bookmarkedBookstores: [String]
+    var bookmarkedBookstores: [String]
 }
 
 extension User: Codable { }

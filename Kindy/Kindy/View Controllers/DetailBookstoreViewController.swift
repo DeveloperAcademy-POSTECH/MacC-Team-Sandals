@@ -8,10 +8,30 @@
 import UIKit
 import MapKit
 
+
 final class DetailBookstoreViewController: UIViewController {
     
     private var defaultScrollYOffset: CGFloat = 0
-
+    
+    
+    private var userRequestTask: Task<Void, Never>?
+    private var bookmarkUpdateTask: Task<Void, Never>?
+    private let firestoreManager = FirestoreManager()
+    
+    // 초기 User 정보를 받아와지면 bookmark된 서점인지 확인하여 북마크 버튼 이미지 변경
+    private var user: User? {
+        didSet {
+            guard let user = user else { return }
+            if user.bookmarkedBookstores.contains(bookstore?.id ?? "nil") {
+                isBookmarked = true
+                bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+            } else {
+                isBookmarked = false
+                bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
+            }
+        }
+    }
+    
     var bookstore: Bookstore?
 
     let detailBookstoreView = DetailBookstoreView()
@@ -56,6 +76,9 @@ final class DetailBookstoreViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
+        updateUserData()
+        
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -96,12 +119,59 @@ final class DetailBookstoreViewController: UIViewController {
     }
 
     @objc private func bookmarkButtonTapped() {
-        isBookmarked.toggle()
-        isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
-        navigationBarRightButton.image = isBookmarked ? UIImage(systemName: "bookmark.fill") : UIImage(systemName: "bookmark")
+        if let user = user {
+            if user.bookmarkedBookstores.contains(bookstore?.id ?? "nil") {
+                let bookmarkedBookstores = user.bookmarkedBookstores.filter{ $0 != bookstore?.id ?? "nil" }
+                self.user!.bookmarkedBookstores = bookmarkedBookstores
+                if updateBookmarkData(email: user.email, provider: user.provider, bookmarkedBookstores: bookmarkedBookstores) {
+                    isBookmarked = false
+                    bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
+                } else {
+                    print("fail delete bookmark")
+                }
+            } else {
+                self.user!.bookmarkedBookstores.append(bookstore?.id ?? "nil")
+                let bookmarkedBookstores = self.user!.bookmarkedBookstores
+                if updateBookmarkData(email: user.email, provider: user.provider, bookmarkedBookstores: bookmarkedBookstores) {
+                    isBookmarked = true
+                    bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+                } else {
+                    print("fail add bookmark")
+                }
+            }
+        } else {
+            let signInViewController = SignInViewController()
+            self.navigationController?.pushViewController(signInViewController, animated: true)
+        }
+//        isBookmarked.toggle()
+//        isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
+//        navigationBarRightButton.image = isBookmarked ? UIImage(systemName: "bookmark.fill") : UIImage(systemName: "bookmark")
 //        NewItems.bookmarkToggle(bookstore!)
     }
     
+    // viewWillAppear에서 User 정보 업데이트 해주기
+    private func updateUserData() {
+        userRequestTask?.cancel()
+        userRequestTask = Task {
+            if firestoreManager.isLoggedIn() {
+                if let user = try? await firestoreManager.fetchUserByLoggedIn() {
+                    self.user = user
+                }
+            }
+            userRequestTask = nil
+        }
+    }
+    
+    // MARK: 추후 데이터 수정 시 true False 반환하게 만들기
+    private func updateBookmarkData(email: String, provider: String, bookmarkedBookstores: [String]) -> Bool {
+        let isSuccess = true
+        bookmarkUpdateTask?.cancel()
+        bookmarkUpdateTask = Task {
+            try? await firestoreManager.updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
+        }
+        bookmarkUpdateTask = nil
+        return isSuccess
+    }
 }
 
 extension DetailBookstoreViewController: UIScrollViewDelegate {
