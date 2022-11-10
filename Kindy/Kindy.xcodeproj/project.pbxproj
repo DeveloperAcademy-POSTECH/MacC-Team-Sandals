@@ -305,7 +305,6 @@
 		7B404C0B28FE87D300A24C89 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3101BC53291BF2A600C46195 /* Login */,
 				6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */,
 				77DCB1672905397E00EAB5D5 /* HomeSearchViewController.swift */,
 				77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */,
@@ -314,6 +313,7 @@
 				361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */,
 				7B7E212A290E22F500B6723D /* Curation */,
 				7B7E2129290E22D800B6723D /* My Page */,
+				3101BC53291BF2A600C46195 /* Login */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -452,7 +452,6 @@
 			isa = PBXGroup;
 			children = (
 				7BCB1A0E291646B700B357D5 /* FirestoreManager.swift */,
-				6E471CB9291775FE00AB2120 /* LocationManager.swift */,
 				3101BC5E291BF41700C46195 /* AuthManager.swift */,
 			);
 			path = Managers;
