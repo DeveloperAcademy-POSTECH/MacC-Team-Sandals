@@ -167,7 +167,7 @@ class SignUpViewController: UIViewController {
         })
         
         if let array = nickNameArray, !array.contains(nickName) {
-            db.collection("users").document(email!).setData([
+            db.collection("Users").document(email!).setData([
                 "email" : email!,
                 "provider" : provider!,
                 "nickName" : nickName
