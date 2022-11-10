@@ -150,13 +150,14 @@ extension MyPageViewController: UITableViewDelegate {
                 let alertForSignIn = UIAlertController(title: "정말 로그아웃하시겠습니까?", message: nil, preferredStyle: .alert)
                 let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
                     self.firestoreManager.signOut()
+                    self.user = nil
                     tableView.reloadData()
                 })
                 let cancel = UIAlertAction(title: "아니오", style: .cancel)
                 alertForSignIn.addAction(cancel)
                 alertForSignIn.addAction(action)
                 present(alertForSignIn, animated: true, completion: nil)
-                self.user = nil
+                
             } else {
                 let signInViewcontroller = SignInViewController()
                 self.navigationController?.pushViewController(signInViewcontroller, animated: false)
