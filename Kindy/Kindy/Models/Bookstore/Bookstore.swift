@@ -17,27 +17,13 @@ struct Bookstore {
     let contact: Contact
     let businessHour: BusinessHour
     let location: Location
+    var distance: Int = 0  // 내 주변 서점과 떨어진 거리(m)
 }
 
 extension Bookstore {
     // 짧은 주소
     var shortAddress: String {
         return address.components(separatedBy: " ")[0] + " " + address.components(separatedBy: " ")[1]
-    }
-    
-    // 내 주변 서점과 떨어진 거리(m)
-    var meterDistance: Int {
-        get {
-            return 1
-        }
-        set {
-//            self.meterDistance = newValue
-        }
-    }
-    
-    // 내 주변 서점까지 도보로 걸리는 시간(분)
-    var timeDistance: Int {
-        return 1
     }
 }
 
