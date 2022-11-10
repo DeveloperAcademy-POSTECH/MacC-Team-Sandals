@@ -30,7 +30,7 @@ final class DetailMyPageViewController: UIViewController {
     
     private func setupNavigation() {
         navigationItem.title = navigationBarTitle
-        navigationController?.navigationBar.tintColor = UIColor(named: "kindyGreen")
+        navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
     }
 
