@@ -29,7 +29,7 @@ extension FirestoreManager {
     }
     
     // id로 큐레이션 fetch
-    func fetchCuration(with id: String) async throws -> Curation {
+    func fetchCuration(by id: String) async throws -> Curation {
         let curation = try await Reference.curations.document(id).getDocument(as: Curation.self)
         return curation
     }
@@ -51,7 +51,7 @@ extension FirestoreManager {
     }
     
     // id로 서점 fetch
-    func fetchBookstore(with id: String) async throws -> Bookstore {
+    func fetchBookstore(by id: String) async throws -> Bookstore {
         let bookstore = try await Reference.bookstores.document(id).getDocument(as: Bookstore.self)
         return bookstore
     }
@@ -70,6 +70,12 @@ extension FirestoreManager {
         let user = User(id: id, nickName: nickName, bookmarkedBookstores: [])
         try Reference.users.document(user.id).setData(from: user)
     }
+    
+    // 이메일로 유저 fetch
+    func fetchUser(by email: String) async throws -> User {
+        let user = try await Reference.users.document(email).getDocument(as: User.self)
+        return user
+    }
 }
 
 // MARK: - 이미지
@@ -80,7 +86,7 @@ extension FirestoreManager {
         case imageDataMissing
     }
     
-    func fetchImage(with url: String?) async throws -> UIImage {
+    func fetchImage(by url: String?) async throws -> UIImage {
         let (data, response) = try await URLSession.shared.data(from: URL(string: url ?? "")!)
         
         guard let httpResponse = response as? HTTPURLResponse,

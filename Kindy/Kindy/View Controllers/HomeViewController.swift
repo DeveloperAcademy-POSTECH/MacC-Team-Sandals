@@ -52,7 +52,7 @@ final class HomeViewController: UIViewController {
         case .notDetermined, .denied, .restricted:
             snapshot.appendSections([.noPermission])
             snapshot.appendItems([ViewModel.Item.noPermission])
-        @unknown default:
+        default:
             snapshot.appendSections([.nearbys])
             snapshot.appendItems(model.bookstores)
         }
@@ -398,7 +398,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.curation!)
                 
                 self.imageRequestTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.curation?.descriptions[indexPath.item].image) {
+                    if let image = try? await firestoreManager.fetchImage(by: item.curation?.descriptions[indexPath.item].image) {
                         cell.imageView.image = image
                     }
                     imageRequestTask = nil
@@ -412,7 +412,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.bookstore!, indexPath: indexPath, numberOfItems: numberOfItems)
                 
                 self.imageRequestTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
+                    if let image = try? await firestoreManager.fetchImage(by: item.bookstore?.images?.first!) {
                         cell.imageView.image = image
                     }
                     imageRequestTask = nil
@@ -424,7 +424,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.bookstore!)
                 
                 self.imageRequestTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?[0]) {
+                    if let image = try? await firestoreManager.fetchImage(by: item.bookstore?.images?[0]) {
                         cell.imageView.image = image
                     }
                     imageRequestTask = nil
