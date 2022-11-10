@@ -165,7 +165,7 @@ final class CurationListCell: UITableViewCell {
     }
 
     private func configureCell(item: Curation) {
-        photoImageView.image = UIImage(named: item.mainImage)
+//        photoImageView.image = UIImage(named: item.mainImage)
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
     }

@@ -6,9 +6,23 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 final class CurationListViewController: UIViewController {
 
+    // MARK: - 파이어베이스 Task
+    
+    var curationsRequestTask: Task<Void, Never>?
+    var imageRequestTask: Task<Void, Never>?
+    
+    deinit {
+        curationsRequestTask?.cancel()
+        imageRequestTask?.cancel()
+    }
+    
+    let firestoreManager = FirestoreManager()
+    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -19,7 +33,9 @@ final class CurationListViewController: UIViewController {
         return tableView
     }()
     
-    private var mainDummy = NewItems.mainDummy
+    private var mainDummy: [Curation] = []
+    
+    private var model = Model()
     
     // MARK: - 라이프 사이클
     
@@ -28,6 +44,12 @@ final class CurationListViewController: UIViewController {
 
         createBarButtonItems()
         setupTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        update()
     }
     
     // MARK: - 메소드
@@ -46,8 +68,8 @@ final class CurationListViewController: UIViewController {
     }
     
     @objc func searchButtonTapped() {
-//        let homeSearchViewController = HomeSearchViewController()
-//        show(homeSearchViewController, sender: nil)
+        let homeSearchViewController = HomeSearchViewController()
+        show(homeSearchViewController, sender: nil)
     }
     
     @objc func bellButtonTapped() {
@@ -71,6 +93,21 @@ final class CurationListViewController: UIViewController {
         ])
     }
     
+    // MARK: - 파이어베이스 update
+    
+    func update() {
+        curationsRequestTask?.cancel()
+        curationsRequestTask = Task {
+            if let curations = try? await firestoreManager.fetchCurations() {
+                mainDummy = curations
+            } else {
+                mainDummy = []
+            }
+            self.tableView.reloadData()
+            curationsRequestTask = nil
+        }
+    }
+    
 }
 
 // MARK: - DataSource
@@ -84,6 +121,13 @@ extension CurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
         cell.curation = mainDummy[indexPath.row]
+        
+//        self.imageRequestTask = Task {
+//            if let image = try? await firestoreManager.fetchImage(with: mainDummy[indexPath.row].descriptions[indexPath.item].image) {
+//                cell.imageView?.image = image
+//            }
+//            imageRequestTask = nil
+//        }
         
         return cell
     }
