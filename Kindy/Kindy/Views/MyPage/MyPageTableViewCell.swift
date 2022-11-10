@@ -18,7 +18,7 @@ final class MyPageTableViewCell: UITableViewCell {
     private let myPageCellImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "chevron.forward")
-        imageView.tintColor = UIColor(named: "kindyGreen")
+        imageView.tintColor = .black
         imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
