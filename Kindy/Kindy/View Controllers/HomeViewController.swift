@@ -13,9 +13,9 @@ import FirebaseFirestoreSwift
 final class HomeViewController: UIViewController {
     
     // MARK: Tasks
-    var bookstoresRequestTask: Task<Void, Never>?
-    var curationsRequestTask: Task<Void, Never>?
-    var imageRequestTask: Task<Void, Never>?
+    private var bookstoresRequestTask: Task<Void, Never>?
+    private var curationsRequestTask: Task<Void, Never>?
+    private var imageRequestTask: Task<Void, Never>?
     
     deinit {
         bookstoresRequestTask?.cancel()
@@ -24,10 +24,10 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: Managers
-    let firestoreManager = FirestoreManager()
-    let locationManager = CLLocationManager()
+    private let firestoreManager = FirestoreManager()
+    private let locationManager = CLLocationManager()
     
-    var model = Model()
+    private var model = Model()
     
     enum SupplementaryViewKind {
         static let header = "header"
@@ -39,7 +39,7 @@ final class HomeViewController: UIViewController {
     
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
     
-    var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
+    private var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
         var snapshot = NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item>()
         
         snapshot.appendSections([.curations])
