@@ -15,7 +15,7 @@ struct FirestoreManager {
     let bookstores = db.collection("Bookstores")
     let curations = db.collection("Curations")
     let users = db.collection("Users")
-    let auth = Auth.auth().currentUser
+    
 }
 
 // MARK: - 큐레이션
@@ -79,6 +79,7 @@ extension FirestoreManager {
     
     // 현재 로그인되어 있는 정보로 User Data를 가지고 옴 --> 위에 함수가 필요할지는 조금 더 확인해봐야 할 듯
     func fetchUserByLoggedIn() async throws -> User {
+        let auth = Auth.auth().currentUser
         let email = auth?.email
         let user = try await users.document(email ?? "").getDocument(as: User.self)
         return user
@@ -116,7 +117,16 @@ extension FirestoreManager {
     
     // 현재 로그인이 되어 있는지 확인하는 함수
     func isLoggedIn() -> Bool {
-        return auth == nil ? false : true
+        return Auth.auth().currentUser == nil ? false : true
+    }
+    
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print("fail Sign Out")
+        }
+        
     }
 }
 

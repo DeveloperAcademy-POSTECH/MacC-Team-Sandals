@@ -140,8 +140,15 @@ final class DetailBookstoreViewController: UIViewController {
                 }
             }
         } else {
-            let signInViewController = SignInViewController()
-            self.navigationController?.pushViewController(signInViewController, animated: true)
+            let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
+            let action = UIAlertAction(title: "네", style: .default, handler: { _ in
+                let signInViewController = SignInViewController()
+                self.navigationController?.pushViewController(signInViewController, animated: true)
+            })
+            let cancel = UIAlertAction(title: "아니오", style: .destructive)
+            alertForSignIn.addAction(cancel)
+            alertForSignIn.addAction(action)
+            present(alertForSignIn, animated: true, completion: nil)
         }
 //        isBookmarked.toggle()
 //        isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
