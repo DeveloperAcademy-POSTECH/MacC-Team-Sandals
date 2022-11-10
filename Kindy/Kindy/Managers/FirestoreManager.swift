@@ -10,12 +10,10 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 struct FirestoreManager {
-    enum Reference {
-        static let db = Firestore.firestore()
-        static let bookstores = db.collection("Bookstores")
-        static let curations = db.collection("Curations")
-        static let users = db.collection("Users")
-    }
+    static let db = Firestore.firestore()
+    let bookstores = db.collection("Bookstores")
+    let curations = db.collection("Curations")
+    let users = db.collection("Users")
 }
 
 // MARK: - 큐레이션
@@ -23,20 +21,20 @@ struct FirestoreManager {
 extension FirestoreManager {
     // 모든 큐레이션 fetch
     func fetchCurations() async throws -> [Curation] {
-        let querySnapshot = try await Reference.curations.getDocuments()
+        let querySnapshot = try await curations.getDocuments()
         let curations = try querySnapshot.documents.map { try $0.data(as: Curation.self) }
         return curations
     }
     
     // id로 큐레이션 fetch
     func fetchCuration(with id: String) async throws -> Curation {
-        let curation = try await Reference.curations.document(id).getDocument(as: Curation.self)
+        let curation = try await curations.document(id).getDocument(as: Curation.self)
         return curation
     }
     
     // 큐레이션 추가
     func add(curation: Curation) throws {
-        try Reference.curations.document(curation.id).setData(from: curation)
+        try curations.document(curation.id).setData(from: curation)
     }
 }
 
@@ -45,20 +43,20 @@ extension FirestoreManager {
 extension FirestoreManager {
     // 모든 서점 fetch
     func fetchBookstores() async throws -> [Bookstore] {
-        let querySnapshot = try await Reference.bookstores.getDocuments()
+        let querySnapshot = try await bookstores.getDocuments()
         let bookstores = try querySnapshot.documents.map { try $0.data(as: Bookstore.self) }
         return bookstores
     }
     
     // id로 서점 fetch
     func fetchBookstore(with id: String) async throws -> Bookstore {
-        let bookstore = try await Reference.bookstores.document(id).getDocument(as: Bookstore.self)
+        let bookstore = try await bookstores.document(id).getDocument(as: Bookstore.self)
         return bookstore
     }
     
     // 서점 추가
     func add(bookstore: Bookstore) throws {
-        try Reference.bookstores.document(bookstore.id).setData(from: bookstore)
+        try bookstores.document(bookstore.id).setData(from: bookstore)
     }
 }
 
@@ -68,12 +66,12 @@ extension FirestoreManager {
     // 유저 추가
     func add(user email: String, nickName: String) throws {
         let user = User(email: email, nickName: nickName, provider: "", bookmarkedBookstores: [])
-        try Reference.users.document(user.email).setData(from: user)
+        try users.document(user.email).setData(from: user)
     }
     
     // 이메일로 유저 fetch
     func fetchUser(with email: String) async throws -> User {
-        let user = try await Reference.users.document(email).getDocument(as: User.self)
+        let user = try await users.document(email).getDocument(as: User.self)
         return user
     }
 }
