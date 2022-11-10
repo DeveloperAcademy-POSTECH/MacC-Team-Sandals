@@ -55,6 +55,11 @@ extension FirestoreManager {
         let bookstore = try await Reference.bookstores.document(id).getDocument(as: Bookstore.self)
         return bookstore
     }
+    
+    // 서점 추가
+    func add(bookstore: Bookstore) throws {
+        try Reference.bookstores.document(bookstore.id).setData(from: bookstore)
+    }
 }
 
 // MARK: -  유저

@@ -61,11 +61,10 @@ final class SectionHeaderView: UICollectionReusableView {
         return button
     }()
     
-    private let regionLabel: UILabel = {
+    let regionLabel: UILabel = {
         let label = UILabel()
         label.font = .footnote
         label.textColor = .kindyGray
-        label.text = "포항시, 북구"
         
         return label
     }()

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
@@ -23,6 +24,7 @@ final class HomeViewController: UIViewController {
     }
     
     let firestoreManager = FirestoreManager()
+    let locationManager = CLLocationManager()
     
     var model = Model()
     
@@ -89,6 +91,11 @@ final class HomeViewController: UIViewController {
         
         // Supplementary View Registeration
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier)
+        
+        // MARK: Location Manager
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -116,6 +123,9 @@ final class HomeViewController: UIViewController {
         super.viewDidDisappear(animated)
         
         // TODO: Task cancellation
+        curationsRequestTask?.cancel()
+        bookstoresRequestTask?.cancel()
+        imageRequestTask?.cancel()
     }
     
     // MARK:  - Navigation Bar
@@ -135,7 +145,7 @@ final class HomeViewController: UIViewController {
     }
     
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수입니다.
-    @objc func searchButtonTapped() {        
+    @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
         show(homeSearchViewController, sender: nil)
     }
@@ -164,9 +174,14 @@ final class HomeViewController: UIViewController {
         bookstoresRequestTask?.cancel()
         bookstoresRequestTask = Task {
             if var bookstores = try? await firestoreManager.fetchBookstores() {
-                model.bookstores = bookstores.map { .nearByBookstore($0) }
+                switch locationManager.authorizationStatus {
+                case .authorizedWhenInUse, .authorizedAlways:
+                    model.bookstores = sortBookstoresByMyLocation(bookstores).map { .nearByBookstore($0) }
+                default:
+                    model.bookstores = bookstores.map { .nearByBookstore($0) }
+                }
                 
-                // TODO: 지금은 3개라 2개만 제거했지만 많아지면 반복문으로 교체
+                // TODO: 지금은 전체 데이터 수가 3개라 2개만 제거했지만 많아지면 반복문으로 교체(랜덤 로직도 추가)
                 model.featuredBookstores = [bookstores.removeLast(), bookstores.removeLast()].map { .featuredBookstore($0) }
             } else {
                 model.bookstores = []
@@ -421,6 +436,11 @@ final class HomeViewController: UIViewController {
         
         // MARK: Supplementary View Provider
         dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            
+            guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
+            
+            //                headerView.delegate = self
+            
             switch kind {
             case SupplementaryViewKind.header:
                 let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
@@ -441,6 +461,10 @@ final class HomeViewController: UIViewController {
                     sectionName = "내 주변 서점"
                     hideSeeAllButton = false
                     hideBottomStackView = false
+                    
+                    Task {
+                        try await headerView.regionLabel.text = self.fetchMyLocation()
+                    }
                 case .bookmarks:
                     sectionName = "북마크 한 서점"
                     hideSeeAllButton = false
@@ -450,10 +474,6 @@ final class HomeViewController: UIViewController {
                     hideSeeAllButton = true
                     hideBottomStackView = true
                 }
-                
-                guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryViewKind.header, withReuseIdentifier: SectionHeaderView.identifier, for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
-                
-//                headerView.delegate = self
                 
                 headerView.configure(
                     title: sectionName,
@@ -478,48 +498,42 @@ extension HomeViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
-
+        
         switch section {
         case .curations:
             let curation = model.curations.map { $0.curation! }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
             curationViewController.modalPresentationStyle = .overFullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
-
+            
             present(curationViewController, animated: true)
-//        case .bookstores:
-//            let bookstore = model.bookstores.map { $0.bookstore! }
-//            let detailBookstoreViewController = DetailBookstoreViewController()
-//            detailBookstoreViewController.bookstore = bookstore
-//
-//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-//        case .nearbys:
-//            let bookstore = model.bookstores.map { $0.bookstore! }
-//            let detailBookstoreViewController = DetailBookstoreViewController()
-//            detailBookstoreViewController.bookstore = bookstore
-//
-//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-//        case .bookmarks:
-//
-//            let detailBookstoreViewController = DetailBookstoreViewController()
-//            detailBookstoreViewController.bookstore = bookstore
-//
-//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-//        case .regions:
-//            let regionName = model.regions[indexPath.item]
-//            let regionViewController = RegionViewController()
-//            regionViewController.setupData(regionName: regionName)
-//
-//            show(regionViewController, sender: nil)
+            //        case .bookstores:
+            //            let bookstore = model.bookstores.map { $0.bookstore! }
+            //            let detailBookstoreViewController = DetailBookstoreViewController()
+            //            detailBookstoreViewController.bookstore = bookstore
+            //
+            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+            //        case .nearbys:
+            //            let bookstore = model.bookstores.map { $0.bookstore! }
+            //            let detailBookstoreViewController = DetailBookstoreViewController()
+            //            detailBookstoreViewController.bookstore = bookstore
+            //
+            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+            //        case .bookmarks:
+            //
+            //            let detailBookstoreViewController = DetailBookstoreViewController()
+            //            detailBookstoreViewController.bookstore = bookstore
+            //
+            //            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+            //        case .regions:
+            //            let regionName = model.regions[indexPath.item]
+            //            let regionViewController = RegionViewController()
+            //            regionViewController.setupData(regionName: regionName)
+            //
+            //            show(regionViewController, sender: nil)
         default:
             return
         }
-    }
-    
-    
-    // TODO: 셀 별로 안보이면 Task cancel 해줘야함
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
     }
 }
 
@@ -547,7 +561,7 @@ extension HomeViewController: UICollectionViewDelegate {
 //}
 
 
-// MARK: Scroll View Delegate
+// MARK: - Scroll View Delegate
 
 extension HomeViewController: UIScrollViewDelegate {
     
@@ -559,4 +573,54 @@ extension HomeViewController: UIScrollViewDelegate {
         }
     }
     
+}
+
+// MARK: - CLLocationManagerDelegate
+
+extension HomeViewController: CLLocationManagerDelegate {
+    
+    // 내 위치를 기준으로 서점 정렬
+    private func sortBookstoresByMyLocation(_ bookstores: [Bookstore]) -> [Bookstore] {
+        guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
+        var sortedBookstores = bookstores
+        
+        for i in 0..<bookstores.count {
+            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude)))
+        }
+        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
+        sortedBookstores = sortedBookstores.filter { $0.distance < 200000 }.sorted { $0.distance < $1.distance }
+        
+        return sortedBookstores
+    }
+    
+    // 내 위치의 지역을 문자열로 반환
+    private func fetchMyLocation() async throws -> String {
+        guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return "" }
+        
+        let location = CLLocation(latitude: myLocation.latitude, longitude: myLocation.longitude)
+        let geocoder = CLGeocoder()
+        let locale = Locale(identifier: "Ko-kr")
+        
+        let placemarks = try await geocoder.reverseGeocodeLocation(location, preferredLocale: locale)
+        let locality = placemarks.first?.locality ?? ""
+        let subLocality = placemarks.first?.subLocality ?? ""
+        
+        return locality + " " + subLocality
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+            return
+        case .authorizedWhenInUse, .authorizedAlways:
+            model.bookstores = sortBookstoresByMyLocation(model.bookstores.map { $0.bookstore! }).map { .nearByBookstore($0) }
+            dataSource.apply(snapshot)
+            return
+        case .restricted, .denied:
+            return
+        @unknown default:
+            return
+        }
+    }
 }
