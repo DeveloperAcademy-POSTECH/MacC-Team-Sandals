@@ -149,7 +149,6 @@ final class HomeViewController: UIViewController {
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
-        
         // MARK : add by X
         homeSearchViewController.setupData(items: self.bookstores)
         show(homeSearchViewController, sender: nil)
@@ -523,6 +522,8 @@ extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
         
+        let bookstore = model.bookstores.map { $0.bookstore! }
+        
         switch section {
         case .curations:
             let curation = model.curations.map { $0.curation! }.first!
@@ -532,15 +533,13 @@ extension HomeViewController: UICollectionViewDelegate {
             
             present(curationViewController, animated: true)
         case .bookstores:
-            let bookstore = model.bookstores.map { $0.bookstore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = bookstore
+            detailBookstoreViewController.bookstore = bookstore[indexPath.item]
             
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .nearbys:
-            let bookstore = model.bookstores.map { $0.bookstore! }[indexPath.item]
             let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = bookstore
+            detailBookstoreViewController.bookstore = bookstore[indexPath.item]
             
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
 //        case .bookmarks:
@@ -552,10 +551,8 @@ extension HomeViewController: UICollectionViewDelegate {
         case .regions:
             let model = model.regions[indexPath.item]
             let regionViewController = RegionViewController()
-            
-            //
             regionViewController.setupData(regionName: model.region!, items: self.bookstores)
-            
+
             show(regionViewController, sender: nil)
         default:
             return

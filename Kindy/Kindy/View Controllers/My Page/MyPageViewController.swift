@@ -19,6 +19,7 @@ final class MyPageViewController: UIViewController {
     private let privacy = Privacy()
     // 라이선스를 추가해야하는 경우 라이선스랑 제보하기의 배열 내부 위치를 바꿔주시면 됩니다
     private let cellTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스", "로그인"]
+
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -98,7 +99,7 @@ extension MyPageViewController: UITableViewDataSource {
             cell.myPageCellLabel.text = cellTitle[indexPath.row]
         }
         
-        if cell.myPageCellLabel.text == "개인정보 처리방침" || cell.myPageCellLabel.text == "라이선스"  {
+        if cell.myPageCellLabel.text == "개인정보 처리방침" || cell.myPageCellLabel.text == "라이선스" || cell.myPageCellLabel.text == "북마크 한 서점"  {
             cell.isHidden = true
         }
         return cell
@@ -110,6 +111,7 @@ extension MyPageViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
+        tableView.deselectRow(at: indexPath, animated: true)
         switch cellTitle[indexPath.row] {
         case "북마크 한 서점":
             if let _ = user {
@@ -144,6 +146,7 @@ extension MyPageViewController: UITableViewDelegate {
         case "독립서점 제보하기":
             tableView.deselectRow(at: indexPath, animated: true)
             tableView.reportButtonTapped()
+
         
         case "로그인":
             if let _ = user {
@@ -162,6 +165,7 @@ extension MyPageViewController: UITableViewDelegate {
                 let signInViewcontroller = SignInViewController()
                 self.navigationController?.pushViewController(signInViewcontroller, animated: false)
             }
+
         default:
             print("TableView Delegate Error!")
             break
