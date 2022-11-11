@@ -7,19 +7,8 @@
 
 import UIKit
 
-protocol ChangeLayout: AnyObject {
-    func defaultHeaderLayout()
-    func changeLayout(y: Double)
-    func setTopHeaderLayout()
-}
-
-protocol PopView: AnyObject {
-    func popView()
-    func dismissHeaderView()
-}
-
 class PagingCurationViewController: UIViewController {
-    
+
     private var curation: Curation
 
     init(curation: Curation) {
@@ -44,7 +33,7 @@ class PagingCurationViewController: UIViewController {
     
     private lazy var dimmingView: UIView = {
         let view = UIView()
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -59,27 +48,6 @@ class PagingCurationViewController: UIViewController {
         configureUI()
         navigationController?.navigationBar.isHidden = true
     }
-    
-    // 뷰 합치면 여기서 띄울건데 이상하면 viewDidAppear에서 ~
-    
-    //    override func viewWillAppear(_ animated: Bool) {
-    //        super.viewWillAppear(animated)
-    //        dimmingView.alpha = 1
-    //
-    //        let bottomVC = BottomSheetViewController(contentViewController: CurationViewController())
-    //        bottomVC.modalPresentationStyle = .overFullScreen
-    //        present(bottomVC, animated: false)
-    //        bottomVC.view.alpha = 0
-    //
-    //        // 같이 보여주고 싶어서 잠시 시간을 줬슴니당
-    //        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-    //            UIView.transition(with: self.view, duration: 0, options: .curveEaseIn) {
-    //                bottomVC.view.alpha = 1
-    //                self.dimmingView.alpha = 0
-    //                bottomVC.delegate = self
-    //            }
-    //        }
-    //    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

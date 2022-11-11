@@ -9,13 +9,13 @@ import UIKit
 
 final class CurationViewController: UIViewController {
     
-    weak var cellDelegate: DynamicCell?
+    let replyDummy = [["니버", "좋네요 너무 가보고 싶어요 ! 좋네요 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 !", "2022-11-04 •"], ["니버", "어쩌라구용~", "2022-11-04 •"], ["니버", "좋네요 너무 가보고 싶어요  좋네요 너무 가보고 싶어요  좋네요 너무 가보고 싶어요 !", "2022-11-04 •"], ["니버", "별룬데요 !", "2022-11-04 • "], ["니버", " 굿! ", "2022-11-04 • "]]
     
     private var curation: Curation
     
-    private var cellCount = 0
+    private var cellCount: Int = 0
     
-    private var cellHeight: CGFloat = 0
+    private var replyCount: Int = 0
     
     init(curation: Curation) {
         self.curation = curation
@@ -26,11 +26,20 @@ final class CurationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var collectionView: UICollectionView = {
-        let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init())
+    lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.backgroundColor = .white
         view.dataSource = self
         view.delegate = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var bottomView: UIView = {
+        let view = CurationButtonStackView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -49,16 +58,24 @@ private extension CurationViewController {
         collectionView.register(CurationTextCell.self, forCellWithReuseIdentifier: CurationTextCell.identifier)
         
         collectionView.register(CurationDetailCell.self, forCellWithReuseIdentifier: CurationDetailCell.identifier)
+        
+        collectionView.register(CurationReplyCell.self, forCellWithReuseIdentifier: CurationReplyCell.identifier)
     }
     
     func createLayout() {
         view.addSubview(collectionView)
+        view.addSubview(bottomView)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -72),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            
+            bottomView.topAnchor.constraint(equalTo: collectionView.bottomAnchor),
+            bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 }
@@ -85,6 +102,10 @@ extension CurationViewController: UICollectionViewDataSource {
                 cell.infoConfigure(data: curation)
             }
             return cell
+        } else if indexPath.item > cellCount {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationReplyCell.identifier, for: indexPath) as? CurationReplyCell else { return UICollectionViewCell() }
+            cell.configure(data: replyDummy[replyCount - indexPath.row])
+            return cell
         }
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationDetailCell.identifier, for: indexPath) as? CurationDetailCell else { return UICollectionViewCell() }
@@ -97,7 +118,9 @@ extension CurationViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         cellCount += 2
         cellCount += curation.imageWithText.count
-        return cellCount + 1
+        // TODO: replyDummy 를 큐레이션 모델 내부에 reply를 받아와서 count 하는 코드로 변경
+        replyCount = cellCount + replyDummy.count
+        return replyCount + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -111,24 +134,6 @@ extension CurationViewController: UICollectionViewDelegate {
 }
 
 extension CurationViewController: UICollectionViewDelegateFlowLayout {
-    /// 셀 크기
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let width: CGFloat = UIScreen.main.bounds.width
-        let height: CGFloat = UIScreen.main.bounds.height
-    
-        if indexPath.item == 0 {
-            return CGSize(width: width, height: height / 7)
-        } else if indexPath.item == 1 || indexPath.item == cellCount {
-            let height: Double = Double(curation.headText.count) / 27.2 * 20
-            return CGSize(width: width, height: height + 100)
-        } else {
-            let height: Double = Double(curation.imageWithText[indexPath.row - 2].1.count) / 27.2 * 20
-            // image height를 고정한다면 밑에 더해주면 댐다
-            return CGSize(width: width, height: height + 400)
-        }
-    }
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }

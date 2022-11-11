@@ -7,6 +7,17 @@
 
 import UIKit
 
+protocol ChangeLayout: AnyObject {
+    func defaultHeaderLayout()
+    func changeLayout(y: Double)
+    func setTopHeaderLayout()
+}
+
+protocol PopView: AnyObject {
+    func popView()
+    func dismissHeaderView()
+}
+
 final class BottomSheetViewController: UIViewController {
     
     enum BottomSheetViewState {
@@ -107,7 +118,7 @@ final class BottomSheetViewController: UIViewController {
                 bottomSheetViewTopConstraint.constant = bottomSheetPanStartingTopConstant + translation.y
                 delegate?.changeLayout(y: translation.y)
             }
-    
+            
         case .ended:
             let safeAreaHeight = view.safeAreaLayoutGuide.layoutFrame.height
             let bottomPadding = view.safeAreaInsets.bottom
@@ -116,7 +127,7 @@ final class BottomSheetViewController: UIViewController {
             let standardHeight = screenHeight * 0.3
             
             let nearestValue = nearest(to: bottomSheetViewTopConstraint.constant, inValues: [bottomSheetPanMinTopConstant, standardHeight, defaultPadding, safeAreaHeight + bottomPadding])
-          
+            
             if nearestValue == bottomSheetPanMinTopConstant || (translation.y < 0 && nearestValue == standardHeight) {
                 showBottomSheet(atState: .expanded)
                 delegate?.setTopHeaderLayout()
@@ -141,15 +152,17 @@ final class BottomSheetViewController: UIViewController {
     }
     
     private func showBottomSheet(atState: BottomSheetViewState = .normal) {
+        guard let vc = self.contentViewController as? CurationViewController else { return }
         if atState == .normal {
-            self.contentViewController.view.isUserInteractionEnabled = false
+            vc.collectionView.isUserInteractionEnabled = false
             let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
             let bottomPadding: CGFloat = view.safeAreaInsets.bottom
             bottomSheetViewTopConstraint.constant = (safeAreaHeight + bottomPadding) - defaultHeight
         } else {
-            self.contentViewController.view.isUserInteractionEnabled = true
+            vc.collectionView.isUserInteractionEnabled = true
             // 확장시 위치
             bottomSheetViewTopConstraint.constant = bottomSheetPanMinTopConstant
+            
         }
         
         UIView.animate(withDuration: 0.33, delay: 0, options: .curveEaseIn, animations: {
