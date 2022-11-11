@@ -74,8 +74,13 @@ final class BottomSheetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(presentReport(_:)), name: .Report, object: nil)
         setupLayout()
         configureGesture()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc private func dismissView() {
@@ -203,3 +208,10 @@ final class BottomSheetViewController: UIViewController {
         return nearestVal
     }
 }
+
+extension BottomSheetViewController: Reportable {
+    @objc private func presentReport(_ notification: Notification) {
+        showReportController(self, style: .actionSheet)
+    }
+}
+
