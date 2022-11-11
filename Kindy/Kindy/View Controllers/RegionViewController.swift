@@ -117,7 +117,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         case "충청/대전":
             return items.filter{ $0.address.contains("충청도") || $0.address.contains("대전광역시") || $0.address.contains("세종특별자치시") }
         case "경북/대구":
-            return items.filter{ $0.address.contains("경상북도") || $0.address.contains("대구광역시")}
+            return items.filter{ $0.address.contains("경상북도") || $0.address.contains("대구") || $0.address.contains("경북") }
         case "전라/광주":
             return items.filter{ $0.address.contains("전라남도") || $0.address.contains("광주광역시") || $0.address.contains("전라북도") }
         case "경남/울산/부산":
@@ -156,11 +156,12 @@ extension RegionViewController: UITableViewDataSource {
 }
 
 // MARK: - Delegate
+
 extension RegionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let detailBookstoreViewController = DetailBookstoreViewController()
-//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         show(detailBookstoreViewController, sender: nil)
 
         tableView.deselectRow(at: indexPath, animated: true)
