@@ -15,7 +15,6 @@ struct FirestoreManager {
     let bookstores = db.collection("Bookstores")
     let curations = db.collection("Curations")
     let users = db.collection("Users")
-    
 }
 
 // MARK: - 큐레이션
@@ -77,8 +76,8 @@ extension FirestoreManager {
         return user
     }
     
-    // 현재 로그인되어 있는 정보로 User Data를 가지고 옴 --> 위에 함수가 필요할지는 조금 더 확인해봐야 할 듯
-    func fetchUserByLoggedIn() async throws -> User {
+    // 현재 로그인되어 있는 정보로 유저 데이터 fetch
+    func fetchCurrentUser() async throws -> User {
         let auth = Auth.auth().currentUser
         let email = auth?.email
         let user = try await users.document(email ?? "").getDocument(as: User.self)

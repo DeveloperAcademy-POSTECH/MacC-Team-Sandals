@@ -150,7 +150,7 @@ final class BookmarkViewController: UIViewController {
         userRequestTask?.cancel()
         userRequestTask = Task {
             if firestoreManager.isLoggedIn() {
-                if let user = try? await firestoreManager.fetchUserByLoggedIn() {
+                if let user = try? await firestoreManager.fetchCurrentUser() {
                     self.user = user
                 }
             }
