@@ -170,7 +170,8 @@ class SignUpViewController: UIViewController {
             db.collection("Users").document(email!).setData([
                 "email" : email!,
                 "provider" : provider!,
-                "nickName" : nickName
+                "nickName" : nickName,
+                "bookmarkedBookstores" : []
             ])  { err in
                 if let err = err {
                     print("Error writing document: \(err)")

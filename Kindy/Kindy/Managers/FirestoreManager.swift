@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import FirebaseAuth
 
 struct FirestoreManager {
     static let db = Firestore.firestore()
@@ -74,6 +75,14 @@ extension FirestoreManager {
         let user = try await users.document(email).getDocument(as: User.self)
         return user
     }
+    
+    // 현재 로그인되어 있는 정보로 유저 데이터 fetch
+    func fetchCurrentUser() async throws -> User {
+        let auth = Auth.auth().currentUser
+        let email = auth?.email
+        let user = try await users.document(email ?? "").getDocument(as: User.self)
+        return user
+    }
 }
 
 // MARK: - 이미지
@@ -97,5 +106,45 @@ extension FirestoreManager {
         }
         
         return image
+    }
+}
+
+
+
+// MARK: Authentication
+extension FirestoreManager {
+    
+    // 현재 로그인이 되어 있는지 확인하는 함수
+    func isLoggedIn() -> Bool {
+        return Auth.auth().currentUser == nil ? false : true
+    }
+    
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print("fail Sign Out")
+        }
+        
+    }
+}
+
+
+// MARK: Bookmark
+extension FirestoreManager {
+    // User의 bookmarkedBookstores 의 값을 바꿔주는 함수(북마크 버튼을 누를 때 호출)
+    // 추후 추가가 되었는지 안되었는지 확인할 수 있게 return true를 해줄 수 있으면 좋을 듯.....
+    func updateBookmark(email: String, provider: String, bookmarkedBookstores: [String]) async throws {
+        users.whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print(err)
+            } else {
+                let document = querySnapshot!.documents.first
+                document?.reference.updateData([
+                    "bookmarkedBookstores" : bookmarkedBookstores
+                ])
+                
+            }
+        }
     }
 }
