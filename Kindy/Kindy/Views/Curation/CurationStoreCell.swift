@@ -7,7 +7,8 @@
 
 import UIKit
 
-class CurationStoreCell: UICollectionViewCell {
+final class CurationStoreCell: UICollectionViewCell {
+    
     private lazy var lineView: UIView = {
         let view = UIView()
         view.backgroundColor = .kindyLightGray
@@ -61,11 +62,10 @@ class CurationStoreCell: UICollectionViewCell {
     override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         super.preferredLayoutAttributesFitting(layoutAttributes)
         layoutIfNeeded()
-
-        let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
         
         var frame = layoutAttributes.frame
-        frame.size.height = ceil(size.height)
+        frame.size.width = UIScreen.main.bounds.width
+        frame.size.height = imageView.bounds.height + 50
 
         layoutAttributes.frame = frame
         return layoutAttributes

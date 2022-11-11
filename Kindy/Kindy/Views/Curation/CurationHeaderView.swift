@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CurationHeaderView: UIView {
+final class CurationHeaderView: UIView {
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
