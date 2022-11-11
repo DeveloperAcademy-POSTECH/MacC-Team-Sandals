@@ -160,7 +160,7 @@ extension RegionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let detailBookstoreViewController = DetailBookstoreViewController()
-//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         show(detailBookstoreViewController, sender: nil)
 
         tableView.deselectRow(at: indexPath, animated: true)
