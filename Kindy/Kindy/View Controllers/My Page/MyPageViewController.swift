@@ -37,15 +37,7 @@ final class MyPageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         updateUserData()
-        if let user = user {
-            bookstoresRequestTask = Task {
-                if var bookstores = try? await firestoreManager.fetchBookstores() {
-                    self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
-                }
-                bookstoresRequestTask = nil
-            }
-        }
-        
+        tableView.reloadData()
     }
 
     private func updateUserData() {
@@ -54,10 +46,18 @@ final class MyPageViewController: UIViewController {
             if firestoreManager.isLoggedIn() {
                 if let user = try? await firestoreManager.fetchUserByLoggedIn() {
                     self.user = user
+                    bookstoresRequestTask = Task {
+                        if let bookstores = try? await firestoreManager.fetchBookstores() {
+                            self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
+                            print("Bookmark Update")
+                        }
+                        bookstoresRequestTask = nil
+                    }
                 }
             }
             userRequestTask = nil
         }
+        print("call update User")
     }
     
     
