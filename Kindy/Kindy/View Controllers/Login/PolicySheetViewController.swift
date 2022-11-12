@@ -10,6 +10,7 @@ import UIKit
 class PolicySheetViewController: UIViewController {
     
     private var labelTitle:String = ""
+    var fromMyPage: Bool = false
     
     let privacy = Privacy()
     
@@ -39,10 +40,15 @@ class PolicySheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = labelTitle
+        
         view.backgroundColor = .white
-        setupLabel()
-        setupXButton()
+        if fromMyPage {
+            self.navigationItem.title = labelTitle
+        } else {
+            setupLabel()
+            setupXButton()
+        }
+        
         setupContentLabel()
         // Do any additional setup after loading the view.
     }
@@ -70,21 +76,43 @@ class PolicySheetViewController: UIViewController {
     }
     
     func setupContentLabel() {
-        if labelTitle == "회원가입 및 운영 약관 동의" {
+        switch labelTitle {
+        case "회원가입 및 운영 약관 동의":
             contentText.text = privacy.memberPolicy
-        } else {
+        case "개인정보 수집 및 이용 동의":
             contentText.text = privacy.privacyPolicy
+        case "개인정보 처리방침":
+            contentText.text = privacy.termsOfService
+        case "라이선스":
+            contentText.text = privacy.license
+        default:
+            contentText.text = ""
         }
+//        if labelTitle == "회원가입 및 운영 약관 동의" {
+//            contentText.text = privacy.memberPolicy
+//        } else {
+//            contentText.text = privacy.privacyPolicy
+//        }
         contentText.isEditable = false
         contentText.showsVerticalScrollIndicator = false
         view.addSubview(contentText)
-        let newSize = contentText.sizeThatFits(CGSize(width: titleLabel.frame.width, height: CGFloat.greatestFiniteMagnitude))
-        NSLayoutConstraint.activate([
-            contentText.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-            contentText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            contentText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            contentText.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+//        let newSize = contentText.sizeThatFits(CGSize(width: titleLabel.frame.width, height: CGFloat.greatestFiniteMagnitude))
+        if fromMyPage {
+            NSLayoutConstraint.activate([
+                contentText.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
+                contentText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                contentText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                contentText.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                contentText.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+                contentText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                contentText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                contentText.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
+        
     }
 
     func setupLabelTitle(_ title: String) {

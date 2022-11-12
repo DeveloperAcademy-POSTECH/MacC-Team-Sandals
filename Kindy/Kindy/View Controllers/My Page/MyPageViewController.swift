@@ -14,12 +14,25 @@ final class MyPageViewController: UIViewController {
     private var userRequestTask: Task<Void, Never>?
     
     private var bookmarkedBookstores:[Bookstore] = []
-    private var user: User?
+    private var user: User? {
+        didSet {
+            if let _ = user {
+                cellTitle = logoutTitle
+            } else {
+                cellTitle = loginTitle
+            }
+        }
+    }
     
     private let privacy = Privacy()
     // 라이선스를 추가해야하는 경우 라이선스랑 제보하기의 배열 내부 위치를 바꿔주시면 됩니다
-    private let cellTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스", "로그인"]
-
+    private var cellTitle: [String] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    private let loginTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스", "로그인"]
+    private let logoutTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스", "로그아웃", "회원탈퇴"]
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -29,6 +42,8 @@ final class MyPageViewController: UIViewController {
         return tableView
     }()
 
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -38,7 +53,6 @@ final class MyPageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         updateUserData()
-        tableView.reloadData()
     }
 
     private func updateUserData() {
@@ -50,15 +64,17 @@ final class MyPageViewController: UIViewController {
                     bookstoresRequestTask = Task {
                         if let bookstores = try? await firestoreManager.fetchBookstores() {
                             self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
-                            print("Bookmark Update")
+                            self.cellTitle = logoutTitle
                         }
                         bookstoresRequestTask = nil
                     }
                 }
+            } else {
+                cellTitle = loginTitle
             }
             userRequestTask = nil
+            tableView.reloadData()
         }
-        print("call update User")
     }
     
     
@@ -93,15 +109,16 @@ extension MyPageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyPageTableViewCell", for: indexPath) as? MyPageTableViewCell else { return UITableViewCell() }
-        if cellTitle[indexPath.row] == "로그인" && firestoreManager.isLoggedIn() {
-            cell.myPageCellLabel.text = "로그아웃"
-        } else {
+        print("\(cellTitle[indexPath.row]), \(indexPath.row))")
             cell.myPageCellLabel.text = cellTitle[indexPath.row]
+        if indexPath.row == 5 {
+            cell.myPageCellLabel.textColor = .red
+        } else {
+            cell.myPageCellLabel.textColor = .black
         }
-        
-        if cell.myPageCellLabel.text == "개인정보 처리방침" || cell.myPageCellLabel.text == "라이선스" || cell.myPageCellLabel.text == "북마크 한 서점"  {
-            cell.isHidden = true
-        }
+//        if cell.myPageCellLabel.text == "개인정보 처리방침" || cell.myPageCellLabel.text == "라이선스" {
+//            cell.isHidden = true
+//        }
         return cell
     }
     
@@ -125,47 +142,55 @@ extension MyPageViewController: UITableViewDelegate {
                     let signInViewController = SignInViewController()
                     self.navigationController?.pushViewController(signInViewController, animated: true)
                 })
-                let cancel = UIAlertAction(title: "아니오", style: .destructive)
-                alertForSignIn.addAction(cancel)
-                alertForSignIn.addAction(action)
-                present(alertForSignIn, animated: true, completion: nil)
-            }
-            
-        case "개인정보 처리방침":
-            let detailMyPageVC = DetailMyPageViewController()
-            detailMyPageVC.navigationBarTitle = "개인정보 처리방침"
-            detailMyPageVC.detailString = privacy.termsOfService
-            show(detailMyPageVC, sender: nil)
-
-        case "라이선스":
-            let detailMyPageVC = DetailMyPageViewController()
-            detailMyPageVC.navigationBarTitle = "라이선스"
-            detailMyPageVC.detailString = privacy.license
-            show(detailMyPageVC, sender: nil)
-
-        case "독립서점 제보하기":
-            tableView.deselectRow(at: indexPath, animated: true)
-            tableView.reportButtonTapped()
-
-        
-        case "로그인":
-            if let _ = user {
-                let alertForSignIn = UIAlertController(title: "정말 로그아웃하시겠습니까?", message: nil, preferredStyle: .alert)
-                let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
-                    self.firestoreManager.signOut()
-                    self.user = nil
-                    tableView.reloadData()
-                })
                 let cancel = UIAlertAction(title: "아니오", style: .cancel)
                 alertForSignIn.addAction(cancel)
                 alertForSignIn.addAction(action)
                 present(alertForSignIn, animated: true, completion: nil)
-                
-            } else {
-                let signInViewcontroller = SignInViewController()
-                self.navigationController?.pushViewController(signInViewcontroller, animated: false)
             }
-
+        case "개인정보 처리방침":
+//            let detailMyPageVC = DetailMyPageViewController()
+//            detailMyPageVC.navigationBarTitle = "개인정보 처리방침"
+//            detailMyPageVC.detailString = privacy.termsOfService
+//            show(detailMyPageVC, sender: nil)
+            let policySheetViewController = PolicySheetViewController()
+            policySheetViewController.fromMyPage = true
+            policySheetViewController.setupLabelTitle("개인정보 처리방침")
+            show(policySheetViewController, sender: nil)
+        case "라이선스":
+//            let detailMyPageVC = DetailMyPageViewController()
+//            detailMyPageVC.navigationBarTitle = "라이선스"
+//            detailMyPageVC.detailString = privacy.license
+//            show(detailMyPageVC, sender: nil)
+            let policySheetViewController = PolicySheetViewController()
+            policySheetViewController.fromMyPage = true
+            policySheetViewController.setupLabelTitle("라이선스")
+            show(policySheetViewController, sender: nil)
+        case "독립서점 제보하기":
+            tableView.deselectRow(at: indexPath, animated: true)
+            tableView.reportButtonTapped()        
+        case "로그인":
+            let signInViewcontroller = SignInViewController()
+            self.navigationController?.pushViewController(signInViewcontroller, animated: false)
+        case "로그아웃":
+            let alertForSignIn = UIAlertController(title: "정말 로그아웃하시겠습니까?", message: nil, preferredStyle: .alert)
+            let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
+                self.firestoreManager.signOut()
+                self.user = nil
+            })
+            let cancel = UIAlertAction(title: "아니오", style: .cancel)
+            alertForSignIn.addAction(cancel)
+            alertForSignIn.addAction(action)
+            present(alertForSignIn, animated: true, completion: nil)
+        case "회원탈퇴":
+            let alertForSignIn = UIAlertController(title: "회원탈퇴", message: "정말 회원 탈퇴를 진행하시겠습니까?", preferredStyle: .alert)
+            let action = UIAlertAction(title: "네", style: .destructive, handler: { _ in
+                self.firestoreManager.deleteUser()
+                self.user = nil
+            })
+            let cancel = UIAlertAction(title: "아니오", style: .cancel)
+            alertForSignIn.addAction(cancel)
+            alertForSignIn.addAction(action)
+            present(alertForSignIn, animated: true, completion: nil)
         default:
             print("TableView Delegate Error!")
             break

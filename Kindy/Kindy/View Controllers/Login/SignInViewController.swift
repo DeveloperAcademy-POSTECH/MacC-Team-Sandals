@@ -264,44 +264,34 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
       // Sign in with Firebase.
 //        print(nonce)
         let checkEmail: String = self.decode(jwt:idTokenString) ?? ""
-        db.collection("Users").document(self.decode(jwt:idTokenString) ?? "").getDocument{ (document, error) in
-            if let document = document, document.exists {
-                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-                    print("Document data: \(dataDescription)")
-                    Auth.auth().signIn(with: credential) { [weak self] result, error in
-                        guard let self = self else { return }
-                        guard
-                            result != nil,
-                            error == nil else {
-                            if let error = error {
-                                print("Error google Login - \(error) ")
-                            }
-                            return
-                        }
-                        print("Successfull Log in \(result.publisher)")
-                        // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
-                        // 확인 후 없다면 해당 유저 도큐먼트를
-                        self.navigationController?.popViewController(animated: true)
-                    }
-                } else {
-                    let vc = SignUpViewController()
-                    vc.credential = credential
-                    vc.provider = "apple"
-                    vc.email = self.decode(jwt:idTokenString) ?? ""
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }
-        }
+        print("checkEmail \(checkEmail)")
         
-//      Auth.auth().signIn(with: credential) { (authResult, error) in
-//          if (error != nil) {
-//          // Error. If error.code == .MissingOrInvalidNonce, make sure
-//          // you're sending the SHA256-hashed nonce as a hex string with
-//          // your request to Apple.
-//              print(error?.localizedDescription ?? "")
-//          return
-//        }
-//          self.navigationController?.popViewController(animated: true)
-//      }
+        Task{
+            let documnetID = try await db.collection("Users").whereField("email", isEqualTo: checkEmail).whereField("provider", isEqualTo: "apple").getDocuments().documents.map{ $0.documentID }
+            if documnetID.isEmpty {
+                let vc = SignUpViewController()
+                vc.credential = credential
+                vc.provider = "apple"
+                vc.email = self.decode(jwt:idTokenString) ?? ""
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                Auth.auth().signIn(with: credential) { [weak self] result, error in
+                    guard let self = self else { return }
+                    guard
+                        result != nil,
+                        error == nil else {
+                        if let error = error {
+                            print("Error google Login - \(error) ")
+                        }
+                        return
+                    }
+                    print("Successfull Log in \(result.publisher)")
+                    // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
+                    // 확인 후 없다면 해당 유저 도큐먼트를
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        }  
     }
   }
 
