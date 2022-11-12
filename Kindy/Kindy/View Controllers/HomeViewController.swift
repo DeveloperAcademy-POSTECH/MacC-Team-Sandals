@@ -15,12 +15,14 @@ final class HomeViewController: UIViewController {
     // MARK: Tasks
     private var bookstoresRequestTask: Task<Void, Never>?
     private var curationsRequestTask: Task<Void, Never>?
+    private var bookmarkedBookstoresRequestTask: Task<Void, Never>?
     private var imageRequestTask: Task<Void, Never>?
     
     deinit {
         bookstoresRequestTask?.cancel()
         curationsRequestTask?.cancel()
         imageRequestTask?.cancel()
+        bookmarkedBookstoresRequestTask?.cancel()
     }
     
     // MARK: Managers
@@ -28,7 +30,6 @@ final class HomeViewController: UIViewController {
     private let locationManager = CLLocationManager()
     
     private var model = Model()
-    
     private var bookstores: [Bookstore] = []
     
     enum SupplementaryViewKind {
@@ -53,10 +54,18 @@ final class HomeViewController: UIViewController {
         switch locationManager.authorizationStatus {
         case .notDetermined, .denied, .restricted:
             snapshot.appendSections([.noPermission])
-            snapshot.appendItems([ViewModel.Item.noPermission])
+            snapshot.appendItems([.noPermission])
         default:
             snapshot.appendSections([.nearbys])
             snapshot.appendItems(model.bookstores)
+        }
+        
+        if model.bookmarkedBookstores.isEmpty || !firestoreManager.isLoggedIn() {
+            snapshot.appendSections([.emptyBookmarks])
+            snapshot.appendItems([.noBookmarkedBookstore])
+        } else {
+            snapshot.appendSections([.bookmarks])
+            snapshot.appendItems(model.bookmarkedBookstores)
         }
         
         snapshot.appendSections([.regions])
@@ -88,7 +97,7 @@ final class HomeViewController: UIViewController {
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.identifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.identifier)
         collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.identifier)
-        collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier)
+        collectionView.register(ExceptionBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: ExceptionBookmarkCollectionViewCell.identifier)
         collectionView.register(NoPermissionCollectionViewCell.self, forCellWithReuseIdentifier: NoPermissionCollectionViewCell.identifier)
         
         // Supplementary View Registeration
@@ -128,6 +137,7 @@ final class HomeViewController: UIViewController {
         curationsRequestTask?.cancel()
         bookstoresRequestTask?.cancel()
         imageRequestTask?.cancel()
+        bookmarkedBookstoresRequestTask?.cancel()
     }
     
     // MARK:  - Navigation Bar
@@ -192,21 +202,18 @@ final class HomeViewController: UIViewController {
         bookstoresRequestTask?.cancel()
         bookstoresRequestTask = Task {
             if var bookstores = try? await firestoreManager.fetchBookstores() {
-                
-                // 전체 데이터 add by X
+                // 전체 데이터에 추가
                 self.bookstores = bookstores
                 
                 switch locationManager.authorizationStatus {
                 case .authorizedWhenInUse, .authorizedAlways:
-                    model.bookstores = sortBookstoresByMyLocation(bookstores).map { .nearByBookstore($0) }
+                    model.bookstores = sortBookstoresByMyLocation(bookstores).map { .nearbyBookstore($0) }
                 default:
-                    model.bookstores = bookstores.map { .nearByBookstore($0) }
+                    model.bookstores = bookstores.map { .nearbyBookstore($0) }
                 }
                 
                 // TODO: 지금은 전체 데이터 수가 3개라 2개만 제거했지만 많아지면 반복문으로 교체(랜덤 로직도 추가)
                 model.featuredBookstores = [bookstores.removeLast(), bookstores.removeLast()].map { .featuredBookstore($0) }
-                
-                
             } else {
                 model.bookstores = []
                 model.featuredBookstores = []
@@ -214,6 +221,18 @@ final class HomeViewController: UIViewController {
             dataSource.apply(snapshot)
             
             bookstoresRequestTask = nil
+        }
+        
+        bookmarkedBookstoresRequestTask?.cancel()
+        bookmarkedBookstoresRequestTask = Task {
+            if let bookmarkedBookstores = try? await firestoreManager.fetchBookmarkedBookstores() {
+                model.bookmarkedBookstores = bookmarkedBookstores.map { .bookmarkedBookstore($0) }
+            } else {
+                model.bookmarkedBookstores = []
+            }
+            dataSource.apply(snapshot)
+
+            bookmarkedBookstoresRequestTask = nil
         }
     }
     
@@ -352,7 +371,7 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-            case .noPermission:
+            case .noPermission, .emptyBookmarks:
                 let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 
                 let groupSize = NSCollectionLayoutSize(
@@ -370,24 +389,6 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-                //            case .emptyBookmark:
-                //                let item = NSCollectionLayoutItem(layoutSize: fullSize)
-                //
-                //                let groupSize = NSCollectionLayoutSize(
-                //                    widthDimension: .fractionalWidth(1),
-                //                    heightDimension: .estimated(150)
-                //                )
-                //                let group = NSCollectionLayoutGroup.horizontal(
-                //                    layoutSize: groupSize,
-                //                    subitem: item,
-                //                    count: 1
-                //                )
-                //
-                //                let section = NSCollectionLayoutSection(group: group)
-                //                section.boundarySupplementaryItems = [headerItem]
-                //                section.contentInsets = sectionContentInsets
-                //
-                //                return section
             }
         }
         
@@ -434,7 +435,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.bookstore!)
                 
                 self.imageRequestTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?[0]) {
+                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
                         cell.imageView.image = image
                     }
                     imageRequestTask = nil
@@ -444,6 +445,13 @@ final class HomeViewController: UIViewController {
             case .bookmarks:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as? BookmarkedCollectionViewCell else { return UICollectionViewCell() }
                 cell.configureCell(item.bookstore!)
+                
+                self.imageRequestTask = Task {
+                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
+                        cell.imageView.image = image
+                    }
+                    imageRequestTask = nil
+                }
                 
                 return cell
             case .regions:
@@ -458,6 +466,10 @@ final class HomeViewController: UIViewController {
             case .noPermission:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoPermissionCollectionViewCell.identifier, for: indexPath) as? NoPermissionCollectionViewCell else { return UICollectionViewCell() }
                 
+                return cell
+            case .emptyBookmarks:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ExceptionBookmarkCollectionViewCell.identifier, for: indexPath) as? ExceptionBookmarkCollectionViewCell else { return UICollectionViewCell() }
+                cell.label.text = firestoreManager.isLoggedIn() ? "북마크한 서점이 아직 없어요" : "로그인 후 이용할 수 있는 서비스입니다."
                 return cell
             }
         }
@@ -493,7 +505,7 @@ final class HomeViewController: UIViewController {
                     Task {
                         try await headerView.regionLabel.text = self.fetchMyLocation()
                     }
-                case .bookmarks:
+                case .bookmarks, .emptyBookmarks:
                     sectionName = "북마크 한 서점"
                     hideSeeAllButton = false
                     hideBottomStackView = true
@@ -542,12 +554,12 @@ extension HomeViewController: UICollectionViewDelegate {
             detailBookstoreViewController.bookstore = bookstore[indexPath.item]
             
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-//        case .bookmarks:
-//
-//            let detailBookstoreViewController = DetailBookstoreViewController()
-//            detailBookstoreViewController.bookstore = bookstore
-//
-//            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+        case .bookmarks:
+            let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore! }
+            let detailBookstoreViewController = DetailBookstoreViewController()
+            detailBookstoreViewController.bookstore = bookmarkedBookstores[indexPath.item]
+
+            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .regions:
             let model = model.regions[indexPath.item]
             let regionViewController = RegionViewController()
@@ -571,11 +583,11 @@ extension HomeViewController: SectionHeaderDelegate {
             let nearbyViewController = NearbyViewController()
             nearbyViewController.setupData(items: nearbyBookstores)
             show(nearbyViewController, sender: nil)
-//        case 3:
-//            let items = Item.bookmarkedBookStores.map { $0.bookstore! }
-//            let bookmarkViewController = BookmarkViewController()
-//            bookmarkViewController.setupData(items: items)
-//            show(bookmarkViewController, sender: nil)
+        case 3:
+            let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore! }
+            let bookmarkViewController = BookmarkViewController()
+            bookmarkViewController.setupData(items: bookmarkedBookstores)
+            show(bookmarkViewController, sender: nil)
         default:
             return
         }
@@ -609,10 +621,10 @@ extension HomeViewController: CLLocationManagerDelegate {
         for i in 0..<bookstores.count {
             sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude))) / 1000
         }
-        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요 + prefix(3)으로 3개만 보여주기
+        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
         sortedBookstores = sortedBookstores.filter { $0.distance < 500 }.sorted { $0.distance < $1.distance }
         
-        return sortedBookstores
+        return Array(sortedBookstores.prefix(3))
     }
     
     // 내 위치의 지역을 문자열로 반환
@@ -636,7 +648,7 @@ extension HomeViewController: CLLocationManagerDelegate {
             manager.requestWhenInUseAuthorization()
             return
         case .authorizedWhenInUse, .authorizedAlways:
-            model.bookstores = sortBookstoresByMyLocation(model.bookstores.map { $0.bookstore! }).map { .nearByBookstore($0) }
+            model.bookstores = sortBookstoresByMyLocation(model.bookstores.map { $0.bookstore! }).map { .nearbyBookstore($0) }
             dataSource.apply(snapshot)
             return
         case .restricted, .denied:
