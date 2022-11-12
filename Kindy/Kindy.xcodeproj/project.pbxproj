@@ -319,7 +319,6 @@
 		7B404C0C28FE87DF00A24C89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3101BC4E291BF27700C46195 /* Login */,
 				7B404C2D29016C7500A24C89 /* Supplementary */,
 				7B404C2C29016BDF00A24C89 /* Home */,
 				77DCB16B29053B9D00EAB5D5 /* HomeSearch */,
@@ -330,6 +329,7 @@
 				77DCB1812909086500EAB5D5 /* EmptyView */,
 				7BF9AACE2909743400C80F72 /* Detail */,
 				A06954F02907C81600C09D1D /* MyPage */,
+				3101BC4E291BF27700C46195 /* Login */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -383,8 +383,8 @@
 				7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */,
 				7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */,
 				7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */,
-				7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */,
 				7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */,
+				7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */,
 				7BDAE69C290504A900BC41E9 /* EmptyBookmarkCollectionViewCell.swift */,
 			);
 			path = Home;

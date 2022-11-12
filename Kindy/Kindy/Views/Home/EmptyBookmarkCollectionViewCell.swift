@@ -21,10 +21,9 @@ final class EmptyBookmarkCollectionViewCell: UICollectionViewCell {
         return stackView
     }()
     
-    private let label: UILabel = {
+    let label: UILabel = {
         let label = UILabel()
         label.font = .body2
-        label.text = "북마크한 서점이 아직 없어요"
         
         return label
     }()
@@ -52,6 +51,8 @@ final class EmptyBookmarkCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupView() {
+        button.isHidden = true
+        
         addSubview(stackView)
         stackView.addArrangedSubview(label)
         stackView.addArrangedSubview(button)
