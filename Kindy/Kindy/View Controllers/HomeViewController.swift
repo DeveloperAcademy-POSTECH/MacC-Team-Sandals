@@ -97,7 +97,7 @@ final class HomeViewController: UIViewController {
         collectionView.register(BookmarkedCollectionViewCell.self, forCellWithReuseIdentifier: BookmarkedCollectionViewCell.identifier)
         collectionView.register(RegionCollectionViewCell.self, forCellWithReuseIdentifier: RegionCollectionViewCell.identifier)
         collectionView.register(EmptyNearbyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyNearbyCollectionViewCell.identifier)
-        collectionView.register(EmptyBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier)
+        collectionView.register(ExceptionBookmarkCollectionViewCell.self, forCellWithReuseIdentifier: ExceptionBookmarkCollectionViewCell.identifier)
         collectionView.register(NoPermissionCollectionViewCell.self, forCellWithReuseIdentifier: NoPermissionCollectionViewCell.identifier)
         
         // Supplementary View Registeration
@@ -468,7 +468,7 @@ final class HomeViewController: UIViewController {
                 
                 return cell
             case .emptyBookmarks:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyBookmarkCollectionViewCell.identifier, for: indexPath) as? EmptyBookmarkCollectionViewCell else { return UICollectionViewCell() }
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ExceptionBookmarkCollectionViewCell.identifier, for: indexPath) as? ExceptionBookmarkCollectionViewCell else { return UICollectionViewCell() }
                 cell.label.text = firestoreManager.isLoggedIn() ? "북마크한 서점이 아직 없어요" : "로그인 후 이용할 수 있는 서비스입니다."
                 return cell
             }
