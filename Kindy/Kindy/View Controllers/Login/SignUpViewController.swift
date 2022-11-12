@@ -166,7 +166,7 @@ class SignUpViewController: UIViewController {
             self.nickNameArray = documents?.documents.map{ $0.data() }.map{ String(describing: $0["nickName"]!) }
             
             if let array = self.nickNameArray, !array.contains(self.nickName) {
-                
+                self.signInButton.isEnabled = false
                 Auth.auth().signIn(with: self.credential!) { [weak self] result, error in
                     guard let self = self else { return }
                     guard result != nil, error == nil else {
