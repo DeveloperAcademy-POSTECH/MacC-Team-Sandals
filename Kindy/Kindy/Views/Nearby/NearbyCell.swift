@@ -21,7 +21,7 @@ final class NearbyCell: UITableViewCell {
     // MARK: - Cell 프로퍼티
     
     // 서점 사진
-    private let photoImageView: UIImageView = {
+    let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
