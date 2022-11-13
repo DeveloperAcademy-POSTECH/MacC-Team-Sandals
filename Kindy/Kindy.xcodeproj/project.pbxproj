@@ -34,6 +34,7 @@
 		6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */; };
 		6EE5E4322905733900EA7413 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */; };
 		6EE5E4342905777C00EA7413 /* CurationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4332905777C00EA7413 /* CurationHeaderView.swift */; };
+		77CF0A3A291F5C7D00670BF4 /* CurationCategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77CF0A39291F5C7D00670BF4 /* CurationCategoryButton.swift */; };
 		77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB149290297C100EAB5D5 /* NearbyCell.swift */; };
 		77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */; };
 		77DCB15229029CF500EAB5D5 /* UITableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB15129029CF500EAB5D5 /* UITableView+.swift */; };
@@ -114,6 +115,7 @@
 		6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingCurationViewController.swift; sourceTree = "<group>"; };
 		6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		6EE5E4332905777C00EA7413 /* CurationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationHeaderView.swift; sourceTree = "<group>"; };
+		77CF0A39291F5C7D00670BF4 /* CurationCategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCategoryButton.swift; sourceTree = "<group>"; };
 		77DCB149290297C100EAB5D5 /* NearbyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyCell.swift; sourceTree = "<group>"; };
 		77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyViewController.swift; sourceTree = "<group>"; };
 		77DCB15129029CF500EAB5D5 /* UITableView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+.swift"; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 		77DCB194291A358200EAB5D5 /* CurationList */ = {
 			isa = PBXGroup;
 			children = (
+				77CF0A39291F5C7D00670BF4 /* CurationCategoryButton.swift */,
 				77DCB192291A357E00EAB5D5 /* CurationListCell.swift */,
 				77DCB197291A706400EAB5D5 /* CurationListHeaderView.swift */,
 			);
@@ -557,7 +560,6 @@
 				A06954ED2906C6CE00C09D1D /* DetailMyPageViewController.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				77DCB193291A357E00EAB5D5 /* CurationListCell.swift in Sources */,
-				7B404C1D28FE8E3000A24C89 /* Region.swift in Sources */,
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
@@ -584,6 +586,7 @@
 				31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */,
 				7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */,
 				313C68DC2913F32B0061946E /* BookmarkSectionHeaderView.swift in Sources */,
+				77CF0A3A291F5C7D00670BF4 /* CurationCategoryButton.swift in Sources */,
 				6EE5E4282905661E00EA7413 /* UIViewController+.swift in Sources */,
 				77DCB1802909085F00EAB5D5 /* EmptyView.swift in Sources */,
 				7B7B49932917C8A70082E2DA /* Model.swift in Sources */,
@@ -592,7 +595,6 @@
 				7B404C2F29016CAF00A24C89 /* SectionHeaderView.swift in Sources */,
 				77DCB1662904467B00EAB5D5 /* RegionHeaderView.swift in Sources */,
 				77DCB191291A2FDF00EAB5D5 /* CurationListViewController.swift in Sources */,
-				31AAD148290948E0004A993C /* NewItems.swift in Sources */,
 				6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */,
 				77DCB16A29053B9900EAB5D5 /* HomeSearchCell.swift in Sources */,
 				7B7E212C290E27D400B6723D /* UIFont+.swift in Sources */,

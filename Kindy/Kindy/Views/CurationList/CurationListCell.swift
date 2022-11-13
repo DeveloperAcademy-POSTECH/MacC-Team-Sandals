@@ -168,5 +168,9 @@ final class CurationListCell: UITableViewCell {
 //        photoImageView.image = UIImage(named: item.mainImage)
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
+        likeLabel.text = "좋아요 \(item.likes.count)개"
+        dateLabel.text = "\(item.createdAt!)"
+        kinditorLabel.text = "킨디터 \(item.userID)"
+        
     }
 }

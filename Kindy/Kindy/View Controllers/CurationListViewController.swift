@@ -58,13 +58,13 @@ final class CurationListViewController: UIViewController {
         let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
         
-        let bellButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(bellButtonTapped))
+        let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonTapped))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
         
-        bellButton.tintColor = .black
+        writeButton.tintColor = .black
         searchButton.tintColor = .black
         
-        navigationItem.rightBarButtonItems = [bellButton, searchButton]
+        navigationItem.rightBarButtonItems = [writeButton, searchButton]
     }
     
     @objc func searchButtonTapped() {
@@ -72,7 +72,7 @@ final class CurationListViewController: UIViewController {
         show(homeSearchViewController, sender: nil)
     }
     
-    @objc func bellButtonTapped() {
+    @objc func writeButtonTapped() {
         
     }
     
@@ -150,11 +150,18 @@ extension CurationListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else {
-            return UIView()
-        }
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
 
-        headerView.headerLabel.text = "카테고리"
+//        headerView.headerLabel.text = "카테고리"
+//        let btn1 = CurationCategoryButton(categoryName: "최신")
+//        let btn2 = CurationCategoryButton(categoryName: "서점")
+//        let btn3 = CurationCategoryButton(categoryName: "책")
+//
+//        [btn1, btn2, btn3].forEach{ headerView.headerStackView.addSubview($0) }
+        headerView.btn1.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            headerView.btn1.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 30)
+        ])
 
         if mainDummy.count == 0 {
             headerView.isHidden = true
