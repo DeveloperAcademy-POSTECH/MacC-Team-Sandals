@@ -19,7 +19,7 @@ final class HomeSearchCell: UITableViewCell {
     
     // MARK: - 프로퍼티
     
-    private var photoImageView: UIImageView = {
+    let photoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 8
