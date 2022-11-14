@@ -535,8 +535,6 @@ extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
         
-        let bookstore = model.bookstores.map { $0.bookstore! }
-        
         switch section {
         case .curations:
             let curation = model.curations.map { $0.curation! }.first!
@@ -546,11 +544,13 @@ extension HomeViewController: UICollectionViewDelegate {
             
             present(curationViewController, animated: true)
         case .bookstores:
+            let featuredBookstore = model.featuredBookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = bookstore[indexPath.item]
+            detailBookstoreViewController.bookstore = featuredBookstore[indexPath.item]
             
             navigationController?.pushViewController(detailBookstoreViewController, animated: true)
         case .nearbys:
+            let bookstore = model.bookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookstore[indexPath.item]
             
