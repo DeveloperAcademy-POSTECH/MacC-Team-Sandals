@@ -109,16 +109,12 @@ extension MyPageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyPageTableViewCell", for: indexPath) as? MyPageTableViewCell else { return UITableViewCell() }
-        print("\(cellTitle[indexPath.row]), \(indexPath.row))")
             cell.myPageCellLabel.text = cellTitle[indexPath.row]
         if indexPath.row == 5 {
             cell.myPageCellLabel.textColor = .red
         } else {
             cell.myPageCellLabel.textColor = .black
         }
-//        if cell.myPageCellLabel.text == "개인정보 처리방침" || cell.myPageCellLabel.text == "라이선스" {
-//            cell.isHidden = true
-//        }
         return cell
     }
     

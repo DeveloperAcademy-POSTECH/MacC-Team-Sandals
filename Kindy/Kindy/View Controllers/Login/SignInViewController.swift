@@ -140,7 +140,6 @@ class SignInViewController: UIViewController {
             db.collection("Users").document(user?.profile?.email ?? "").getDocument{ (document, error) in
                 if let document = document, document.exists {
                         let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-                    print("Document data: \(dataDescription)")
                         Auth.auth().signIn(with: credential) { [weak self] result, error in
                             guard let self = self else { return }
                             guard
@@ -151,7 +150,6 @@ class SignInViewController: UIViewController {
                                 }
                                 return
                             }
-                            print("Successfull Log in \(result.publisher)")
                             // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
                             // 확인 후 없다면 해당 유저 도큐먼트를
                             self.navigationController?.popViewController(animated: true)
@@ -260,12 +258,8 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
       let credential = OAuthProvider.credential(withProviderID: "apple.com",
                                                 idToken: idTokenString,
                                                 rawNonce: nonce)
-//        print("userIdentifier = \(decode(jwt:idTokenString))")
       // Sign in with Firebase.
-//        print(nonce)
         let checkEmail: String = self.decode(jwt:idTokenString) ?? ""
-        print("checkEmail \(checkEmail)")
-        
         Task{
             let documnetID = try await db.collection("Users").whereField("email", isEqualTo: checkEmail).whereField("provider", isEqualTo: "apple").getDocuments().documents.map{ $0.documentID }
             if documnetID.isEmpty {
@@ -285,7 +279,6 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
                         }
                         return
                     }
-                    print("Successfull Log in \(result.publisher)")
                     // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
                     // 확인 후 없다면 해당 유저 도큐먼트를
                     self.navigationController?.popViewController(animated: true)

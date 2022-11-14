@@ -44,9 +44,7 @@ extension FirestoreManager {
 extension FirestoreManager {
     // 모든 서점 fetch
     func fetchBookstores() async throws -> [Bookstore] {
-//        print("beforebefore")
         let querySnapshot = try await bookstores.getDocuments()
-//        print("before \(querySnapshot.documents.first?.data() )")
         let bookstores = try querySnapshot.documents.map { try $0.data(as: Bookstore.self) }
         return bookstores
     }
@@ -95,10 +93,8 @@ extension FirestoreManager {
     }
     
     func deleteUser() {
-        print("deleteUser call")
-        users.document(Auth.auth().currentUser?.uid ?? "al").delete()
-        Auth.auth().currentUser?.delete() { _ in
-            print("delete User Success")
+        users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
+            Auth.auth().currentUser?.delete()
         }
     }
 }

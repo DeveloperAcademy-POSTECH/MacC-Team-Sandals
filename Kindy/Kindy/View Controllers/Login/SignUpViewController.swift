@@ -175,7 +175,6 @@ class SignUpViewController: UIViewController {
                         }
                         return
                     }
-                    print("Successfull Log in \(result.publisher)")
                     // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
                     // 확인 후 없다면 해당 유저 도큐먼트를
                     self.db.collection("Users").document(Auth.auth().currentUser!.uid).setData([
