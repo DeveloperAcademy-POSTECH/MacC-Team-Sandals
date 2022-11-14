@@ -69,8 +69,7 @@ class PagingCurationViewController: UIViewController {
         super.viewWillAppear(animated)
 
         self.imageRequestTask = Task {
-            // 머지하면 headImage로 바꾸기 ~
-            if let mainImage = try? await firestoreManager.fetchImage(with: "https://firebasestorage.googleapis.com/v0/b/kindy-43d2d.appspot.com/o/Bookstores%2FB%EA%B8%89%EC%B7%A8%ED%96%A5%2FB%E1%84%80%E1%85%B3%E1%86%B8%E1%84%8E%E1%85%B1%E1%84%92%E1%85%A3%E1%86%BC1.jpeg?alt=media&token=f5fb5afa-c4f7-497e-b1ca-0aadebf82188") {
+            if let mainImage = try? await firestoreManager.fetchImage(with: curation.mainImage) {
                 DispatchQueue.main.async {
                     guard let view = self.headerView as? CurationHeaderView else { print("hi")
                         return }
