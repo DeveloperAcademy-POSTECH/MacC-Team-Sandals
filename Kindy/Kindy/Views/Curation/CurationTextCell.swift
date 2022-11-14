@@ -57,8 +57,4 @@ class CurationTextCell: UICollectionViewCell {
     func headConfigure(data: Curation) {
         textView.text = data.headText
     }
-    
-    func infoConfigure(data: Curation) {
-//        textLabel.text = data.infoText
-    }
 }
