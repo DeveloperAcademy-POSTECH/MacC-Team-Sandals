@@ -19,7 +19,7 @@ final class CurationListCell: UITableViewCell {
     
     // MARK: - 프로퍼티
     
-    private let photoImageView: UIImageView = {
+    let photoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 8

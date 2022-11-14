@@ -70,5 +70,8 @@ final class CurationListHeaderView: UITableViewHeaderFooterView {
             btn2.leadingAnchor.constraint(equalTo: btn1.trailingAnchor, constant: 7),
             btn3.leadingAnchor.constraint(equalTo: btn2.trailingAnchor, constant: 7)
         ])
+        NSLayoutConstraint.activate([
+            
+        ])
     }
 }

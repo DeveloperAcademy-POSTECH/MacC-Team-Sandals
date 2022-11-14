@@ -122,12 +122,12 @@ extension CurationListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
         cell.curation = mainDummy[indexPath.row]
         
-//        self.imageRequestTask = Task {
-//            if let image = try? await firestoreManager.fetchImage(with: mainDummy[indexPath.row].descriptions[indexPath.item].image) {
-//                cell.imageView?.image = image
-//            }
-//            imageRequestTask = nil
-//        }
+        self.imageRequestTask = Task {
+            if let image = try? await firestoreManager.fetchImage(with: cell.curation?.descriptions[indexPath.item].image) {
+                cell.photoImageView.image = image
+            }
+            imageRequestTask = nil
+        }
         
         return cell
     }
@@ -152,12 +152,6 @@ extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
 
-//        headerView.headerLabel.text = "카테고리"
-//        let btn1 = CurationCategoryButton(categoryName: "최신")
-//        let btn2 = CurationCategoryButton(categoryName: "서점")
-//        let btn3 = CurationCategoryButton(categoryName: "책")
-//
-//        [btn1, btn2, btn3].forEach{ headerView.headerStackView.addSubview($0) }
         headerView.btn1.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             headerView.btn1.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 30)
