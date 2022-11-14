@@ -164,44 +164,42 @@ class SignUpViewController: UIViewController {
         
         db.collection("Users").getDocuments(completion: { (documents, error) in
             self.nickNameArray = documents?.documents.map{ $0.data() }.map{ String(describing: $0["nickName"]!) }
+            
+            if let array = self.nickNameArray, !array.contains(self.nickName) {
+                self.signInButton.isEnabled = false
+                Auth.auth().signIn(with: self.credential!) { [weak self] result, error in
+                    guard let self = self else { return }
+                    guard result != nil, error == nil else {
+                        if let error = error {
+                            print("Error google Login - \(error) ")
+                        }
+                        return
+                    }
+                    // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
+                    // 확인 후 없다면 해당 유저 도큐먼트를
+                    self.db.collection("Users").document(Auth.auth().currentUser!.uid).setData([
+                        "email" : self.email!,
+                        "provider" : self.provider!,
+                        "nickName" : self.nickName,
+                        "bookmarkedBookstores" : []
+                    ])  { err in
+                        if let err = err {
+                            print("Error writing document: \(err)")
+                        } else {
+                            print("Document successfully written!")
+                        }
+                    let viewControllers = self.navigationController?.viewControllers
+                    self.navigationController?.popToViewController(viewControllers![viewControllers!.count - 3], animated: true)
+                    }
+                    
+                }
+            } else {
+                self.isAlreadyLabel.alpha = 1
+                self.underLineView.layer.borderColor = UIColor.red.cgColor
+            }
         })
         
-        if let array = nickNameArray, !array.contains(nickName) {
-            db.collection("Users").document(email!).setData([
-                "email" : email!,
-                "provider" : provider!,
-                "nickName" : nickName,
-                "bookmarkedBookstores" : []
-            ])  { err in
-                if let err = err {
-                    print("Error writing document: \(err)")
-                } else {
-                    print("Document successfully written!")
-                    
-                    Auth.auth().signIn(with: self.credential!) { [weak self] result, error in
-                        guard let self = self else { return }
-                        guard
-                            result != nil,
-                            error == nil else {
-                            if let error = error {
-                                print("Error google Login - \(error) ")
-                            }
-                            return
-                        }
-                        print("Successfull Log in \(result.publisher)")
-                        // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
-                        // 확인 후 없다면 해당 유저 도큐먼트를
-                        
-                        let viewControllers = self.navigationController?.viewControllers
-                        self.navigationController?.popToViewController(viewControllers![viewControllers!.count - 3], animated: true)
-                    }
-                }
-            }
-            
-        } else {
-            isAlreadyLabel.alpha = 1
-            underLineView.layer.borderColor = UIColor.red.cgColor
-        }
+        
     }
     
     func isEnable() {

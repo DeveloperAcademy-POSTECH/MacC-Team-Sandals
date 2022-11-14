@@ -62,10 +62,11 @@ final class BookmarkViewController: UIViewController {
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
-        navigationController?.navigationBar.tintColor = UIColor.kindyPrimaryGreen
+        navigationController?.navigationBar.tintColor = UIColor.black
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
     // 서치컨트롤러 설정

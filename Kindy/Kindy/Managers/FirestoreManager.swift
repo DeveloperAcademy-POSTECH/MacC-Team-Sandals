@@ -77,8 +77,22 @@ extension FirestoreManager {
     func fetchCurrentUser() async throws -> User {
         let auth = Auth.auth().currentUser
         let email = auth?.email
-        let user = try await users.document(email ?? "").getDocument(as: User.self)
-        return user
+        if email!.contains("@gmail.com") {
+            let user = try await users.document(email ?? "").getDocument(as: User.self)
+            return user
+        } else {
+            let user = try await users.document(Auth.auth().currentUser?.uid ?? "").getDocument(as: User.self)
+            return user
+        }
+        
+        
+        
+    }
+    
+    func deleteUser() {
+        users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
+            Auth.auth().currentUser?.delete()
+        }
     }
 }
 

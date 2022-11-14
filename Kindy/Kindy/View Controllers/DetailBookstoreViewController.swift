@@ -145,7 +145,7 @@ final class DetailBookstoreViewController: UIViewController {
                 let signInViewController = SignInViewController()
                 self.navigationController?.pushViewController(signInViewController, animated: true)
             })
-            let cancel = UIAlertAction(title: "아니오", style: .destructive)
+            let cancel = UIAlertAction(title: "아니오", style: .cancel)
             alertForSignIn.addAction(cancel)
             alertForSignIn.addAction(action)
             present(alertForSignIn, animated: true, completion: nil)
