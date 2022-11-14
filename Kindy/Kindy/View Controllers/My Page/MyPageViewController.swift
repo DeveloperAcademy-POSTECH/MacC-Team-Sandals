@@ -31,7 +31,7 @@ final class MyPageViewController: UIViewController {
             tableView.reloadData()
         }
     }
-    private let loginTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스", "로그인"]
+    private let loginTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "라이선스", "로그인"]
     private let logoutTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스", "로그아웃", "회원탈퇴"]
     
     private let tableView: UITableView = {

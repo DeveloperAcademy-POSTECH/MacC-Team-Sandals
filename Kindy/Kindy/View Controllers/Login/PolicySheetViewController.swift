@@ -44,6 +44,8 @@ class PolicySheetViewController: UIViewController {
         view.backgroundColor = .white
         if fromMyPage {
             self.navigationItem.title = labelTitle
+            navigationController?.navigationBar.tintColor = UIColor.black
+            navigationController?.navigationBar.topItem?.title = ""
         } else {
             setupLabel()
             setupXButton()
@@ -82,7 +84,7 @@ class PolicySheetViewController: UIViewController {
         case "개인정보 수집 및 이용 동의":
             contentText.text = privacy.privacyPolicy
         case "개인정보 처리방침":
-            contentText.text = privacy.termsOfService
+            contentText.text = privacy.privacyPolicy
         case "라이선스":
             contentText.text = privacy.license
         default:
