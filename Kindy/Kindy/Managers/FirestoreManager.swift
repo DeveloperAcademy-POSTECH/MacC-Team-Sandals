@@ -15,11 +15,9 @@ struct FirestoreManager {
     let bookstores = db.collection("Bookstores")
     let curations = db.collection("Curations")
     let users = db.collection("Users")
-    
 }
 
-// MARK: - 큐레이션
-
+// MARK: 큐레이션
 extension FirestoreManager {
     // 모든 큐레이션 fetch
     func fetchCurations() async throws -> [Curation] {
@@ -40,8 +38,7 @@ extension FirestoreManager {
     }
 }
 
-// MARK: -  서점
-
+// MARK: 서점
 extension FirestoreManager {
     // 모든 서점 fetch
     func fetchBookstores() async throws -> [Bookstore] {
@@ -62,8 +59,7 @@ extension FirestoreManager {
     }
 }
 
-// MARK: -  유저
-
+// MARK: 유저
 extension FirestoreManager {
     // 유저 추가
     func add(user email: String, nickName: String) throws {
@@ -77,8 +73,8 @@ extension FirestoreManager {
         return user
     }
     
-    // 현재 로그인되어 있는 정보로 User Data를 가지고 옴 --> 위에 함수가 필요할지는 조금 더 확인해봐야 할 듯
-    func fetchUserByLoggedIn() async throws -> User {
+    // 현재 로그인되어 있는 정보로 유저 데이터 fetch
+    func fetchCurrentUser() async throws -> User {
         let auth = Auth.auth().currentUser
         let email = auth?.email
         let user = try await users.document(email ?? "").getDocument(as: User.self)
@@ -86,8 +82,7 @@ extension FirestoreManager {
     }
 }
 
-// MARK: - 이미지
-
+// MARK: 이미지
 extension FirestoreManager {
     enum ImageRequestError: Error {
         case couldNotInitializeFromData
@@ -95,7 +90,9 @@ extension FirestoreManager {
     }
     
     func fetchImage(with url: String?) async throws -> UIImage {
-        let (data, response) = try await URLSession.shared.data(from: URL(string: url ?? "")!)
+        guard let url = URL(string: url ?? "") else { return UIImage() }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
         
         guard let httpResponse = response as? HTTPURLResponse,
               httpResponse.statusCode == 200 else {
@@ -110,11 +107,8 @@ extension FirestoreManager {
     }
 }
 
-
-
 // MARK: Authentication
 extension FirestoreManager {
-    
     // 현재 로그인이 되어 있는지 확인하는 함수
     func isLoggedIn() -> Bool {
         return Auth.auth().currentUser == nil ? false : true
@@ -130,22 +124,27 @@ extension FirestoreManager {
     }
 }
 
-
-// MARK: Bookmark
+// MARK: 북마크
 extension FirestoreManager {
-    // User의 bookmarkedBookstores 의 값을 바꿔주는 함수(북마크 버튼을 누를 때 호출)
-    // 추후 추가가 되었는지 안되었는지 확인할 수 있게 return true를 해줄 수 있으면 좋을 듯.....
+    // User의 bookmarkedBookstores 의 값을 바꿔주는 함수 (북마크 버튼을 누를 때 호출)
     func updateBookmark(email: String, provider: String, bookmarkedBookstores: [String]) async throws {
-        users.whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print(err)
-            } else {
-                let document = querySnapshot!.documents.first
-                document?.reference.updateData([
-                    "bookmarkedBookstores" : bookmarkedBookstores
-                ])
-                
+        let querySnapshot = try await users.whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments()
+        let document = querySnapshot.documents.first
+        try await document?.reference.updateData(["bookmarkedBookstores" : bookmarkedBookstores])
+    }
+    
+    // 유저가 가진 서점 id 값으로 북마크된 서점 fetch
+    func fetchBookmarkedBookstores() async throws -> [Bookstore] {
+        if isLoggedIn() {
+            let user = try await fetchCurrentUser()
+            var bookmarkedBookstores = [Bookstore]()
+            for index in user.bookmarkedBookstores.indices {
+                bookmarkedBookstores.append(try await fetchBookstore(with: user.bookmarkedBookstores[index]))
             }
+            
+            return bookmarkedBookstores
+        } else {
+            return []
         }
     }
 }

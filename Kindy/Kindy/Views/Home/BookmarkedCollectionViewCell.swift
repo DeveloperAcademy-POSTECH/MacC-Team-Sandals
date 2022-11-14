@@ -31,7 +31,7 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
         return stackView
     }()
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
