@@ -21,7 +21,7 @@ final class NearbyCell: UITableViewCell {
     // MARK: - Cell 프로퍼티
     
     // 서점 사진
-    private let photoImageView: UIImageView = {
+    let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +99,7 @@ final class NearbyCell: UITableViewCell {
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
         addressLabel.text = item.address
-        distanceLabel.text = "\(item.distance)m"
+        distanceLabel.text = "\(item.distance)km"
 //        photoImageView.image = item.images?[0] ?? nil   // 첫번째 사진이 대표 사진
     }
     
