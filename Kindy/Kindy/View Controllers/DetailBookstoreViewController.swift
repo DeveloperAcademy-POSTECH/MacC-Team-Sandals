@@ -11,6 +11,7 @@ import MapKit
 
 final class DetailBookstoreViewController: UIViewController {
     
+    // MARK: Properties
     private var defaultScrollYOffset: CGFloat = 0
     
     private let firestoreManager = FirestoreManager()
@@ -59,11 +60,11 @@ final class DetailBookstoreViewController: UIViewController {
         return button
     }()
     
+    // MARK: LifeCycle
     override func loadView() {
         view = detailBookstoreView
     }
     
-    // MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBookstore()
@@ -84,7 +85,6 @@ final class DetailBookstoreViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        print(#function)
         // MARK: Task cancellation
         imageRequestTask?.cancel()
     }
@@ -95,8 +95,31 @@ final class DetailBookstoreViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
+        let view = setupBackButtonView()
+        
+        // 백버튼 커스텀 뷰로 대체
+        let leftBarButtonItem = UIBarButtonItem(customView: view)
+        self.navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        // 백스와이프 추가
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        
         navigationController?.navigationBar.tintColor = UIColor(named: "kindyPrimaryGreen")
-        navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    private func setupBackButtonView() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 8, width: 24, height: 24))
+        
+        if let image = UIImage(named: "backButton") {
+            imageView.image = image
+        }
+        view.addSubview(imageView)
+        
+        let backButton = UITapGestureRecognizer(target: self, action: #selector(backButtonTapped))
+        view.addGestureRecognizer(backButton)
+        
+        return view
     }
     
     private func setupTabbar() {
@@ -130,6 +153,31 @@ final class DetailBookstoreViewController: UIViewController {
         }
     }
     
+    // viewWillAppear에서 User 정보 업데이트 해주기
+    private func updateUserData() {
+        userRequestTask?.cancel()
+        userRequestTask = Task {
+            if firestoreManager.isLoggedIn() {
+                if let user = try? await firestoreManager.fetchCurrentUser() {
+                    self.user = user
+                }
+            }
+            userRequestTask = nil
+        }
+    }
+    
+    // MARK: 추후 데이터 수정 시 true False 반환하게 만들기
+    private func updateBookmarkData(email: String, provider: String, bookmarkedBookstores: [String]) -> Bool {
+        let isSuccess = true
+        bookmarkUpdateTask?.cancel()
+        bookmarkUpdateTask = Task {
+            try? await firestoreManager.updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
+        }
+        bookmarkUpdateTask = nil
+        return isSuccess
+    }
+    
+    // MARK: Actions
     @objc private func bookmarkButtonTapped() {
         if let user = user {
             if user.bookmarkedBookstores.contains(bookstore?.id ?? "nil") {
@@ -164,29 +212,10 @@ final class DetailBookstoreViewController: UIViewController {
         }
     }
     
-    // viewWillAppear에서 User 정보 업데이트 해주기
-    private func updateUserData() {
-        userRequestTask?.cancel()
-        userRequestTask = Task {
-            if firestoreManager.isLoggedIn() {
-                if let user = try? await firestoreManager.fetchCurrentUser() {
-                    self.user = user
-                }
-            }
-            userRequestTask = nil
-        }
+    @objc func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
     }
     
-    // MARK: 추후 데이터 수정 시 true False 반환하게 만들기
-    private func updateBookmarkData(email: String, provider: String, bookmarkedBookstores: [String]) -> Bool {
-        let isSuccess = true
-        bookmarkUpdateTask?.cancel()
-        bookmarkUpdateTask = Task {
-            try? await firestoreManager.updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
-        }
-        bookmarkUpdateTask = nil
-        return isSuccess
-    }
 }
 
 extension DetailBookstoreViewController: UIScrollViewDelegate {
