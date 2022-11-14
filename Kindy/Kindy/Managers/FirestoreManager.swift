@@ -90,6 +90,12 @@ extension FirestoreManager {
     }
     
     func fetchImage(with url: String?) async throws -> UIImage {
+        let cachedKey = NSString(string: url ?? "")
+        
+        if let cachedImage = ImageCacheManager.shared.object(forKey: cachedKey) {
+            return cachedImage
+        }
+        
         guard let url = URL(string: url ?? "") else { return UIImage() }
         
         let (data, response) = try await URLSession.shared.data(from: url)
@@ -102,6 +108,8 @@ extension FirestoreManager {
         guard let image = UIImage(data: data) else {
             throw ImageRequestError.couldNotInitializeFromData
         }
+        
+        ImageCacheManager.shared.setObject(image, forKey: cachedKey)
         
         return image
     }
