@@ -267,6 +267,7 @@ final class DetailBookstoreView: UIView {
     private let mapAddressLabel: UILabel = {
         let label = UILabel()
         label.text = "경상북도 포항시 남구 지곡로 83"
+        label.numberOfLines = 2
         label.font = UIFont.systemFont(ofSize: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
