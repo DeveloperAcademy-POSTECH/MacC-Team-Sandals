@@ -149,6 +149,7 @@ final class DetailBookstoreView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         button.contentHorizontalAlignment = .left
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(instagramButtonTapped), for: .touchUpInside)
         return button
     }()
     
