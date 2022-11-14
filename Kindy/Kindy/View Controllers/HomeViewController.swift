@@ -491,11 +491,11 @@ final class HomeViewController: UIViewController {
                 
                 switch section {
                 case .curations:
-                    sectionName = "이런 서점은 어때요"
+                    sectionName = "킨디터 Pick"
                     hideSeeAllButton = true
                     hideBottomStackView = true
                 case .bookstores:
-                    sectionName = "킨디터 추천 서점"
+                    sectionName = "이런 서점은 어때요"
                     hideSeeAllButton = true
                     hideBottomStackView = true
                 case .nearbys, .noPermission:
@@ -623,7 +623,7 @@ extension HomeViewController: CLLocationManagerDelegate {
             sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude))) / 1000
         }
         // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
-        sortedBookstores = sortedBookstores.filter { $0.distance < 500 }.sorted { $0.distance < $1.distance }
+        sortedBookstores = sortedBookstores.filter { $0.distance < 100 }.sorted { $0.distance < $1.distance }
         
         return Array(sortedBookstores.prefix(3))
     }
