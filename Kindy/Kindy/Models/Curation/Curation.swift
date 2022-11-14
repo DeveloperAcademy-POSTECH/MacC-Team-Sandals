@@ -11,6 +11,7 @@ struct Curation {
     var id: String = UUID().uuidString
     let userID: String
     let bookstoreID: String
+    let mainImage: String
     let title: String
     let subTitle: String?
     var createdAt: Date? = Date()
