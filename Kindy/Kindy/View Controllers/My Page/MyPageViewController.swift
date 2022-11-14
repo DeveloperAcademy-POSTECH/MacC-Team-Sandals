@@ -166,7 +166,7 @@ extension MyPageViewController: UITableViewDelegate {
             tableView.reportButtonTapped()        
         case "로그인":
             let signInViewcontroller = SignInViewController()
-            self.navigationController?.pushViewController(signInViewcontroller, animated: false)
+            self.navigationController?.pushViewController(signInViewcontroller, animated: true)
         case "로그아웃":
             let alertForSignIn = UIAlertController(title: "정말 로그아웃하시겠습니까?", message: nil, preferredStyle: .alert)
             let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
