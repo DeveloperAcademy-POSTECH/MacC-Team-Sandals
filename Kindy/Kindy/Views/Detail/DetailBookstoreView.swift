@@ -310,7 +310,6 @@ final class DetailBookstoreView: UIView {
     // MARK: init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
         setupUI()
     }
     
@@ -319,6 +318,8 @@ final class DetailBookstoreView: UIView {
     }
     
     private func setupUI() {
+        backgroundColor = .white
+        
         addSubview(mainScrollView)
         bookstoreImageScrollView.backgroundColor = .lightGray
         
