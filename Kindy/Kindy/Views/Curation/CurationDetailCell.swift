@@ -69,9 +69,9 @@ final class CurationDetailCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
         ])
     }
-    
-    func configure(imageWithText: (String, String)) {
-        imageView.image = UIImage(named: imageWithText.0)
-        descriptionLabel.text = imageWithText.1
+    func configure(description: Description, image: UIImage) {
+        //        imageView.image = UIImage(named: description.image ?? "")
+        imageView.image = image
+        descriptionLabel.text = description.content
     }
 }

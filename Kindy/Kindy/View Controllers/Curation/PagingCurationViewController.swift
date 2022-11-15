@@ -7,9 +7,24 @@
 
 import UIKit
 
-class PagingCurationViewController: UIViewController {
+protocol ChangeLayout: AnyObject {
+    func defaultHeaderLayout()
+    func changeLayout(y: Double)
+    func setTopHeaderLayout()
+}
 
-    private var curation: Curation
+protocol PopView: AnyObject {
+    func popView()
+    func dismissHeaderView()
+}
+
+final class PagingCurationViewController: UIViewController {
+    private let curation: Curation
+
+    private var imageRequestTask: Task<Void, Never>?
+    private let firestoreManager = FirestoreManager()
+
+    private var images: [UIImage] = []
 
     init(curation: Curation) {
         self.curation = curation
@@ -48,6 +63,22 @@ class PagingCurationViewController: UIViewController {
         configureUI()
         navigationController?.navigationBar.isHidden = true
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.imageRequestTask = Task {
+            if let mainImage = try? await firestoreManager.fetchImage(with: curation.mainImage) {
+                DispatchQueue.main.async {
+                    guard let view = self.headerView as? CurationHeaderView else { print("hi")
+                        return }
+                    view.imageView.image = mainImage
+                }
+                self.images.append(mainImage)
+            }
+            imageRequestTask = nil
+        }
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -60,19 +91,27 @@ class PagingCurationViewController: UIViewController {
         changeGradientLayer(view: headerView)
         
         dimmingView.alpha = 1
-        
-        let bottomVC = BottomSheetViewController(contentViewController: CurationViewController(curation: curation))
-        bottomVC.modalPresentationStyle = .overFullScreen
-        bottomVC.delegate = self
-        bottomVC.popDelegate = self
-        bottomVC.view.alpha = 0
-        
-        // 뷰를 같이 띄우고 싶어서 잠시 시간을 줬슴니당
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.27) {
-            UIView.transition(with: self.view, duration: 0.3, options: .curveEaseIn) {
-                self.present(bottomVC, animated: false)
-                bottomVC.view.alpha = 1
-                self.dimmingView.alpha = 0
+
+        self.imageRequestTask = Task {
+            for i in 0..<curation.descriptions.count {
+                if let image = try? await firestoreManager.fetchImage(with: curation.descriptions[i].image) {
+                    self.images.append(image)
+                }
+            }
+            imageRequestTask = nil
+
+            let bottomVC = BottomSheetViewController(contentViewController: CurationViewController(curation: curation, images: images))
+            bottomVC.modalPresentationStyle = .overFullScreen
+            bottomVC.delegate = self
+            bottomVC.popDelegate = self
+            bottomVC.view.alpha = 0
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.27) {
+                UIView.transition(with: self.view, duration: 0.3, options: .curveEaseIn) {
+                    self.present(bottomVC, animated: false)
+                    bottomVC.view.alpha = 1
+                    self.dimmingView.alpha = 0
+                }
             }
         }
     }
@@ -134,7 +173,7 @@ extension PagingCurationViewController: ChangeLayout {
     
     func setTopHeaderLayout() {
         let defaultHeight: CGFloat = (0.65 * screenHeight + 96.5) - (0.52 * screenHeight)
-                
+
         headerViewHeightConstant = screenHeight * 0.05 + 30 + defaultHeight
         headerViewHeightConstraint.constant = headerViewHeightConstant
         UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseIn, animations: {

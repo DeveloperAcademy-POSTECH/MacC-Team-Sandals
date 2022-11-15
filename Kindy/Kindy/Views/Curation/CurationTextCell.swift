@@ -80,9 +80,4 @@ final class CurationTextCell: UICollectionViewCell {
         textLabel.text = data.headText
         dividerView.alpha = 0
     }
-    
-    func infoConfigure(data: Curation) {
-        textLabel.text = data.infoText
-        dividerView.alpha = 1
-    }
 }
