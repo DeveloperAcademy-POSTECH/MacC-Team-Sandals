@@ -31,7 +31,7 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
         return stackView
     }()
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
@@ -89,6 +89,5 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
         addressLabel.text = bookstore.shortAddress
-        imageView.image = bookstore.images?.first!
     }
 }

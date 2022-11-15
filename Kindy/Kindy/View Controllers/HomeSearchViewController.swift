@@ -6,9 +6,21 @@
 //
 
 import UIKit
-
+   
 final class HomeSearchViewController: UIViewController, UISearchResultsUpdating {
 
+    // MARK: - 파이어베이스 Task
+
+    private var imageRequestTask: Task<Void, Never>?
+    
+    deinit {
+        imageRequestTask?.cancel()
+    }
+    
+    // MARK: - 파이어베이스 매니저
+    
+    private let firestoreManager = FirestoreManager()
+    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -18,6 +30,8 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         
         return view
     }()
+    
+    private var receivedData: [Bookstore] = []
     
     private var filteredItems: [Bookstore] = []
     
@@ -31,6 +45,7 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         super.viewDidLoad()
 
         setupSearchController()
+        setupCustomCancelButton(of: searchController)
         setupTableView()
         
         dismissKeyboard()
@@ -68,15 +83,6 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         searchController.searchResultsUpdater = self
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.obscuresBackgroundDuringPresentation = false
-        
-        customCancelButton()
-    }
-    
-    private func customCancelButton() {
-        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
-        searchController.searchBar.tintColor = UIColor(red: 0.173, green: 0.459, blue: 0.355, alpha: 1)
-        searchController.searchBar.placeholder = "서점 이름, 주소 검색"
-        searchController.searchBar.setShowsCancelButton(true, animated: true)
     }
     
     private func setupTableView() {
@@ -96,10 +102,12 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        if let searchString = searchController.searchBar.text, searchString.isEmpty == false {
+        if let searchString = searchController.searchBar.text?.components(separatedBy: " ").joined(separator: ""), searchString.isEmpty == false {
             searchText = searchString
-            filteredItems = NewItems.bookstoreDummy.filter{ (item) -> Bool in
-                item.name.localizedCaseInsensitiveContains(searchText!)
+            
+            // TODO: 파이어베이스 데이터 연결
+            filteredItems = receivedData.filter{ (item) -> Bool in
+                item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
             }
         } else {
             filteredItems = []
@@ -108,9 +116,13 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         
         tableView.reloadData()
     }
+    
+    func setupData(items: [Bookstore]) {
+        self.receivedData = items
+    }
 }
 
-// MARK: - data source
+// MARK: - 데이터 소스
 
 extension HomeSearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -123,6 +135,14 @@ extension HomeSearchViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchCell.identifier, for: indexPath) as? HomeSearchCell else { return UITableViewCell() }
         
         cell.bookstore = filteredItems[indexPath.row]
+        
+        self.imageRequestTask = Task {
+            if let image = try? await firestoreManager.fetchImage(with: cell.bookstore!.images?.first ?? "") {
+                cell.photoImageView.image = image
+            }
+            imageRequestTask = nil
+        }
+        
         return cell
     }
     
@@ -131,15 +151,13 @@ extension HomeSearchViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - delegate
+// MARK: - 델리게이트
 
 extension HomeSearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         let detailBookstoreViewController = DetailBookstoreViewController()
         detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-        
     }
 }
 

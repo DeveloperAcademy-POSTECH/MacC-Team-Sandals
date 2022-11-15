@@ -9,6 +9,10 @@ import UIKit
 
 class BookmarkCollectionViewCell: UICollectionViewCell {
     
+    private var imageRequestTask: Task<Void, Never>?
+    
+    private let firestoreManager = FirestoreManager()
+    
     private var bookstore: Bookstore?
     private var currentPage: Int = 0 {
         didSet {
@@ -189,7 +193,12 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCarouselCollectionViewCell.identifier, for: indexPath) as? ImageCarouselCollectionViewCell else {return UICollectionViewCell()}
-        cell.configureCell(image: (bookstore!.images![indexPath.row]))
+        self.imageRequestTask = Task {
+            if let image = try? await firestoreManager.fetchImage(with: bookstore!.images![indexPath.row]) {
+                cell.configureCell(image: image)
+            }
+            imageRequestTask = nil
+        }
         return cell
     }
     // PageControl과 ImageCarouselView와 싱크를 맞추기 위해 스크롤 추적

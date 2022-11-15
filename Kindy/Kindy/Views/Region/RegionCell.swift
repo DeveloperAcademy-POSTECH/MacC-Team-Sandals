@@ -18,12 +18,12 @@ final class RegionCell: UITableViewCell {
 
     // MARK: - 프로퍼티
     
-    private let photoImageView: UIImageView = {
+    let photoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 8
         view.clipsToBounds = true      // radius를 imageView에 적용
-        view.backgroundColor = .lightGray      // 사진 없을 경우 default 색
+        view.backgroundColor = .kindyLightGray      // 사진 없을 경우 default 색
         view.translatesAutoresizingMaskIntoConstraints = false
 
         return view
@@ -41,7 +41,7 @@ final class RegionCell: UITableViewCell {
 
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
+        label.font = .headline
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -49,8 +49,8 @@ final class RegionCell: UITableViewCell {
 
     private let addressLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
-        label.textColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
+        label.font = .body2
+        label.textColor = .kindyGray
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -79,7 +79,7 @@ final class RegionCell: UITableViewCell {
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
         addressLabel.text = item.address
-        photoImageView.image = item.images?[0]   // 첫번째 사진이 대표 사진
+//        photoImageView.image = item.images?[0]   // 첫번째 사진이 대표 사진
     }
 
     // MARK: - 라이프 사이클

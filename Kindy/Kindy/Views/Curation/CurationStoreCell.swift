@@ -45,6 +45,10 @@ final class CurationStoreCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+
+    private let firestoreManager = FirestoreManager()
+    private var bookstoresRequestTask: Task<Void, Never>?
+    private var bookStore: Bookstore?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -97,9 +101,17 @@ final class CurationStoreCell: UICollectionViewCell {
         ])
     }
     
-    func configure(curation: Curation) {
-        imageView.image = UIImage(named: curation.mainImage)
-        titleLabel.text = curation.bookStore.name
-        descriptionLabel.text = curation.bookStore.shortAddress
+    // 서점 들고와야하나
+    func configure(image: UIImage, bookStore: String) {
+        self.bookstoresRequestTask = Task {
+            self.bookStore = try? await firestoreManager.fetchBookstore(with: bookStore)
+            guard let image = try? await firestoreManager.fetchImage(with: self.bookStore?.images?[0]) else { return }
+            DispatchQueue.main.async {
+                self.titleLabel.text = self.bookStore?.name
+                self.imageView.image = image
+                self.descriptionLabel.text = self.bookStore?.shortAddress
+            }
+            bookstoresRequestTask = nil
+        }
     }
 }

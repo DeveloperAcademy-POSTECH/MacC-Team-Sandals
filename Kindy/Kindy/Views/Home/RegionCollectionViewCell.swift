@@ -82,8 +82,8 @@ final class RegionCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: Configure Cell
-    func configureCell(_ region: Region, hideTopLine: Bool, hideRightLine: Bool) {
-        regionLabel.text = region.name
+    func configureCell(_ region: String, hideTopLine: Bool, hideRightLine: Bool) {
+        regionLabel.text = region
         topLineView.isHidden = hideTopLine
         rightLineView.isHidden = hideRightLine
     }

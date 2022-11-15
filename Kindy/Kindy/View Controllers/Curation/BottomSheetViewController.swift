@@ -7,17 +7,6 @@
 
 import UIKit
 
-protocol ChangeLayout: AnyObject {
-    func defaultHeaderLayout()
-    func changeLayout(y: Double)
-    func setTopHeaderLayout()
-}
-
-protocol PopView: AnyObject {
-    func popView()
-    func dismissHeaderView()
-}
-
 final class BottomSheetViewController: UIViewController {
     
     enum BottomSheetViewState {
@@ -158,13 +147,14 @@ final class BottomSheetViewController: UIViewController {
     
     private func showBottomSheet(atState: BottomSheetViewState = .normal) {
         guard let vc = self.contentViewController as? CurationViewController else { return }
+
         if atState == .normal {
-            vc.collectionView.isUserInteractionEnabled = false
+            vc.view.isUserInteractionEnabled = false
             let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
             let bottomPadding: CGFloat = view.safeAreaInsets.bottom
             bottomSheetViewTopConstraint.constant = (safeAreaHeight + bottomPadding) - defaultHeight
         } else {
-            vc.collectionView.isUserInteractionEnabled = true
+            vc.view.isUserInteractionEnabled = true
             // 확장시 위치
             bottomSheetViewTopConstraint.constant = bottomSheetPanMinTopConstant
             

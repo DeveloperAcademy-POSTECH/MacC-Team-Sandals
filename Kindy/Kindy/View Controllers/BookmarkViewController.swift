@@ -9,6 +9,12 @@ import UIKit
 
 final class BookmarkViewController: UIViewController {
     
+    private var userRequestTask: Task<Void, Never>?
+    private var bookmarkUpdateTask: Task<Void, Never>?
+    private let firestoreManager = FirestoreManager()
+    
+    private var user: User?
+    
     enum Section: Hashable {
         case bookmark
     }
@@ -48,18 +54,19 @@ final class BookmarkViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = false
-        
         navigationController?.setNavigationBarHidden(false, animated: false)
+        updateUserData()
         
         // MARK: Navigation Bar Appearance
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
-        navigationController?.navigationBar.tintColor = UIColor.kindyPrimaryGreen
+        navigationController?.navigationBar.tintColor = UIColor.black
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
     // 서치컨트롤러 설정
@@ -139,6 +146,29 @@ final class BookmarkViewController: UIViewController {
         
         dataSource.apply(filteredItemSnapshot)
     }
+    
+    private func updateUserData() {
+        userRequestTask?.cancel()
+        userRequestTask = Task {
+            if firestoreManager.isLoggedIn() {
+                if let user = try? await firestoreManager.fetchCurrentUser() {
+                    self.user = user
+                }
+            }
+            userRequestTask = nil
+        }
+    }
+    
+    // MARK: 추후 데이터 수정 시 true False 반환하게 만들기
+    private func updateBookmarkData(email: String, provider: String, bookmarkedBookstores: [String]) -> Bool {
+        let isSuccess = true
+        bookmarkUpdateTask?.cancel()
+        bookmarkUpdateTask = Task {
+            try? await firestoreManager.updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
+        }
+        bookmarkUpdateTask = nil
+        return isSuccess
+    }
 
 }
 
@@ -156,14 +186,25 @@ extension BookmarkViewController: UISearchResultsUpdating {
 // MARK: 추후 Bookmark 삭제로직 구현 예정
 extension BookmarkViewController: BookmarkDelegate {
     func deleteBookmark(_ deleteItem: Bookstore) {
+        totalData = totalData.filter { $0.id != deleteItem.id }
+        if let user = user {
+            let bookmarkedBookstores = user.bookmarkedBookstores.filter{ $0 != deleteItem.id }
+            self.user!.bookmarkedBookstores = bookmarkedBookstores
+            if updateBookmarkData(email: user.email, provider: user.provider, bookmarkedBookstores: bookmarkedBookstores) {
+                print("delete Success in BookmarkViewController")
+            } else {
+                print("fail in BookmarkViewController")
+            }
+        }
         filterdItem = filterdItem.filter{ $0.id != deleteItem.id }
-        NewItems.bookmarkToggle(deleteItem)
-        totalData = NewItems.bookstoreDummy.filter{ $0.isFavorite }
-        
         dataSource.apply(filteredItemSnapshot, animatingDifferences: true)
+//        filterdItem = filterdItem.filter{ $0.id != deleteItem.id }
+//        NewItems.bookmarkToggle(deleteItem)
+//        totalData = NewItems.bookstoreDummy.filter{ $0.isFavorite }
+        
     }
-    
-    
+
+
     func selectItem(_ bookstore: Bookstore) {
         let detailBookstoreViewController = DetailBookstoreViewController()
         detailBookstoreViewController.bookstore = bookstore

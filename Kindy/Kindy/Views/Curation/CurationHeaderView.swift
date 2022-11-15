@@ -9,7 +9,7 @@ import UIKit
 
 final class CurationHeaderView: UIView {
     
-    private lazy var imageView: UIImageView = {
+    lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
@@ -66,9 +66,7 @@ final class CurationHeaderView: UIView {
         ])
     }
     
-    // TODO: Model이 들어오면 수정해야함
     private func configureData(curationData: Curation) {
-        self.imageView.image = UIImage(named: curationData.mainImage)
         self.titleLabel.text = curationData.title
         self.subtitleLabel.text = curationData.subTitle
     }

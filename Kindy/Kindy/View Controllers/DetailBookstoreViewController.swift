@@ -8,9 +8,30 @@
 import UIKit
 import MapKit
 
+
 final class DetailBookstoreViewController: UIViewController {
     
+    // MARK: Properties
     private var defaultScrollYOffset: CGFloat = 0
+    
+    private let firestoreManager = FirestoreManager()
+    private var userRequestTask: Task<Void, Never>?
+    private var bookmarkUpdateTask: Task<Void, Never>?
+    private var imageRequestTask: Task<Void, Never>?
+    
+    // 초기 User 정보를 받아와지면 bookmark된 서점인지 확인하여 북마크 버튼 이미지 변경
+    private var user: User? {
+        didSet {
+            guard let user = user else { return }
+            if user.bookmarkedBookstores.contains(bookstore?.id ?? "nil") {
+                isBookmarked = true
+                bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+            } else {
+                isBookmarked = false
+                bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
+            }
+        }
+    }
     
     var bookstore: Bookstore?
     
@@ -18,7 +39,6 @@ final class DetailBookstoreViewController: UIViewController {
     
     private lazy var mainScrollView = detailBookstoreView.mainScrollView
     private lazy var bookstoreImageScrollView = detailBookstoreView.bookstoreImageScrollView
-    private lazy var bookstoreImages = detailBookstoreView.bookstoreImages
     private lazy var imagePageControl = detailBookstoreView.imagePageControl
     
     private lazy var bookmarkButton = detailBookstoreView.bookmarkButton
@@ -40,11 +60,11 @@ final class DetailBookstoreViewController: UIViewController {
         return button
     }()
     
+    // MARK: LifeCycle
     override func loadView() {
         view = detailBookstoreView
     }
     
-    // MARK: viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBookstore()
@@ -56,19 +76,50 @@ final class DetailBookstoreViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
+        updateUserData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         setupBookstoreImages()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // MARK: Task cancellation
+        imageRequestTask?.cancel()
+    }
+    
+    // MARK: Helpers
     private func setupBookstore() {
         detailBookstoreView.bookstore = bookstore
     }
     
     private func setupNavigationBar() {
-        navigationController?.navigationBar.tintColor = UIColor(named: "kindyGreen")
-        navigationController?.navigationBar.topItem?.title = ""
+        let view = setupBackButtonView()
+        
+        // 백버튼 커스텀 뷰로 대체
+        let leftBarButtonItem = UIBarButtonItem(customView: view)
+        self.navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        // 백스와이프 추가
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        
+        navigationController?.navigationBar.tintColor = UIColor(named: "kindyPrimaryGreen")
+    }
+    
+    private func setupBackButtonView() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 8, width: 24, height: 24))
+        
+        if let image = UIImage(named: "backButton") {
+            imageView.image = image
+        }
+        view.addSubview(imageView)
+        
+        let backButton = UITapGestureRecognizer(target: self, action: #selector(backButtonTapped))
+        view.addGestureRecognizer(backButton)
+        
+        return view
     }
     
     private func setupTabbar() {
@@ -86,20 +137,83 @@ final class DetailBookstoreViewController: UIViewController {
     
     // 서점 이미지 불러오기
     private func setupBookstoreImages() {
-        for i in 0..<bookstoreImages.count {
-            let imageView = UIImageView()
-            imageView.frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: bookstoreImageScrollView.frame.width, height: bookstoreImageScrollView.frame.height)
-            imageView.image = bookstoreImages[i]
-            bookstoreImageScrollView.contentSize.width = imageView.frame.width * CGFloat(i + 1)
-            bookstoreImageScrollView.addSubview(imageView)
+        imagePageControl.numberOfPages = bookstore?.images?.count ?? 1
+        bookstoreImageScrollView.contentSize.width = view.frame.width * CGFloat(bookstore?.images?.count ?? 1)
+        
+        for i in 0..<(bookstore?.images?.count ?? 0) {
+            self.imageRequestTask = Task {
+                if let image = try? await firestoreManager.fetchImage(with: bookstore?.images?[i]) {
+                    let imageView = UIImageView()
+                    imageView.frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: bookstoreImageScrollView.frame.width, height: bookstoreImageScrollView.frame.height)
+                    imageView.image = image
+                    bookstoreImageScrollView.addSubview(imageView)
+                }
+                imageRequestTask = nil
+            }
         }
     }
     
+    // viewWillAppear에서 User 정보 업데이트 해주기
+    private func updateUserData() {
+        userRequestTask?.cancel()
+        userRequestTask = Task {
+            if firestoreManager.isLoggedIn() {
+                if let user = try? await firestoreManager.fetchCurrentUser() {
+                    self.user = user
+                }
+            }
+            userRequestTask = nil
+        }
+    }
+    
+    // MARK: 추후 데이터 수정 시 true False 반환하게 만들기
+    private func updateBookmarkData(email: String, provider: String, bookmarkedBookstores: [String]) -> Bool {
+        let isSuccess = true
+        bookmarkUpdateTask?.cancel()
+        bookmarkUpdateTask = Task {
+            try? await firestoreManager.updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
+        }
+        bookmarkUpdateTask = nil
+        return isSuccess
+    }
+    
+    // MARK: Actions
     @objc private func bookmarkButtonTapped() {
-        isBookmarked.toggle()
-        isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
-        navigationBarRightButton.image = isBookmarked ? UIImage(systemName: "bookmark.fill") : UIImage(systemName: "bookmark")
-        NewItems.bookmarkToggle(bookstore!)
+        if let user = user {
+            if user.bookmarkedBookstores.contains(bookstore?.id ?? "nil") {
+                let bookmarkedBookstores = user.bookmarkedBookstores.filter{ $0 != bookstore?.id ?? "nil" }
+                self.user!.bookmarkedBookstores = bookmarkedBookstores
+                if updateBookmarkData(email: user.email, provider: user.provider, bookmarkedBookstores: bookmarkedBookstores) {
+                    isBookmarked = false
+                    bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
+                } else {
+                    print("fail delete bookmark")
+                }
+            } else {
+                self.user!.bookmarkedBookstores.append(bookstore?.id ?? "nil")
+                let bookmarkedBookstores = self.user!.bookmarkedBookstores
+                if updateBookmarkData(email: user.email, provider: user.provider, bookmarkedBookstores: bookmarkedBookstores) {
+                    isBookmarked = true
+                    bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+                } else {
+                    print("fail add bookmark")
+                }
+            }
+        } else {
+            let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
+            let action = UIAlertAction(title: "네", style: .default, handler: { _ in
+                let signInViewController = SignInViewController()
+                self.navigationController?.pushViewController(signInViewController, animated: true)
+            })
+            let cancel = UIAlertAction(title: "아니오", style: .cancel)
+            alertForSignIn.addAction(cancel)
+            alertForSignIn.addAction(action)
+            present(alertForSignIn, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
     }
     
 }

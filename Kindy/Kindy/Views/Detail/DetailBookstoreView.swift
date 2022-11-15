@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 
+// FIXME: 주석처리한 부분과 기타 디테일을 수정해주세용
 final class DetailBookstoreView: UIView {
     
     private let padding16: CGFloat = 16
@@ -15,41 +16,10 @@ final class DetailBookstoreView: UIView {
     
     var bookstore: Bookstore? {
         didSet {
-            guard let bookstore = self.bookstore else { return }
-            if let bookstoreImages = bookstore.images {
-                self.bookstoreImages = bookstoreImages
-                imagePageControl.numberOfPages = bookstoreImages.count
-            }
-            nameLabel.text = bookstore.name
-            shortAddressLabel.text = bookstore.shortAddress
-            isBookmarked = bookstore.isFavorite
-            isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
-            telephoneNumberLabel.text = bookstore.telNumber
-            let optionalInstagramID = bookstore.instagramURL?.components(separatedBy: "/")[3]
-            guard let instagramID = optionalInstagramID else { return }
-            instagramButton.setTitle("@\(instagramID)", for: .normal)
-            instagramButton.setUnderline()
-            businessHourLabel.text = """
-            월 \(bookstore.businessHour.monday)
-            화 \(bookstore.businessHour.tuesday)
-            수 \(bookstore.businessHour.wednesday)
-            목 \(bookstore.businessHour.thursday)
-            금 \(bookstore.businessHour.friday)
-            토 \(bookstore.businessHour.saturday)
-            일 \(bookstore.businessHour.sunday)
-            """
-            descriptionLabel.text = bookstore.description
-            address.text = bookstore.address
-            bookstoreCoordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
-            bookstorePin.title = bookstore.name
-            bookstorePin.coordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
-            setupMapView()
+            setupBookstore()
         }
     }
     
-    // 서점 데이터 기본값
-    // 서점 사진이 없을 경우 보여줄 사진도 필요
-    var bookstoreImages: [UIImage] = [UIImage(named: "testImage")!]
     var isBookmarked: Bool = false
     private var bookstoreCoordinate = CLLocationCoordinate2D(latitude: 36.0090456, longitude: 129.3331438)
     
@@ -81,7 +51,7 @@ final class DetailBookstoreView: UIView {
     // 서점 이름 레이블
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "달팽이책방"
+        label.text = "책방"
         label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -89,8 +59,7 @@ final class DetailBookstoreView: UIView {
     
     lazy var bookmarkButton: UIButton = {
         let button = UIButton()
-        isBookmarked ? button.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : button.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
-        button.tintColor = UIColor(named: "kindyGreen")
+        button.tintColor = UIColor(named: "kindyPrimaryGreen")
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -107,9 +76,9 @@ final class DetailBookstoreView: UIView {
     }()
     
     // 서점의 짧은 주소 레이블
-    private let shortAddressLabel: UILabel = {
+    private let addressLabel: UILabel = {
         let label = UILabel()
-        label.text = "경상북도 포항시 남구"
+        label.text = "주소"
         label.font = UIFont.systemFont(ofSize: 17)
         label.textColor = UIColor(named: "kindyGray")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -117,7 +86,7 @@ final class DetailBookstoreView: UIView {
     }()
     
     private lazy var headerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [nameStackView, shortAddressLabel])
+        let stackView = UIStackView(arrangedSubviews: [nameStackView, addressLabel])
         stackView.axis = .vertical
         stackView.spacing = 0
         stackView.distribution = .fill
@@ -146,7 +115,7 @@ final class DetailBookstoreView: UIView {
     // 전화번호 레이블
     private let telephoneNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "054-782-7653"
+        label.text = "010-1234-567"
         label.font = UIFont.systemFont(ofSize: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -176,13 +145,11 @@ final class DetailBookstoreView: UIView {
     // 인스타그램 주소 버튼
     private lazy var instagramButton: UIButton = {
         let button = UIButton()
-//        button.setTitle("https://www.instagram.com/bookshopsnail/", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         button.contentHorizontalAlignment = .left
-        button.setUnderline()
-        button.addTarget(self, action: #selector(instagramButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(instagramButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -211,9 +178,7 @@ final class DetailBookstoreView: UIView {
     private let businessHourLabel: UILabel = {
         let label = UILabel()
         label.text = """
-        월, 화, 수 9:00 - 20:00
-        목, 금 9:00 - 20:00
-        토,일 9:00 - 20:00
+        운영시간
         """
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 15)
@@ -263,7 +228,7 @@ final class DetailBookstoreView: UIView {
     // 서점 상세설명 레이블
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Happiness is good health and a bad memory.Time moves in one direction, memory in another. History is not a burden on the memory but an illumination of the soul. Happiness is good health and a bad memory. Time moves in one direction, memory in another. History is not a burden on the memory but an illumination of the soul. History is not a burden on the memory but an illumination of the soul."
+        label.text = "상세설명"
         label.font = UIFont.systemFont(ofSize: 17)
         label.numberOfLines = 0
         label.setLineSpacing(lineSpacing: 6)
@@ -300,16 +265,17 @@ final class DetailBookstoreView: UIView {
     }()
     
     // 하단 서점 상세 주소 레이블
-    private let address: UILabel = {
+    private let mapAddressLabel: UILabel = {
         let label = UILabel()
-        label.text = "경상북도 포항시 남구 효자동길10번길 32"
+        label.text = "경상북도 포항시 남구 지곡로 83"
+        label.numberOfLines = 2
         label.font = UIFont.systemFont(ofSize: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var addressStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [mapIconImageView, address])
+        let stackView = UIStackView(arrangedSubviews: [mapIconImageView, mapAddressLabel])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -346,7 +312,6 @@ final class DetailBookstoreView: UIView {
         super.init(frame: frame)
         backgroundColor = .white
         setupUI()
-        setupMapView()
     }
     
     required init?(coder: NSCoder) {
@@ -376,7 +341,7 @@ final class DetailBookstoreView: UIView {
             mainScrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             // 서점 이미지뷰 설정
-            bookstoreImageScrollView.topAnchor.constraint(equalTo: mainScrollView.topAnchor, constant: -100),
+            bookstoreImageScrollView.topAnchor.constraint(equalTo: mainScrollView.topAnchor, constant: -92),
             bookstoreImageScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
             bookstoreImageScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
             bookstoreImageScrollView.heightAnchor.constraint(equalToConstant: 368),
@@ -388,7 +353,7 @@ final class DetailBookstoreView: UIView {
             
             // 서점 이름, 짧은 주소, 북마크 버튼뷰
             nameStackView.heightAnchor.constraint(equalToConstant: 36),
-            shortAddressLabel.heightAnchor.constraint(equalToConstant: 25),
+            addressLabel.heightAnchor.constraint(equalToConstant: 25),
             headerStackView.topAnchor.constraint(equalTo: bookstoreImageScrollView.bottomAnchor, constant: padding24),
             headerStackView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor, constant: padding16),
             headerStackView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor, constant: -padding16),
@@ -444,14 +409,71 @@ final class DetailBookstoreView: UIView {
         ])
     }
     
+    private func setupBookstore() {
+        guard let bookstore = self.bookstore else { return }
+        nameLabel.text = bookstore.name
+        addressLabel.text = bookstore.address
+        isBookmarked ? bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal) : bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
+        telephoneNumberLabel.text = bookstore.contact.telNumber ?? "-"
+        setupInstagramView()
+        setupBusinessHourLabel()
+        descriptionLabel.text = bookstore.description
+        mapAddressLabel.text = bookstore.address
+        setupMapView()
+    }
+    
+    private func setupInstagramView() {
+        guard let bookstore = self.bookstore else { return }
+        guard let instagramURL = bookstore.contact.instagramURL else {
+            instagramButton.setTitle("-", for: .normal)
+            return
+        }
+        
+        let instagramID = instagramURL.components(separatedBy: "/")[3]
+        instagramButton.setTitle("@\(instagramID)", for: .normal)
+        instagramButton.setUnderline()
+        //        infoSummaryStackView.insertArrangedSubview(instagramStackView, at: 1)
+    }
+    
+    private func setupBusinessHourLabel() {
+        guard let bookstore = self.bookstore else { return }
+        guard let notice = bookstore.businessHour.notice else {
+            businessHourLabel.text = """
+                월 \(bookstore.businessHour.monday ?? "휴무")
+                화 \(bookstore.businessHour.tuesday ?? "휴무")
+                수 \(bookstore.businessHour.wednesday ?? "휴무")
+                목 \(bookstore.businessHour.thursday ?? "휴무")
+                금 \(bookstore.businessHour.friday ?? "휴무")
+                토 \(bookstore.businessHour.saturday ?? "휴무")
+                일 \(bookstore.businessHour.sunday ?? "휴무")
+                """
+            return
+        }
+        businessHourLabel.text = """
+            월 \(bookstore.businessHour.monday ?? "휴무")
+            화 \(bookstore.businessHour.tuesday ?? "휴무")
+            수 \(bookstore.businessHour.wednesday ?? "휴무")
+            목 \(bookstore.businessHour.thursday ?? "휴무")
+            금 \(bookstore.businessHour.friday ?? "휴무")
+            토 \(bookstore.businessHour.saturday ?? "휴무")
+            일 \(bookstore.businessHour.sunday ?? "휴무")
+            \(notice)
+            """
+    }
+    
     private func setupMapView() {
+        guard let bookstore = self.bookstore else { return }
+        
+        bookstoreCoordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
+        bookstorePin.title = bookstore.name
+        bookstorePin.coordinate = CLLocationCoordinate2D(latitude: bookstore.location.latitude, longitude: bookstore.location.longitude)
+        
         bookstoreMapView.setRegion(MKCoordinateRegion(center: bookstoreCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: true)
         bookstoreMapView.addAnnotation(bookstorePin)
     }
     
     @objc private func instagramButtonTapped() {
-        
-        guard let instagramAddress = bookstore?.instagramURL else { return }
+        guard let instagramAddress = bookstore?.contact.instagramURL else { return }
         guard let url = URL(string: instagramAddress) else { return }
         UIApplication.shared.open(url, options: [:])
     }

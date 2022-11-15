@@ -19,12 +19,12 @@ final class HomeSearchCell: UITableViewCell {
     
     // MARK: - 프로퍼티
     
-    private var photoImageView: UIImageView = {
+    let photoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 8
         view.clipsToBounds = true      // radius를 imageView에 적용
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -32,7 +32,7 @@ final class HomeSearchCell: UITableViewCell {
     
     private var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 17)
+        label.font = .body1
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -57,7 +57,7 @@ final class HomeSearchCell: UITableViewCell {
     
     private func configureCell(item: Bookstore) {
         nameLabel.text = item.name
-        photoImageView.image = item.images?[0]
+//        photoImageView.image = item.images?[0]
     }
     
     // MARK: - 라이프 사이클
