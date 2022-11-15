@@ -13,7 +13,7 @@ final class UserInfoContainerView: UIView {
     private let padding16: CGFloat = 16
     private let padding24: CGFloat = 24
     
-    private let nicknameLabel: UILabel = {
+    let nicknameLabel: UILabel = {
         let label = UILabel()
         label.text = "몇글자까지가능할까요"
         label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
@@ -21,7 +21,7 @@ final class UserInfoContainerView: UIView {
         return label
     }()
     
-    private let nicknameEditButton: UIButton = {
+    let nicknameEditButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "pencil"), for: .normal)
         button.tintColor = .lightGray
@@ -40,7 +40,7 @@ final class UserInfoContainerView: UIView {
     
     private let divider: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "kindyLightGray")
+        view.backgroundColor = UIColor(named: "kindyLightGray3")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -49,7 +49,7 @@ final class UserInfoContainerView: UIView {
         let button = UIButton()
         button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
         button.tintColor = .black
-        button.backgroundColor = UIColor(named: "kindyLightGray")
+        button.backgroundColor = UIColor(named: "kindyLightGray3")
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
@@ -77,7 +77,7 @@ final class UserInfoContainerView: UIView {
         let button = UIButton()
         button.setImage(UIImage(systemName: "text.book.closed.fill"), for: .normal)
         button.tintColor = .black
-        button.backgroundColor = UIColor(named: "kindyLightGray")
+        button.backgroundColor = UIColor(named: "kindyLightGray3")
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -104,7 +104,7 @@ final class UserInfoContainerView: UIView {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.tintColor = .black
-        button.backgroundColor = UIColor(named: "kindyLightGray")
+        button.backgroundColor = UIColor(named: "kindyLightGray3")
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -131,13 +131,11 @@ final class UserInfoContainerView: UIView {
         let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-//        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        stackView.isLayoutMarginsRelativeArrangement = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
-    private lazy var containerStackView: UIStackView = {
+    private lazy var userInfoContainerStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nicknameStackView, divider, infoButtonStackView])
         stackView.axis = .vertical
         stackView.spacing = 16
@@ -157,15 +155,15 @@ final class UserInfoContainerView: UIView {
     
     // MARK: Helpers
     private func setupUI() {
-        addSubview(containerStackView)
+        addSubview(userInfoContainerStackView)
         
         setupFixedLayout()
         
         NSLayoutConstraint.activate([
-            containerStackView.topAnchor.constraint(equalTo: topAnchor, constant: padding24),
-            containerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
-            containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24),
+            userInfoContainerStackView.topAnchor.constraint(equalTo: topAnchor, constant: padding24),
+            userInfoContainerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
+            userInfoContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            userInfoContainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24),
         ])
     }
     
