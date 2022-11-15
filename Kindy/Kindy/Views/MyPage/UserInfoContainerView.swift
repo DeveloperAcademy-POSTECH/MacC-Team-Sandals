@@ -191,6 +191,7 @@ final class UserInfoContainerView: UIView {
         ])
     }
     
+    // TODO: 버튼 클릭 시 네비게이션 구현
     @objc func buttonTapped() {
         print("DEBUG: Button Tapped...")
     }
