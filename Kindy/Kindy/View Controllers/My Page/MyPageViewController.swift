@@ -9,22 +9,14 @@ import UIKit
 
 final class MyPageViewController: UIViewController {
     
+    // MARK: Properties
+    private let padding16: CGFloat = 16
+    private let padding24: CGFloat = 24
+    
     private let firestoreManager = FirestoreManager()
     private var bookstoresRequestTask: Task<Void, Never>?
     private var userRequestTask: Task<Void, Never>?
     
-    private var bookmarkedBookstores:[Bookstore] = []
-    private var user: User? {
-        didSet {
-            if let _ = user {
-                cellTitle = logoutTitle
-            } else {
-                cellTitle = loginTitle
-            }
-        }
-    }
-    
-    private let privacy = Privacy()
     // 라이선스를 추가해야하는 경우 라이선스랑 제보하기의 배열 내부 위치를 바꿔주시면 됩니다
     private var cellTitle: [String] = [] {
         didSet {
@@ -34,6 +26,26 @@ final class MyPageViewController: UIViewController {
     private let loginTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "라이선스", "로그인"]
     private let logoutTitle: [String] = ["북마크 한 서점", "독립서점 제보하기", "개인정보 처리방침", "라이선스", "로그아웃", "회원탈퇴"]
     
+    private let privacy = Privacy()
+    
+    private var user: User? {
+        didSet {
+            if let _ = user {
+                cellTitle = logoutTitle
+            } else {
+                cellTitle = loginTitle
+            }
+        }
+    }
+    private var bookmarkedBookstores: [Bookstore] = []
+
+    private let userContainerView: UIView = {
+        let view = UserInfoContainerView()
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         //테이블 뷰 셀 separator 왼쪽 여백 없애기
@@ -41,9 +53,8 @@ final class MyPageViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-
     
-    
+    // MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -55,8 +66,39 @@ final class MyPageViewController: UIViewController {
         updateUserData()
     }
 
+    // MARK: Helpers
+    
+    private func setupTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.rowHeight = 56
+        tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
+    }
+    
+    private func setupUI() {
+        view.addSubview(userContainerView)
+        view.addSubview(tableView)
+        
+        userContainerView.layer.cornerRadius = 8
+        userContainerView.layer.borderWidth = 1
+        userContainerView.layer.borderColor = UIColor.systemGray6.cgColor
+    
+        NSLayoutConstraint.activate([
+            userContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            userContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
+            userContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
+            userContainerView.heightAnchor.constraint(equalToConstant: 190),
+            
+            tableView.topAnchor.constraint(equalTo: userContainerView.bottomAnchor, constant: 32),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+        ])
+    }
+    
     private func updateUserData() {
         userRequestTask?.cancel()
+        
         userRequestTask = Task {
             if firestoreManager.isLoggedIn() {
                 if let user = try? await firestoreManager.fetchCurrentUser() {
@@ -73,34 +115,14 @@ final class MyPageViewController: UIViewController {
                 cellTitle = loginTitle
             }
             userRequestTask = nil
-            tableView.reloadData()
         }
+        tableView.reloadData()
     }
-    
-    
-    
-    private func setupTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.rowHeight = 56
-        tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
-    }
-    
-    private func setupUI() {
-        view.addSubview(tableView)
-    
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
-        ])
-    }
-    
-    
 
 }
 
+// MARK: Extensions
+// MARK: UITableViewDataSource
 extension MyPageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -120,10 +142,10 @@ extension MyPageViewController: UITableViewDataSource {
     
 }
 
+// MARK: UITableViewDelegate
 extension MyPageViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         tableView.deselectRow(at: indexPath, animated: true)
         switch cellTitle[indexPath.row] {
         case "북마크 한 서점":
@@ -191,7 +213,6 @@ extension MyPageViewController: UITableViewDelegate {
             print("TableView Delegate Error!")
             break
         }
-
     }
 
 }
