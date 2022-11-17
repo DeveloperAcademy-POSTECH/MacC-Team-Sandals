@@ -1,5 +1,5 @@
 //
-//  TestCurationCell.swift
+//  CurationStoreCell.swift
 //  Kindy
 //
 //  Created by rbwo on 2022/10/23.

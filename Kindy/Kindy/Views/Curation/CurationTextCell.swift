@@ -1,5 +1,5 @@
 //
-//  CurationInfoCell.swift
+//  CurationTextCell.swift
 //  Kindy
 //
 //  Created by rbwo on 2022/10/25.

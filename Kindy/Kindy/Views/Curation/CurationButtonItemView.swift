@@ -1,5 +1,5 @@
 //
-//  CurationFooterView.swift
+//  CurationButtonItemView.swift
 //  Kindy
 //
 //  Created by rbwo on 2022/11/09.
@@ -13,9 +13,23 @@ final class CurationButtonItemView: UIView {
         case heart
         case reply
     }
-    
+
+    private var isLoggedIn: Bool = false
+    private var userEmail: String = ""
+
+    private var userRequestTask: Task<Void, Never>?
+    private var likeUpdateTask: Task<Void, Never>?
+    private let firestoreManager = FirestoreManager()
+
+    private var view: Views
+    private var user: User?
+
+    private var curation: Curation
     private let buttonImage: String
-    
+
+    private lazy var heartCount: Int = curation.likes.count
+//    private lazy var replyCount: Int = curation.replys.count
+
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .horizontal
@@ -45,21 +59,32 @@ final class CurationButtonItemView: UIView {
         return view
     }()
     
-    init(frame: CGRect, viewName: Views) {
+    init(frame: CGRect, curation: Curation, viewName: Views) {
+        self.curation = curation
         switch viewName {
         case .heart:
+            self.view = .heart
             self.buttonImage = "heart"
-            self.countLabel.text = "12"
+            print(curation.likes.count)
+            self.countLabel.text = String(curation.likes.count)
         case .reply:
+            self.view = .reply
             self.buttonImage = "bubble.left"
-            self.countLabel.text = "14"
+            self.countLabel.text = String(curation.likes.count)
         }
         super.init(frame: frame)
         setupUI()
+        checkLiked()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(setupUser(_:)), name: .LoggedIn, object: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func setupUI() {
@@ -74,11 +99,61 @@ final class CurationButtonItemView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
+    private func checkLiked() {
+        if isLoggedIn || firestoreManager.isLoggedIn() {
+            isLoggedIn = true
+            userRequestTask = Task {
+                userRequestTask?.cancel()
+                if userEmail == "", let user = try? await firestoreManager.fetchCurrentUser() {
+                    self.userEmail = user.email
+                }
+
+                if curation.likes.contains(userEmail) {
+                    let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+                    let image = UIImage(systemName: "heart.fill", withConfiguration: imageConfig)
+                    buttonView.setImage(image, for: .normal)
+                }
+                userRequestTask = nil
+            }
+        }
+    }
+
+    @objc private func setupUser(_ notification: Notification) {
+        checkLiked()
+    }
 }
 
 private extension CurationButtonItemView {
-    // 어케 분기? 함수 2개 ? 할지 생각 ~
-   @objc func customAction() {
-        print("hi")
+    @objc func customAction() {
+        if isLoggedIn || firestoreManager.isLoggedIn() {
+            switch view {
+            case .heart:
+                likeUpdateTask = Task {
+                    likeUpdateTask?.cancel()
+                    if curation.likes.contains(userEmail) {
+                        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+                        let image = UIImage(systemName: "heart", withConfiguration: imageConfig)
+                        buttonView.setImage(image, for: .normal)
+
+                        curation.likes = curation.likes.filter { $0 != userEmail }
+                        self.countLabel.text = String(curation.likes.count)
+                        try? await firestoreManager.updateLike(bookstoreID: curation.bookstoreID, likes: curation.likes)
+                    } else {
+                        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+                        let image = UIImage(systemName: "heart.fill", withConfiguration: imageConfig)
+                        buttonView.setImage(image, for: .normal)
+
+                        curation.likes.append(userEmail)
+                        self.countLabel.text = String(curation.likes.count)
+                        try? await firestoreManager.updateLike(bookstoreID: curation.bookstoreID, likes: curation.likes)
+                    }
+                    likeUpdateTask = nil
+                }
+            case .reply:
+                print("reply")
+            }
+        } else {
+            NotificationCenter.default.post(name: .Loggin, object: nil)
+        }
     }
 }

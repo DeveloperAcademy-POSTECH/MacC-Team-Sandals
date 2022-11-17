@@ -1,5 +1,5 @@
 //
-//  CurationHeaderView2.swift
+//  CurationHeaderView.swift
 //  Kindy
 //
 //  Created by rbwo on 2022/10/23.
