@@ -22,6 +22,7 @@
 		31F7DD652904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */; };
 		31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */; };
 		361D54CF2901CABB00ACA11E /* DetailBookstoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */; };
+		363B56EF29263252008AF99C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B56EE29263252008AF99C /* Constants.swift */; };
 		36671EB429222E7E003BC7F7 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36671EB329222E7E003BC7F7 /* ImageCacheManager.swift */; };
 		369CC07B29241661000D7B96 /* EditNicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369CC07A29241661000D7B96 /* EditNicknameViewController.swift */; };
 		369CC07D29241681000D7B96 /* MyWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369CC07C29241681000D7B96 /* MyWritingViewController.swift */; };
@@ -108,6 +109,7 @@
 		31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCarouselCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDelegate.swift; sourceTree = "<group>"; };
 		361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookstoreViewController.swift; sourceTree = "<group>"; };
+		363B56EE29263252008AF99C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		36671EB329222E7E003BC7F7 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
 		369CC07A29241661000D7B96 /* EditNicknameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNicknameViewController.swift; sourceTree = "<group>"; };
 		369CC07C29241681000D7B96 /* MyWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWritingViewController.swift; sourceTree = "<group>"; };
@@ -441,6 +443,7 @@
 			isa = PBXGroup;
 			children = (
 				A06954EE2906D9D800C09D1D /* Privacy.swift */,
+				363B56EE29263252008AF99C /* Constants.swift */,
 			);
 			name = Resources;
 			path = Extensions/Resources;
@@ -627,6 +630,7 @@
 				7B529ED0291B8FAD007C023F /* CLLocationCoordinate2D+.swift in Sources */,
 				77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */,
 				36F6198B292406010085791C /* TryLoginContainerView.swift in Sources */,
+				363B56EF29263252008AF99C /* Constants.swift in Sources */,
 				31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */,
 				3101BC50291BF29300C46195 /* CheckboxUIView.swift in Sources */,
 				7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */,

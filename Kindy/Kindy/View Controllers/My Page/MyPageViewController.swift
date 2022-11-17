@@ -10,9 +10,6 @@ import UIKit
 final class MyPageViewController: UIViewController {
     
     // MARK: Properties
-    private let padding16: CGFloat = 16
-    private let padding24: CGFloat = 24
-    
     private let firestoreManager = FirestoreManager()
     private var bookstoresRequestTask: Task<Void, Never>?
     private var userRequestTask: Task<Void, Never>?
@@ -42,7 +39,7 @@ final class MyPageViewController: UIViewController {
     }
     private var bookmarkedBookstores: [Bookstore] = []
     
-    private let userContainerView: UIView = {
+    private let userInfoContainerView: UIView = {
         let view = UserInfoContainerView()
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -57,9 +54,10 @@ final class MyPageViewController: UIViewController {
     }()
     
     private let tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .grouped)
         //테이블 뷰 셀 separator 왼쪽 여백 없애기
-        tableView.separatorInset.left = 0
+        tableView.separatorInset.left = 16
+        tableView.separatorInset.right = 16
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -82,32 +80,35 @@ final class MyPageViewController: UIViewController {
         tableView.delegate = self
         tableView.rowHeight = 56
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
     }
     
     // TODO: userContainerView와 tryLoginContainerView 구분 로직 작성
     private func setupUI() {
         view.addSubview(tableView)
-        tableView.tableHeaderView = tryLoginContainerView
+        tableView.tableHeaderView = userInfoContainerView
         
-        userContainerView.layer.cornerRadius = 8
-        userContainerView.layer.borderWidth = 1
-        userContainerView.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
+        userInfoContainerView.layer.cornerRadius = 8
+        userInfoContainerView.layer.borderWidth = 1
+        userInfoContainerView.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
         
         tryLoginContainerView.layer.cornerRadius = 8
         tryLoginContainerView.layer.borderWidth = 1
         tryLoginContainerView.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
     
         NSLayoutConstraint.activate([
-            userContainerView.widthAnchor.constraint(equalToConstant: view.frame.width - (16 * 2)),
-            userContainerView.heightAnchor.constraint(equalToConstant: 190),
+            userInfoContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
+            userInfoContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
+            userInfoContainerView.heightAnchor.constraint(equalToConstant: 190),
             
-            tryLoginContainerView.widthAnchor.constraint(equalToConstant: view.frame.width - (16 * 2)),
-            tryLoginContainerView.heightAnchor.constraint(equalToConstant: 190),
+//            tryLoginContainerView.widthAnchor.constraint(equalToConstant: view.frame.width - (16 * 2)),
+//            tryLoginContainerView.heightAnchor.constraint(equalToConstant: 190),
             
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
@@ -118,16 +119,16 @@ final class MyPageViewController: UIViewController {
             if firestoreManager.isLoggedIn() {
                 if let user = try? await firestoreManager.fetchCurrentUser() {
                     self.user = user
+                    cellTitle = loginTitle
                     bookstoresRequestTask = Task {
                         if let bookstores = try? await firestoreManager.fetchBookstores() {
                             self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
-                            self.cellTitle = logoutTitle
                         }
                         bookstoresRequestTask = nil
                     }
                 }
             } else {
-                cellTitle = loginTitle
+                cellTitle = logoutTitle
             }
             userRequestTask = nil
         }
@@ -140,12 +141,35 @@ final class MyPageViewController: UIViewController {
 // MARK: UITableViewDataSource
 extension MyPageViewController: UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 25
+    // 섹션 헤더 설정
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let sectionHeaderView = UIView.init(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 25))
+
+        let label = UILabel()
+        label.frame = CGRect.init(x: padding16, y: (padding16 * 2), width: sectionHeaderView.frame.width, height: sectionHeaderView.frame.height)
+//        label.backgroundColor = .green
+        label.font = .systemFont(ofSize: 17, weight: .bold)
+        sectionHeaderView.addSubview(label)
+
+        switch section {
+        case 0:
+            label.text = "지원"
+            return sectionHeaderView
+        case 1:
+            label.text = "정보"
+            return sectionHeaderView
+        case 2:
+            label.text = "회원"
+            return sectionHeaderView
+        default:
+            return UIView()
+        }
     }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Section Header"
+
+    // 섹션 헤더의 Height
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        // 섹션 헤더뷰(레이블)의 높이 25 + 섹션 간의 스페이싱 32
+        return (25 + 32)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -158,12 +182,15 @@ extension MyPageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyPageTableViewCell", for: indexPath) as? MyPageTableViewCell else { return UITableViewCell() }
+        
         cell.myPageCellLabel.text = cellTitle[indexPath.section][indexPath.row]
-        if indexPath.row == 5 {
-            cell.myPageCellLabel.textColor = .red
-        } else {
-            cell.myPageCellLabel.textColor = .black
-        }
+        
+//        if indexPath.row == 5 {
+//            cell.myPageCellLabel.textColor = .red
+//        } else {
+//            cell.myPageCellLabel.textColor = .black
+//        }
+        
         return cell
     }
     

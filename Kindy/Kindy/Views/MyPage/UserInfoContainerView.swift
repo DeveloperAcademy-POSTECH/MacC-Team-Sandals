@@ -10,9 +10,6 @@ import UIKit
 final class UserInfoContainerView: UIView {
     
     // MARK: Properties
-    private let padding16: CGFloat = 16
-    private let padding24: CGFloat = 24
-    
     let nicknameLabel: UILabel = {
         let label = UILabel()
         label.text = "몇글자까지가능할까요"
@@ -32,7 +29,7 @@ final class UserInfoContainerView: UIView {
     private lazy var nicknameStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nicknameLabel, nicknameEditButton])
         stackView.axis = .horizontal
-        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: padding16, bottom: 0, right: padding16)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -128,7 +125,8 @@ final class UserInfoContainerView: UIView {
     }()
     
     private lazy var infoButtonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
+//        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
+        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -155,6 +153,8 @@ final class UserInfoContainerView: UIView {
     
     // MARK: Helpers
     private func setupUI() {
+        backgroundColor = .white
+        
         addSubview(userInfoContainerStackView)
         
         setupFixedLayout()

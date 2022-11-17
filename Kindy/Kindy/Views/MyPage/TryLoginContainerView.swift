@@ -10,9 +10,6 @@ import UIKit
 final class TryLoginContainerView: UIView {
     
     // MARK: Properties
-    private let padding16: CGFloat = 16
-    private let padding24: CGFloat = 24
-    
     private let tryLoginLabel: UILabel = {
         let label = UILabel()
         label.text = "로그인 후 킨디를 보다 더 즐겨보세요!"
