@@ -15,7 +15,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 
-class SignInViewController: UIViewController {
+final class SignInViewController: UIViewController {
     
     private let firestoreManager = FirestoreManager()
     

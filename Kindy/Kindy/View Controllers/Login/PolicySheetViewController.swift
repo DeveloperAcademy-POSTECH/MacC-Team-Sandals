@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PolicySheetViewController: UIViewController {
+final class PolicySheetViewController: UIViewController {
     
     private var labelTitle:String = ""
     var fromMyPage: Bool = false

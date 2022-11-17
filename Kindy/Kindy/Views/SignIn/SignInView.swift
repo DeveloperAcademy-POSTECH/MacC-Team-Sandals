@@ -9,7 +9,7 @@ import UIKit
 import GoogleSignIn
 import AuthenticationServices
 
-class SignInView: UIView {
+final class SignInView: UIView {
     
     var delegate: SignInDelegate?
 
