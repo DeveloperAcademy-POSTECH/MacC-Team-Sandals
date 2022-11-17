@@ -15,104 +15,35 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 
-class SignInViewController: UIViewController {
+final class SignInViewController: UIViewController {
     
-    let db = Firestore.firestore()
+    private let firestoreManager = FirestoreManager()
     
     fileprivate var currentNonce: String?
     
-    private let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.headline
-        label.textColor = UIColor.kindySecondaryGreen
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    } ()
-    
-    private let welcomeLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.headline
-        label.textColor = UIColor.kindyPrimaryGreen
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    } ()
-    
-    
-    private let googleLoginButton: GIDSignInButton = {
-        let button = GIDSignInButton()
-        button.style = .wide
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    } ()
-
-    
-    private let appleLoginButton: ASAuthorizationAppleIDButton = {
-        let button = ASAuthorizationAppleIDButton(type: .signIn, style: .black)
-        button.cornerRadius = 5
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    } ()
-    
-    private let signoutButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    } ()
-    
+    private let signInView: SignInView = SignInView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "로그인"
         setupUI()
     }
     
     private func setupUI() {
+        self.navigationItem.title = "로그인"
         view.backgroundColor = .white
-        setupAppleSignInButton()
-        setupGoogleSignInButton()
-        setupLabel()
-    }
-    
-    private func setupLabel() {
-        descriptionLabel.text = "내 손 안의 독립서점"
-        welcomeLabel.text = "Kindy에 오신 것을 환영합니다"
-        view.addSubview(descriptionLabel)
-        view.addSubview(welcomeLabel)
+        signInView.translatesAutoresizingMaskIntoConstraints = false
+        signInView.delegate = self
+        view.addSubview(signInView)
         NSLayoutConstraint.activate([
-            welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            welcomeLabel.bottomAnchor.constraint(equalTo: appleLoginButton.topAnchor, constant: -56),
-            descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            descriptionLabel.bottomAnchor.constraint(equalTo: welcomeLabel.topAnchor, constant: -8)
-        ])
-    }
-    
-    private func setupGoogleSignInButton() {
-        googleLoginButton.addTarget(self, action: #selector(googleSignIn), for: .touchUpInside)
-        googleLoginButton.layer.frame.size = CGSize(width: view.frame.width - 32, height: 56)
-        view.addSubview(googleLoginButton)
-        NSLayoutConstraint.activate([
-            googleLoginButton.topAnchor.constraint(equalTo: view.centerYAnchor, constant: 8),
-            googleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            googleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            googleLoginButton.heightAnchor.constraint(equalToConstant: 56)
+            signInView.topAnchor.constraint(equalTo: view.topAnchor),
+            signInView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            signInView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            signInView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
     
     
-    private func setupAppleSignInButton() {
-        appleLoginButton.addTarget(self, action: #selector(startSignInWithAppleFlow), for: .touchUpInside)
-        view.addSubview(appleLoginButton)
-        NSLayoutConstraint.activate([
-            appleLoginButton.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -8),
-            appleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            appleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            appleLoginButton.heightAnchor.constraint(equalToConstant: 56)
-        ])
-    }
-    
-    
+    // MARK: Google SignIn Button Action
     @objc private func googleSignIn() {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
 
@@ -121,50 +52,42 @@ class SignInViewController: UIViewController {
 
         // Start the sign in flow!
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
 
-          if let error = error {
-              print(error.localizedDescription)
-            return
-          }
-
-          guard
-            let authentication = user?.authentication,
-            let idToken = authentication.idToken
-          else {
-            return
-          }
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                           accessToken: authentication.accessToken)
+            guard let authentication = user?.authentication, let idToken = authentication.idToken else { return }
             
-            
-            db.collection("Users").document(user?.profile?.email ?? "").getDocument{ (document, error) in
-                if let document = document, document.exists {
-                        let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-                        Auth.auth().signIn(with: credential) { [weak self] result, error in
-                            guard let self = self else { return }
-                            guard
-                                result != nil,
-                                error == nil else {
-                                if let error = error {
-                                    print("Error google Login - \(error) ")
-                                }
-                                return
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
+            Task {
+                if try await firestoreManager.isExistingUser(user?.profile?.email, "google") {
+                    Auth.auth().signIn(with: credential) { [weak self] result, error in
+                        guard let self = self else { return }
+                        guard
+                            result != nil,
+                            error == nil else {
+                            if let error = error {
+                                print("Error google Login - \(error) ")
                             }
-                            // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
-                            // 확인 후 없다면 해당 유저 도큐먼트를
-                            self.navigationController?.popViewController(animated: true)
+                            return
                         }
-                    } else {
-                        let vc = SignUpViewController()
-                        vc.credential = credential
-                        vc.provider = "google"
-                        vc.email = user?.profile?.email ?? ""
-                        self.navigationController?.pushViewController(vc, animated: false)
+                        // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
+                        // 확인 후 없다면 해당 유저 도큐먼트를
+                        self.navigationController?.popViewController(animated: true)
                     }
+                } else {
+                    let vc = SignUpViewController()
+                    vc.credential = credential
+                    vc.provider = "google"
+                    vc.email = user?.profile?.email ?? ""
+                    self.navigationController?.pushViewController(vc, animated: false)
+                }
             }
         }
     }
-
+    
+    // MARK: Apple SignIn Button Action
     @available(iOS 13, *)
     @objc func startSignInWithAppleFlow() {
       //난수 생성
@@ -184,120 +107,111 @@ class SignInViewController: UIViewController {
     }
 }
 
-
 // Sign in with Apple 관련 사항
 @available(iOS 13.0, *)
 extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-    
+
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
     }
     
     // Adapted from https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce
+    // MARK: 난수 생성
     private func randomNonceString(length: Int = 32) -> String {
-      precondition(length > 0)
-      let charset: [Character] =
-        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
-      var result = ""
-      var remainingLength = length
+        
+        precondition(length > 0)
+        
+        let charset: [Character] = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        var result = ""
+        var remainingLength = length
 
-      while remainingLength > 0 {
-        let randoms: [UInt8] = (0 ..< 16).map { _ in
-          var random: UInt8 = 0
-          let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
-          if errorCode != errSecSuccess {
-            fatalError(
-              "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
-            )
-          }
-          return random
-        }
+        while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+                var random: UInt8 = 0
+                let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+                if errorCode != errSecSuccess {
+                    fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+                }
+                return random
+            }
 
         randoms.forEach { random in
-          if remainingLength == 0 {
-            return
-          }
-
-          if random < charset.count {
-            result.append(charset[Int(random)])
-            remainingLength -= 1
-          }
+            if remainingLength == 0 {
+                    return
+                }
+                if random < charset.count {
+                    result.append(charset[Int(random)])
+                    remainingLength -= 1
+                }
+            }
         }
-      }
-
-      return result
+        return result
     }
     
     private func sha256(_ input: String) -> String {
-      let inputData = Data(input.utf8)
-      let hashedData = SHA256.hash(data: inputData)
-      let hashString = hashedData.compactMap {
-        String(format: "%02x", $0)
-      }.joined()
-
-      return hashString
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap { String(format: "%02x", $0) }.joined()
+        return hashString
     }
-
-  func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-    if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-      guard let nonce = currentNonce else {
-        fatalError("Invalid state: A login callback was received, but no login request was sent.")
-      }
-      guard let appleIDToken = appleIDCredential.identityToken else {
-        print("Unable to fetch identity token")
-        return
-      }
-      guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-        print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
-        return
-      }
+    
+    // MARK: 실제 로그인 작동하는 로직
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard let nonce = currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
 
             // appleIDCredential.user , email fullName 등등으로 값을 확인할 수 있다 user는 identifier로 사용된다.
 
-      // Initialize a Firebase credential.
-      let credential = OAuthProvider.credential(withProviderID: "apple.com",
-                                                idToken: idTokenString,
-                                                rawNonce: nonce)
-      // Sign in with Firebase.
-        let checkEmail: String = self.decode(jwt:idTokenString) ?? ""
-        Task{
-            let documnetID = try await db.collection("Users").whereField("email", isEqualTo: checkEmail).whereField("provider", isEqualTo: "apple").getDocuments().documents.map{ $0.documentID }
-            if documnetID.isEmpty {
-                let vc = SignUpViewController()
-                vc.credential = credential
-                vc.provider = "apple"
-                vc.email = self.decode(jwt:idTokenString) ?? ""
-                self.navigationController?.pushViewController(vc, animated: true)
-            } else {
-                Auth.auth().signIn(with: credential) { [weak self] result, error in
-                    guard let self = self else { return }
-                    guard
-                        result != nil,
-                        error == nil else {
-                        if let error = error {
-                            print("Error google Login - \(error) ")
+            // Initialize a Firebase credential.
+            let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                idToken: idTokenString,
+                                rawNonce: nonce)
+            // Sign in with Firebase.
+            let checkEmail: String = self.decode(jwt:idTokenString) ?? ""
+            Task{
+                if try await firestoreManager.isExistingUser(checkEmail, "apple") {
+                    Auth.auth().signIn(with: credential) { [weak self] result, error in
+                        guard let self = self else { return }
+                        guard result != nil, error == nil else {
+                            if let error = error {
+                                print("Error google Login - \(error) ")
+                            }
+                            return
                         }
-                        return
+                        // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
+                        // 확인 후 없다면 해당 유저 도큐먼트를
+                        self.navigationController?.popViewController(animated: true)
                     }
-                    // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
-                    // 확인 후 없다면 해당 유저 도큐먼트를
-                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    let vc = SignUpViewController()
+                    vc.credential = credential
+                    vc.provider = "apple"
+                    vc.email = self.decode(jwt:idTokenString) ?? ""
+                    self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
-        }  
+        }
     }
-  }
 
-  func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-    print("Sign in with Apple errored: \(error)")
-  }
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("Sign in with Apple errored: \(error)")
+    }
 
 }
 
-
+// MARK: Apple에서 발행한 토큰값 decode
 extension SignInViewController {
-    
-    // 참조 : https://github.com/auth0/JWTDecode.swift/tree/master/JWTDecode
+    // 출처 : https://github.com/auth0/JWTDecode.swift/tree/master/JWTDecode
     private func base64UrlDecode(_ value: String) -> Data? {
         var base64 = value
             .replacingOccurrences(of: "-", with: "+")
@@ -359,8 +273,6 @@ extension SignInViewController {
         }
     }
 
-
-
     public func decode(jwt: String) -> String? {
         let parts = jwt.components(separatedBy: ".")
         do {
@@ -373,4 +285,15 @@ extension SignInViewController {
         
     }
     
+}
+
+
+extension SignInViewController: SignInDelegate {
+    func googleSignInMethod() {
+        googleSignIn()
+    }
+    
+    func appleSignInMethod() {
+        startSignInWithAppleFlow()
+    }
 }

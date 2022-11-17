@@ -10,7 +10,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseFirestoreSwift
 
-class SignUpViewController: UIViewController {
+final class SignUpViewController: UIViewController {
     
     let db = Firestore.firestore()
     
