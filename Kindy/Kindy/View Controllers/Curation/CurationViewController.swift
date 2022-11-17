@@ -12,9 +12,8 @@ final class CurationViewController: UIViewController {
     let replyDummy = [["니버", "좋네요 너무 가보고 싶어요 ! 좋네요 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 ! 좋네요 너무 가보고 싶어요 !", "2022-11-04 •"], ["니버", "어쩌라구용~", "2022-11-04 •"], ["니버", "좋네요 너무 가보고 싶어요  좋네요 너무 가보고 싶어요  좋네요 너무 가보고 싶어요 !", "2022-11-04 •"], ["니버", "별룬데요 !", "2022-11-04 • "], ["니버", " 굿! ", "2022-11-04 • "]]
     
     private var curation: Curation
-    
-    private var cellCount: Int = 0
 
+    private var cellCount: Int = 0
     private var replyCount: Int = 0
 
     private var bookstoresRequestTask: Task<Void, Never>?
@@ -54,7 +53,7 @@ final class CurationViewController: UIViewController {
     }
     
     private lazy var bottomView: UIView = {
-        let view = CurationButtonStackView(frame: .zero)
+        let view = CurationButtonStackView(frame: .zero, curation: curation)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -123,9 +122,10 @@ extension CurationViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         cellCount += 1
         cellCount += curation.descriptions.count
+        return cellCount + 1
         // TODO: replyDummy 를 큐레이션 모델 내부에 reply를 받아와서 count 하는 코드로 변경
-        replyCount = cellCount + replyDummy.count
-        return replyCount + 1
+//        replyCount = cellCount + replyDummy.count
+//        return replyCount + 1
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

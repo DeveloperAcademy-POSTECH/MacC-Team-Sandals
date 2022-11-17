@@ -19,8 +19,9 @@ protocol PopView: AnyObject {
 }
 
 final class PagingCurationViewController: UIViewController {
-    private let curation: Curation
+    private var curation: Curation
 
+    private var curationRequestTask: Task<Void, Never>?
     private var imageRequestTask: Task<Void, Never>?
     private let firestoreManager = FirestoreManager()
 
@@ -77,6 +78,14 @@ final class PagingCurationViewController: UIViewController {
                 self.images.append(mainImage)
             }
             imageRequestTask = nil
+        }
+
+        self.curationRequestTask = Task {
+            curationRequestTask?.cancel()
+            if let curation = try? await firestoreManager.fetchCuration(with: curation.id) {
+                self.curation = curation
+            }
+            curationRequestTask = nil
         }
     }
     

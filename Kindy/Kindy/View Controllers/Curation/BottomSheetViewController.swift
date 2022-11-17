@@ -64,6 +64,9 @@ final class BottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(presentReport(_:)), name: .Report, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(checkLogin(_:)), name: .Loggin, object: nil)
+
         setupLayout()
         configureGesture()
     }
@@ -205,3 +208,8 @@ extension BottomSheetViewController: Reportable {
     }
 }
 
+extension BottomSheetViewController: LoginCheckable {
+    @objc private func checkLogin(_ notification: Notification) {
+        showLoginController(self)
+    }
+}
