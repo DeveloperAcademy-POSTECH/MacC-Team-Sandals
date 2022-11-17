@@ -61,17 +61,13 @@ final class CurationCategoryButton: UIButton {
     }
     
     private func setup() {
-//        self.translatesAutoresizingMaskIntoConstraints = false
-//        self.layer.cornerRadius = 12
-//        self.clipsToBounds = true
-        
         self.addSubview(categoryButton)
-//        NSLayoutConstraint.activate([
-//            categoryButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 14),
-//            categoryButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -14),
-//            categoryButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-//            self.heightAnchor.constraint(equalToConstant: 24)
-//        ])
+        
+        if categoryName == "최신" {
+            categoryButton.backgroundColor = .kindySecondaryGreen
+            categoryButton.tintColor = .white
+            categoryButton.setTitleColor(.white, for: .normal)
+        }
     }
     
     required init?(coder: NSCoder) {

@@ -44,7 +44,7 @@ final class CurationListCell: UITableViewCell {
         let view = UIStackView()
         view.alignment = .leading
         view.axis = .horizontal
-        view.spacing = 7   // 피그마에 적혀있는 4 적용하니 좁아보임. 7로 적용하니 피그마에 있는 비율과 비슷
+        view.spacing = 15
         view.translatesAutoresizingMaskIntoConstraints = false
 
         return view
