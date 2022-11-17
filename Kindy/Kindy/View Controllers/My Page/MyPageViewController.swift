@@ -7,12 +7,13 @@
 
 import UIKit
 
+// TODO: 들어올 때 로딩뷰 뜨면 좋을듯
 final class MyPageViewController: UIViewController {
     
     // MARK: Properties
     private let firestoreManager = FirestoreManager()
-    private var bookstoresRequestTask: Task<Void, Never>?
     private var userRequestTask: Task<Void, Never>?
+    private var bookstoresRequestTask: Task<Void, Never>?
     
     // 라이선스를 추가해야하는 경우 라이선스랑 제보하기의 배열 내부 위치를 바꿔주시면 됩니다
     private var cellTitle: [[String]] = [[]] {
@@ -39,16 +40,22 @@ final class MyPageViewController: UIViewController {
     }
     private var bookmarkedBookstores: [Bookstore] = []
     
-    private let userInfoContainerView: UIView = {
+    private let userInfoContainerView: UserInfoContainerView = {
         let view = UserInfoContainerView()
         view.clipsToBounds = true
+        view.layer.cornerRadius = 8
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let tryLoginContainerView: UIView = {
+    private let tryLoginContainerView: TryLoginContainerView = {
         let view = TryLoginContainerView()
         view.clipsToBounds = true
+        view.layer.cornerRadius = 8
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -56,8 +63,8 @@ final class MyPageViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         //테이블 뷰 셀 separator 왼쪽 여백 없애기
-        tableView.separatorInset.left = 16
-        tableView.separatorInset.right = 16
+//        tableView.separatorInset.left = padding16
+//        tableView.separatorInset.right = padding16
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -67,13 +74,14 @@ final class MyPageViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         setupUI()
+        setupAddTarget()
         navigationController?.navigationBar.topItem?.title = "마이페이지"
     }
-    
+            
     override func viewWillAppear(_ animated: Bool) {
         updateUserData()
     }
-
+        
     // MARK: Helpers
     private func setupTableView() {
         tableView.dataSource = self
@@ -84,57 +92,88 @@ final class MyPageViewController: UIViewController {
         tableView.backgroundColor = .clear
     }
     
-    // TODO: userContainerView와 tryLoginContainerView 구분 로직 작성
     private func setupUI() {
         view.addSubview(tableView)
-        tableView.tableHeaderView = userInfoContainerView
         
-        userInfoContainerView.layer.cornerRadius = 8
-        userInfoContainerView.layer.borderWidth = 1
-        userInfoContainerView.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
+        firestoreManager.isLoggedIn() ? setupContainerView(userInfoContainerView) : setupContainerView(tryLoginContainerView)
         
-        tryLoginContainerView.layer.cornerRadius = 8
-        tryLoginContainerView.layer.borderWidth = 1
-        tryLoginContainerView.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
-    
         NSLayoutConstraint.activate([
-            userInfoContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
-            userInfoContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
-            userInfoContainerView.heightAnchor.constraint(equalToConstant: 190),
-            
-//            tryLoginContainerView.widthAnchor.constraint(equalToConstant: view.frame.width - (16 * 2)),
-//            tryLoginContainerView.heightAnchor.constraint(equalToConstant: 190),
-            
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
+    }
+    
+    private func setupContainerView(_ containerView: UIView) {
+        tableView.tableHeaderView = containerView
+        
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: tableView.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
+            containerView.heightAnchor.constraint(equalToConstant: 190)
+        ])
+    }
+    
+    private func setupAddTarget() {
+        userInfoContainerView.nicknameEditButton.addTarget(self, action: #selector(nicknameEditButtonTapped), for: .touchUpInside)
+        userInfoContainerView.bookmarkedBookstoreButton.addTarget(self, action: #selector(bookmarkedBookstoreButtonTapped), for: .touchUpInside)
+        tryLoginContainerView.signInButton.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
+        tryLoginContainerView.signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
     
     private func updateUserData() {
         userRequestTask?.cancel()
+        bookstoresRequestTask?.cancel()
         
-        userRequestTask = Task {
-            if firestoreManager.isLoggedIn() {
-                if let user = try? await firestoreManager.fetchCurrentUser() {
-                    self.user = user
-                    cellTitle = loginTitle
-                    bookstoresRequestTask = Task {
-                        if let bookstores = try? await firestoreManager.fetchBookstores() {
-                            self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
-                        }
-                        bookstoresRequestTask = nil
-                    }
+        switch firestoreManager.isLoggedIn() {
+        case true:
+            userRequestTask = Task {
+                guard let user = try? await firestoreManager.fetchCurrentUser() else { return }
+                
+                self.user = user
+                cellTitle = loginTitle
+                setupContainerView(userInfoContainerView)
+                userInfoContainerView.user = user
+                
+                bookstoresRequestTask = Task {
+                    guard let bookstores = try? await firestoreManager.fetchBookstores() else { return }
+                    self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
+                    bookstoresRequestTask = nil
                 }
-            } else {
-                cellTitle = logoutTitle
+                userRequestTask = nil
             }
-            userRequestTask = nil
+            
+        case false:
+            cellTitle = logoutTitle
+            setupContainerView(tryLoginContainerView)
         }
+        
         tableView.reloadData()
     }
-
+    
+    // MARK: Actions
+    @objc func nicknameEditButtonTapped() {
+        let editNicknameVC = EditNicknameViewController()
+        show(editNicknameVC, sender: nil)
+    }
+    
+    @objc func bookmarkedBookstoreButtonTapped() {
+        let bookmarkVC = BookmarkViewController()
+        bookmarkVC.setupData(items: bookmarkedBookstores)
+        show(bookmarkVC, sender: nil)
+    }
+    
+    @objc func signInButtonTapped() {
+        let signInViewcontroller = SignInViewController()
+        self.navigationController?.pushViewController(signInViewcontroller, animated: true)
+    }
+    
+    @objc func signUpButtonTapped() {
+        let signInViewcontroller = SignInViewController()
+        self.navigationController?.pushViewController(signInViewcontroller, animated: true)
+    }
 }
 
 // MARK: Extensions
@@ -144,13 +183,12 @@ extension MyPageViewController: UITableViewDataSource {
     // 섹션 헤더 설정
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionHeaderView = UIView.init(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 25))
-
+        
         let label = UILabel()
         label.frame = CGRect.init(x: padding16, y: (padding16 * 2), width: sectionHeaderView.frame.width, height: sectionHeaderView.frame.height)
-//        label.backgroundColor = .green
         label.font = .systemFont(ofSize: 17, weight: .bold)
         sectionHeaderView.addSubview(label)
-
+        
         switch section {
         case 0:
             label.text = "지원"
@@ -165,7 +203,7 @@ extension MyPageViewController: UITableViewDataSource {
             return UIView()
         }
     }
-
+    
     // 섹션 헤더의 Height
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // 섹션 헤더뷰(레이블)의 높이 25 + 섹션 간의 스페이싱 32
@@ -185,12 +223,11 @@ extension MyPageViewController: UITableViewDataSource {
         
         cell.myPageCellLabel.text = cellTitle[indexPath.section][indexPath.row]
         
-//        if indexPath.row == 5 {
-//            cell.myPageCellLabel.textColor = .red
-//        } else {
-//            cell.myPageCellLabel.textColor = .black
-//        }
-        
+        if cellTitle[indexPath.section][indexPath.row] == "회원탈퇴" {
+            cell.myPageCellLabel.textColor = .red
+        } else {
+            cell.myPageCellLabel.textColor = .black
+        }
         return cell
     }
     
@@ -198,75 +235,64 @@ extension MyPageViewController: UITableViewDataSource {
 
 // MARK: UITableViewDelegate
 extension MyPageViewController: UITableViewDelegate {
-
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        switch cellTitle[indexPath.row] {
-//        case "북마크 한 서점":
-//            if let _ = user {
-//                let bookmarkVC = BookmarkViewController()
-//                bookmarkVC.setupData(items: bookmarkedBookstores)
-//                show(bookmarkVC, sender: nil)
-//                tableView.deselectRow(at: indexPath, animated: true)
-//            } else {
-//                let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
-//                let action = UIAlertAction(title: "네", style: .default, handler: { _ in
-//                    let signInViewController = SignInViewController()
-//                    self.navigationController?.pushViewController(signInViewController, animated: true)
-//                })
-//                let cancel = UIAlertAction(title: "아니오", style: .cancel)
-//                alertForSignIn.addAction(cancel)
-//                alertForSignIn.addAction(action)
-//                present(alertForSignIn, animated: true, completion: nil)
-//            }
-//        case "개인정보 처리방침":
-////            let detailMyPageVC = DetailMyPageViewController()
-////            detailMyPageVC.navigationBarTitle = "개인정보 처리방침"
-////            detailMyPageVC.detailString = privacy.termsOfService
-////            show(detailMyPageVC, sender: nil)
-//            let policySheetViewController = PolicySheetViewController()
-//            policySheetViewController.fromMyPage = true
-//            policySheetViewController.setupLabelTitle("개인정보 처리방침")
-//            show(policySheetViewController, sender: nil)
-//        case "라이선스":
-////            let detailMyPageVC = DetailMyPageViewController()
-////            detailMyPageVC.navigationBarTitle = "라이선스"
-////            detailMyPageVC.detailString = privacy.license
-////            show(detailMyPageVC, sender: nil)
-//            let policySheetViewController = PolicySheetViewController()
-//            policySheetViewController.fromMyPage = true
-//            policySheetViewController.setupLabelTitle("라이선스")
-//            show(policySheetViewController, sender: nil)
-//        case "독립서점 제보하기":
-//            tableView.deselectRow(at: indexPath, animated: true)
-//            tableView.reportButtonTapped()
-//        case "로그인":
-//            let signInViewcontroller = SignInViewController()
-//            self.navigationController?.pushViewController(signInViewcontroller, animated: true)
-//        case "로그아웃":
-//            let alertForSignIn = UIAlertController(title: "정말 로그아웃하시겠습니까?", message: nil, preferredStyle: .alert)
-//            let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
-//                self.firestoreManager.signOut()
-//                self.user = nil
-//            })
-//            let cancel = UIAlertAction(title: "아니오", style: .cancel)
-//            alertForSignIn.addAction(cancel)
-//            alertForSignIn.addAction(action)
-//            present(alertForSignIn, animated: true, completion: nil)
-//        case "회원탈퇴":
-//            let alertForSignIn = UIAlertController(title: "회원탈퇴", message: "정말 회원 탈퇴를 진행하시겠습니까?", preferredStyle: .alert)
-//            let action = UIAlertAction(title: "네", style: .destructive, handler: { _ in
-//                self.firestoreManager.deleteUser()
-//                self.user = nil
-//            })
-//            let cancel = UIAlertAction(title: "아니오", style: .cancel)
-//            alertForSignIn.addAction(cancel)
-//            alertForSignIn.addAction(action)
-//            present(alertForSignIn, animated: true, completion: nil)
-//        default:
-//            print("TableView Delegate Error!")
-//            break
-//        }
-//    }
-
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        switch cellTitle[indexPath.section][indexPath.row] {
+        case "독립서점 제보하기":
+            tableView.deselectRow(at: indexPath, animated: true)
+            tableView.reportButtonTapped()
+            
+        case "의견 보내기":
+            tableView.deselectRow(at: indexPath, animated: true)
+            tableView.feedbackButtonTapped()
+            
+        case "이용약관":
+            let policySheetViewController = PolicySheetViewController()
+            policySheetViewController.fromMyPage = true
+            policySheetViewController.setupLabelTitle("이용약관")
+            show(policySheetViewController, sender: nil)
+            
+        case "개인정보 처리방침":
+            let policySheetViewController = PolicySheetViewController()
+            policySheetViewController.fromMyPage = true
+            policySheetViewController.setupLabelTitle("개인정보 처리방침")
+            show(policySheetViewController, sender: nil)
+            
+        case "오픈소스 라이선스":
+            let policySheetViewController = PolicySheetViewController()
+            policySheetViewController.fromMyPage = true
+            policySheetViewController.setupLabelTitle("오픈소스 라이선스")
+            show(policySheetViewController, sender: nil)
+            
+        case "로그아웃":
+            let alertForSignOut = UIAlertController(title: "정말 로그아웃하시겠습니까?", message: nil, preferredStyle: .alert)
+            let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
+                self.firestoreManager.signOut()
+                self.user = nil
+            })
+            let cancel = UIAlertAction(title: "아니오", style: .cancel)
+            alertForSignOut.addAction(cancel)
+            alertForSignOut.addAction(action)
+            present(alertForSignOut, animated: true) {
+                tableView.reloadData()
+            }
+            
+        case "회원탈퇴":
+            let alertForDeleteUser = UIAlertController(title: "회원탈퇴", message: "정말 회원 탈퇴를 진행하시겠습니까?", preferredStyle: .alert)
+            let action = UIAlertAction(title: "네", style: .destructive, handler: { _ in
+                self.firestoreManager.deleteUser()
+                self.user = nil
+            })
+            let cancel = UIAlertAction(title: "아니오", style: .cancel)
+            alertForDeleteUser.addAction(cancel)
+            alertForDeleteUser.addAction(action)
+            present(alertForDeleteUser, animated: true, completion: nil)
+            
+        default:
+            print("TableView Delegate Error!")
+            break
+        }
+    }
+    
 }

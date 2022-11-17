@@ -9,10 +9,16 @@ import UIKit
 
 final class UserInfoContainerView: UIView {
     
+    var user: User? {
+        didSet {
+            nicknameLabel.text = user?.nickName
+        }
+    }
+    
     // MARK: Properties
     let nicknameLabel: UILabel = {
         let label = UILabel()
-        label.text = "몇글자까지가능할까요"
+        label.text = "닉네임"
         label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -42,14 +48,13 @@ final class UserInfoContainerView: UIView {
         return view
     }()
     
-    private lazy var bookmarkedBookstoreButton: UIButton = {
+    lazy var bookmarkedBookstoreButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
         button.tintColor = .black
         button.backgroundColor = UIColor(named: "kindyLightGray3")
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -177,8 +182,8 @@ final class UserInfoContainerView: UIView {
             
             divider.heightAnchor.constraint(equalToConstant: 1),
             
-            nicknameEditButton.widthAnchor.constraint(equalToConstant: 20),
-            nicknameEditButton.heightAnchor.constraint(equalToConstant: 20),
+//            nicknameEditButton.widthAnchor.constraint(equalToConstant: 20),
+//            nicknameEditButton.heightAnchor.constraint(equalToConstant: 20),
             
             bookmarkedBookstoreButton.widthAnchor.constraint(equalToConstant: 60),
             bookmarkedBookstoreButton.heightAnchor.constraint(equalToConstant: 60),
@@ -189,11 +194,6 @@ final class UserInfoContainerView: UIView {
             myActivitiesButton.widthAnchor.constraint(equalToConstant: 60),
             myActivitiesButton.heightAnchor.constraint(equalToConstant: 60),
         ])
-    }
-    
-    // TODO: 버튼 클릭 시 네비게이션 구현
-    @objc func buttonTapped() {
-        print("DEBUG: Button Tapped...")
     }
     
 }

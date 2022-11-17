@@ -25,7 +25,7 @@ final class TryLoginContainerView: UIView {
         return view
     }()
     
-    private let toLoginButton: UIButton = {
+    lazy var signInButton: UIButton = {
         let button = UIButton()
         button.setTitle("로그인 하러가기", for: .normal)
         button.setTitleColor(UIColor(named: "kindyPrimaryGreen"), for: .normal)
@@ -35,7 +35,7 @@ final class TryLoginContainerView: UIView {
         return button
     }()
     
-    private let signUpButton: UIButton = {
+    lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.black, for: .normal)
@@ -46,7 +46,7 @@ final class TryLoginContainerView: UIView {
     }()
     
     private lazy var tryLogincontainerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [tryLoginLabel, divider, toLoginButton, signUpButton])
+        let stackView = UIStackView(arrangedSubviews: [tryLoginLabel, divider, signInButton, signUpButton])
         stackView.axis = .vertical
         stackView.spacing = padding16
         stackView.alignment = .center
