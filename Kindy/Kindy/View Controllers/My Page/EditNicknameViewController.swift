@@ -53,6 +53,7 @@ final class EditNicknameViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         nicknameTextField.delegate = self
+        tabBarController?.tabBar.isHidden = true
         navigationItem.rightBarButtonItem = navigationEditButton
         navigationController?.navigationBar.topItem?.title = "내 정보 수정"
         navigationController?.title = "내 정보 수정"

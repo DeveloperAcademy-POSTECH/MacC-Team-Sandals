@@ -32,9 +32,9 @@ final class MyPageViewController: UIViewController {
     private var user: User? {
         didSet {
             if let _ = user {
-                cellTitle = logoutTitle
-            } else {
                 cellTitle = loginTitle
+            } else {
+                cellTitle = logoutTitle
             }
         }
     }
@@ -62,9 +62,6 @@ final class MyPageViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        //테이블 뷰 셀 separator 왼쪽 여백 없애기
-//        tableView.separatorInset.left = padding16
-//        tableView.separatorInset.right = padding16
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -103,6 +100,7 @@ final class MyPageViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
+        
     }
     
     private func setupContainerView(_ containerView: UIView) {
@@ -114,6 +112,8 @@ final class MyPageViewController: UIViewController {
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
             containerView.heightAnchor.constraint(equalToConstant: 190)
         ])
+        
+        tableView.tableHeaderView?.layoutIfNeeded()
     }
     
     private func setupAddTarget() {
@@ -155,8 +155,6 @@ final class MyPageViewController: UIViewController {
             cellTitle = logoutTitle
             setupContainerView(tryLoginContainerView)
         }
-        
-        tableView.reloadData()
     }
     
     // MARK: Actions
@@ -243,13 +241,13 @@ extension MyPageViewController: UITableViewDataSource {
 extension MyPageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         switch cellTitle[indexPath.section][indexPath.row] {
+            
         case "독립서점 제보하기":
-            tableView.deselectRow(at: indexPath, animated: true)
             tableView.reportButtonTapped()
             
         case "의견 보내기":
-            tableView.deselectRow(at: indexPath, animated: true)
             tableView.feedbackButtonTapped()
             
         case "이용약관":
@@ -275,12 +273,13 @@ extension MyPageViewController: UITableViewDelegate {
             let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
                 self.firestoreManager.signOut()
                 self.user = nil
+                self.setupContainerView(self.tryLoginContainerView)
             })
             let cancel = UIAlertAction(title: "아니오", style: .cancel)
             alertForSignOut.addAction(cancel)
             alertForSignOut.addAction(action)
+            
             present(alertForSignOut, animated: true) {
-                self.setupContainerView(self.tryLoginContainerView)
                 tableView.reloadData()
             }
             
@@ -289,11 +288,14 @@ extension MyPageViewController: UITableViewDelegate {
             let action = UIAlertAction(title: "네", style: .destructive, handler: { _ in
                 self.firestoreManager.deleteUser()
                 self.user = nil
+                self.setupContainerView(self.tryLoginContainerView)
             })
             let cancel = UIAlertAction(title: "아니오", style: .cancel)
             alertForDeleteUser.addAction(cancel)
             alertForDeleteUser.addAction(action)
-            present(alertForDeleteUser, animated: true, completion: nil)
+            present(alertForDeleteUser, animated: true) {
+                tableView.reloadData()
+            }
             
         default:
             print("TableView Delegate Error!")
