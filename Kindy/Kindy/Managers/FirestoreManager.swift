@@ -74,6 +74,7 @@ extension FirestoreManager {
     }
     
     // 현재 로그인되어 있는 정보로 유저 데이터 fetch
+    // MARK: 회원가입 로직 변경 후 수정 예정
     func fetchCurrentUser() async throws -> User {
         let auth = Auth.auth().currentUser
         let email = auth?.email
@@ -84,10 +85,23 @@ extension FirestoreManager {
             let user = try await users.document(Auth.auth().currentUser?.uid ?? "").getDocument(as: User.self)
             return user
         }
-        
-        
+    }
+    // 이미 존재하는 닉네임 확인
+    func isExistingNickname(_ nickName: String) async throws -> Bool {
+        let nickNames = try await FirestoreManager.db.collection("Users").getDocuments().documents.map{ $0.data() }.filter{ String(describing: $0["nickName"]!) == nickName }
+        return !nickNames.isEmpty
+    }
+    // 이미 가입한 유저인지 확인
+    func isExistingUser(_ email: String?, _ provider: String) async throws -> Bool {
+        if let email = email {
+            return try await !FirestoreManager.db.collection("Users").whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map{ $0.documentID }.isEmpty
+        } else {
+            return false
+        }
         
     }
+    
+    
     
     func deleteUser() {
         users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
