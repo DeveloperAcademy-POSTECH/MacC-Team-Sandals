@@ -17,6 +17,8 @@
 		3101BC5B291BF30200C46195 /* SignUpDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3101BC5A291BF30200C46195 /* SignUpDelegate.swift */; };
 		3101BC5D291BF34400C46195 /* CheckPolicyDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3101BC5C291BF34400C46195 /* CheckPolicyDelegate.swift */; };
 		313C68DC2913F32B0061946E /* BookmarkSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313C68DB2913F32B0061946E /* BookmarkSectionHeaderView.swift */; };
+		31F5A01E2925DF85002C1FAD /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A01D2925DF85002C1FAD /* SignInView.swift */; };
+		31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A01F2925E095002C1FAD /* SignInDelegate.swift */; };
 		31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */; };
 		31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */; };
 		31F7DD652904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */; };
@@ -98,6 +100,8 @@
 		3101BC5A291BF30200C46195 /* SignUpDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpDelegate.swift; sourceTree = "<group>"; };
 		3101BC5C291BF34400C46195 /* CheckPolicyDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckPolicyDelegate.swift; sourceTree = "<group>"; };
 		313C68DB2913F32B0061946E /* BookmarkSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSectionHeaderView.swift; sourceTree = "<group>"; };
+		31F5A01D2925DF85002C1FAD /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		31F5A01F2925E095002C1FAD /* SignInDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInDelegate.swift; sourceTree = "<group>"; };
 		31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCarouselCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -203,6 +207,14 @@
 				3101BC58291BF2C800C46195 /* PolicySheetViewController.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		31F5A01C2925D453002C1FAD /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				31F5A01D2925DF85002C1FAD /* SignInView.swift */,
+			);
+			path = SignIn;
 			sourceTree = "<group>";
 		};
 		31F7DD612904EACE007E6E99 /* Bookmark */ = {
@@ -317,6 +329,7 @@
 		7B404C0C28FE87DF00A24C89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				31F5A01C2925D453002C1FAD /* SignIn */,
 				7B404C2D29016C7500A24C89 /* Supplementary */,
 				7B404C2C29016BDF00A24C89 /* Home */,
 				77DCB16B29053B9D00EAB5D5 /* HomeSearch */,
@@ -350,6 +363,7 @@
 				31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */,
 				3101BC5A291BF30200C46195 /* SignUpDelegate.swift */,
 				3101BC5C291BF34400C46195 /* CheckPolicyDelegate.swift */,
+				31F5A01F2925E095002C1FAD /* SignInDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -589,6 +603,7 @@
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
+				31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */,
 				A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift in Sources */,
 				6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */,
@@ -626,6 +641,7 @@
 				3101BC52291BF2A200C46195 /* CheckPolicyUIView.swift in Sources */,
 				3101BC5D291BF34400C46195 /* CheckPolicyDelegate.swift in Sources */,
 				6EE5E3EF28FECECE00EA7413 /* Curation.swift in Sources */,
+				31F5A01E2925DF85002C1FAD /* SignInView.swift in Sources */,
 				6EE5E3F128FECEE900EA7413 /* CurationViewController.swift in Sources */,
 				77DCB1632904462300EAB5D5 /* RegionCell.swift in Sources */,
 				31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */,
