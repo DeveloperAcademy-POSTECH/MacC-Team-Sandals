@@ -152,17 +152,23 @@ extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
 
-        headerView.btn1.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerView.btn1.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 30)
-        ])
+//        headerView.btn1.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            headerView.btn1.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 30)
+//        ])
 
         if mainDummy.count == 0 {
             headerView.isHidden = true
         } else {
             headerView.isHidden = false
         }
+        
+        headerView.btn3.addTarget(self, action: #selector(touched), for: .touchUpInside)
 
         return headerView
+    }
+    
+    @objc func touched(_ sender: UIButton) {
+        print("hi")
     }
 }

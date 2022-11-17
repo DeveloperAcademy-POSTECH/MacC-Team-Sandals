@@ -65,13 +65,29 @@ final class CurationListHeaderView: UITableViewHeaderFooterView {
     private func addCategoryButton() {
         
         [btn1, btn2, btn3].forEach{ headerLabel.addSubview($0) }
-        
+        [btn1, btn2, btn3].forEach{ $0.translatesAutoresizingMaskIntoConstraints = false }
+//        headerLabel.addSubview(btn1)
+//        btn1.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            btn2.leadingAnchor.constraint(equalTo: btn1.trailingAnchor, constant: 7),
-            btn3.leadingAnchor.constraint(equalTo: btn2.trailingAnchor, constant: 7)
+//            btn2.leadingAnchor.constraint(equalTo: btn1.trailingAnchor, constant: 7),
+//            btn3.leadingAnchor.constraint(equalTo: btn2.trailingAnchor, constant: 7)
+            btn1.centerYAnchor.constraint(equalTo: headerLabel.centerYAnchor),
+            btn2.centerYAnchor.constraint(equalTo: headerLabel.centerYAnchor),
+            btn2.leadingAnchor.constraint(equalTo: btn1.trailingAnchor, constant: 70),
+            btn3.centerYAnchor.constraint(equalTo: headerLabel.centerYAnchor),
+            btn3.leadingAnchor.constraint(equalTo: btn2.trailingAnchor, constant: 70)
+//            btn1.leadingAnchor.constraint(equalTo: headerLabel.leadingAnchor, constant: 30)
         ])
         NSLayoutConstraint.activate([
             
         ])
     }
+    
+//    private func addAction() {
+//        btn1.addTarget(self, action: #selector(touch), for: .touchUpInside)
+//    }
+//    
+//    @objc func touch(_ sender: UIButton) {
+//        print("touch")
+//    }
 }

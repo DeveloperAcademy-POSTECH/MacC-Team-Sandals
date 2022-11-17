@@ -80,7 +80,7 @@ final class CurationListCell: UITableViewCell {
     
     private let likeLabel: UILabel = {
         let label = UILabel()
-        label.font = .footnote
+        label.font = .subhead
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "좋아요"
 
@@ -89,8 +89,7 @@ final class CurationListCell: UITableViewCell {
 
     private let commentLabel: UILabel = {
         let label = UILabel()
-        label.font = .footnote
-        label.textColor = .kindyGray
+        label.font = .subhead
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "댓글"
 
@@ -100,7 +99,6 @@ final class CurationListCell: UITableViewCell {
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = .footnote
-        label.textColor = .kindyGray
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "날짜"
 
@@ -110,9 +108,8 @@ final class CurationListCell: UITableViewCell {
     private let kinditorLabel: UILabel = {
         let label = UILabel()
         label.font = .footnote
-        label.textColor = .kindyGray
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "킨디터 백루이"
+        label.text = "킨디터"
 
         return label
     }()
@@ -160,17 +157,46 @@ final class CurationListCell: UITableViewCell {
             leftInfoStackView.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 16),
             
             rightInfoStackView.trailingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: -8),
-            rightInfoStackView.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 16)
+            rightInfoStackView.centerYAnchor.constraint(equalTo: leftInfoStackView.centerYAnchor)
         ])
     }
 
     private func configureCell(item: Curation) {
-//        photoImageView.image = UIImage(named: item.mainImage)
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
-        likeLabel.text = "좋아요 \(item.likes.count)개"
+//        likeLabel.text = "좋아요 \(item.likes.count)개"
         dateLabel.text = "\(item.createdAt!)"
-        kinditorLabel.text = "킨디터 \(item.userID)"
+//        kinditorLabel.text = "킨디터 \(item.userID)"
         
+        // MARK: 좋아요
+        let attributedString = NSMutableAttributedString(string: "")
+        
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = UIImage(systemName: "heart")?.withTintColor(.kindySecondaryGreen ?? UIColor())
+        
+        attributedString.append(NSAttributedString(attachment: imageAttachment))
+        attributedString.append(NSAttributedString(string: " \(item.likes.count)"))
+        
+        likeLabel.attributedText = attributedString
+        
+        // MARK: 댓글
+        let commentAttributedString = NSMutableAttributedString(string: "")
+        
+        let commentImageAttachment = NSTextAttachment()
+        commentImageAttachment.image = UIImage(systemName: "bubble.left")?.withTintColor(.kindySecondaryGreen ?? UIColor())
+        
+        commentAttributedString.append(NSAttributedString(attachment: commentImageAttachment))
+        commentAttributedString.append(NSAttributedString(string: " 100"))
+        
+        commentLabel.attributedText = commentAttributedString
+        
+        // MARK: 킨디터
+        let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 백루이")
+//        let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 \(item.userID)")
+
+        kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4,length: 3))
+//        kinditorAttributedString.addAttribute(.font, value: UIFont.subhead, range: NSRange(location: 4,length: item.userID.count))
+        
+        kinditorLabel.attributedText = kinditorAttributedString
     }
 }

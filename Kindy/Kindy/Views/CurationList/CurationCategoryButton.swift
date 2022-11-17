@@ -11,11 +11,13 @@ final class CurationCategoryButton: UIButton {
 
     private lazy var categoryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("  \(categoryName)", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.adjustsFontForContentSizeCategory = true
+        
+        button.setTitle("  \(categoryName)", for: .normal)
         button.setImage(categorySymbolImage, for: .normal)
         button.tintColor = .kindyPrimaryGreen
+        
         button.setTitleColor(.black, for: .normal)
         button.semanticContentAttribute = .forceLeftToRight
         button.contentVerticalAlignment = .center
@@ -34,8 +36,8 @@ final class CurationCategoryButton: UIButton {
     
     var categoryName: String = "" {
         didSet {
-            categoryButton.setTitle("  \(categoryName)", for: .normal)
-            categoryButton.setImage(categorySymbolImage, for: .normal)
+//            categoryButton.setTitle("  \(categoryName)", for: .normal)
+//            categoryButton.setImage(categorySymbolImage, for: .normal)
         }
     }
     
