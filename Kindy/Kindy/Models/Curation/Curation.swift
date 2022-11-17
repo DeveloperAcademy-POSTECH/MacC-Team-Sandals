@@ -17,7 +17,7 @@ struct Curation {
     var createdAt: Date? = Date()
     let headText: String
     let descriptions: [Description]
-    let likes: [String]
+    var likes: [String]
 }
 
 extension Curation: Codable { }
