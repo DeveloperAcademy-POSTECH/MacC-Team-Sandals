@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SignUpView: UIView {
+final class SignUpView: UIView {
     
     var provider: String?
     var email: String?
