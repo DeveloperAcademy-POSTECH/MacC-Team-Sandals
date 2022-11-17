@@ -165,7 +165,7 @@ final class CurationListCell: UITableViewCell {
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
 //        likeLabel.text = "좋아요 \(item.likes.count)개"
-        dateLabel.text = "\(item.createdAt!)"
+//        dateLabel.text = "\(item.createdAt!)"
 //        kinditorLabel.text = "킨디터 \(item.userID)"
         
         // MARK: 좋아요
@@ -189,6 +189,13 @@ final class CurationListCell: UITableViewCell {
         commentAttributedString.append(NSAttributedString(string: " 100"))
         
         commentLabel.attributedText = commentAttributedString
+        
+        // MARK: 날짜
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let date = dateFormatter.string(from: item.createdAt!)
+        let todayDate = dateFormatter.string(from: Date())
+        dateLabel.text = date == todayDate ? "오늘" : date
         
         // MARK: 킨디터
         let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 백루이")
