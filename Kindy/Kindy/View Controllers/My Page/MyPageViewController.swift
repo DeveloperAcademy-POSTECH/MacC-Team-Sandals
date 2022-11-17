@@ -130,7 +130,10 @@ final class MyPageViewController: UIViewController {
         switch firestoreManager.isLoggedIn() {
         case true:
             userRequestTask = Task {
-                guard let user = try? await firestoreManager.fetchCurrentUser() else { return }
+                guard let user = try? await firestoreManager.fetchCurrentUser() else {
+                    userRequestTask = nil
+                    return
+                }
                 
                 self.user = user
                 cellTitle = loginTitle
@@ -138,7 +141,10 @@ final class MyPageViewController: UIViewController {
                 userInfoContainerView.user = user
                 
                 bookstoresRequestTask = Task {
-                    guard let bookstores = try? await firestoreManager.fetchBookstores() else { return }
+                    guard let bookstores = try? await firestoreManager.fetchBookstores() else {
+                        bookstoresRequestTask = nil
+                        return
+                    }
                     self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
                     bookstoresRequestTask = nil
                 }
@@ -171,8 +177,8 @@ final class MyPageViewController: UIViewController {
     }
     
     @objc func signUpButtonTapped() {
-        let signInViewcontroller = SignInViewController()
-        self.navigationController?.pushViewController(signInViewcontroller, animated: true)
+        let signUpViewcontroller = SignUpViewController()
+        self.navigationController?.pushViewController(signUpViewcontroller, animated: true)
     }
 }
 
@@ -237,7 +243,6 @@ extension MyPageViewController: UITableViewDataSource {
 extension MyPageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         switch cellTitle[indexPath.section][indexPath.row] {
         case "독립서점 제보하기":
             tableView.deselectRow(at: indexPath, animated: true)
@@ -275,6 +280,7 @@ extension MyPageViewController: UITableViewDelegate {
             alertForSignOut.addAction(cancel)
             alertForSignOut.addAction(action)
             present(alertForSignOut, animated: true) {
+                self.setupContainerView(self.tryLoginContainerView)
                 tableView.reloadData()
             }
             
