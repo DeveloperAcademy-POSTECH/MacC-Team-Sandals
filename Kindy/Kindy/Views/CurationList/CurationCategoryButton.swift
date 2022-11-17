@@ -44,7 +44,7 @@ final class CurationCategoryButton: UIButton {
     var categorySymbolImage: UIImage {
         switch categoryName {
         case "최신":
-            return UIImage(systemName: "sparkle")!
+            return UIImage(systemName: "sparkles")!
         case "서점":
             return UIImage(systemName: "heart")!
         case "책":
