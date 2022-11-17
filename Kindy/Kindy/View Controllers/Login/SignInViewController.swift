@@ -61,7 +61,7 @@ final class SignInViewController: UIViewController {
             
             let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
             Task {
-                if try await firestoreManager.isExistID(user?.profile?.email, "google") {
+                if try await firestoreManager.isExistingUser(user?.profile?.email, "google") {
                     Auth.auth().signIn(with: credential) { [weak self] result, error in
                         guard let self = self else { return }
                         guard
@@ -179,7 +179,7 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
             // Sign in with Firebase.
             let checkEmail: String = self.decode(jwt:idTokenString) ?? ""
             Task{
-                if try await firestoreManager.isExistID(checkEmail, "apple") {
+                if try await firestoreManager.isExistingUser(checkEmail, "apple") {
                     Auth.auth().signIn(with: credential) { [weak self] result, error in
                         guard let self = self else { return }
                         guard result != nil, error == nil else {

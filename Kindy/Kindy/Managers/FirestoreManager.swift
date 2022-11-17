@@ -87,14 +87,14 @@ extension FirestoreManager {
         }
     }
     // 이미 존재하는 닉네임 확인
-    func isExistNickName(_ nickName: String) async throws -> Bool {
+    func isExistingNickname(_ nickName: String) async throws -> Bool {
         let nickNames = try await FirestoreManager.db.collection("Users").getDocuments().documents.map{ $0.data() }.filter{ String(describing: $0["nickName"]!) == nickName }
-        return nickNames.isEmpty ? false : true
+        return !nickNames.isEmpty
     }
     // 이미 가입한 유저인지 확인
-    func isExistID(_ email: String?, _ provider: String) async throws -> Bool {
+    func isExistingUser(_ email: String?, _ provider: String) async throws -> Bool {
         if let email = email {
-            return try await FirestoreManager.db.collection("Users").whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map{ $0.documentID }.isEmpty ? false : true
+            return try await !FirestoreManager.db.collection("Users").whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map{ $0.documentID }.isEmpty
         } else {
             return false
         }

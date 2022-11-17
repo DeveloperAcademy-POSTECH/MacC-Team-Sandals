@@ -11,7 +11,7 @@ import AuthenticationServices
 
 final class SignInView: UIView {
     
-    var delegate: SignInDelegate?
+    weak var delegate: SignInDelegate?
 
     private let descriptionLabel: UILabel = {
         let label = UILabel()

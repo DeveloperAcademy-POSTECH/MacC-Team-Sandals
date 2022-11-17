@@ -10,7 +10,7 @@ import UIKit
 class CheckboxUIView: UIView {
     
     
-    var delegate: CheckPolicyDelegate?
+    weak var delegate: CheckPolicyDelegate?
     var position: String = ""
     
     var isChecked: Bool = false {

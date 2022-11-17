@@ -9,7 +9,7 @@ import UIKit
 
 class CheckPolicyUIView: UIView {
     
-    var delegate: SignUpDelegate?
+    weak var delegate: SignUpDelegate?
     
     private var isTotalChecked: Bool = false {
         didSet {
