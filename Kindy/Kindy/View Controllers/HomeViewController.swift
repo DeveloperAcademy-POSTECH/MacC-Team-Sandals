@@ -13,16 +13,16 @@ import FirebaseFirestoreSwift
 final class HomeViewController: UIViewController {
     
     // MARK: Tasks
-    private var bookstoresRequestTask: Task<Void, Never>?
-    private var curationsRequestTask: Task<Void, Never>?
-    private var bookmarkedBookstoresRequestTask: Task<Void, Never>?
-    private var imageRequestTask: Task<Void, Never>?
+    private var bookstoresTask: Task<Void, Never>?
+    private var curationsTask: Task<Void, Never>?
+    private var bookmarkedBookstoresTask: Task<Void, Never>?
+    private var imagesTask: Task<Void, Never>?
     
     deinit {
-        bookstoresRequestTask?.cancel()
-        curationsRequestTask?.cancel()
-        imageRequestTask?.cancel()
-        bookmarkedBookstoresRequestTask?.cancel()
+        bookstoresTask?.cancel()
+        curationsTask?.cancel()
+        bookmarkedBookstoresTask?.cancel()
+        imagesTask?.cancel()
     }
     
     // MARK: Managers
@@ -30,7 +30,7 @@ final class HomeViewController: UIViewController {
     private let locationManager = CLLocationManager()
     
     private var model = Model()
-    private var bookstores: [Bookstore] = []
+    private var bookstores = [Bookstore]()
     
     enum SupplementaryViewKind {
         static let header = "header"
@@ -107,6 +107,9 @@ final class HomeViewController: UIViewController {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        // 큐레이션은 1번만 fetch
+        updateCuration()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -135,10 +138,10 @@ final class HomeViewController: UIViewController {
         super.viewDidDisappear(animated)
         
         // MARK: Task cancellation
-        curationsRequestTask?.cancel()
-        bookstoresRequestTask?.cancel()
-        imageRequestTask?.cancel()
-        bookmarkedBookstoresRequestTask?.cancel()
+        curationsTask?.cancel()
+        bookstoresTask?.cancel()
+        bookmarkedBookstoresTask?.cancel()
+        imagesTask?.cancel()
     }
     
     // MARK:  - Navigation Bar
@@ -188,21 +191,9 @@ final class HomeViewController: UIViewController {
     // MARK: - Update
     
     func update() {
-        curationsRequestTask?.cancel()
-        curationsRequestTask = Task {
-            if let curations = try? await firestoreManager.fetchCurations() {
-                model.curations = curations.map { .curation($0) }
-            } else {
-                model.curations = []
-            }
-            dataSource.apply(snapshot)
-            
-            curationsRequestTask = nil
-        }
-        
-        bookstoresRequestTask?.cancel()
-        bookstoresRequestTask = Task {
-            if var bookstores = try? await firestoreManager.fetchBookstores() {
+        bookstoresTask?.cancel()
+        bookstoresTask = Task {
+            if let bookstores = try? await firestoreManager.fetchBookstores() {
                 // 전체 데이터에 추가
                 self.bookstores = bookstores
                 
@@ -213,19 +204,25 @@ final class HomeViewController: UIViewController {
                     model.bookstores = bookstores.map { .nearbyBookstore($0) }
                 }
                 
-                // TODO: 지금은 전체 데이터 수가 3개라 2개만 제거했지만 많아지면 반복문으로 교체(랜덤 로직도 추가)
-                model.featuredBookstores = [bookstores.removeLast(), bookstores.removeLast()].map { .featuredBookstore($0) }
+                var shuffledBookstores = bookstores.shuffled()
+                var featuredBookstores = [Bookstore]()
+                
+                for _ in 0..<5 {
+                    featuredBookstores.append(shuffledBookstores.removeLast())
+                }
+                
+                model.featuredBookstores = featuredBookstores.map { .featuredBookstore($0) }
             } else {
                 model.bookstores = []
                 model.featuredBookstores = []
             }
             dataSource.apply(snapshot)
             
-            bookstoresRequestTask = nil
+            bookstoresTask = nil
         }
         
-        bookmarkedBookstoresRequestTask?.cancel()
-        bookmarkedBookstoresRequestTask = Task {
+        bookmarkedBookstoresTask?.cancel()
+        bookmarkedBookstoresTask = Task {
             if let bookmarkedBookstores = try? await firestoreManager.fetchBookmarkedBookstores() {
                 model.bookmarkedBookstores = bookmarkedBookstores.map { .bookmarkedBookstore($0) }
             } else {
@@ -233,7 +230,21 @@ final class HomeViewController: UIViewController {
             }
             dataSource.apply(snapshot)
 
-            bookmarkedBookstoresRequestTask = nil
+            bookmarkedBookstoresTask = nil
+        }
+    }
+    
+    func updateCuration() {
+        curationsTask?.cancel()
+        curationsTask = Task {
+            if let curations = try? await firestoreManager.fetchCurations() {
+                model.curations = curations.map { .curation($0) }
+            } else {
+                model.curations = []
+            }
+            dataSource.apply(snapshot)
+            
+            curationsTask = nil
         }
     }
     
@@ -409,11 +420,11 @@ final class HomeViewController: UIViewController {
                 
                 cell.configureCell(item.curation!)
                 
-                self.imageRequestTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.curation?.descriptions[indexPath.item].image) {
+                self.imagesTask = Task {
+                    if let image = try? await firestoreManager.fetchImage(with: item.curation?.mainImage) {
                         cell.imageView.image = image
                     }
-                    imageRequestTask = nil
+                    imagesTask = nil
                 }
                 
                 return cell
@@ -423,11 +434,11 @@ final class HomeViewController: UIViewController {
                 let numberOfItems = collectionView.numberOfItems(inSection: indexPath.section)
                 cell.configureCell(item.bookstore!, indexPath: indexPath, numberOfItems: numberOfItems)
                 
-                self.imageRequestTask = Task {
+                self.imagesTask = Task {
                     if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
                         cell.imageView.image = image
                     }
-                    imageRequestTask = nil
+                    imagesTask = nil
                 }
                 
                 return cell
@@ -435,11 +446,11 @@ final class HomeViewController: UIViewController {
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NearByBookstoreCollectionViewCell.identifier, for: indexPath) as? NearByBookstoreCollectionViewCell else { return UICollectionViewCell() }
                 cell.configureCell(item.bookstore!)
                 
-                self.imageRequestTask = Task {
+                self.imagesTask = Task {
                     if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
                         cell.imageView.image = image
                     }
-                    imageRequestTask = nil
+                    imagesTask = nil
                 }
                 
                 return cell
@@ -447,11 +458,11 @@ final class HomeViewController: UIViewController {
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookmarkedCollectionViewCell.identifier, for: indexPath) as? BookmarkedCollectionViewCell else { return UICollectionViewCell() }
                 cell.configureCell(item.bookstore!)
                 
-                self.imageRequestTask = Task {
+                self.imagesTask = Task {
                     if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
                         cell.imageView.image = image
                     }
-                    imageRequestTask = nil
+                    imagesTask = nil
                 }
                 
                 return cell
@@ -544,23 +555,23 @@ extension HomeViewController: UICollectionViewDelegate {
             
             present(curationViewController, animated: true)
         case .bookstores:
-            let featuredBookstore = model.featuredBookstores.map { $0.bookstore! }
+            let featuredBookstores = model.featuredBookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = featuredBookstore[indexPath.item]
+            detailBookstoreViewController.bookstore = featuredBookstores[indexPath.item]
             
-            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+            show(detailBookstoreViewController, sender: nil)
         case .nearbys:
-            let bookstore = model.bookstores.map { $0.bookstore! }
+            let bookstores = model.bookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
-            detailBookstoreViewController.bookstore = bookstore[indexPath.item]
+            detailBookstoreViewController.bookstore = bookstores[indexPath.item]
             
-            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+            show(detailBookstoreViewController, sender: nil)
         case .bookmarks:
             let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookmarkedBookstores[indexPath.item]
 
-            navigationController?.pushViewController(detailBookstoreViewController, animated: true)
+            show(detailBookstoreViewController, sender: nil)
         case .regions:
             let model = model.regions[indexPath.item]
             let regionViewController = RegionViewController()
