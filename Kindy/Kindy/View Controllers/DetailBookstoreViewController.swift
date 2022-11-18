@@ -215,7 +215,8 @@ final class DetailBookstoreViewController: UIViewController {
     }
     
     @objc func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true)
     }
     
 }
