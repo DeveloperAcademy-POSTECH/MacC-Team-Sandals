@@ -200,7 +200,7 @@ final class HomeViewController: UIViewController {
                 case .authorizedWhenInUse, .authorizedAlways:
                     model.nearbyBookstores = sortBookstoresByMyLocation(bookstores).map { .nearbyBookstore($0) }
                 default:
-                    model.nearbyBookstores = bookstores.map { .nearbyBookstore($0) }
+                    model.nearbyBookstores = []
                 }
                 
                 var shuffledBookstores = bookstores.shuffled()
