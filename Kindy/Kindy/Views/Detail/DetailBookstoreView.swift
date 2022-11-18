@@ -393,8 +393,8 @@ final class DetailBookstoreView: UIView {
     
     private func setupIconConstraints() {
         NSLayoutConstraint.activate([
-            bookmarkButton.heightAnchor.constraint(equalToConstant: 36),
-            bookmarkButton.widthAnchor.constraint(equalToConstant: 32),
+            bookmarkButton.heightAnchor.constraint(equalToConstant: 30),
+            bookmarkButton.widthAnchor.constraint(equalToConstant: 25),
             
             telephoneIconImageView.widthAnchor.constraint(equalToConstant: 22),
             telephoneIconImageView.heightAnchor.constraint(equalToConstant: 22),
