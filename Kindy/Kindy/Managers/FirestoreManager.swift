@@ -105,7 +105,18 @@ extension FirestoreManager {
         
     }
     
+
+    // 닉네임 수정
+    func editNickname(_ newNickname: String) {
+        let user = users.document(Auth.auth().currentUser?.uid ?? "")
+        user.updateData(["nickName": newNickname])
+    }
+    
+    
+    
+
     // 유저 삭제
+
     func deleteUser() {
         users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
             Auth.auth().currentUser?.delete()

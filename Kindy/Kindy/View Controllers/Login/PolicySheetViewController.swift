@@ -83,9 +83,11 @@ final class PolicySheetViewController: UIViewController {
             contentText.text = privacy.memberPolicy
         case "개인정보 수집 및 이용 동의":
             contentText.text = privacy.privacyPolicy
+        case "이용약관":
+            contentText.text = privacy.memberPolicy
         case "개인정보 처리방침":
             contentText.text = privacy.privacyPolicy
-        case "라이선스":
+        case "오픈소스 라이선스":
             contentText.text = privacy.license
         default:
             contentText.text = ""

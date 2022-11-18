@@ -186,6 +186,7 @@ final class DetailBookstoreViewController: UIViewController {
                 if updateBookmarkData(email: user.email, provider: user.provider, bookmarkedBookstores: bookmarkedBookstores) {
                     isBookmarked = false
                     bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
+                    navigationBarRightButton.image = UIImage(systemName: "bookmark")
                 } else {
                     print("fail delete bookmark")
                 }
@@ -195,6 +196,7 @@ final class DetailBookstoreViewController: UIViewController {
                 if updateBookmarkData(email: user.email, provider: user.provider, bookmarkedBookstores: bookmarkedBookstores) {
                     isBookmarked = true
                     bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+                    navigationBarRightButton.image = UIImage(systemName: "bookmark.fill")
                 } else {
                     print("fail add bookmark")
                 }
@@ -213,7 +215,8 @@ final class DetailBookstoreViewController: UIViewController {
     }
     
     @objc func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true)
     }
     
 }
@@ -229,7 +232,7 @@ extension DetailBookstoreViewController: UIScrollViewDelegate {
             
             // 밑으로 내릴수록 네비게이션 바의 배경색을 하얗게 변경
             if currentScrollYOffset > defaultScrollYOffset {
-                navigationBarAppearance.backgroundColor = .init(white: currentScrollYOffset / 175, alpha: currentScrollYOffset / 175)
+                navigationBarAppearance.backgroundColor = .init(white: 1, alpha: currentScrollYOffset / 175)
                 navigationBarAppearance.shadowColor = .init(red: 0, green: 0, blue: 0, alpha: ((currentScrollYOffset / 175) * 0.3))
             // 상단 화면을 보고 있으면 네비게이션 바 안보이게 변경
             } else {
