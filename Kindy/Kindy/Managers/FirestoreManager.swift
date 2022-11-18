@@ -111,15 +111,20 @@ extension FirestoreManager {
         let user = users.document(Auth.auth().currentUser?.uid ?? "")
         user.updateData(["nickName": newNickname])
     }
-    
-    
-    
 
     // 유저 삭제
-
     func deleteUser() {
         users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
             Auth.auth().currentUser?.delete()
+        }
+    }
+
+    // 유저 documentID fetch
+    func getUserID() -> String {
+        if let uid = Auth.auth().currentUser?.uid {
+            return uid
+        } else {
+            return ""
         }
     }
 }
@@ -189,4 +194,28 @@ extension FirestoreManager {
             return []
         }
     }
+}
+
+// MARK: 좋아요
+extension FirestoreManager {
+    // 큐레이션의 likes 업데이트
+    func updateLike(bookstoreID: String, likes: [String]) async throws {
+        let querySnapshot = try await curations.whereField("bookstoreID", isEqualTo: bookstoreID).getDocuments()
+        let document = querySnapshot.documents.first
+        try await document?.reference.updateData(["likes" : likes])
+    }
+
+    // 큐레이션이 가진 좋아요 값으로 fetch
+//    func fetchLikesCurtions() async throws -> [Curation] {
+//        if isLoggedIn() {
+//            let user = try await fetchCurrentUser()
+//            var likesCurations = [Curation]()
+//            for index in user.curationLikes.indices {
+//                likesCurations.append(try await fetchCuration(with: user.curstionLikes[index]))
+//            }
+//            return likesCurations
+//        } else {
+//            return []
+//        }
+//    }
 }
