@@ -99,7 +99,7 @@ extension CurationViewController: UICollectionViewDataSource {
         if indexPath.item == 0 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationStoreCell.identifier, for: indexPath) as? CurationStoreCell else {
                 return UICollectionViewCell() }
-            cell.configure(image: images[0], bookStore: curation.bookstoreID)
+            cell.configure(bookStore: curation.bookstoreID)
             cell.backgroundColor = .clear
             return cell
         }
