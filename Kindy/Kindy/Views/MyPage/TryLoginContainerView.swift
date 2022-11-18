@@ -41,7 +41,7 @@ final class TryLoginContainerView: UIView {
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        button.setUnderline()
+//        button.setUnderline()
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

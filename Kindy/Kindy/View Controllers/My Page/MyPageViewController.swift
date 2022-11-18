@@ -122,7 +122,7 @@ final class MyPageViewController: UIViewController {
         userInfoContainerView.nicknameEditButton.addTarget(self, action: #selector(nicknameEditButtonTapped), for: .touchUpInside)
         userInfoContainerView.bookmarkedBookstoreButton.addTarget(self, action: #selector(bookmarkedBookstoreButtonTapped), for: .touchUpInside)
         tryLoginContainerView.signInButton.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
-        tryLoginContainerView.signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+//        tryLoginContainerView.signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
     
     private func updateUserData() {
@@ -179,10 +179,10 @@ final class MyPageViewController: UIViewController {
         self.navigationController?.pushViewController(signInViewcontroller, animated: true)
     }
     
-    @objc func signUpButtonTapped() {
-        let signUpViewcontroller = SignUpViewController()
-        self.navigationController?.pushViewController(signUpViewcontroller, animated: true)
-    }
+//    @objc func signUpButtonTapped() {
+//        let signUpViewcontroller = SignUpViewController()
+//        self.navigationController?.pushViewController(signUpViewcontroller, animated: true)
+//    }
 }
 
 // MARK: Extensions
