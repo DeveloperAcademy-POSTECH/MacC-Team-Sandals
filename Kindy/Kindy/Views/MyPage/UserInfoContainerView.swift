@@ -182,6 +182,8 @@ final class UserInfoContainerView: UIView {
             
             divider.heightAnchor.constraint(equalToConstant: 1),
             
+            nicknameEditButton.widthAnchor.constraint(equalToConstant: 24),
+            
             bookmarkedBookstoreButton.widthAnchor.constraint(equalToConstant: 60),
             bookmarkedBookstoreButton.heightAnchor.constraint(equalToConstant: 60),
             
