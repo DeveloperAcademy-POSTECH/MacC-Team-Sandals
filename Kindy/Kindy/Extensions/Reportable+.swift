@@ -41,39 +41,39 @@ extension Reportable {
         self.present(alertController, animated: true)
     }
 
-    func showReportController2(_ self: UIViewController, style: UIAlertController.Style, title: String = "댓글 신고") {
-        let completeHandler: (UIAlertAction) -> Void = { report in
-            let alertController = UIAlertController(title: "신고해주셔서 감사합니다", message: "더 나은 서비스 제공을 위해\n 빠른 시일 내로 확인하여 반영하겠습니다", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "완료", style: .default)
-
-            alertController.addAction(okAction)
-            self.present(alertController, animated: true)
-        }
-
-        let reportReasonHandler: (UIAlertAction) -> Void = { _ in
-            let alertController = UIAlertController(title: "", message: "신고 사유를 선택해 주세요", preferredStyle: .actionSheet)
-            reportList.forEach { text in
-                let okAction = UIAlertAction(title: text, style: .default) { action in
-                    completeHandler(action)
-                }
-                alertController.addAction(okAction)
-            }
-            let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true)
-        }
-
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: style)
-
-        let okAction = UIAlertAction(title: title, style: .destructive) { action in
-            reportReasonHandler(action)
-        }
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-
-        alertController.addAction(okAction)
-        alertController.addAction(cancelAction)
-
-        self.present(alertController, animated: true)
-    }
+//    func showReportController2(_ self: UIViewController, style: UIAlertController.Style, title: String = "댓글 신고") {
+//        let completeHandler: (UIAlertAction) -> Void = { report in
+//            let alertController = UIAlertController(title: "신고해주셔서 감사합니다", message: "더 나은 서비스 제공을 위해\n 빠른 시일 내로 확인하여 반영하겠습니다", preferredStyle: .alert)
+//            let okAction = UIAlertAction(title: "완료", style: .default)
+//
+//            alertController.addAction(okAction)
+//            self.present(alertController, animated: true)
+//        }
+//
+//        let reportReasonHandler: (UIAlertAction) -> Void = { _ in
+//            let alertController = UIAlertController(title: "", message: "신고 사유를 선택해 주세요", preferredStyle: .actionSheet)
+//            reportList.forEach { text in
+//                let okAction = UIAlertAction(title: text, style: .default) { action in
+//                    completeHandler(action)
+//                }
+//                alertController.addAction(okAction)
+//            }
+//            let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+//            alertController.addAction(cancelAction)
+//            self.present(alertController, animated: true)
+//        }
+//
+//        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: style)
+//
+//        let okAction = UIAlertAction(title: title, style: .destructive) { action in
+//            reportReasonHandler(action)
+//        }
+//        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+//
+//        alertController.addAction(okAction)
+//        alertController.addAction(cancelAction)
+//
+//        self.present(alertController, animated: true)
+//    }
 
 }
