@@ -190,3 +190,27 @@ extension FirestoreManager {
         }
     }
 }
+
+// MARK: 좋아요
+extension FirestoreManager {
+    // 큐레이션의 likes 업데이트
+    func updateLike(bookstoreID: String, likes: [String]) async throws {
+        let querySnapshot = try await curations.whereField("bookstoreID", isEqualTo: bookstoreID).getDocuments()
+        let document = querySnapshot.documents.first
+        try await document?.reference.updateData(["likes" : likes])
+    }
+
+    // 큐레이션이 가진 좋아요 값으로 fetch
+//    func fetchLikesCurtions() async throws -> [Curation] {
+//        if isLoggedIn() {
+//            let user = try await fetchCurrentUser()
+//            var likesCurations = [Curation]()
+//            for index in user.curationLikes.indices {
+//                likesCurations.append(try await fetchCuration(with: user.curstionLikes[index]))
+//            }
+//            return likesCurations
+//        } else {
+//            return []
+//        }
+//    }
+}
