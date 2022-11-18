@@ -16,7 +16,6 @@ final class SignUpView: UIView {
     
     weak var delegate: SignUpDelegate?
     
-    
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.footnote
@@ -150,11 +149,9 @@ final class SignUpView: UIView {
     }
     
     @objc func signUp() {
+        nickNameTextField.resignFirstResponder()
         delegate?.signUpDelegate()
     }
-    
-    
-
 }
 
 
@@ -165,9 +162,21 @@ extension SignUpView: UITextFieldDelegate {
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(
             in: stringRange,
-            with: string)
-        delegate?.textFieldAction(newText)
+            with: string) as NSString
+        delegate?.textFieldAction(String(newText))
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+    }
+    
+//    func textFieldDidChangeSelection(_ textField: UITextField) {
+//        self.nickName = textField.text!
+//    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        let text = textField.text!
+        delegate?.textFieldAction(text)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
