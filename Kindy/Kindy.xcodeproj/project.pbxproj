@@ -92,7 +92,6 @@
 		7BEDC38E29090A0C002C21B6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BEDC38D29090A0B002C21B6 /* GoogleService-Info.plist */; };
 		7BF9AACD2909200100C80F72 /* NoPermissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */; };
 		A06954E72905C74100C09D1D /* MyPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */; };
-		A06954ED2906C6CE00C09D1D /* DetailMyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */; };
 		A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954EE2906D9D800C09D1D /* Privacy.swift */; };
 		A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954F32907C84A00C09D1D /* DetailMyPageView.swift */; };
 /* End PBXBuildFile section */
@@ -179,7 +178,6 @@
 		7BEDC38D29090A0B002C21B6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPermissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTableViewCell.swift; sourceTree = "<group>"; };
-		A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyPageViewController.swift; sourceTree = "<group>"; };
 		A06954EE2906D9D800C09D1D /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
 		A06954F32907C84A00C09D1D /* DetailMyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyPageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -435,7 +433,6 @@
 			isa = PBXGroup;
 			children = (
 				6EE5E3AE28FD318A00EA7413 /* MyPageViewController.swift */,
-				A06954EC2906C6CE00C09D1D /* DetailMyPageViewController.swift */,
 				369CC07A29241661000D7B96 /* EditNicknameViewController.swift */,
 				369CC07C29241681000D7B96 /* MyWritingViewController.swift */,
 				369CC07E292416A7000D7B96 /* MyActivitiesViewController.swift */,
@@ -618,7 +615,6 @@
 				369CC07B29241661000D7B96 /* EditNicknameViewController.swift in Sources */,
 				3101BC55291BF2B600C46195 /* SignInViewController.swift in Sources */,
 				7BCB1A0F291646B700B357D5 /* FirestoreManager.swift in Sources */,
-				A06954ED2906C6CE00C09D1D /* DetailMyPageViewController.swift in Sources */,
 				36671EB429222E7E003BC7F7 /* ImageCacheManager.swift in Sources */,
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,

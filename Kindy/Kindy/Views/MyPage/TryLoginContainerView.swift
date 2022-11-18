@@ -18,6 +18,7 @@ final class TryLoginContainerView: UIView {
         return label
     }()
     
+    // TODO: divider 안보임
     private let divider: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "kindyLightGray3")

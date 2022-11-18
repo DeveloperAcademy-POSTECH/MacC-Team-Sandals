@@ -7,6 +7,8 @@
 
 import UIKit
 
+// TODO: MVC 패턴에 맞게 수정
+// TODO: 닉네임 수정 메소드 FirestoreManager에 추가
 final class EditNicknameViewController: UIViewController {
     
     // MARK: Properties
@@ -30,6 +32,11 @@ final class EditNicknameViewController: UIViewController {
     
     private let nicknameTextField: UITextField = {
         let textField = UITextField()
+        textField.placeholder = "닉네임을 입력해주세요"
+        textField.clearButtonMode = .always
+        textField.returnKeyType = .done
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -55,8 +62,6 @@ final class EditNicknameViewController: UIViewController {
         nicknameTextField.delegate = self
         tabBarController?.tabBar.isHidden = true
         navigationItem.rightBarButtonItem = navigationEditButton
-        navigationController?.navigationBar.topItem?.title = "내 정보 수정"
-        navigationController?.title = "내 정보 수정"
         navigationController?.navigationBar.tintColor = UIColor.black
         navigationController?.navigationBar.topItem?.title = ""
     }
@@ -91,10 +96,28 @@ final class EditNicknameViewController: UIViewController {
     
     // MARK: Actions
     @objc func editButtonTapped() {
-//        firestoreManager.editNickname(nicknameTextField.text)
-        navigationController?.popViewController(animated: true)
+        // 텍스트필드의 텍스트로 닉네임 중복 검사
+        guard let text = nicknameTextField.text else { return }
         
+        userNicknameRequestTask?.cancel()
+        
+        userNicknameRequestTask = Task {
+            guard let isExistingNickname = try? await firestoreManager.isExistingNickname(text) else { return }
+            switch isExistingNickname {
+            case true:
+                textFieldUnderLine.backgroundColor = .red
+                warningLabel.text = "이미 사용 중인 닉네임입니다."
+                warningLabel.textColor = .red
+                
+            case false:
+//                firestoreManager.editNickname(nicknameTextField.text)
+                userNicknameRequestTask = nil
+                navigationController?.popViewController(animated: true)
+            }
+            
+        }
     }
+    
 }
 
 // MARK: Extensions
@@ -103,40 +126,56 @@ extension EditNicknameViewController: UITextFieldDelegate {
     
     // 텍스트필드 입력될 때마다 호출
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(#function)
-        
         let maxLength = 10
-        let currentString: NSString = (textField.text ?? "") as NSString
-        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-        let currentTextFieldString = newString as String
+        let currentNSString: NSString = (textField.text ?? "") as NSString
+        let newNSString: NSString = currentNSString.replacingCharacters(in: range, with: string) as NSString
+        let currentTextFieldText: String = newNSString as String
         
-        if currentTextFieldString.count == 0 {
+        // 텍스트 필드가 비어져있으면 완료 버튼 비활성화
+        if currentTextFieldText.count == 0 {
             textFieldUnderLine.backgroundColor = UIColor(named: "kindyGray")
             warningLabel.text = ""
             navigationEditButton.tintColor = UIColor(named: "kindyGray2")
             navigationEditButton.isEnabled = false
         } else {
-            userNicknameRequestTask?.cancel()
-
-            userNicknameRequestTask = Task {
-                guard let result = try? await firestoreManager.isExistingNickname(newString as String) else { return }
-                if !result {
-                    textFieldUnderLine.backgroundColor = UIColor(named: "kindyGray")
-                    warningLabel.text = "사용 가능한 닉네임입니다."
-                    warningLabel.textColor = .black
-                    navigationEditButton.tintColor = .black
-                    navigationEditButton.isEnabled = true
-                } else {
-                    textFieldUnderLine.backgroundColor = .red
-                    warningLabel.text = "이미 사용 중인 닉네임입니다."
-                    warningLabel.textColor = .red
-                    navigationEditButton.tintColor = UIColor(named: "kindyGray2")
-                    navigationEditButton.isEnabled = false
-                }
-                userNicknameRequestTask = nil
-            }
+            navigationEditButton.tintColor = .black
+            navigationEditButton.isEnabled = true
         }
-        return newString.length <= maxLength
+        
+        // 최대글자수 10자로 제한
+        return newNSString.length <= maxLength
+    }
+    
+    // 텍스트필드 입력이 완료되었을때
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        // 키보드를 내리고
+        nicknameTextField.resignFirstResponder()
+        
+        // 텍스트가 입력되었으면
+        guard let text = textField.text else { return }
+        guard text.count != 0 else { return }
+        
+        userNicknameRequestTask?.cancel()
+        
+        // 유저 닉네임 중복 검사
+        userNicknameRequestTask = Task {
+            guard let isExistingNickname = try? await firestoreManager.isExistingNickname(text) else { return }
+            
+            switch isExistingNickname {
+            // 닉네임이 중복될때 UI 변경
+            case true:
+                textFieldUnderLine.backgroundColor = .red
+                warningLabel.text = "이미 사용 중인 닉네임입니다."
+                warningLabel.textColor = .red
+                
+            // 닉네임이 중복되지 않을때 UI 변경
+            case false:
+                textFieldUnderLine.backgroundColor = .systemGreen
+                warningLabel.text = "사용 가능한 닉네임입니다."
+                warningLabel.textColor = .systemGreen
+            }
+            userNicknameRequestTask = nil
+        }
     }
     
     // 리턴 누르면 키보드 내림
@@ -148,5 +187,15 @@ extension EditNicknameViewController: UITextFieldDelegate {
     // 키보드 외 영역 터치하면 키보드 내림
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         nicknameTextField.resignFirstResponder()
+    }
+    
+    // 텍스트필드의 클리어버튼이 눌렸을때 호출
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        // UI 수정 및 버튼 비활성화
+        textFieldUnderLine.backgroundColor = UIColor(named: "kindyGray")
+        warningLabel.text = ""
+        navigationEditButton.tintColor = UIColor(named: "kindyGray2")
+        navigationEditButton.isEnabled = false
+        return true
     }
 }

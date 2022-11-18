@@ -8,6 +8,7 @@
 import UIKit
 
 // TODO: 들어올 때 로딩뷰 뜨면 좋을듯
+// TODO: 프로퍼티명 수정 및 코드 정리해놓겠습니다
 final class MyPageViewController: UIViewController {
     
     // MARK: Properties
@@ -72,6 +73,7 @@ final class MyPageViewController: UIViewController {
         setupTableView()
         setupUI()
         setupAddTarget()
+        tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.topItem?.title = "마이페이지"
     }
             
@@ -98,7 +100,7 @@ final class MyPageViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
         ])
         
     }
@@ -127,19 +129,21 @@ final class MyPageViewController: UIViewController {
         userRequestTask?.cancel()
         bookstoresRequestTask?.cancel()
         
+        // 로그인 검사
         switch firestoreManager.isLoggedIn() {
+        // 로그인 되었을때 유저 fetch해와서 UI 수정
         case true:
             userRequestTask = Task {
                 guard let user = try? await firestoreManager.fetchCurrentUser() else {
                     userRequestTask = nil
                     return
                 }
-                
                 self.user = user
                 cellTitle = loginTitle
                 setupContainerView(userInfoContainerView)
                 userInfoContainerView.user = user
                 
+                // 해당 유저의 북마크한 서점 fetch
                 bookstoresRequestTask = Task {
                     guard let bookstores = try? await firestoreManager.fetchBookstores() else {
                         bookstoresRequestTask = nil
@@ -151,6 +155,7 @@ final class MyPageViewController: UIViewController {
                 userRequestTask = nil
             }
             
+        // 로그인 안되어있을때 UI로 수정
         case false:
             cellTitle = logoutTitle
             setupContainerView(tryLoginContainerView)
@@ -214,10 +219,12 @@ extension MyPageViewController: UITableViewDataSource {
         return (25 + 32)
     }
     
+    // 섹션 갯수
     func numberOfSections(in tableView: UITableView) -> Int {
         return cellTitle.count
     }
     
+    // 셀 갯수
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cellTitle[section].count
     }
@@ -227,9 +234,11 @@ extension MyPageViewController: UITableViewDataSource {
         
         cell.myPageCellLabel.text = cellTitle[indexPath.section][indexPath.row]
         
-        if cellTitle[indexPath.section][indexPath.row] == "회원탈퇴" {
+        // 회원탈퇴 셀의 경우 텍스트 색깔 빨간색으로 변경
+        switch cellTitle[indexPath.section][indexPath.row] {
+        case "회원탈퇴":
             cell.myPageCellLabel.textColor = .red
-        } else {
+        default:
             cell.myPageCellLabel.textColor = .black
         }
         return cell
@@ -269,13 +278,13 @@ extension MyPageViewController: UITableViewDelegate {
             show(policySheetViewController, sender: nil)
             
         case "로그아웃":
-            let alertForSignOut = UIAlertController(title: "정말 로그아웃하시겠습니까?", message: nil, preferredStyle: .alert)
+            let alertForSignOut = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
                 self.firestoreManager.signOut()
                 self.user = nil
                 self.setupContainerView(self.tryLoginContainerView)
             })
-            let cancel = UIAlertAction(title: "아니오", style: .cancel)
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
             alertForSignOut.addAction(cancel)
             alertForSignOut.addAction(action)
             
@@ -284,13 +293,13 @@ extension MyPageViewController: UITableViewDelegate {
             }
             
         case "회원탈퇴":
-            let alertForDeleteUser = UIAlertController(title: "회원탈퇴", message: "정말 회원 탈퇴를 진행하시겠습니까?", preferredStyle: .alert)
-            let action = UIAlertAction(title: "네", style: .destructive, handler: { _ in
+            let alertForDeleteUser = UIAlertController(title: "Kindy 회원 탈퇴하기", message: "탈퇴하더라도 삭제하지 않은\n작성 글과 댓글은 유지됩니다.\n그래도 정말 탈퇴하시겠습니까?", preferredStyle: .alert)
+            let action = UIAlertAction(title: "탈퇴하기", style: .destructive, handler: { _ in
                 self.firestoreManager.deleteUser()
                 self.user = nil
                 self.setupContainerView(self.tryLoginContainerView)
             })
-            let cancel = UIAlertAction(title: "아니오", style: .cancel)
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
             alertForDeleteUser.addAction(cancel)
             alertForDeleteUser.addAction(action)
             present(alertForDeleteUser, animated: true) {
