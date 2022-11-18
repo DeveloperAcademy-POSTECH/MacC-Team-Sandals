@@ -30,7 +30,6 @@ final class HomeViewController: UIViewController {
     private let locationManager = CLLocationManager()
     
     private var model = Model()
-    private var bookstores = [Bookstore]()
     
     enum SupplementaryViewKind {
         static let header = "header"
@@ -57,7 +56,7 @@ final class HomeViewController: UIViewController {
             snapshot.appendItems([.noPermission])
         default:
             snapshot.appendSections([.nearbys])
-            snapshot.appendItems(model.bookstores)
+            snapshot.appendItems(model.nearbyBookstores)
         }
         
         if model.bookmarkedBookstores.isEmpty || !firestoreManager.isLoggedIn() {
@@ -164,7 +163,7 @@ final class HomeViewController: UIViewController {
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
         // MARK : add by X
-        homeSearchViewController.setupData(items: self.bookstores)
+        homeSearchViewController.setupData(items: model.bookstores)
         show(homeSearchViewController, sender: nil)
     }
     
@@ -195,13 +194,13 @@ final class HomeViewController: UIViewController {
         bookstoresTask = Task {
             if let bookstores = try? await firestoreManager.fetchBookstores() {
                 // 전체 데이터에 추가
-                self.bookstores = bookstores
+                model.bookstores = bookstores
                 
                 switch locationManager.authorizationStatus {
                 case .authorizedWhenInUse, .authorizedAlways:
-                    model.bookstores = sortBookstoresByMyLocation(bookstores).map { .nearbyBookstore($0) }
+                    model.nearbyBookstores = sortBookstoresByMyLocation(bookstores).map { .nearbyBookstore($0) }
                 default:
-                    model.bookstores = bookstores.map { .nearbyBookstore($0) }
+                    model.nearbyBookstores = bookstores.map { .nearbyBookstore($0) }
                 }
                 
                 var shuffledBookstores = bookstores.shuffled()
@@ -216,7 +215,7 @@ final class HomeViewController: UIViewController {
                 model.bookstores = []
                 model.featuredBookstores = []
             }
-            dataSource.apply(snapshot)
+            dataSource.apply(snapshot, animatingDifferences: false)
             
             bookstoresTask = nil
         }
@@ -567,7 +566,7 @@ extension HomeViewController: UICollectionViewDelegate {
             
             show(detailBookstoreViewController, sender: nil)
         case .nearbys:
-            let bookstores = model.bookstores.map { $0.bookstore! }
+            let bookstores = model.nearbyBookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookstores[indexPath.item]
             
@@ -579,9 +578,9 @@ extension HomeViewController: UICollectionViewDelegate {
 
             show(detailBookstoreViewController, sender: nil)
         case .regions:
-            let model = model.regions[indexPath.item]
+            let region = model.regions[indexPath.item].region
             let regionViewController = RegionViewController()
-            regionViewController.setupData(regionName: model.region!, items: self.bookstores)
+            regionViewController.setupData(regionName: region!, items: model.bookstores)
 
             show(regionViewController, sender: nil)
         default:
@@ -597,7 +596,7 @@ extension HomeViewController: SectionHeaderDelegate {
     func segueWithSectionIndex(_ sectionIndex: Int) {
         switch sectionIndex {
         case 2:
-            let nearbyBookstores = model.bookstores.map { $0.bookstore! }
+            let nearbyBookstores = model.nearbyBookstores.map { $0.bookstore! }
             let nearbyViewController = NearbyViewController()
             nearbyViewController.setupData(items: nearbyBookstores)
             show(nearbyViewController, sender: nil)
@@ -666,7 +665,7 @@ extension HomeViewController: CLLocationManagerDelegate {
             manager.requestWhenInUseAuthorization()
             return
         case .authorizedWhenInUse, .authorizedAlways:
-            model.bookstores = sortBookstoresByMyLocation(model.bookstores.map { $0.bookstore! }).map { .nearbyBookstore($0) }
+            model.nearbyBookstores = sortBookstoresByMyLocation(model.bookstores).map { .nearbyBookstore($0) }
             dataSource.apply(snapshot)
             return
         case .restricted, .denied:
