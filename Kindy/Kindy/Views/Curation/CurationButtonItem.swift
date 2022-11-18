@@ -15,7 +15,7 @@ final class CurationButtonItemView: UIView {
     }
 
     private var isLoggedIn: Bool = false
-    private var userEmail: String = ""
+    private var userID: String = ""
 
     private var userRequestTask: Task<Void, Never>?
     private var likeUpdateTask: Task<Void, Never>?
@@ -104,11 +104,11 @@ final class CurationButtonItemView: UIView {
             isLoggedIn = true
             userRequestTask = Task {
                 userRequestTask?.cancel()
-                if userEmail == "", let user = try? await firestoreManager.fetchCurrentUser() {
-                    self.userEmail = user.email
+                if userID == "" {
+                    self.userID = firestoreManager.getUserID()
                 }
 
-                if curation.likes.contains(userEmail) {
+                if curation.likes.contains(userID) {
                     let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
                     let image = UIImage(systemName: "heart.fill", withConfiguration: imageConfig)
                     buttonView.setImage(image, for: .normal)
@@ -130,12 +130,12 @@ private extension CurationButtonItemView {
             case .heart:
                 likeUpdateTask = Task {
                     likeUpdateTask?.cancel()
-                    if curation.likes.contains(userEmail) {
+                    if curation.likes.contains(userID) {
                         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
                         let image = UIImage(systemName: "heart", withConfiguration: imageConfig)
                         buttonView.setImage(image, for: .normal)
 
-                        curation.likes = curation.likes.filter { $0 != userEmail }
+                        curation.likes = curation.likes.filter { $0 != userID }
                         self.countLabel.text = String(curation.likes.count)
                         try? await firestoreManager.updateLike(bookstoreID: curation.bookstoreID, likes: curation.likes)
                     } else {
@@ -143,7 +143,7 @@ private extension CurationButtonItemView {
                         let image = UIImage(systemName: "heart.fill", withConfiguration: imageConfig)
                         buttonView.setImage(image, for: .normal)
 
-                        curation.likes.append(userEmail)
+                        curation.likes.append(userID)
                         self.countLabel.text = String(curation.likes.count)
                         try? await firestoreManager.updateLike(bookstoreID: curation.bookstoreID, likes: curation.likes)
                     }

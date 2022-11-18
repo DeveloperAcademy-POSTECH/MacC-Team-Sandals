@@ -111,15 +111,20 @@ extension FirestoreManager {
         let user = users.document(Auth.auth().currentUser?.uid ?? "")
         user.updateData(["nickName": newNickname])
     }
-    
-    
-    
 
     // 유저 삭제
-
     func deleteUser() {
         users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
             Auth.auth().currentUser?.delete()
+        }
+    }
+
+    // 유저 documentID fetch
+    func getUserID() -> String {
+        if let uid = Auth.auth().currentUser?.uid {
+            return uid
+        } else {
+            return ""
         }
     }
 }
