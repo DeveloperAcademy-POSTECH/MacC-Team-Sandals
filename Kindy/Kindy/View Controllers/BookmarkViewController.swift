@@ -14,6 +14,13 @@ final class BookmarkViewController: UIViewController {
     private let firestoreManager = FirestoreManager()
     
     private var user: User?
+    {
+        didSet {
+            totalData = totalData.filter{ user?.bookmarkedBookstores.contains( $0.id ) ?? false }
+            filterdItem = filterdItem.filter{ user?.bookmarkedBookstores.contains( $0.id ) ?? false }
+            dataSource.apply(filteredItemSnapshot)
+        }
+    }
     
     enum Section: Hashable {
         case bookmark
@@ -74,6 +81,7 @@ final class BookmarkViewController: UIViewController {
         navigationItem.searchController = searchController
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "서점 이름, 주소 검색"
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
