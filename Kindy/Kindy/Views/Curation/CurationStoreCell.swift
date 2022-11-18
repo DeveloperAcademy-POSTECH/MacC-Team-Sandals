@@ -23,6 +23,7 @@ final class CurationStoreCell: UICollectionViewCell {
         view.layer.cornerRadius = 8
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .kindyLightGray
         return view
     }()
     

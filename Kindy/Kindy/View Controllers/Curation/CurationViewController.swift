@@ -130,9 +130,11 @@ extension CurationViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == 0 {
-            let vc = DetailBookstoreViewController()
-            vc.bookstore = bookStore
-            show(vc, sender: nil)
+            let bookstoreVC = DetailBookstoreViewController()
+            bookstoreVC.bookstore = bookStore
+            let naviVC = UINavigationController(rootViewController: bookstoreVC)
+            naviVC.modalPresentationStyle = .overFullScreen
+            show(naviVC, sender: nil)
         }
     }
 }

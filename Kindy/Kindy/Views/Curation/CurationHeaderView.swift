@@ -14,6 +14,7 @@ final class CurationHeaderView: UIView {
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .kindyLightGray
         return view
     }()
     
