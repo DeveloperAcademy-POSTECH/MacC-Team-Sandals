@@ -124,8 +124,8 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             bookmarkButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             bookmarkButton.topAnchor.constraint(equalTo: imageCarouselCollectionView.bottomAnchor, constant: 16),
-            bookmarkButton.widthAnchor.constraint(equalToConstant: 23),
-            bookmarkButton.heightAnchor.constraint(equalToConstant: 36)
+            bookmarkButton.widthAnchor.constraint(equalToConstant: 25),
+            bookmarkButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
     

@@ -19,6 +19,7 @@
 		313C68DC2913F32B0061946E /* BookmarkSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313C68DB2913F32B0061946E /* BookmarkSectionHeaderView.swift */; };
 		31F5A01E2925DF85002C1FAD /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A01D2925DF85002C1FAD /* SignInView.swift */; };
 		31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A01F2925E095002C1FAD /* SignInDelegate.swift */; };
+		31F5A02429261606002C1FAD /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A02329261606002C1FAD /* SignUpView.swift */; };
 		31F7DD602904EAC6007E6E99 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */; };
 		31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */; };
 		31F7DD652904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */; };
@@ -107,6 +108,7 @@
 		313C68DB2913F32B0061946E /* BookmarkSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSectionHeaderView.swift; sourceTree = "<group>"; };
 		31F5A01D2925DF85002C1FAD /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		31F5A01F2925E095002C1FAD /* SignInDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInDelegate.swift; sourceTree = "<group>"; };
+		31F5A02329261606002C1FAD /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		31F7DD5F2904EAC6007E6E99 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCarouselCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -203,8 +205,9 @@
 		3101BC4E291BF27700C46195 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				3101BC4F291BF29300C46195 /* CheckboxUIView.swift */,
-				3101BC51291BF2A200C46195 /* CheckPolicyUIView.swift */,
+				31F5A01D2925DF85002C1FAD /* SignInView.swift */,
+				31F5A02329261606002C1FAD /* SignUpView.swift */,
+				31F5A022292615DF002C1FAD /* SignUpComponent */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -219,12 +222,13 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		31F5A01C2925D453002C1FAD /* SignIn */ = {
+		31F5A022292615DF002C1FAD /* SignUpComponent */ = {
 			isa = PBXGroup;
 			children = (
-				31F5A01D2925DF85002C1FAD /* SignInView.swift */,
+				3101BC4F291BF29300C46195 /* CheckboxUIView.swift */,
+				3101BC51291BF2A200C46195 /* CheckPolicyUIView.swift */,
 			);
-			path = SignIn;
+			path = SignUpComponent;
 			sourceTree = "<group>";
 		};
 		31F7DD612904EACE007E6E99 /* Bookmark */ = {
@@ -339,7 +343,6 @@
 		7B404C0C28FE87DF00A24C89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				31F5A01C2925D453002C1FAD /* SignIn */,
 				7B404C2D29016C7500A24C89 /* Supplementary */,
 				7B404C2C29016BDF00A24C89 /* Home */,
 				77DCB16B29053B9D00EAB5D5 /* HomeSearch */,
@@ -648,6 +651,7 @@
 				313C68DC2913F32B0061946E /* BookmarkSectionHeaderView.swift in Sources */,
 				6EE5E4282905661E00EA7413 /* UIViewController+.swift in Sources */,
 				369CC07D29241681000D7B96 /* MyWritingViewController.swift in Sources */,
+				31F5A02429261606002C1FAD /* SignUpView.swift in Sources */,
 				77DCB1802909085F00EAB5D5 /* EmptyView.swift in Sources */,
 				7B7B49932917C8A70082E2DA /* Model.swift in Sources */,
 				6EE5E3F828FECFA300EA7413 /* CurationDetailCell.swift in Sources */,
