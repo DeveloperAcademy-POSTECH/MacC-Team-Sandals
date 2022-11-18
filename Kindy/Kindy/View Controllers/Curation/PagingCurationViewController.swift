@@ -70,11 +70,8 @@ final class PagingCurationViewController: UIViewController {
 
         self.imageRequestTask = Task {
             if let mainImage = try? await firestoreManager.fetchImage(with: curation.mainImage) {
-                DispatchQueue.main.async {
-                    guard let view = self.headerView as? CurationHeaderView else { print("hi")
-                        return }
-                    view.imageView.image = mainImage
-                }
+                guard let view = self.headerView as? CurationHeaderView else { return }
+                view.imageView.image = mainImage
                 self.images.append(mainImage)
             }
             imageRequestTask = nil
