@@ -140,7 +140,7 @@ extension FirestoreManager {
 extension FirestoreManager {
     // 현재 로그인이 되어 있는지 확인
     func isLoggedIn() -> Bool {
-        return Auth.auth().currentUser == nil ? false : true
+        return !(Auth.auth().currentUser == nil)
     }
     
     func signOut() {

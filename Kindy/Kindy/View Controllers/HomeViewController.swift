@@ -511,7 +511,13 @@ final class HomeViewController: UIViewController {
                     hideBottomStackView = true
                 case .nearbys, .noPermission:
                     sectionName = "내 주변 서점"
-                    hideSeeAllButton = false
+                    
+                    switch self.locationManager.authorizationStatus {
+                    case .notDetermined, .denied, .restricted:
+                        hideSeeAllButton = true
+                    default:
+                        hideSeeAllButton = false
+                    }
                     hideBottomStackView = false
                     
                     Task {
