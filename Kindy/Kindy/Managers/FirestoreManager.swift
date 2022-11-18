@@ -78,7 +78,9 @@ extension FirestoreManager {
     func fetchCurrentUser() async throws -> User {
         let auth = Auth.auth().currentUser
         let email = auth?.email
-        if email!.contains("@gmail.com") {
+        // MARK: 로직 변경으로 Google 로그인도 uid 로 도큐먼트 id 값을 가지므로, 기존 유저만 찾아내기 위한 배열, 추후 유저 정리후 삭제 필요 , 삭제하면 if 로직을 실행하지 않으므로, 성능개선
+        let oldUsers = ["jhy9094@gmail.com", "rkddnr330@gmail.com", "teamsandalsofficial@gmail.com"]
+        if oldUsers.contains(email ?? "") {
             let user = try await users.document(email ?? "").getDocument(as: User.self)
             return user
         } else {
