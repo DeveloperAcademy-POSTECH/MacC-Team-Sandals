@@ -110,7 +110,7 @@ final class EditNicknameViewController: UIViewController {
                 warningLabel.textColor = .red
                 
             case false:
-//                firestoreManager.editNickname(nicknameTextField.text)
+                firestoreManager.editNickname(text)
                 userNicknameRequestTask = nil
                 navigationController?.popViewController(animated: true)
             }
