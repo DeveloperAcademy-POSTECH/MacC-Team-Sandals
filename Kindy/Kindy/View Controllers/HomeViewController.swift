@@ -551,6 +551,9 @@ extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
         
+        // TODO: item 넘겨줄때 snapshot 활용해서??
+//        let item = dataSource.snapshot().itemIdentifiers[indexPath.section + indexPath.item]
+        
         switch section {
         case .curations:
             let curation = model.curations.map { $0.curation! }.first!
