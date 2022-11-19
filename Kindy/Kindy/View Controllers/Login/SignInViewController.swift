@@ -74,7 +74,13 @@ final class SignInViewController: UIViewController {
                         }
                         // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
                         // 확인 후 없다면 해당 유저 도큐먼트를
-                        self.navigationController?.popViewController(animated: true)
+                        guard let naviVC = self.navigationController else { return }
+                            if naviVC.viewControllers.count == 1 {
+                                self.dismiss(animated: true) {
+                                    NotificationCenter.default.post(name: .LoggedIn, object: nil)
+                                }
+                        }
+                        naviVC.popViewController(animated: true)
                     }
                 } else {
                     let vc = SignUpViewController()
@@ -190,7 +196,13 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
                         }
                         // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
                         // 확인 후 없다면 해당 유저 도큐먼트를
-                        self.navigationController?.popViewController(animated: true)
+                        guard let naviVC = self.navigationController else { return }
+                            if naviVC.viewControllers.count == 1 {
+                                self.dismiss(animated: true) {
+                                    NotificationCenter.default.post(name: .LoggedIn, object: nil)
+                                }
+                        }
+                        naviVC.popViewController(animated: true)
                     }
                 } else {
                     let vc = SignUpViewController()

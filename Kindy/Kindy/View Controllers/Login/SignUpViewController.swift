@@ -81,8 +81,12 @@ final class SignUpViewController: UIViewController {
                             } else {
                                 print("Document successfully written!")
                             }
-                        let viewControllers = self.navigationController?.viewControllers
-                        self.navigationController?.popToViewController(viewControllers![viewControllers!.count - 3], animated: true)
+                            let viewControllers = self.navigationController?.viewControllers
+                            if viewControllers?.count == 2 {
+                                self.dismiss(animated: true)
+                            } else {
+                                self.navigationController?.popToViewController(viewControllers![viewControllers!.count - 3], animated: true)
+                            }
                         }
                         
                     }

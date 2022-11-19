@@ -7,29 +7,26 @@
 
 import UIKit
 
-protocol DynamicCell: AnyObject {
-    func calHeight() -> CGFloat
-}
-
 final class CurationDetailCell: UICollectionViewCell {
-    
-    var cellHeight: CGFloat = 0
-    
-    private lazy var spacingView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
+
+    private lazy var stackView: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.distribution = .fill
+        view.spacing = 32
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .kindyLightGray
         return view
     }()
-    
+
     private lazy var descriptionLabel: UILabel = {
         let view = UILabel()
         view.textColor = .black
@@ -45,63 +42,37 @@ final class CurationDetailCell: UICollectionViewCell {
         super.init(frame: frame)
         configureUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         super.preferredLayoutAttributesFitting(layoutAttributes)
         layoutIfNeeded()
 
-        let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
-        
         var frame = layoutAttributes.frame
-        frame.size.height = ceil(size.height)
+        frame.size.width = UIScreen.main.bounds.width
+        frame.size.height = stackView.bounds.height
 
         layoutAttributes.frame = frame
-        
         return layoutAttributes
     }
-    
+
     private func configureUI() {
-        self.backgroundColor = .white
-        
-        self.addSubview(imageView)
-        self.addSubview(descriptionLabel)
-        self.addSubview(spacingView)
+        self.addSubview(stackView)
+        stackView.addArrangedSubview(imageView)
+        stackView.addArrangedSubview(descriptionLabel)
 
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 326),
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            
-            descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 32),
-            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: spacingView.topAnchor, constant: -16),
-            
-            spacingView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            spacingView.heightAnchor.constraint(equalToConstant: 20),
-            spacingView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            spacingView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
         ])
     }
-    
     func configure(description: Description, image: UIImage) {
         //        imageView.image = UIImage(named: description.image ?? "")
         imageView.image = image
         descriptionLabel.text = description.content
-    }
-}
-
-extension CurationDetailCell: DynamicCell {
-    func calHeight() -> CGFloat {
-        return [descriptionLabel, imageView].map { view in
-            view.frame.size.height
-        }.reduce(into: 0) { partialResult, CGFloat in
-            partialResult += CGFloat
-        }
     }
 }

@@ -88,11 +88,13 @@ extension FirestoreManager {
             return user
         }
     }
+    
     // 이미 존재하는 닉네임 확인
     func isExistingNickname(_ nickName: String) async throws -> Bool {
         let nickNames = try await FirestoreManager.db.collection("Users").getDocuments().documents.map{ $0.data() }.filter{ String(describing: $0["nickName"]!) == nickName }
         return !nickNames.isEmpty
     }
+    
     // 이미 가입한 유저인지 확인
     func isExistingUser(_ email: String?, _ provider: String) async throws -> Bool {
         if let email = email {
@@ -103,17 +105,26 @@ extension FirestoreManager {
         
     }
     
+
     // 닉네임 수정
     func editNickname(_ newNickname: String) {
         let user = users.document(Auth.auth().currentUser?.uid ?? "")
         user.updateData(["nickName": newNickname])
     }
-    
-    
-    
+
+    // 유저 삭제
     func deleteUser() {
         users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
             Auth.auth().currentUser?.delete()
+        }
+    }
+
+    // 유저 documentID fetch
+    func getUserID() -> String {
+        if let uid = Auth.auth().currentUser?.uid {
+            return uid
+        } else {
+            return ""
         }
     }
 }
@@ -121,29 +132,21 @@ extension FirestoreManager {
 // MARK: 이미지
 extension FirestoreManager {
     enum ImageRequestError: Error {
-        case couldNotInitializeFromData
+        case invalidURL
         case imageDataMissing
+        case couldNotInitializeFromData
     }
     
     func fetchImage(with url: String?) async throws -> UIImage {
         let cachedKey = NSString(string: url ?? "")
+        if let cachedImage = ImageCacheManager.shared.object(forKey: cachedKey) { return cachedImage }
         
-        if let cachedImage = ImageCacheManager.shared.object(forKey: cachedKey) {
-            return cachedImage
-        }
-        
-        guard let url = URL(string: url ?? "") else { return UIImage() }
-        
+        guard let url = URL(string: url ?? "") else { throw ImageRequestError.invalidURL }
         let (data, response) = try await URLSession.shared.data(from: url)
         
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else {
-            throw ImageRequestError.imageDataMissing
-        }
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw ImageRequestError.imageDataMissing }
         
-        guard let image = UIImage(data: data) else {
-            throw ImageRequestError.couldNotInitializeFromData
-        }
+        guard let image = UIImage(data: data) else { throw ImageRequestError.couldNotInitializeFromData }
         
         ImageCacheManager.shared.setObject(image, forKey: cachedKey)
         
@@ -153,9 +156,9 @@ extension FirestoreManager {
 
 // MARK: Authentication
 extension FirestoreManager {
-    // 현재 로그인이 되어 있는지 확인하는 함수
+    // 현재 로그인이 되어 있는지 확인
     func isLoggedIn() -> Bool {
-        return Auth.auth().currentUser == nil ? false : true
+        return !(Auth.auth().currentUser == nil)
     }
     
     func signOut() {
@@ -170,7 +173,7 @@ extension FirestoreManager {
 
 // MARK: 북마크
 extension FirestoreManager {
-    // User의 bookmarkedBookstores 의 값을 바꿔주는 함수 (북마크 버튼을 누를 때 호출)
+    // User의 bookmarkedBookstores 의 값 변경 (북마크 버튼 누를 때 호출)
     func updateBookmark(email: String, provider: String, bookmarkedBookstores: [String]) async throws {
         let querySnapshot = try await users.whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments()
         let document = querySnapshot.documents.first
@@ -191,4 +194,28 @@ extension FirestoreManager {
             return []
         }
     }
+}
+
+// MARK: 좋아요
+extension FirestoreManager {
+    // 큐레이션의 likes 업데이트
+    func updateLike(bookstoreID: String, likes: [String]) async throws {
+        let querySnapshot = try await curations.whereField("bookstoreID", isEqualTo: bookstoreID).getDocuments()
+        let document = querySnapshot.documents.first
+        try await document?.reference.updateData(["likes" : likes])
+    }
+
+    // 큐레이션이 가진 좋아요 값으로 fetch
+//    func fetchLikesCurtions() async throws -> [Curation] {
+//        if isLoggedIn() {
+//            let user = try await fetchCurrentUser()
+//            var likesCurations = [Curation]()
+//            for index in user.curationLikes.indices {
+//                likesCurations.append(try await fetchCuration(with: user.curstionLikes[index]))
+//            }
+//            return likesCurations
+//        } else {
+//            return []
+//        }
+//    }
 }

@@ -103,11 +103,11 @@
             </objects>
             <point key="canvasLocation" x="1628" y="1322"/>
         </scene>
-        <!--관리-->
+        <!--마이페이지-->
         <scene sceneID="KE9-8z-IH0">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jo1-Y7-fdS" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="관리" image="person.circle" catalog="system" id="aZa-3C-iSk"/>
+                    <tabBarItem key="tabBarItem" title="마이페이지" image="person.circle" catalog="system" id="aZa-3C-iSk"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uCF-VG-rlL">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
