@@ -47,7 +47,7 @@ final class HomeViewController: UIViewController {
         snapshot.appendSections([.curations])
         snapshot.appendItems(model.curations)
         
-        snapshot.appendSections([.bookstores])
+        snapshot.appendSections([.featured])
         snapshot.appendItems(model.featuredBookstores)
         
         switch locationManager.authorizationStatus {
@@ -285,7 +285,7 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-            case .bookstores:
+            case .featured:
                 let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 item.contentInsets = leading16ContentInsetsForItem
                 
@@ -468,7 +468,7 @@ final class HomeViewController: UIViewController {
                 sectionName = "킨디터 Pick"
                 hideSeeAllButton = true
                 hideBottomStackView = true
-            case .bookstores:
+            case .featured:
                 sectionName = "이런 서점은 어때요"
                 hideSeeAllButton = true
                 hideBottomStackView = true
@@ -506,7 +506,7 @@ final class HomeViewController: UIViewController {
             switch section {
             case .curations:
                 return collectionView.dequeueConfiguredReusableCell(using: curationCellRegistration, for: indexPath, item: item)
-            case .bookstores:
+            case .featured:
                 return collectionView.dequeueConfiguredReusableCell(using: bookstoreCellRegistration, for: indexPath, item: item)
             case .nearbys:
                 return collectionView.dequeueConfiguredReusableCell(using: nearbyBookstoreCellRegistration, for: indexPath, item: item)
@@ -548,7 +548,7 @@ extension HomeViewController: UICollectionViewDelegate {
             curationViewController.modalTransitionStyle = .crossDissolve
             
             present(curationViewController, animated: true)
-        case .bookstores:
+        case .featured:
             let featuredBookstores = model.featuredBookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = featuredBookstores[indexPath.item]
