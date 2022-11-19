@@ -94,7 +94,6 @@
 		7BF9AACD2909200100C80F72 /* NoPermissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */; };
 		A06954E72905C74100C09D1D /* MyPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */; };
 		A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954EE2906D9D800C09D1D /* Privacy.swift */; };
-		A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954F32907C84A00C09D1D /* DetailMyPageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -181,7 +180,6 @@
 		7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPermissionCollectionViewCell.swift; sourceTree = "<group>"; };
 		A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTableViewCell.swift; sourceTree = "<group>"; };
 		A06954EE2906D9D800C09D1D /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
-		A06954F32907C84A00C09D1D /* DetailMyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyPageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -502,7 +500,6 @@
 			isa = PBXGroup;
 			children = (
 				A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */,
-				A06954F32907C84A00C09D1D /* DetailMyPageView.swift */,
 				36E6CCE829236B4100E0F709 /* UserInfoContainerView.swift */,
 				36F6198A292406000085791C /* TryLoginContainerView.swift */,
 			);
@@ -623,7 +620,6 @@
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
 				31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */,
-				A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift in Sources */,
 				6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */,
 				6E2AA45D290791480049E445 /* CurationTextCell.swift in Sources */,
