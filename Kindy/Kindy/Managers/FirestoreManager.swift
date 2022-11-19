@@ -129,31 +129,6 @@ extension FirestoreManager {
     }
 }
 
-// MARK: 이미지
-extension FirestoreManager {
-    enum ImageRequestError: Error {
-        case invalidURL
-        case imageDataMissing
-        case couldNotInitializeFromData
-    }
-    
-    func fetchImage(with url: String?) async throws -> UIImage {
-        let cachedKey = NSString(string: url ?? "")
-        if let cachedImage = ImageCacheManager.shared.object(forKey: cachedKey) { return cachedImage }
-        
-        guard let url = URL(string: url ?? "") else { throw ImageRequestError.invalidURL }
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw ImageRequestError.imageDataMissing }
-        
-        guard let image = UIImage(data: data) else { throw ImageRequestError.couldNotInitializeFromData }
-        
-        ImageCacheManager.shared.setObject(image, forKey: cachedKey)
-        
-        return image
-    }
-}
-
 // MARK: Authentication
 extension FirestoreManager {
     // 현재 로그인이 되어 있는지 확인

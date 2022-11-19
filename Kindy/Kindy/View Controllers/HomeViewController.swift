@@ -420,7 +420,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.curation!)
                 
                 self.imagesTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.curation?.mainImage) {
+                    if let image = try? await ImageCache.cache.load(url: item.curation?.mainImage) {
                         cell.imageView.image = image
                     }
                     imagesTask = nil
@@ -434,7 +434,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.bookstore!, indexPath: indexPath, numberOfItems: numberOfItems)
                 
                 self.imagesTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
+                    if let image = try? await ImageCache.cache.load(url: item.bookstore?.images?.first) {
                         cell.imageView.image = image
                     }
                     imagesTask = nil
@@ -446,7 +446,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.bookstore!)
                 
                 self.imagesTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
+                    if let image = try? await ImageCache.cache.load(url: item.bookstore?.images?.first) {
                         cell.imageView.image = image
                     }
                     imagesTask = nil
@@ -458,7 +458,7 @@ final class HomeViewController: UIViewController {
                 cell.configureCell(item.bookstore!)
                 
                 self.imagesTask = Task {
-                    if let image = try? await firestoreManager.fetchImage(with: item.bookstore?.images?.first!) {
+                    if let image = try? await ImageCache.cache.load(url: item.bookstore?.images?.first) {
                         cell.imageView.image = image
                     }
                     imagesTask = nil
