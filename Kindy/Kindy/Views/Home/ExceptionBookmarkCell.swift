@@ -1,5 +1,5 @@
 //
-//  ExceptionBookmarkCollectionViewCell.swift
+//  ExceptionBookmarkCell.swift
 //  Kindy
 //
 //  Created by 정호윤 on 2022/10/23.
@@ -8,7 +8,7 @@
 import UIKit
 
 // 북마크 섹션이 비거나 로그인하지 않았을때 보여줄 셀
-final class ExceptionBookmarkCollectionViewCell: UICollectionViewCell {
+final class ExceptionBookmarkCell: UICollectionViewCell {
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()

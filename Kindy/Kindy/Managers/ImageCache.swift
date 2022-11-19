@@ -26,7 +26,6 @@ final class ImageCache {
     
     // 캐시된 이미지가 있다면 리턴하고, 없다면 비동기적으로 로드 한 뒤 캐싱
     func load(url: String?) async throws -> UIImage {
-        // url 생성 후 캐시된 이미지 있는지 확인
         guard let string = url else { return UIImage() }
         guard let url = NSURL(string: string) else { throw ImageRequestError.invalidURL }
         if let cachedImage = image(url: url) { return cachedImage }
