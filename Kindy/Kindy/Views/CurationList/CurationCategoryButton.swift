@@ -9,11 +9,16 @@ import UIKit
 
 final class CurationCategoryButton: UIButton {
 
+    // MARK: - 프로퍼티
+    
     lazy var categoryButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .body2
         button.tintColor = .kindyPrimaryGreen
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = 8
+        button.layer.borderWidth = 1.5
         button.contentVerticalAlignment = .center
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -35,12 +40,20 @@ final class CurationCategoryButton: UIButton {
         }
     }
     
+    // MARK: - 라이프 사이클
+    
     init(categoryName: String) {
         super.init(frame: .zero)
         self.categoryName = categoryName
         createLayout()
         configureButton()
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - 메소드
     
     private func createLayout() {
         self.addSubview(categoryButton)
@@ -54,10 +67,6 @@ final class CurationCategoryButton: UIButton {
     private func configureButton() {
         categoryButton.setTitle("  \(categoryName)", for: .normal)
         categoryButton.setImage(categorySymbolImage, for: .normal)
-        
-        categoryButton.backgroundColor = .clear
-        categoryButton.layer.cornerRadius = 8
-        categoryButton.layer.borderWidth = 1.5
         categoryButton.layer.borderColor = UIColor.kindySecondaryGreen?.cgColor
         
         if categoryName == "최신" {
@@ -65,9 +74,5 @@ final class CurationCategoryButton: UIButton {
             categoryButton.tintColor = .white
             categoryButton.setTitleColor(.white, for: .normal)
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

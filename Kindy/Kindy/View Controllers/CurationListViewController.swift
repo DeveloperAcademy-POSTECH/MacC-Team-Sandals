@@ -162,7 +162,7 @@ extension CurationListViewController: UITableViewDelegate {
             headerView.isHidden = false
         }
         
-        headerView.btn3.addTarget(self, action: #selector(touched), for: .touchUpInside)
+//        headerView.bookButton.addTarget(self, action: #selector(touched), for: .touchUpInside)
 
         return headerView
     }
