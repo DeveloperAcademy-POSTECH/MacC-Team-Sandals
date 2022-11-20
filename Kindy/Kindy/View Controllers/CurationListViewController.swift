@@ -35,6 +35,8 @@ final class CurationListViewController: UIViewController {
     
     private var mainDummy: [Curation] = []
     
+    private var curationImage = UIImage()
+    
     private var model = Model()
     
     // MARK: - 라이프 사이클
@@ -124,7 +126,8 @@ extension CurationListViewController: UITableViewDataSource {
         
         self.imageRequestTask = Task {
             if let image = try? await firestoreManager.fetchImage(with: cell.curation?.descriptions[indexPath.item].image) {
-                cell.photoImageView.image = image
+                curationImage = image
+                cell.photoImageView.image = curationImage
             }
             imageRequestTask = nil
         }
@@ -141,21 +144,17 @@ extension CurationListViewController: UITableViewDataSource {
 
 extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let curationVC = PagingCurationViewController(curation: mainDummy[indexPath.row])
+        curationVC.modalPresentationStyle = .overFullScreen
+        curationVC.modalTransitionStyle = .crossDissolve
         
-//        let detailBookstoreViewController = DetailBookstoreViewController()
-//        detailBookstoreViewController.bookstore = mainDummy[indexPath.row]
-//        show(detailBookstoreViewController, sender: nil)
+        present(curationVC, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
-
-//        headerView.btn1.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            headerView.btn1.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 30)
-//        ])
 
         if mainDummy.count == 0 {
             headerView.isHidden = true

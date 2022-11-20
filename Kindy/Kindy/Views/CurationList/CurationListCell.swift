@@ -30,6 +30,15 @@ final class CurationListCell: UITableViewCell {
         return view
     }()
     
+    private let titleLabelView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 8
+        view.layer.backgroundColor = (UIColor.black.cgColor).copy(alpha: 0.4)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
     private let titleInfoStackView: UIStackView = {
         let view = UIStackView()
         view.alignment = .leading
@@ -139,7 +148,8 @@ final class CurationListCell: UITableViewCell {
         [likeLabel, commentLabel].forEach{ leftInfoStackView.addArrangedSubview($0) }
         [dateLabel, kinditorLabel].forEach{ rightInfoStackView.addArrangedSubview($0) }
         [titleLabel, subTitleLabel].forEach{ titleInfoStackView.addArrangedSubview($0) }
-        [photoImageView, titleInfoStackView, leftInfoStackView, rightInfoStackView].forEach{ contentView.addSubview($0) }
+        titleLabelView.addSubview(titleInfoStackView)
+        [photoImageView, titleLabelView, leftInfoStackView, rightInfoStackView].forEach{ contentView.addSubview($0) }
     }
 
     private func createLayout() {
@@ -149,9 +159,14 @@ final class CurationListCell: UITableViewCell {
             photoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             photoImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -54),
             
-            titleInfoStackView.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor, constant: 16),
-            titleInfoStackView.topAnchor.constraint(equalTo: photoImageView.topAnchor, constant: 113),
-            titleInfoStackView.trailingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: -10),
+            titleLabelView.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor),
+            titleLabelView.topAnchor.constraint(equalTo: photoImageView.topAnchor),
+            titleLabelView.trailingAnchor.constraint(equalTo: photoImageView.trailingAnchor),
+            titleLabelView.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor),
+            
+            titleInfoStackView.leadingAnchor.constraint(equalTo: titleLabelView.leadingAnchor, constant: 16),
+            titleInfoStackView.topAnchor.constraint(equalTo: titleLabelView.topAnchor, constant: 113),
+            titleInfoStackView.trailingAnchor.constraint(equalTo: titleLabelView.trailingAnchor, constant: -10),
 
             leftInfoStackView.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor, constant: 8),
             leftInfoStackView.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 16),
@@ -164,9 +179,6 @@ final class CurationListCell: UITableViewCell {
     private func configureCell(item: Curation) {
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
-//        likeLabel.text = "좋아요 \(item.likes.count)개"
-//        dateLabel.text = "\(item.createdAt!)"
-//        kinditorLabel.text = "킨디터 \(item.userID)"
         
         // MARK: 좋아요
         let attributedString = NSMutableAttributedString(string: "")
