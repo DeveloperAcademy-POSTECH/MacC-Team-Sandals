@@ -33,7 +33,7 @@ final class CurationCategoryButton: UIButton {
             return UIImage(systemName: "sparkles")!
         case "서점":
             return UIImage(systemName: "heart")!
-        case " 책":
+        case "책":
             return UIImage(systemName: "book")!
         default:
             return UIImage(systemName: "circle")!

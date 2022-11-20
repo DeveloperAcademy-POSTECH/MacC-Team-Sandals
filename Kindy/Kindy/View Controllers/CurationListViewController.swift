@@ -6,19 +6,19 @@
 //
 
 import UIKit
-import FirebaseFirestore
-import FirebaseFirestoreSwift
 
 final class CurationListViewController: UIViewController {
 
     // MARK: - 파이어베이스 Task
     
-    var curationsRequestTask: Task<Void, Never>?
-    var imageRequestTask: Task<Void, Never>?
+    private var curationsRequestTask: Task<Void, Never>?
+    private var imageRequestTask: Task<Void, Never>?
+    private var userRequestTask: Task<Void, Never>?
     
     deinit {
         curationsRequestTask?.cancel()
         imageRequestTask?.cancel()
+        userRequestTask?.cancel()
     }
     
     let firestoreManager = FirestoreManager()
@@ -156,18 +156,30 @@ extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
 
-        if mainDummy.count == 0 {
+        if mainDummy.isEmpty {
             headerView.isHidden = true
         } else {
             headerView.isHidden = false
         }
         
-//        headerView.bookButton.addTarget(self, action: #selector(touched), for: .touchUpInside)
+        let bookstoreBtn = headerView.bookstoreButton
+        let bookBtn = headerView.bookButton
+        
+        bookstoreBtn.tag = 1
+        bookBtn.tag = 2
+        
+        [bookstoreBtn, bookBtn].forEach{ $0.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside) }
 
         return headerView
     }
     
-    @objc func touched(_ sender: UIButton) {
-        print("hi")
+    @objc func buttonTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case 1: print("1")
+        case 2: print("2")
+        default:
+            print("3")
+        }
     }
+
 }
