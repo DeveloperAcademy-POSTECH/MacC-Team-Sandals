@@ -201,7 +201,7 @@ final class HomeViewController: UIViewController {
                 model.bookstores = []
                 model.featuredBookstores = []
             }
-            await dataSource.apply(snapshot)
+            dataSource.apply(snapshot)
             
             bookstoresTask = nil
         }
@@ -213,7 +213,7 @@ final class HomeViewController: UIViewController {
             } else {
                 model.bookmarkedBookstores = []
             }
-            await dataSource.apply(snapshot)
+            dataSource.apply(snapshot)
 
             bookmarkedBookstoresTask = nil
         }
@@ -227,13 +227,13 @@ final class HomeViewController: UIViewController {
             } else {
                 model.curations = []
             }
-            await dataSource.apply(snapshot)
+            dataSource.apply(snapshot)
             
             curationsTask = nil
         }
     }
     
-    // MARK: - Compositional Layout Method
+    // MARK: - Layout
     
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
@@ -392,7 +392,7 @@ final class HomeViewController: UIViewController {
         return layout
     }
     
-    // MARK: - Diffable Data Source Method
+    // MARK: - Data Source
     
     private func configureDataSource() {
         // MARK: Cell Registration
