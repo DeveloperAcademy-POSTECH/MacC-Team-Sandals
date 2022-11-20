@@ -1,24 +1,22 @@
 //
-//  CurationListViewController.swift
+//  FeaturedCurationListViewController.swift
 //  Kindy
 //
-//  Created by Park Kangwook on 2022/11/08.
+//  Created by Park Kangwook on 2022/11/20.
 //
 
 import UIKit
 
-final class CurationListViewController: UIViewController {
+final class FeaturedCurationListViewController: UIViewController {
 
     // MARK: - 파이어베이스 Task
-    
-    private var curationsRequestTask: Task<Void, Never>?
-    private var imageRequestTask: Task<Void, Never>?
+
     private var userRequestTask: Task<Void, Never>?
+    private var imageRequestTask: Task<Void, Never>?
     
     deinit {
-        curationsRequestTask?.cancel()
-        imageRequestTask?.cancel()
         userRequestTask?.cancel()
+        imageRequestTask?.cancel()
     }
     
     private let firestoreManager = FirestoreManager()
@@ -33,7 +31,8 @@ final class CurationListViewController: UIViewController {
         return tableView
     }()
     
-    private var mainDummy: [Curation] = []
+    private var category: String = ""
+    private var curationList: [Curation]? = []
     
     private var curationImage = UIImage()
     
@@ -50,6 +49,7 @@ final class CurationListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navigationItem.title = category
         createBarButtonItems()
         setupTableView()
     }
@@ -57,28 +57,17 @@ final class CurationListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        update()
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.tintColor = .black
         updateUserData()
     }
     
     // MARK: - 메소드
     
     private func createBarButtonItems() {
-        let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
-        
         let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonTapped))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
-        
         writeButton.tintColor = .black
-        searchButton.tintColor = .black
-        
-        navigationItem.rightBarButtonItems = [writeButton, searchButton]
-    }
-    
-    @objc func searchButtonTapped() {
-        let homeSearchViewController = HomeSearchViewController()
-        show(homeSearchViewController, sender: nil)
+        navigationItem.rightBarButtonItem = writeButton
     }
     
     @objc func writeButtonTapped() {
@@ -115,20 +104,12 @@ final class CurationListViewController: UIViewController {
         ])
     }
     
-    // MARK: - 파이어베이스 update
-    
-    private func update() {
-        curationsRequestTask?.cancel()
-        curationsRequestTask = Task {
-            if let curations = try? await firestoreManager.fetchCurations() {
-                mainDummy = curations
-            } else {
-                mainDummy = []
-            }
-            self.tableView.reloadData()
-            curationsRequestTask = nil
-        }
+    func setupData(items: [Curation]?, tag: Int) {
+        curationList = items
+        category = tag == 1 ? "서점" : "책"
     }
+    
+    // MARK: - 파이어베이스 update
     
     private func updateUserData() {
         userRequestTask?.cancel()
@@ -141,23 +122,22 @@ final class CurationListViewController: UIViewController {
             userRequestTask = nil
         }
     }
-    
 }
 
-// MARK: - DataSource
+// MARK: - 데이터소스
 
-extension CurationListViewController: UITableViewDataSource {
+extension FeaturedCurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return mainDummy.count
+        return curationList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
-        cell.curation = mainDummy[indexPath.row]
+        cell.curation = curationList?[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await firestoreManager.fetchImage(with: cell.curation?.descriptions[indexPath.item].image) {
+            if let image = try? await firestoreManager.fetchImage(with: cell.curation?.mainImage) {
                 curationImage = image
                 cell.photoImageView.image = curationImage
             }
@@ -166,49 +146,18 @@ extension CurationListViewController: UITableViewDataSource {
         
         return cell
     }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 60
-    }
 }
 
-// MARK: - Delegate
+// MARK: - 델리게이트
 
-extension CurationListViewController: UITableViewDelegate {
+extension FeaturedCurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curationVC = PagingCurationViewController(curation: mainDummy[indexPath.row])
+        let curationVC = PagingCurationViewController(curation: (curationList![indexPath.row]))
         curationVC.modalPresentationStyle = .overFullScreen
         curationVC.modalTransitionStyle = .crossDissolve
         
         present(curationVC, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
-
-        if mainDummy.isEmpty {
-            headerView.isHidden = true
-        } else {
-            headerView.isHidden = false
-        }
-        
-        let bookstoreBtn = headerView.bookstoreButton
-        let bookBtn = headerView.bookButton
-        
-        bookstoreBtn.tag = 1
-        bookBtn.tag = 2
-        
-        [bookstoreBtn, bookBtn].forEach{ $0.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside) }
-
-        return headerView
-    }
-    
-    @objc func buttonTapped(_ sender: UIButton) {
-        let vc = FeaturedCurationListViewController()
-        vc.setupData(items: mainDummy, tag: sender.tag)
-        
-        show(vc, sender: nil)
     }
 }

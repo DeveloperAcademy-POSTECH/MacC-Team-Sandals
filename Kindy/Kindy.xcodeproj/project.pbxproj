@@ -59,6 +59,7 @@
 		6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */; };
 		6EE5E4322905733900EA7413 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */; };
 		6EE5E4342905777C00EA7413 /* CurationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E4332905777C00EA7413 /* CurationHeaderView.swift */; };
+		773663E1292A475B000B013E /* FeaturedCurationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773663E0292A475B000B013E /* FeaturedCurationListViewController.swift */; };
 		77CF0A3A291F5C7D00670BF4 /* CurationCategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77CF0A39291F5C7D00670BF4 /* CurationCategoryButton.swift */; };
 		77DCB14A290297C100EAB5D5 /* NearbyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB149290297C100EAB5D5 /* NearbyCell.swift */; };
 		77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */; };
@@ -162,6 +163,7 @@
 		6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingCurationViewController.swift; sourceTree = "<group>"; };
 		6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		6EE5E4332905777C00EA7413 /* CurationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationHeaderView.swift; sourceTree = "<group>"; };
+		773663E0292A475B000B013E /* FeaturedCurationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCurationListViewController.swift; sourceTree = "<group>"; };
 		77CF0A39291F5C7D00670BF4 /* CurationCategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCategoryButton.swift; sourceTree = "<group>"; };
 		77DCB149290297C100EAB5D5 /* NearbyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyCell.swift; sourceTree = "<group>"; };
 		77DCB14F2902987700EAB5D5 /* NearbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyViewController.swift; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 				77DCB1602904457600EAB5D5 /* RegionViewController.swift */,
 				361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */,
 				77DCB190291A2FDF00EAB5D5 /* CurationListViewController.swift */,
+				773663E0292A475B000B013E /* FeaturedCurationListViewController.swift */,
 				7B7E212A290E22F500B6723D /* Curation */,
 				7B7E2129290E22D800B6723D /* My Page */,
 				3101BC53291BF2A600C46195 /* Login */,
@@ -659,7 +662,6 @@
 				369CC07B29241661000D7B96 /* EditNicknameViewController.swift in Sources */,
 				3101BC55291BF2B600C46195 /* SignInViewController.swift in Sources */,
 				7BCB1A0F291646B700B357D5 /* FirestoreManager.swift in Sources */,
-				A06954ED2906C6CE00C09D1D /* DetailMyPageViewController.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				77DCB193291A357E00EAB5D5 /* CurationListCell.swift in Sources */,
 				36671EB429222E7E003BC7F7 /* ImageCacheManager.swift in Sources */,
@@ -723,6 +725,7 @@
 				6EE5E3F128FECEE900EA7413 /* CurationViewController.swift in Sources */,
 				77DCB1632904462300EAB5D5 /* RegionCell.swift in Sources */,
 				31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */,
+				773663E1292A475B000B013E /* FeaturedCurationListViewController.swift in Sources */,
 				7B7E2127290E20F200B6723D /* Location.swift in Sources */,
 				77DCB15229029CF500EAB5D5 /* UITableView+.swift in Sources */,
 			);
