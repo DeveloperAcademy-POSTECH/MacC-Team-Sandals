@@ -35,11 +35,11 @@ final class HomeViewController: UIViewController {
         static let header = "header"
     }
     
-    // MARK: - Collection View
-    
     @IBOutlet weak var collectionView: UICollectionView!
     
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
+    
+    // MARK: - Snapshot
     
     private var snapshot: NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item> {
         var snapshot = NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item>()
@@ -233,7 +233,7 @@ final class HomeViewController: UIViewController {
         }
     }
     
-    // MARK: - Compositional Layout Method
+    // MARK: - Layout
     
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
@@ -392,7 +392,7 @@ final class HomeViewController: UIViewController {
         return layout
     }
     
-    // MARK: - Diffable Data Source Method
+    // MARK: - Data Source
     
     private func configureDataSource() {
         // MARK: Cell Registration
@@ -527,6 +527,19 @@ final class HomeViewController: UIViewController {
         }
         
         dataSource.apply(snapshot)
+    }
+}
+
+// MARK: - Data Source Prefetching
+
+extension HomeViewController: UICollectionViewDataSourcePrefetching {
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        
     }
 }
 
