@@ -32,6 +32,7 @@
 		369CC07F292416A7000D7B96 /* MyActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369CC07E292416A7000D7B96 /* MyActivitiesViewController.swift */; };
 		36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1B3832904102300C91825 /* DetailBookstoreView.swift */; };
 		36BD7D64290404C200CBC879 /* UILabel+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BD7D63290404C200CBC879 /* UILabel+.swift */; };
+		36D881B9292951FC0089D2FF /* EditNicknameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D881B8292951FC0089D2FF /* EditNicknameView.swift */; };
 		36E6CCE929236B4100E0F709 /* UserInfoContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E6CCE829236B4100E0F709 /* UserInfoContainerView.swift */; };
 		36F6198B292406010085791C /* TryLoginContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F6198A292406000085791C /* TryLoginContainerView.swift */; };
 		6E2AA45D290791480049E445 /* CurationTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2AA45C290791480049E445 /* CurationTextCell.swift */; };
@@ -127,6 +128,7 @@
 		369CC07E292416A7000D7B96 /* MyActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyActivitiesViewController.swift; sourceTree = "<group>"; };
 		36B1B3832904102300C91825 /* DetailBookstoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookstoreView.swift; sourceTree = "<group>"; };
 		36BD7D63290404C200CBC879 /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
+		36D881B8292951FC0089D2FF /* EditNicknameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNicknameView.swift; sourceTree = "<group>"; };
 		36E6CCE829236B4100E0F709 /* UserInfoContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoContainerView.swift; sourceTree = "<group>"; };
 		36F6198A292406000085791C /* TryLoginContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TryLoginContainerView.swift; sourceTree = "<group>"; };
 		6E2AA45C290791480049E445 /* CurationTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationTextCell.swift; sourceTree = "<group>"; };
@@ -523,6 +525,7 @@
 				A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */,
 				36E6CCE829236B4100E0F709 /* UserInfoContainerView.swift */,
 				36F6198A292406000085791C /* TryLoginContainerView.swift */,
+				36D881B8292951FC0089D2FF /* EditNicknameView.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -680,6 +683,7 @@
 				77DCB1662904467B00EAB5D5 /* RegionHeaderView.swift in Sources */,
 				6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */,
 				6E359EDF29278DF100139F6F /* CurationButtonItem.swift in Sources */,
+				36D881B9292951FC0089D2FF /* EditNicknameView.swift in Sources */,
 				77DCB16A29053B9900EAB5D5 /* HomeSearchCell.swift in Sources */,
 				6E359EDD29278DC500139F6F /* LoginCheckable+.swift in Sources */,
 				6E359EEB29278EBC00139F6F /* CurationReplyCell.swift in Sources */,
