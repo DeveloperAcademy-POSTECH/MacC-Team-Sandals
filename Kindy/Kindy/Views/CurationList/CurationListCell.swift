@@ -177,45 +177,51 @@ final class CurationListCell: UITableViewCell {
     }
 
     private func configureCell(item: Curation) {
+        // 타이틀 & 서브 타이틀
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
         
-        // MARK: 좋아요
+        // 좋아요 & 댓글 개수
+        configureImageAndTextLabel(for: likeLabel, imageName: "heart", text: item.likes.count)
+        configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: 100)
+        
+        // 날짜
+        configureDateLabel(for: dateLabel, date: item.createdAt!)
+        
+        // 킨디터
+        configureKinditorLabel(for: kinditorLabel, kinditor: "백루이")
+    }
+    
+    private func configureImageAndTextLabel(for view: UILabel, imageName: String, text: Int) {
         let attributedString = NSMutableAttributedString(string: "")
         
         let imageAttachment = NSTextAttachment()
-        imageAttachment.image = UIImage(systemName: "heart")?.withTintColor(.kindySecondaryGreen ?? UIColor())
+        imageAttachment.image = UIImage(systemName: imageName)?.withTintColor(.kindySecondaryGreen ?? UIColor())
         
         attributedString.append(NSAttributedString(attachment: imageAttachment))
-        attributedString.append(NSAttributedString(string: " \(item.likes.count)"))
+        attributedString.append(NSAttributedString(string: " \(text)"))
         
-        likeLabel.attributedText = attributedString
-        
-        // MARK: 댓글
-        let commentAttributedString = NSMutableAttributedString(string: "")
-        
-        let commentImageAttachment = NSTextAttachment()
-        commentImageAttachment.image = UIImage(systemName: "bubble.left")?.withTintColor(.kindySecondaryGreen ?? UIColor())
-        
-        commentAttributedString.append(NSAttributedString(attachment: commentImageAttachment))
-        commentAttributedString.append(NSAttributedString(string: " 100"))
-        
-        commentLabel.attributedText = commentAttributedString
-        
-        // MARK: 날짜
+        view.attributedText = attributedString
+    }
+    
+    private func configureDateLabel(for view: UILabel, date: Date) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
-        let date = dateFormatter.string(from: item.createdAt!)
+        
+        let dateText = dateFormatter.string(from: date)
         let todayDate = dateFormatter.string(from: Date())
-        dateLabel.text = date == todayDate ? "오늘" : date
         
-        // MARK: 킨디터
-        let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 백루이")
+        view.text = dateText == todayDate ? "오늘" : dateText
+    }
+    
+    private func configureKinditorLabel(for view: UILabel, kinditor: String) {
+        let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 \(kinditor)")
+        kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4,length: kinditor.count))
+        
+        // TODO: 추후 아래 주석 처리된 코드로 변경 요망
 //        let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 \(item.userID)")
-
-        kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4,length: 3))
-//        kinditorAttributedString.addAttribute(.font, value: UIFont.subhead, range: NSRange(location: 4,length: item.userID.count))
+//        kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4,length: item.userID.count))
         
-        kinditorLabel.attributedText = kinditorAttributedString
+        view.attributedText = kinditorAttributedString
     }
 }
