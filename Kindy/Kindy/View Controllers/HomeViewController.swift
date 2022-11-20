@@ -201,7 +201,7 @@ final class HomeViewController: UIViewController {
                 model.bookstores = []
                 model.featuredBookstores = []
             }
-            dataSource.apply(snapshot)
+            await dataSource.apply(snapshot)
             
             bookstoresTask = nil
         }
@@ -213,7 +213,7 @@ final class HomeViewController: UIViewController {
             } else {
                 model.bookmarkedBookstores = []
             }
-            dataSource.apply(snapshot)
+            await dataSource.apply(snapshot)
 
             bookmarkedBookstoresTask = nil
         }
@@ -227,7 +227,7 @@ final class HomeViewController: UIViewController {
             } else {
                 model.curations = []
             }
-            dataSource.apply(snapshot)
+            await dataSource.apply(snapshot)
             
             curationsTask = nil
         }
@@ -397,47 +397,47 @@ final class HomeViewController: UIViewController {
     private func configureDataSource() {
         // MARK: Cell Registration
         let curationCellRegistration = UICollectionView.CellRegistration<CurationCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.curation!)
-            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(item.curation?.mainImage) {
+                if let image = try? await ImageCache.shared.load(item.curation?.mainImage) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
+            
+            cell.configureCell(item.curation!)
         }
         
         let bookstoreCellRegistration = UICollectionView.CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.bookstore!)
-            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
+            
+            cell.configureCell(item.bookstore!)
         }
         
         let nearbyBookstoreCellRegistration = UICollectionView.CellRegistration<NearByBookstoreCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.bookstore!)
-            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
+            
+            cell.configureCell(item.bookstore!)
         }
         
         let bookmarkedBookstoreCellRegistration = UICollectionView.CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.bookstore!)
-            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
+            
+            cell.configureCell(item.bookstore!)
         }
         
         let regionNameCellRegistration = UICollectionView.CellRegistration<RegionNameCell, ViewModel.Item> { cell, indexPath, item in

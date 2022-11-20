@@ -8,7 +8,7 @@
 import UIKit
 
 final class ImageCache {
-    static let cache = ImageCache()
+    static let shared = ImageCache()
     private init() {
         createDirectoryIfNeeded()
     }
