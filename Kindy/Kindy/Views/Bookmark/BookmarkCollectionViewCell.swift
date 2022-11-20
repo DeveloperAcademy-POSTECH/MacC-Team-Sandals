@@ -194,7 +194,7 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCarouselCollectionViewCell.identifier, for: indexPath) as? ImageCarouselCollectionViewCell else {return UICollectionViewCell()}
         self.imageRequestTask = Task {
-            if let image = try? await ImageCache.cache.load(url: bookstore!.images![indexPath.row]) {
+            if let image = try? await ImageCache.cache.load(bookstore!.images![indexPath.row]) {
                 cell.configureCell(image: image)
             }
             imageRequestTask = nil

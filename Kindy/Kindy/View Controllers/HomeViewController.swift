@@ -201,7 +201,7 @@ final class HomeViewController: UIViewController {
                 model.bookstores = []
                 model.featuredBookstores = []
             }
-            dataSource.apply(snapshot, animatingDifferences: false)
+            dataSource.apply(snapshot)
             
             bookstoresTask = nil
         }
@@ -400,7 +400,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.curation!)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(url: item.curation?.mainImage) {
+                if let image = try? await ImageCache.cache.load(item.curation?.mainImage) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
@@ -411,7 +411,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.bookstore!)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(url: item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.cache.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
@@ -422,7 +422,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.bookstore!)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(url: item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.cache.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
@@ -433,7 +433,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.bookstore!)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.cache.load(url: item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.cache.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil

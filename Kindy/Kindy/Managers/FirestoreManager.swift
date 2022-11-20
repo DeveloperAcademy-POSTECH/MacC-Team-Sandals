@@ -104,7 +104,6 @@ extension FirestoreManager {
         }
         
     }
-    
 
     // 닉네임 수정
     func editNickname(_ newNickname: String) {

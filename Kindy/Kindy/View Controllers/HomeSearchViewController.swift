@@ -137,7 +137,7 @@ extension HomeSearchViewController: UITableViewDataSource {
         cell.bookstore = filteredItems[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await ImageCache.cache.load(url: cell.bookstore!.images?.first ?? "") {
+            if let image = try? await ImageCache.cache.load(cell.bookstore!.images?.first) {
                 cell.photoImageView.image = image
             }
             imageRequestTask = nil

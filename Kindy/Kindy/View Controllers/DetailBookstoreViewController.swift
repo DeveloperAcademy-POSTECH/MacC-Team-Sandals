@@ -142,7 +142,7 @@ final class DetailBookstoreViewController: UIViewController {
         
         for i in 0..<(bookstore?.images?.count ?? 0) {
             self.imageRequestTask = Task {
-                if let image = try? await ImageCache.cache.load(url: bookstore?.images?[i]) {
+                if let image = try? await ImageCache.cache.load(bookstore?.images?[i]) {
                     let imageView = UIImageView()
                     imageView.frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: bookstoreImageScrollView.frame.width, height: bookstoreImageScrollView.frame.height)
                     imageView.image = image
