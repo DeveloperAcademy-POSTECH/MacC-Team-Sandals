@@ -12,6 +12,18 @@ import UIKit
    
 final class NearbyViewController: UIViewController, UISearchResultsUpdating {
     
+    // MARK: - 파이어베이스 Task
+
+    private var imageRequestTask: Task<Void, Never>?
+    
+    deinit {
+        imageRequestTask?.cancel()
+    }
+    
+    // MARK: - 파이어베이스 매니저
+    
+    private let firestoreManager = FirestoreManager()
+    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -116,7 +128,14 @@ extension NearbyViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NearbyCell.reuseID, for: indexPath) as? NearbyCell else { return UITableViewCell() }
         cell.bookstore = filteredItems[indexPath.row]
-
+        
+        self.imageRequestTask = Task {
+            if let image = try? await firestoreManager.fetchImage(with: cell.bookstore!.images?.first ?? "") {
+                cell.photoImageView.image = image
+            }
+            imageRequestTask = nil
+        }
+        
         return cell
     }
 
@@ -131,7 +150,7 @@ extension NearbyViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let detailBookstoreViewController = DetailBookstoreViewController()
-//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         show(detailBookstoreViewController, sender: nil)
 
         tableView.deselectRow(at: indexPath, animated: true)

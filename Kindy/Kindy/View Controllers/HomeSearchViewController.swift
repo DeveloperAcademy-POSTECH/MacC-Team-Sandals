@@ -9,6 +9,18 @@ import UIKit
    
 final class HomeSearchViewController: UIViewController, UISearchResultsUpdating {
 
+    // MARK: - 파이어베이스 Task
+
+    private var imageRequestTask: Task<Void, Never>?
+    
+    deinit {
+        imageRequestTask?.cancel()
+    }
+    
+    // MARK: - 파이어베이스 매니저
+    
+    private let firestoreManager = FirestoreManager()
+    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -18,8 +30,8 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         
         return view
     }()
-    // TODO: 파이어베이스 데이터 연결
-    private var firebaseData: [Bookstore] = []
+    
+    private var receivedData: [Bookstore] = []
     
     private var filteredItems: [Bookstore] = []
     
@@ -94,7 +106,7 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
             searchText = searchString
             
             // TODO: 파이어베이스 데이터 연결
-            filteredItems = firebaseData.filter{ (item) -> Bool in
+            filteredItems = receivedData.filter{ (item) -> Bool in
                 item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
             }
         } else {
@@ -104,9 +116,13 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         
         tableView.reloadData()
     }
+    
+    func setupData(items: [Bookstore]) {
+        self.receivedData = items
+    }
 }
 
-// MARK: - data source
+// MARK: - 데이터 소스
 
 extension HomeSearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -119,6 +135,14 @@ extension HomeSearchViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchCell.identifier, for: indexPath) as? HomeSearchCell else { return UITableViewCell() }
         
         cell.bookstore = filteredItems[indexPath.row]
+        
+        self.imageRequestTask = Task {
+            if let image = try? await firestoreManager.fetchImage(with: cell.bookstore!.images?.first ?? "") {
+                cell.photoImageView.image = image
+            }
+            imageRequestTask = nil
+        }
+        
         return cell
     }
     
@@ -127,15 +151,13 @@ extension HomeSearchViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - delegate
+// MARK: - 델리게이트
 
 extension HomeSearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         let detailBookstoreViewController = DetailBookstoreViewController()
-//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         navigationController?.pushViewController(detailBookstoreViewController, animated: true)
-        
     }
 }
 

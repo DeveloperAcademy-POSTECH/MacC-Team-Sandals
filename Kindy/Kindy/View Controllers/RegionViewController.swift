@@ -5,12 +5,22 @@
 //  Created by Park Kangwook on 2022/10/21.
 //
 
-// TODO: 지역 이름 분기 처리해서 표시 (regionHeaderView)
-
 import UIKit
 
 final class RegionViewController: UIViewController, UISearchResultsUpdating {
 
+    // MARK: - 파이어베이스 Task
+
+    private var imageRequestTask: Task<Void, Never>?
+    
+    deinit {
+        imageRequestTask?.cancel()
+    }
+    
+    // MARK: - 파이어베이스 매니저
+    
+    private let firestoreManager = FirestoreManager()
+    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -24,7 +34,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
     // TODO: 파이어베이스 데이터 연결
     private var filteredItems: [Bookstore] = []
     
-    private var regionItems: [Bookstore] = []
+    private var receivedData: [Bookstore] = []
     
     private var regionName: String = ""
 
@@ -88,26 +98,49 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
     // 서치바에 타이핑될 때 어떻게 할 건지 설정하는 함수 (유저의 검색에 반응하는 로직)
     func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text?.components(separatedBy: " ").joined(separator: ""), searchString.isEmpty == false {
-            filteredItems = regionItems.filter{ (item) -> Bool in
+            filteredItems = receivedData.filter{ (item) -> Bool in
                 item.name.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || item.address.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
             }
         } else {
-            filteredItems = regionItems
+            filteredItems = receivedData
         }
         
         tableView.reloadData()
     }
     
-    func setupData(regionName: String) {
+    func setupData(regionName: String, items: [Bookstore]) {
         self.regionName = regionName
-        
-        // TODO: 파이어베이스 데이터 연결
-//        filteredItems = NewItems().getBookstoreByRegion(regionName)
-//        regionItems = NewItems().getBookstoreByRegion(regionName)
+        self.receivedData = getBookstoreByRegion(items: items, region: regionName)
+        self.filteredItems = getBookstoreByRegion(items: items, region: regionName)
+    }
+    
+    private func getBookstoreByRegion(items: [Bookstore], region: String) -> [Bookstore] {
+        switch region{
+        case "전체":
+            return items
+        case "서울":
+            return items.filter{ $0.address.contains("서울") }
+        case "강원":
+            return items.filter{ $0.address.contains("강원") }
+        case "경기/인천":
+            return items.filter{ $0.address.contains("경기") || $0.address.contains("인천") }
+        case "충청/대전":
+            return items.filter{ $0.address.contains("충청") || $0.address.contains("대전") || $0.address.contains("세종") || $0.address.contains("충북") || $0.address.contains("충남") }
+        case "경북/대구":
+            return items.filter{ $0.address.contains("경상북도") || $0.address.contains("대구") || $0.address.contains("경북") }
+        case "전라/광주":
+            return items.filter{ $0.address.contains("전라남도") || $0.address.contains("전남") || $0.address.contains("전라북도") || $0.address.contains("전북") || $0.address.contains("광주광역시") }
+        case "경남/울산/부산":
+            return items.filter{ $0.address.contains("경상남도") || $0.address.contains("경남") || $0.address.contains("울산") || $0.address.contains("부산") }
+        case "제주":
+            return items.filter{ $0.address.contains("제주") }
+        default:
+            return []
+        }
     }
 }
 
-// MARK: - DataSource
+// MARK: - 데이터 소스
 
 extension RegionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -120,6 +153,13 @@ extension RegionViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RegionCell.identifier, for: indexPath) as? RegionCell else { return UITableViewCell() }
         cell.bookstore = filteredItems[indexPath.row]
 
+        self.imageRequestTask = Task {
+            if let image = try? await firestoreManager.fetchImage(with: cell.bookstore!.images?.first ?? "") {
+                cell.photoImageView.image = image
+            }
+            imageRequestTask = nil
+        }
+        
         return cell
     }
 
@@ -132,12 +172,12 @@ extension RegionViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - Delegate
+// MARK: - 델리게이트
+
 extension RegionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         let detailBookstoreViewController = DetailBookstoreViewController()
-//        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
+        detailBookstoreViewController.bookstore = filteredItems[indexPath.row]
         show(detailBookstoreViewController, sender: nil)
 
         tableView.deselectRow(at: indexPath, animated: true)

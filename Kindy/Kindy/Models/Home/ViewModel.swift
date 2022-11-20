@@ -12,16 +12,18 @@ enum ViewModel {
         case curations
         case bookstores
         case nearbys
-        case bookmarks
+        case bookmarks, emptyBookmarks
         case regions
+        case noPermission
     }
 
     enum Item: Hashable {
         case curation(Curation)
         case featuredBookstore(Bookstore)
-        case nearByBookstore(Bookstore)
-        case bookmarkedBookstore(Bookstore)
+        case nearbyBookstore(Bookstore)
+        case bookmarkedBookstore(Bookstore), noBookmarkedBookstore
         case region(String)
+        case noPermission
         
         var curation: Curation? {
             if case .curation(let curation) = self {
@@ -35,7 +37,7 @@ enum ViewModel {
             switch self {
             case .featuredBookstore(let bookstore):
                 return bookstore
-            case .nearByBookstore(let bookstore):
+            case .nearbyBookstore(let bookstore):
                 return bookstore
             case .bookmarkedBookstore(let bookstore):
                 return bookstore

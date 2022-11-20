@@ -18,8 +18,7 @@ final class MyPageTableViewCell: UITableViewCell {
     private let myPageCellImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "chevron.forward")
-        imageView.tintColor = UIColor(named: "kindyGreen")
-        imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        imageView.tintColor = UIColor(named: "kindyGray2")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -45,9 +44,11 @@ final class MyPageTableViewCell: UITableViewCell {
         addSubview(myPageCellStackView)
         
         NSLayoutConstraint.activate([
+            myPageCellImageView.widthAnchor.constraint(equalToConstant: 14),
+            
             myPageCellStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            myPageCellStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            myPageCellStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
+            myPageCellStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
+            myPageCellStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16)
         ])
     }
     

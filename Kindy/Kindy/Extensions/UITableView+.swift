@@ -41,6 +41,26 @@ extension UITableView: MFMailComposeViewControllerDelegate{
         }
     }
     
+    @objc func feedbackButtonTapped() {
+        let viewController = self.findViewController()
+        let recipientEmail = "teamsandalsofficial@gmail.com"
+        let subject = "[의견 보내기] 제목을 입력해주세요"
+        let body = "킨디에게 남기고 싶은 의견을 자유롭게 작성해주세요 :)"
+        
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = viewController
+            mail.setToRecipients([recipientEmail])
+            mail.setSubject(subject)
+            mail.setMessageBody(body, isHTML: false)
+            
+            viewController?.present(mail, animated: true)
+            
+        } else if let emailUrl = createEmailUrl(to: recipientEmail, subject: subject, body: body) {
+            UIApplication.shared.open(emailUrl)
+        }
+    }
+    
     private func createEmailUrl(to: String, subject: String, body: String) -> URL? {
         let subjectEncoded = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let bodyEncoded = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!

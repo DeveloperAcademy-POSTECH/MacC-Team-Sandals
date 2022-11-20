@@ -8,9 +8,10 @@
 import Foundation
 
 struct User {
-    let id: String
+    let email: String
     let nickName: String
-    let bookmarkedBookstores: [String]
+    let provider: String
+    var bookmarkedBookstores: [String]
 }
 
 extension User: Codable { }
