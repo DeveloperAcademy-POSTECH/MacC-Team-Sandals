@@ -104,7 +104,6 @@ extension FirestoreManager {
         }
         
     }
-    
 
     // 닉네임 수정
     func editNickname(_ newNickname: String) {
@@ -126,31 +125,6 @@ extension FirestoreManager {
         } else {
             return ""
         }
-    }
-}
-
-// MARK: 이미지
-extension FirestoreManager {
-    enum ImageRequestError: Error {
-        case invalidURL
-        case imageDataMissing
-        case couldNotInitializeFromData
-    }
-    
-    func fetchImage(with url: String?) async throws -> UIImage {
-        let cachedKey = NSString(string: url ?? "")
-        if let cachedImage = ImageCacheManager.shared.object(forKey: cachedKey) { return cachedImage }
-        
-        guard let url = URL(string: url ?? "") else { throw ImageRequestError.invalidURL }
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw ImageRequestError.imageDataMissing }
-        
-        guard let image = UIImage(data: data) else { throw ImageRequestError.couldNotInitializeFromData }
-        
-        ImageCacheManager.shared.setObject(image, forKey: cachedKey)
-        
-        return image
     }
 }
 
