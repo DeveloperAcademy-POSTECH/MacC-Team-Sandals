@@ -9,37 +9,18 @@ import UIKit
 
 final class CurationCategoryButton: UIButton {
 
-    private lazy var categoryButton: UIButton = {
+    lazy var categoryButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.adjustsFontForContentSizeCategory = true
-        
-        button.setTitle("  \(categoryName)", for: .normal)
-        button.setImage(categorySymbolImage, for: .normal)
-        button.tintColor = .kindyPrimaryGreen
-        
         button.setTitleColor(.black, for: .normal)
-        button.semanticContentAttribute = .forceLeftToRight
+        button.titleLabel?.font = .body2
+        button.tintColor = .kindyPrimaryGreen
         button.contentVerticalAlignment = .center
-        button.contentHorizontalAlignment = .leading
-        
-        button.backgroundColor = .clear
-        button.layer.cornerRadius = 8
-        button.layer.borderWidth = 1.5
-        button.layer.borderColor = UIColor.kindySecondaryGreen?.cgColor
-//        button.frame = CGRect(x: 0, y: 0, width: 74, height: 32)
-        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 13, bottom: 8, right: 13)
-//        button.addTarget(self, action: #selector(tap), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    var categoryName: String = "" {
-        didSet {
-//            categoryButton.setTitle("  \(categoryName)", for: .normal)
-//            categoryButton.setImage(categorySymbolImage, for: .normal)
-        }
-    }
+    var categoryName: String = ""
     
     var categorySymbolImage: UIImage {
         switch categoryName {
@@ -47,7 +28,7 @@ final class CurationCategoryButton: UIButton {
             return UIImage(systemName: "sparkles")!
         case "서점":
             return UIImage(systemName: "heart")!
-        case "책":
+        case " 책":
             return UIImage(systemName: "book")!
         default:
             return UIImage(systemName: "circle")!
@@ -57,11 +38,27 @@ final class CurationCategoryButton: UIButton {
     init(categoryName: String) {
         super.init(frame: .zero)
         self.categoryName = categoryName
-        setup()
+        createLayout()
+        configureButton()
     }
     
-    private func setup() {
+    private func createLayout() {
         self.addSubview(categoryButton)
+        
+        NSLayoutConstraint.activate([
+            categoryButton.widthAnchor.constraint(equalToConstant: 74),
+            categoryButton.heightAnchor.constraint(equalToConstant: 34)
+        ])
+    }
+    
+    private func configureButton() {
+        categoryButton.setTitle("  \(categoryName)", for: .normal)
+        categoryButton.setImage(categorySymbolImage, for: .normal)
+        
+        categoryButton.backgroundColor = .clear
+        categoryButton.layer.cornerRadius = 8
+        categoryButton.layer.borderWidth = 1.5
+        categoryButton.layer.borderColor = UIColor.kindySecondaryGreen?.cgColor
         
         if categoryName == "최신" {
             categoryButton.backgroundColor = .kindySecondaryGreen
