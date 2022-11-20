@@ -21,7 +21,7 @@ final class CurationListViewController: UIViewController {
         userRequestTask?.cancel()
     }
     
-    let firestoreManager = FirestoreManager()
+    private let firestoreManager = FirestoreManager()
     
     // MARK: - 프로퍼티
     
@@ -39,6 +39,14 @@ final class CurationListViewController: UIViewController {
     
     private var model = Model()
     
+    private var user: User? {
+        didSet {
+            guard let user = user else { return }
+            
+            // user가 좋아요한 큐레이션 게시글 목록 필요함
+        }
+    }
+    
     // MARK: - 라이프 사이클
     
     override func viewDidLoad() {
@@ -52,6 +60,8 @@ final class CurationListViewController: UIViewController {
         super.viewWillAppear(animated)
         
         update()
+        updateUserData()
+        print(user?.nickName)
     }
     
     // MARK: - 메소드
@@ -75,7 +85,20 @@ final class CurationListViewController: UIViewController {
     }
     
     @objc func writeButtonTapped() {
-        
+        if let user = user {
+            // TODO: 큐레이션 작성 페이지 연결
+            
+        } else {
+            let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
+            let action = UIAlertAction(title: "로그인", style: .default, handler: { _ in
+                let signInViewController = SignInViewController()
+                self.navigationController?.pushViewController(signInViewController, animated: true)
+            })
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            alertForSignIn.addAction(cancel)
+            alertForSignIn.addAction(action)
+            present(alertForSignIn, animated: true, completion: nil)
+        }
     }
     
     private func setupTableView() {
@@ -97,7 +120,7 @@ final class CurationListViewController: UIViewController {
     
     // MARK: - 파이어베이스 update
     
-    func update() {
+    private func update() {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await firestoreManager.fetchCurations() {
@@ -107,6 +130,18 @@ final class CurationListViewController: UIViewController {
             }
             self.tableView.reloadData()
             curationsRequestTask = nil
+        }
+    }
+    
+    private func updateUserData() {
+        userRequestTask?.cancel()
+        userRequestTask = Task {
+            if firestoreManager.isLoggedIn() {
+                if let user = try? await firestoreManager.fetchCurrentUser() {
+                    self.user = user
+                }
+            }
+            userRequestTask = nil
         }
     }
     
@@ -175,10 +210,20 @@ extension CurationListViewController: UITableViewDelegate {
     
     @objc func buttonTapped(_ sender: UIButton) {
         switch sender.tag {
-        case 1: print("1")
-        case 2: print("2")
+        case 1:
+            let alert = UIAlertController(title: "서점 카테고리 연결", message: "커밍 쑨", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "확인", style: .cancel)
+            alert.addAction(ok)
+            present(alert, animated: true, completion: nil)
+
+        case 2:
+            let alert = UIAlertController(title: "책 카테고리 연결", message: "커밍 쑨", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "확인", style: .cancel)
+            alert.addAction(ok)
+            present(alert, animated: true, completion: nil)
+
         default:
-            print("3")
+            print("default")
         }
     }
 
