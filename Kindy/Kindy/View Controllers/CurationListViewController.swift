@@ -101,6 +101,7 @@ final class CurationListViewController: UIViewController {
     private func setupTableView() {
         view.addSubview(tableView)
         
+        tableView.backgroundColor = .clear
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = CurationListCell.rowHeight
@@ -157,7 +158,7 @@ extension CurationListViewController: UITableViewDataSource {
         cell.curation = mainDummy[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await firestoreManager.fetchImage(with: cell.curation?.descriptions[indexPath.item].image) {
+            if let image = try? await ImageCache.shared.load(cell.curation?.descriptions[indexPath.item].image) {
                 curationImage = image
                 cell.photoImageView.image = curationImage
             }

@@ -137,7 +137,7 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
         cell.curation = curationList?[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await firestoreManager.fetchImage(with: cell.curation?.mainImage) {
+            if let image = try? await ImageCache.shared.load(cell.curation?.mainImage) {
                 curationImage = image
                 cell.photoImageView.image = curationImage
             }
