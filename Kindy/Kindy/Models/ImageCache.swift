@@ -64,7 +64,30 @@ extension ImageCache {
         return image
     }
     
-    // TODO: 메모리 캐싱만 하는 함수 필요 (커뮤니티 게시글)
+    // 메모리 캐싱만 하는 함수 (커뮤니티 게시글에 사용)
+    func loadFromMemory(_ url: String?) async throws -> UIImage? {
+        guard let urlString = url,
+              let url = NSURL(string: urlString)
+        else { throw ImageRequestError.invalidURL }
+        
+        // 메모리 확인
+        if let image = checkMemory(with: url) {
+            return image
+        }
+        
+        // 메모리에 이미지 없다면 fetch
+        let (data, response) = try await URLSession.shared.data(from: url as URL)
+        
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw ImageRequestError.imageDataMissing }
+        
+        guard let image = UIImage(data: data) else { throw ImageRequestError.couldNotInitializeFromData }
+        
+        // fetch 후 메모리에 이미지 저장
+        saveToMemory(image, key: url)
+        
+        return image
+    }
+    
 }
 
 // MARK: 메모리 캐싱
