@@ -192,11 +192,7 @@ extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
 
-        if mainDummy.isEmpty {
-            headerView.isHidden = true
-        } else {
-            headerView.isHidden = false
-        }
+        headerView.isHidden = mainDummy.isEmpty
         
         let bookstoreBtn = headerView.bookstoreButton
         let bookBtn = headerView.bookButton
