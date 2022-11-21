@@ -57,7 +57,6 @@ final class FeaturedCurationListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = .black
         updateUserData()
     }
