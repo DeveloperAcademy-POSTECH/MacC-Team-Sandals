@@ -28,7 +28,9 @@ extension FirestoreManager {
     
     // id로 큐레이션 fetch
     func fetchCuration(with id: String) async throws -> Curation {
-        let curation = try await curations.document(id).getDocument(as: Curation.self)
+        var curation = try await curations.document(id).getDocument(as: Curation.self)
+        let querySnapshot = try await curations.document(curation.id).collection("Comment").getDocuments()
+        curation.comments = try querySnapshot.documents.map { try $0.data(as: Comment.self) }
         return curation
     }
     
