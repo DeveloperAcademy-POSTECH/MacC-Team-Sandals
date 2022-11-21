@@ -45,7 +45,7 @@ final class HomeViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<ViewModel.Section, ViewModel.Item>()
         
         snapshot.appendSections([.curations])
-        snapshot.appendItems(model.curations)
+        snapshot.appendItems(model.curation)
         
         snapshot.appendSections([.featured])
         snapshot.appendItems(model.featuredBookstores)
@@ -223,7 +223,8 @@ final class HomeViewController: UIViewController {
         curationsTask?.cancel()
         curationsTask = Task {
             if let curations = try? await firestoreManager.fetchCurations() {
-                model.curations = curations.map { .curation($0) }
+                model.curations = curations
+                model.curation = [curations.randomElement()!].map { .curation($0) }
             } else {
                 model.curations = []
             }
@@ -537,12 +538,9 @@ extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
         
-        // TODO: item 넘겨줄때 snapshot 활용해서??
-//        let item = dataSource.snapshot().itemIdentifiers[indexPath.section + indexPath.item]
-        
         switch section {
         case .curations:
-            let curation = model.curations.map { $0.curation! }.first!
+            let curation = model.curation.map { $0.curation! }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
             curationViewController.modalPresentationStyle = .overFullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
