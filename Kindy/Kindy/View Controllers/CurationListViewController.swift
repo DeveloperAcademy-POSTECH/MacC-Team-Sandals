@@ -161,7 +161,7 @@ extension CurationListViewController: UITableViewDataSource {
         cell.curation = mainDummy[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await ImageCache.shared.load(cell.curation?.descriptions[indexPath.item].image) {
+            if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.descriptions[indexPath.item].image) {
                 curationImage = image
                 cell.photoImageView.image = curationImage
             }
