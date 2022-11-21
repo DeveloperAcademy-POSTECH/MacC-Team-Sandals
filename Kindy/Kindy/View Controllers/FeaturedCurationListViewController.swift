@@ -49,7 +49,7 @@ final class FeaturedCurationListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationItem.title = category
+        self.navigationItem.title = category == "bookstore" ? "서점" : "책"
         createBarButtonItems()
         setupTableView()
     }
@@ -105,8 +105,8 @@ final class FeaturedCurationListViewController: UIViewController {
     }
     
     func setupData(items: [Curation]?, tag: Int) {
-        curationList = items
-        category = tag == 1 ? "서점" : "책"
+        category = tag == 1 ? "bookstore" : "book"
+        curationList = items?.filter{ $0.category == category }
     }
     
     // MARK: - 파이어베이스 update

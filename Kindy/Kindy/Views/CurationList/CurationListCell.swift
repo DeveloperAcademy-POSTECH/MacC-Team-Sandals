@@ -189,7 +189,7 @@ final class CurationListCell: UITableViewCell {
         configureDateLabel(for: dateLabel, date: item.createdAt!)
         
         // 킨디터
-        configureKinditorLabel(for: kinditorLabel, kinditor: "백루이")
+        configureKinditorLabel(for: kinditorLabel, kinditor: item.userID)
     }
     
     private func configureImageAndTextLabel(for view: UILabel, imageName: String, text: Int) {
@@ -217,10 +217,6 @@ final class CurationListCell: UITableViewCell {
     private func configureKinditorLabel(for view: UILabel, kinditor: String) {
         let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 \(kinditor)")
         kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4,length: kinditor.count))
-        
-        // TODO: 추후 아래 주석 처리된 코드로 변경 요망
-//        let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 \(item.userID)")
-//        kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4,length: item.userID.count))
         
         view.attributedText = kinditorAttributedString
     }

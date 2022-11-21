@@ -18,6 +18,7 @@ struct Curation {
     let headText: String
     let descriptions: [Description]
     var likes: [String]
+    let category: String
 }
 
 extension Curation: Codable { }
