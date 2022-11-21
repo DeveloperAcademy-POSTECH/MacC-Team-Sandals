@@ -1,5 +1,5 @@
 //
-//  BookmarkedCollectionViewCell.swift
+//  NearByBookstoreCell.swift
 //  Kindy
 //
 //  Created by 정호윤 on 2022/10/19.
@@ -7,15 +7,16 @@
 
 import UIKit
 
-// 북마크한 서점 섹션의 북마크 셀
-final class BookmarkedCollectionViewCell: UICollectionViewCell {
+// 내 주변 서점 섹션의 서점 셀
+// TODO: Base class로 쓸 수 있게도 만들어보기
+final class NearByBookstoreCell: UICollectionViewCell {
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .vertical
+        stackView.axis = .horizontal
         stackView.distribution = .fill
-        stackView.alignment = .fill
-        stackView.spacing = 4
+        stackView.alignment = .center
+        stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -24,9 +25,9 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
     private let labelStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.distribution = .fill
+        stackView.distribution = .equalSpacing
         stackView.alignment = .leading
-        stackView.spacing = 0
+        stackView.spacing = 4
         
         return stackView
     }()
@@ -48,12 +49,20 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let addressLabel: UILabel = {
+    private let distanceLabel: UILabel = {
         let label = UILabel()
-        label.font = .footnote
-        label.textColor = .kindyGray
+        label.font = .body1
+        label.textColor = .kindyPrimaryGreen
         
         return label
+    }()
+    
+    private let lineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .kindyLightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
     }()
     
     // MARK: Initialization
@@ -68,26 +77,32 @@ final class BookmarkedCollectionViewCell: UICollectionViewCell {
     
     private func setupView() {
         addSubview(stackView)
+        addSubview(lineView)
         
         stackView.addArrangedSubview(imageView)
         stackView.addArrangedSubview(labelStackView)
         labelStackView.addArrangedSubview(nameLabel)
-        labelStackView.addArrangedSubview(addressLabel)
+        labelStackView.addArrangedSubview(distanceLabel)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             
-            imageView.widthAnchor.constraint(equalToConstant: 136),
-            imageView.heightAnchor.constraint(equalToConstant: 168)
+            imageView.widthAnchor.constraint(equalToConstant: 72),
+            imageView.heightAnchor.constraint(equalToConstant: 72),
+            
+            lineView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
+            lineView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            lineView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            lineView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
     
     // MARK: Configure Cell
     func configureCell(_ bookstore: Bookstore) {
         nameLabel.text = bookstore.name
-        addressLabel.text = bookstore.shortAddress
+        distanceLabel.text = "\(bookstore.distance)km"
     }
 }

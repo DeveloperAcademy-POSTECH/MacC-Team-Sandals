@@ -61,6 +61,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="gUh-z9-edb" kind="relationship" relationship="viewControllers" id="XbB-V0-KMK"/>
+                        <segue destination="RSo-Lw-Evv" kind="relationship" relationship="viewControllers" id="1Ln-yE-kEa"/>
                         <segue destination="Jo1-Y7-fdS" kind="relationship" relationship="viewControllers" id="4QD-zN-9tM"/>
                     </connections>
                 </tabBarController>
@@ -87,6 +88,22 @@
             </objects>
             <point key="canvasLocation" x="94" y="518"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="M5L-OK-deW">
+            <objects>
+                <viewController id="phP-Jp-pPd" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZDK-uX-bld">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="7dr-dx-cNl"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Slm-gg-1ej"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MU5-uv-VSW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="922" y="1322"/>
+        </scene>
         <!--My Page View Controller-->
         <scene sceneID="GOZ-HX-Qjb">
             <objects>
@@ -101,7 +118,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VAz-2j-2CE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1628" y="1322"/>
+            <point key="canvasLocation" x="1774" y="1322"/>
         </scene>
         <!--마이페이지-->
         <scene sceneID="KE9-8z-IH0">
@@ -120,10 +137,30 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6g5-QT-Pgb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1628" y="518"/>
+            <point key="canvasLocation" x="1774" y="518"/>
+        </scene>
+        <!--큐레이션-->
+        <scene sceneID="qRz-gs-P0J">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="RSo-Lw-Evv" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="큐레이션" image="books.vertical" catalog="system" id="1YV-Do-ELf"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="QGe-rC-K00">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="phP-Jp-pPd" kind="relationship" relationship="rootViewController" id="JDY-HN-axv"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hz4-bx-575" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="921.53846153846155" y="517.53554502369661"/>
         </scene>
     </scenes>
     <resources>
+        <image name="books.vertical" catalog="system" width="128" height="107"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="person.circle" catalog="system" width="128" height="123"/>
         <namedColor name="kindyGreen">

@@ -1,5 +1,5 @@
 //
-//  EmptyNearbyCollectionViewCell.swift
+//  EmptyNearbyCell.swift
 //  Kindy
 //
 //  Created by 정호윤 on 2022/10/23.
@@ -8,7 +8,7 @@
 import UIKit
 
 // 내 주변 서점 섹션이 비었을때의 셀
-final class EmptyNearbyCollectionViewCell: UICollectionViewCell {
+final class EmptyNearbyCell: UICollectionViewCell {
     
     private let label: UILabel = {
         let label = UILabel()

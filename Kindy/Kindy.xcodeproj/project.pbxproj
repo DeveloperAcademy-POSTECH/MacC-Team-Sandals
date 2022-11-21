@@ -26,7 +26,7 @@
 		31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */; };
 		361D54CF2901CABB00ACA11E /* DetailBookstoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */; };
 		363B56EF29263252008AF99C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B56EE29263252008AF99C /* Constants.swift */; };
-		36671EB429222E7E003BC7F7 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36671EB329222E7E003BC7F7 /* ImageCacheManager.swift */; };
+		36671EB429222E7E003BC7F7 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36671EB329222E7E003BC7F7 /* ImageCache.swift */; };
 		369CC07B29241661000D7B96 /* EditNicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369CC07A29241661000D7B96 /* EditNicknameViewController.swift */; };
 		369CC07D29241681000D7B96 /* MyWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369CC07C29241681000D7B96 /* MyWritingViewController.swift */; };
 		369CC07F292416A7000D7B96 /* MyActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369CC07E292416A7000D7B96 /* MyActivitiesViewController.swift */; };
@@ -79,11 +79,11 @@
 		7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1228FE889200A24C89 /* UIColor+.swift */; };
 		7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1A28FE89BA00A24C89 /* Bookstore.swift */; };
 		7B404C1F28FE90B700A24C89 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1E28FE90B700A24C89 /* ViewModel.swift */; };
-		7B404C2328FFD26100A24C89 /* CurationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2228FFD26100A24C89 /* CurationCollectionViewCell.swift */; };
-		7B404C2528FFD33500A24C89 /* BookstoreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2428FFD33500A24C89 /* BookstoreCollectionViewCell.swift */; };
-		7B404C2728FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */; };
-		7B404C2928FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */; };
-		7B404C2B28FFD3CF00A24C89 /* RegionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */; };
+		7B404C2328FFD26100A24C89 /* CurationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2228FFD26100A24C89 /* CurationCell.swift */; };
+		7B404C2528FFD33500A24C89 /* FeaturedBookstoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2428FFD33500A24C89 /* FeaturedBookstoreCell.swift */; };
+		7B404C2728FFD36E00A24C89 /* NearByBookstoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2628FFD36E00A24C89 /* NearByBookstoreCell.swift */; };
+		7B404C2928FFD3B000A24C89 /* BookmarkedBookstoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2828FFD3B000A24C89 /* BookmarkedBookstoreCell.swift */; };
+		7B404C2B28FFD3CF00A24C89 /* RegionNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2A28FFD3CF00A24C89 /* RegionNameCell.swift */; };
 		7B404C2F29016CAF00A24C89 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C2E29016CAF00A24C89 /* SectionHeaderView.swift */; };
 		7B404C3129017C7300A24C89 /* SectionHeaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C3029017C7300A24C89 /* SectionHeaderDelegate.swift */; };
 		7B529ED0291B8FAD007C023F /* CLLocationCoordinate2D+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B529ECF291B8FAD007C023F /* CLLocationCoordinate2D+.swift */; };
@@ -99,11 +99,11 @@
 		7BCB1A07291633E300B357D5 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB1A06291633E300B357D5 /* Contact.swift */; };
 		7BCB1A0A29163D7400B357D5 /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB1A0929163D7400B357D5 /* Description.swift */; };
 		7BCB1A0F291646B700B357D5 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB1A0E291646B700B357D5 /* FirestoreManager.swift */; };
-		7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69C290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift */; };
-		7BDAE69F2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */; };
+		7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69C290504A900BC41E9 /* ExceptionBookmarkCell.swift */; };
+		7BDAE69F2905107900BC41E9 /* EmptyNearbyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDAE69E2905107900BC41E9 /* EmptyNearbyCell.swift */; };
 		7BDB89AB291A099900FB2F23 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB89AA291A099900FB2F23 /* User.swift */; };
 		7BEDC38E29090A0C002C21B6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BEDC38D29090A0B002C21B6 /* GoogleService-Info.plist */; };
-		7BF9AACD2909200100C80F72 /* NoPermissionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */; };
+		7BF9AACD2909200100C80F72 /* NoPermissionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9AACC2909200100C80F72 /* NoPermissionCell.swift */; };
 		A06954E72905C74100C09D1D /* MyPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */; };
 		A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954EE2906D9D800C09D1D /* Privacy.swift */; };
 		A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06954F32907C84A00C09D1D /* DetailMyPageView.swift */; };
@@ -127,7 +127,7 @@
 		31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDelegate.swift; sourceTree = "<group>"; };
 		361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookstoreViewController.swift; sourceTree = "<group>"; };
 		363B56EE29263252008AF99C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		36671EB329222E7E003BC7F7 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
+		36671EB329222E7E003BC7F7 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		369CC07A29241661000D7B96 /* EditNicknameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNicknameViewController.swift; sourceTree = "<group>"; };
 		369CC07C29241681000D7B96 /* MyWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWritingViewController.swift; sourceTree = "<group>"; };
 		369CC07E292416A7000D7B96 /* MyActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyActivitiesViewController.swift; sourceTree = "<group>"; };
@@ -183,11 +183,11 @@
 		7B404C1228FE889200A24C89 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		7B404C1A28FE89BA00A24C89 /* Bookstore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookstore.swift; sourceTree = "<group>"; };
 		7B404C1E28FE90B700A24C89 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
-		7B404C2228FFD26100A24C89 /* CurationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCollectionViewCell.swift; sourceTree = "<group>"; };
-		7B404C2428FFD33500A24C89 /* BookstoreCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookstoreCollectionViewCell.swift; sourceTree = "<group>"; };
-		7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearByBookstoreCollectionViewCell.swift; sourceTree = "<group>"; };
-		7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkedCollectionViewCell.swift; sourceTree = "<group>"; };
-		7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCollectionViewCell.swift; sourceTree = "<group>"; };
+		7B404C2228FFD26100A24C89 /* CurationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCell.swift; sourceTree = "<group>"; };
+		7B404C2428FFD33500A24C89 /* FeaturedBookstoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedBookstoreCell.swift; sourceTree = "<group>"; };
+		7B404C2628FFD36E00A24C89 /* NearByBookstoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearByBookstoreCell.swift; sourceTree = "<group>"; };
+		7B404C2828FFD3B000A24C89 /* BookmarkedBookstoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkedBookstoreCell.swift; sourceTree = "<group>"; };
+		7B404C2A28FFD3CF00A24C89 /* RegionNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionNameCell.swift; sourceTree = "<group>"; };
 		7B404C2E29016CAF00A24C89 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		7B404C3029017C7300A24C89 /* SectionHeaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderDelegate.swift; sourceTree = "<group>"; };
 		7B529ECF291B8FAD007C023F /* CLLocationCoordinate2D+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+.swift"; sourceTree = "<group>"; };
@@ -198,11 +198,11 @@
 		7BCB1A06291633E300B357D5 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		7BCB1A0929163D7400B357D5 /* Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
 		7BCB1A0E291646B700B357D5 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
-		7BDAE69C290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExceptionBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
-		7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyNearbyCollectionViewCell.swift; sourceTree = "<group>"; };
+		7BDAE69C290504A900BC41E9 /* ExceptionBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExceptionBookmarkCell.swift; sourceTree = "<group>"; };
+		7BDAE69E2905107900BC41E9 /* EmptyNearbyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyNearbyCell.swift; sourceTree = "<group>"; };
 		7BDB89AA291A099900FB2F23 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7BEDC38D29090A0B002C21B6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPermissionCollectionViewCell.swift; sourceTree = "<group>"; };
+		7BF9AACC2909200100C80F72 /* NoPermissionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPermissionCell.swift; sourceTree = "<group>"; };
 		A06954E62905C74100C09D1D /* MyPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTableViewCell.swift; sourceTree = "<group>"; };
 		A06954EE2906D9D800C09D1D /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
 		A06954F32907C84A00C09D1D /* DetailMyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyPageView.swift; sourceTree = "<group>"; };
@@ -404,6 +404,7 @@
 				7BCB1A0829163D6300B357D5 /* Curation */,
 				7BDB89B2291A90FD00FB2F23 /* Home */,
 				7BDB89AA291A099900FB2F23 /* User.swift */,
+				36671EB329222E7E003BC7F7 /* ImageCache.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -445,14 +446,14 @@
 		7B404C2C29016BDF00A24C89 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				7B404C2228FFD26100A24C89 /* CurationCollectionViewCell.swift */,
-				7B404C2428FFD33500A24C89 /* BookstoreCollectionViewCell.swift */,
-				7B404C2628FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift */,
-				7B404C2828FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift */,
-				7B404C2A28FFD3CF00A24C89 /* RegionCollectionViewCell.swift */,
-				7BF9AACC2909200100C80F72 /* NoPermissionCollectionViewCell.swift */,
-				7BDAE69E2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift */,
-				7BDAE69C290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift */,
+				7B404C2228FFD26100A24C89 /* CurationCell.swift */,
+				7B404C2428FFD33500A24C89 /* FeaturedBookstoreCell.swift */,
+				7B404C2628FFD36E00A24C89 /* NearByBookstoreCell.swift */,
+				7B404C2828FFD3B000A24C89 /* BookmarkedBookstoreCell.swift */,
+				7B404C2A28FFD3CF00A24C89 /* RegionNameCell.swift */,
+				7BF9AACC2909200100C80F72 /* NoPermissionCell.swift */,
+				7BDAE69E2905107900BC41E9 /* EmptyNearbyCell.swift */,
+				7BDAE69C290504A900BC41E9 /* ExceptionBookmarkCell.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -520,7 +521,6 @@
 			isa = PBXGroup;
 			children = (
 				7BCB1A0E291646B700B357D5 /* FirestoreManager.swift */,
-				36671EB329222E7E003BC7F7 /* ImageCacheManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -648,16 +648,16 @@
 				7BDB89AB291A099900FB2F23 /* User.swift in Sources */,
 				31F7DD652904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift in Sources */,
 				7B10E564290B8FEA009F543B /* UIImage+.swift in Sources */,
-				7B404C2928FFD3B000A24C89 /* BookmarkedCollectionViewCell.swift in Sources */,
+				7B404C2928FFD3B000A24C89 /* BookmarkedBookstoreCell.swift in Sources */,
 				3101BC59291BF2C800C46195 /* PolicySheetViewController.swift in Sources */,
 				3101BC5B291BF30200C46195 /* SignUpDelegate.swift in Sources */,
-				7BF9AACD2909200100C80F72 /* NoPermissionCollectionViewCell.swift in Sources */,
+				7BF9AACD2909200100C80F72 /* NoPermissionCell.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
-				7BDAE69F2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift in Sources */,
-				7B404C2B28FFD3CF00A24C89 /* RegionCollectionViewCell.swift in Sources */,
+				7BDAE69F2905107900BC41E9 /* EmptyNearbyCell.swift in Sources */,
+				7B404C2B28FFD3CF00A24C89 /* RegionNameCell.swift in Sources */,
 				7BCB1A0A29163D7400B357D5 /* Description.swift in Sources */,
 				77DCB1682905397E00EAB5D5 /* HomeSearchViewController.swift in Sources */,
-				7B404C2528FFD33500A24C89 /* BookstoreCollectionViewCell.swift in Sources */,
+				7B404C2528FFD33500A24C89 /* FeaturedBookstoreCell.swift in Sources */,
 				77DCB185290A5D9700EAB5D5 /* UIView+.swift in Sources */,
 				369CC07B29241661000D7B96 /* EditNicknameViewController.swift in Sources */,
 				3101BC55291BF2B600C46195 /* SignInViewController.swift in Sources */,
@@ -665,18 +665,19 @@
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				77DCB193291A357E00EAB5D5 /* CurationListCell.swift in Sources */,
 				36671EB429222E7E003BC7F7 /* ImageCacheManager.swift in Sources */,
+				36671EB429222E7E003BC7F7 /* ImageCache.swift in Sources */,
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
 				31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */,
 				A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */,
-				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift in Sources */,
+				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */,
 				6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */,
 				6E359EE529278E6E00139F6F /* Notification+.swift in Sources */,
 				6E2AA45D290791480049E445 /* CurationTextCell.swift in Sources */,
 				A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */,
-				7B404C2328FFD26100A24C89 /* CurationCollectionViewCell.swift in Sources */,
-				7B404C2728FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift in Sources */,
+				7B404C2328FFD26100A24C89 /* CurationCell.swift in Sources */,
+				7B404C2728FFD36E00A24C89 /* NearByBookstoreCell.swift in Sources */,
 				7BCB1A07291633E300B357D5 /* Contact.swift in Sources */,
 				6E359EE929278E9200139F6F /* Reportable+.swift in Sources */,
 				6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */,
