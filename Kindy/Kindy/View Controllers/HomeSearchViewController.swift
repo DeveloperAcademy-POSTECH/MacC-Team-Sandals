@@ -17,10 +17,6 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         imageRequestTask?.cancel()
     }
     
-    // MARK: - 파이어베이스 매니저
-    
-    private let firestoreManager = FirestoreManager()
-    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {

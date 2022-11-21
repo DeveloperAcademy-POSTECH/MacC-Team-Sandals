@@ -139,7 +139,7 @@ extension ImageCache {
     }
     
     // 디스크의 이미지 디렉토리 삭제
-    private func deleteDirectory() {
+    func deleteDirectory() {
         guard let path = FileManager.default
             .urls(for: .cachesDirectory, in: .userDomainMask).first?
             .appendingPathComponent(directoryName)

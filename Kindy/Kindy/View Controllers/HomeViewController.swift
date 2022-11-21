@@ -25,8 +25,6 @@ final class HomeViewController: UIViewController {
         imagesTask?.cancel()
     }
     
-    // MARK: Managers
-    private let firestoreManager = FirestoreManager()
     private let locationManager = CLLocationManager()
     
     private var model = Model()
@@ -59,7 +57,7 @@ final class HomeViewController: UIViewController {
             snapshot.appendItems(model.nearbyBookstores)
         }
         
-        if model.bookmarkedBookstores.isEmpty || !firestoreManager.isLoggedIn() {
+        if model.bookmarkedBookstores.isEmpty || !UserManager().isLoggedIn() {
             snapshot.appendSections([.emptyBookmarks])
             snapshot.appendItems([.noBookmarkedBookstore])
         } else {
@@ -148,7 +146,6 @@ final class HomeViewController: UIViewController {
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
     @objc func searchButtonTapped() {
         let homeSearchViewController = HomeSearchViewController()
-        // MARK : add by X
         homeSearchViewController.setupData(items: model.bookstores)
         show(homeSearchViewController, sender: nil)
     }
@@ -178,7 +175,7 @@ final class HomeViewController: UIViewController {
     func update() {
         bookstoresTask?.cancel()
         bookstoresTask = Task {
-            if let bookstores = try? await firestoreManager.fetchBookstores() {
+            if let bookstores = try? await BookstoreRequest().fetch() {
                 // 전체 데이터에 추가
                 model.bookstores = bookstores
                 
@@ -208,7 +205,7 @@ final class HomeViewController: UIViewController {
         
         bookmarkedBookstoresTask?.cancel()
         bookmarkedBookstoresTask = Task {
-            if let bookmarkedBookstores = try? await firestoreManager.fetchBookmarkedBookstores() {
+            if let bookmarkedBookstores = try? await BookstoreRequest().fetchBookmarkedBookstores() {
                 model.bookmarkedBookstores = bookmarkedBookstores.map { .bookmarkedBookstore($0) }
             } else {
                 model.bookmarkedBookstores = []
@@ -222,7 +219,7 @@ final class HomeViewController: UIViewController {
     func updateCuration() {
         curationsTask?.cancel()
         curationsTask = Task {
-            if let curations = try? await firestoreManager.fetchCurations() {
+            if let curations = try? await CurationRequest().fetch() {
                 model.curations = curations
                 model.curation = [curations.randomElement()!].map { .curation($0) }
             } else {
@@ -451,7 +448,7 @@ final class HomeViewController: UIViewController {
         let noPermissionCellRegistration = UICollectionView.CellRegistration<NoPermissionCell, ViewModel.Item> { _, _, _ in }
         
         let exceptionBookmarkCellRegistration = UICollectionView.CellRegistration<ExceptionBookmarkCell, ViewModel.Item> { cell, indexPath, item in
-            cell.label.text = self.firestoreManager.isLoggedIn() ? "북마크한 서점이 아직 없어요" : "로그인 후 이용할 수 있는 서비스입니다."
+            cell.label.text = UserManager().isLoggedIn() ? "북마크한 서점이 아직 없어요" : "로그인 후 이용할 수 있는 서비스입니다."
         }
         
         // MARK: Supplementary View Registration

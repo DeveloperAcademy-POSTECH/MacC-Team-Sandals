@@ -8,11 +8,9 @@
 import UIKit
 
 // TODO: MVC 패턴에 맞게 수정
-// TODO: 닉네임 수정 메소드 FirestoreManager에 추가
 final class EditNicknameViewController: UIViewController {
     
     // MARK: Properties
-    private let firestoreManager = FirestoreManager()
     private var userNicknameRequestTask: Task<Void, Never>?
     
     private lazy var navigationEditButton: UIBarButtonItem = {
@@ -102,7 +100,7 @@ final class EditNicknameViewController: UIViewController {
         userNicknameRequestTask?.cancel()
         
         userNicknameRequestTask = Task {
-            guard let isExistingNickname = try? await firestoreManager.isExistingNickname(text) else { return }
+            guard let isExistingNickname = try? await UserManager().isExistingNickname(text) else { return }
             switch isExistingNickname {
             case true:
                 textFieldUnderLine.backgroundColor = .red
@@ -110,7 +108,7 @@ final class EditNicknameViewController: UIViewController {
                 warningLabel.textColor = .red
                 
             case false:
-                firestoreManager.editNickname(text)
+                UserManager().editNickname(text)
                 userNicknameRequestTask = nil
                 navigationController?.popViewController(animated: true)
             }
@@ -159,7 +157,7 @@ extension EditNicknameViewController: UITextFieldDelegate {
         
         // 유저 닉네임 중복 검사
         userNicknameRequestTask = Task {
-            guard let isExistingNickname = try? await firestoreManager.isExistingNickname(text) else { return }
+            guard let isExistingNickname = try? await UserManager().isExistingNickname(text) else { return }
             
             switch isExistingNickname {
             // 닉네임이 중복될때 UI 변경

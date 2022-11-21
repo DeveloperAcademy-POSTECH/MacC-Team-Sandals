@@ -11,8 +11,6 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     
     private var imageRequestTask: Task<Void, Never>?
     
-    private let firestoreManager = FirestoreManager()
-    
     private var bookstore: Bookstore?
     private var currentPage: Int = 0 {
         didSet {
