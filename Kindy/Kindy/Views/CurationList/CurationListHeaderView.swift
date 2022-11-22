@@ -22,7 +22,7 @@ final class CurationListHeaderView: UITableViewHeaderFooterView {
     
     let latestButton = CurationCategoryButton(categoryName: "최신").categoryButton
     let bookstoreButton = CurationCategoryButton(categoryName: "서점").categoryButton
-    let bookButton = CurationCategoryButton(categoryName: "책").categoryButton
+    let bookButton = CurationCategoryButton(categoryName: "도서").categoryButton
     
     // MARK: - 라이프 사이클
     

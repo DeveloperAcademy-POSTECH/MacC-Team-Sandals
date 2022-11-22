@@ -47,7 +47,7 @@ final class FeaturedCurationListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = category == "bookstore" ? "서점" : "책"
+        navigationItem.title = category == "bookstore" ? "서점" : "도서"
         createBarButtonItems()
         setupTableView()
     }
@@ -56,7 +56,7 @@ final class FeaturedCurationListViewController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.topItem?.title = ""         // back 버튼 없애기
-        navigationItem.title = category == "bookstore" ? "서점" : "책"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
+        navigationItem.title = category == "bookstore" ? "서점" : "도서"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
         navigationController?.navigationBar.tintColor = .black
         updateUserData()
     }
