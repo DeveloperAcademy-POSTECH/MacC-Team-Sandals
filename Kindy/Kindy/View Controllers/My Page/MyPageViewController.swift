@@ -15,30 +15,24 @@ final class MyPageViewController: UIViewController {
     private var userRequestTask: Task<Void, Never>?
     private var bookstoresRequestTask: Task<Void, Never>?
     
-    private let privacy = Privacy()
+    private let loginCellLabel: [[String]] = [["독립서점 제보하기", "의견 보내기"],
+                                          ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"],
+                                          ["로그아웃", "회원탈퇴"]]
+    private let logoutCellLabel: [[String]] = [["독립서점 제보하기", "의견 보내기"],
+                                           ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"]]
     
-    // 라이선스를 추가해야하는 경우 라이선스랑 제보하기의 배열 내부 위치를 바꿔주시면 됩니다
-    private var cellTitle: [[String]] = [[]] {
+    private var user: User? {
+        didSet {
+            updateMyPageViewWithUserInfo()
+        }
+    }
+    
+    private var myPageCellLabel: [[String]] = [[]] {
         didSet {
             tableView.reloadData()
         }
     }
     
-    private let loginTitle: [[String]] = [["독립서점 제보하기", "의견 보내기"],
-                                          ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"],
-                                          ["로그아웃", "회원탈퇴"]]
-    private let logoutTitle: [[String]] = [["독립서점 제보하기", "의견 보내기"],
-                                           ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"]]
-    
-    private var user: User? {
-        didSet {
-            if let _ = user {
-                cellTitle = loginTitle
-            } else {
-                cellTitle = logoutTitle
-            }
-        }
-    }
     private var bookmarkedBookstores: [Bookstore] = []
     
     private let userInfoContainerView = UserInfoContainerView()
@@ -59,6 +53,7 @@ final class MyPageViewController: UIViewController {
     }
             
     override func viewWillAppear(_ animated: Bool) {
+        print(#function)
         updateUserData()
     }
     
@@ -98,7 +93,6 @@ final class MyPageViewController: UIViewController {
     
     private func setupContainerView(_ containerView: UIView) {
         tableView.tableHeaderView = containerView
-        
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -124,33 +118,39 @@ final class MyPageViewController: UIViewController {
         
         // 로그인 검사
         switch userManager.isLoggedIn() {
-        // 로그인 되었을때 유저 fetch해와서 UI 수정
         case true:
             userRequestTask = Task {
-                guard let user = try? await userManager.fetchCurrentUser() else {
+                if let user = try? await userManager.fetchCurrentUser() {
+                    self.user = user
+                } else {
                     userRequestTask = nil
                     return
                 }
-                self.user = user
-                cellTitle = loginTitle
-                setupContainerView(userInfoContainerView)
-                userInfoContainerView.user = user
                 
                 // 해당 유저의 북마크한 서점 fetch
                 bookstoresRequestTask = Task {
-                    guard let bookstores = try? await BookstoreRequest().fetchBookmarkedBookstores() else {
-                        bookstoresRequestTask = nil
-                        return
+                    if let bookstores = try? await BookstoreRequest().fetchBookmarkedBookstores() {
+                        self.bookmarkedBookstores = bookstores
                     }
-                    self.bookmarkedBookstores = bookstores
                     bookstoresRequestTask = nil
                 }
                 userRequestTask = nil
             }
             
-        // 로그인 안되어있을때 UI로 수정
         case false:
-            cellTitle = logoutTitle
+            self.user = nil
+        }
+    }
+    
+    private func updateMyPageViewWithUserInfo() {
+        print(#function)
+        print("Hi")
+        if let user = user {
+            myPageCellLabel = loginCellLabel
+            setupContainerView(userInfoContainerView)
+            userInfoContainerView.user = user
+        } else {
+            myPageCellLabel = logoutCellLabel
             setupContainerView(tryLoginContainerView)
         }
     }
@@ -215,21 +215,21 @@ extension MyPageViewController: UITableViewDataSource {
     
     // 섹션 갯수
     func numberOfSections(in tableView: UITableView) -> Int {
-        return cellTitle.count
+        return myPageCellLabel.count
     }
     
     // 셀 갯수
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cellTitle[section].count
+        return myPageCellLabel[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyPageTableViewCell", for: indexPath) as? MyPageTableViewCell else { return UITableViewCell() }
         
-        cell.myPageCellLabel.text = cellTitle[indexPath.section][indexPath.row]
+        cell.myPageCellLabel.text = myPageCellLabel[indexPath.section][indexPath.row]
         
         // 회원탈퇴 셀의 경우 텍스트 색깔 빨간색으로 변경
-        switch cellTitle[indexPath.section][indexPath.row] {
+        switch myPageCellLabel[indexPath.section][indexPath.row] {
         case "회원탈퇴":
             cell.myPageCellLabel.textColor = .red
         default:
@@ -245,7 +245,7 @@ extension MyPageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch cellTitle[indexPath.section][indexPath.row] {
+        switch myPageCellLabel[indexPath.section][indexPath.row] {
             
         case "독립서점 제보하기":
             tableView.reportButtonTapped()
@@ -276,7 +276,6 @@ extension MyPageViewController: UITableViewDelegate {
             let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
                 self.userManager.signOut()
                 self.user = nil
-                self.setupContainerView(self.tryLoginContainerView)
             })
             let cancel = UIAlertAction(title: "취소", style: .cancel)
             alertForSignOut.addAction(cancel)
@@ -291,11 +290,11 @@ extension MyPageViewController: UITableViewDelegate {
             let action = UIAlertAction(title: "탈퇴하기", style: .destructive, handler: { _ in
                 self.userManager.delete()
                 self.user = nil
-                self.setupContainerView(self.tryLoginContainerView)
             })
             let cancel = UIAlertAction(title: "취소", style: .cancel)
             alertForDeleteUser.addAction(cancel)
             alertForDeleteUser.addAction(action)
+            
             present(alertForDeleteUser, animated: true) {
                 tableView.reloadData()
             }
