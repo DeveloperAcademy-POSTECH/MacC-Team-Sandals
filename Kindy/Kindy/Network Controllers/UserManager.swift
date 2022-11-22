@@ -58,11 +58,10 @@ extension UserManager {
     
     // 유저 삭제
     func delete() {
-        signOut()
-        db.collection(users)
-        
-        db.collection(users).document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
-            Auth.auth().currentUser?.delete()
+        let auth = Auth.auth().currentUser
+
+        db.collection(users).document(auth?.uid ?? "al").delete() { _ in
+            auth?.delete()
         }
     }
 }
