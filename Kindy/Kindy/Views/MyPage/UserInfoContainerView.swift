@@ -170,6 +170,11 @@ final class UserInfoContainerView: UIView {
             userInfoContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
             userInfoContainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24),
         ])
+        
+        clipsToBounds = true
+        layer.cornerRadius = 8
+        layer.borderWidth = 1
+        layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
     }
     
     private func setupFixedLayout() {
@@ -180,6 +185,7 @@ final class UserInfoContainerView: UIView {
         NSLayoutConstraint.activate([
             nicknameStackView.heightAnchor.constraint(equalToConstant: 25),
             
+            divider.widthAnchor.constraint(equalToConstant: 326),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
             nicknameEditButton.widthAnchor.constraint(equalToConstant: 24),

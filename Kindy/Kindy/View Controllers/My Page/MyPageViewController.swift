@@ -8,12 +8,14 @@
 import UIKit
 
 // TODO: 들어올 때 로딩뷰 뜨면 좋을듯
-// TODO: 프로퍼티명 수정 및 코드 정리해놓겠습니다
 final class MyPageViewController: UIViewController {
     
     // MARK: Properties
+    private let userManager = UserManager()
     private var userRequestTask: Task<Void, Never>?
     private var bookstoresRequestTask: Task<Void, Never>?
+    
+    private let privacy = Privacy()
     
     // 라이선스를 추가해야하는 경우 라이선스랑 제보하기의 배열 내부 위치를 바꿔주시면 됩니다
     private var cellTitle: [[String]] = [[]] {
@@ -21,13 +23,12 @@ final class MyPageViewController: UIViewController {
             tableView.reloadData()
         }
     }
+    
     private let loginTitle: [[String]] = [["독립서점 제보하기", "의견 보내기"],
                                           ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"],
                                           ["로그아웃", "회원탈퇴"]]
     private let logoutTitle: [[String]] = [["독립서점 제보하기", "의견 보내기"],
                                            ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"]]
-    
-    private let privacy = Privacy()
     
     private var user: User? {
         didSet {
@@ -40,25 +41,8 @@ final class MyPageViewController: UIViewController {
     }
     private var bookmarkedBookstores: [Bookstore] = []
     
-    private let userInfoContainerView: UserInfoContainerView = {
-        let view = UserInfoContainerView()
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 8
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let tryLoginContainerView: TryLoginContainerView = {
-        let view = TryLoginContainerView()
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 8
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let userInfoContainerView = UserInfoContainerView()
+    private let tryLoginContainerView = TryLoginContainerView()
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -82,13 +66,18 @@ final class MyPageViewController: UIViewController {
         navigationItem.title = "마이페이지"
         tabBarController?.tabBar.isHidden = false
     }
+    
+    deinit {
+        userRequestTask?.cancel()
+        bookstoresRequestTask?.cancel()
+    }
         
     // MARK: Helpers
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = 56
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
+        tableView.rowHeight = 56
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
     }
@@ -96,7 +85,7 @@ final class MyPageViewController: UIViewController {
     private func setupUI() {
         view.addSubview(tableView)
         
-        UserManager().isLoggedIn() ? setupContainerView(userInfoContainerView) : setupContainerView(tryLoginContainerView)
+        userManager.isLoggedIn() ? setupContainerView(userInfoContainerView) : setupContainerView(tryLoginContainerView)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
@@ -109,6 +98,8 @@ final class MyPageViewController: UIViewController {
     
     private func setupContainerView(_ containerView: UIView) {
         tableView.tableHeaderView = containerView
+        
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: tableView.topAnchor),
@@ -132,11 +123,11 @@ final class MyPageViewController: UIViewController {
         bookstoresRequestTask?.cancel()
         
         // 로그인 검사
-        switch UserManager().isLoggedIn() {
+        switch userManager.isLoggedIn() {
         // 로그인 되었을때 유저 fetch해와서 UI 수정
         case true:
             userRequestTask = Task {
-                guard let user = try? await UserManager().fetchCurrentUser() else {
+                guard let user = try? await userManager.fetchCurrentUser() else {
                     userRequestTask = nil
                     return
                 }
@@ -147,11 +138,11 @@ final class MyPageViewController: UIViewController {
                 
                 // 해당 유저의 북마크한 서점 fetch
                 bookstoresRequestTask = Task {
-                    guard let bookstores = try? await BookstoreRequest().fetch() else {
+                    guard let bookstores = try? await BookstoreRequest().fetchBookmarkedBookstores() else {
                         bookstoresRequestTask = nil
                         return
                     }
-                    self.bookmarkedBookstores = bookstores.filter{ user.bookmarkedBookstores.contains($0.id) }
+                    self.bookmarkedBookstores = bookstores
                     bookstoresRequestTask = nil
                 }
                 userRequestTask = nil
@@ -185,6 +176,7 @@ final class MyPageViewController: UIViewController {
 //        let signUpViewcontroller = SignUpViewController()
 //        self.navigationController?.pushViewController(signUpViewcontroller, animated: true)
 //    }
+    
 }
 
 // MARK: Extensions
@@ -282,7 +274,7 @@ extension MyPageViewController: UITableViewDelegate {
         case "로그아웃":
             let alertForSignOut = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
-                UserManager().signOut()
+                self.userManager.signOut()
                 self.user = nil
                 self.setupContainerView(self.tryLoginContainerView)
             })
@@ -297,7 +289,7 @@ extension MyPageViewController: UITableViewDelegate {
         case "회원탈퇴":
             let alertForDeleteUser = UIAlertController(title: "Kindy 회원 탈퇴하기", message: "탈퇴하더라도 삭제하지 않은\n작성 글과 댓글은 유지됩니다.\n그래도 정말 탈퇴하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "탈퇴하기", style: .destructive, handler: { _ in
-                UserManager().delete()
+                self.userManager.delete()
                 self.user = nil
                 self.setupContainerView(self.tryLoginContainerView)
             })

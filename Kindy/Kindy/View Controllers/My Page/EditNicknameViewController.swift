@@ -7,10 +7,10 @@
 
 import UIKit
 
-// TODO: MVC 패턴에 맞게 수정
 final class EditNicknameViewController: UIViewController {
     
     // MARK: Properties
+    private let userManager = UserManager()
     private var userNicknameRequestTask: Task<Void, Never>?
     
     private let maxNicknameLength = 10
@@ -38,32 +38,35 @@ final class EditNicknameViewController: UIViewController {
         setupNavigationBar()
         tabBarController?.tabBar.isHidden = true
     }
+    
+    deinit {
+        userNicknameRequestTask?.cancel()
+    }
 
     // MARK: Helpers
     private func setupNavigationBar() {
         navigationItem.rightBarButtonItem = navigationEditButton
-        navigationItem.title = "내 정보 수정"
         navigationController?.navigationBar.topItem?.title = ""
+        navigationItem.title = "내 정보 수정"
         navigationController?.navigationBar.tintColor = UIColor.black
     }
     
     // MARK: Actions
     @objc func editButtonTapped() {
         // 텍스트필드의 텍스트로 닉네임 중복 검사
-        guard let text = editNicknameView.nicknameTextField.text else { return }
+        guard let currentNickname = editNicknameView.nicknameTextField.text else { return }
         
         userNicknameRequestTask?.cancel()
         
         userNicknameRequestTask = Task {
-            guard let isExistingNickname = try? await firestoreManager.isExistingNickname(text) else { return }
+            guard let isExistingNickname = try? await userManager.isExistingNickname(currentNickname) else { return }
             
             switch isExistingNickname {
             case true:
                 changeViewComponents(with: true)
                 
             case false:
-                // TODO: 나중에 주석 풀기
-                firestoreManager.editNickname(text)
+                userManager.editNickname(currentNickname)
                 _ = navigationController?.popViewController(animated: true)
             }
             userNicknameRequestTask = nil
@@ -106,7 +109,7 @@ extension EditNicknameViewController: UITextFieldDelegate {
         
         // 유저 닉네임 중복 검사
         userNicknameRequestTask = Task {
-            guard let isExistingNickname = try? await UserManager().isExistingNickname(text) else { return }
+            guard let isExistingNickname = try? await userManager.isExistingNickname(text) else { return }
             
             switch isExistingNickname {
             // 닉네임이 중복될때 UI 변경
