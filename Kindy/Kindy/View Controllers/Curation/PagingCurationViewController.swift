@@ -101,8 +101,9 @@ final class PagingCurationViewController: UIViewController {
         dimmingView.alpha = 1
 
         self.imageRequestTask = Task {
+            let descriptions = curation.descriptions
             for i in 0..<curation.descriptions.count {
-                if let image = try? await firestoreManager.fetchImage(with: curation.descriptions[i].image) {
+                if let image = try? await firestoreManager.fetchImage(with: descriptions[i].image) {
                     self.images.append(image)
                 } else {
                     self.images.append(UIImage())
