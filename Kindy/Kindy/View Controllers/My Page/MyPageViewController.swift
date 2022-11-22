@@ -12,7 +12,6 @@ import UIKit
 final class MyPageViewController: UIViewController {
     
     // MARK: Properties
-    private let firestoreManager = FirestoreManager()
     private var userRequestTask: Task<Void, Never>?
     private var bookstoresRequestTask: Task<Void, Never>?
     
@@ -97,7 +96,7 @@ final class MyPageViewController: UIViewController {
     private func setupUI() {
         view.addSubview(tableView)
         
-        firestoreManager.isLoggedIn() ? setupContainerView(userInfoContainerView) : setupContainerView(tryLoginContainerView)
+        UserManager().isLoggedIn() ? setupContainerView(userInfoContainerView) : setupContainerView(tryLoginContainerView)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
@@ -133,11 +132,11 @@ final class MyPageViewController: UIViewController {
         bookstoresRequestTask?.cancel()
         
         // 로그인 검사
-        switch firestoreManager.isLoggedIn() {
+        switch UserManager().isLoggedIn() {
         // 로그인 되었을때 유저 fetch해와서 UI 수정
         case true:
             userRequestTask = Task {
-                guard let user = try? await firestoreManager.fetchCurrentUser() else {
+                guard let user = try? await UserManager().fetchCurrentUser() else {
                     userRequestTask = nil
                     return
                 }
@@ -148,7 +147,7 @@ final class MyPageViewController: UIViewController {
                 
                 // 해당 유저의 북마크한 서점 fetch
                 bookstoresRequestTask = Task {
-                    guard let bookstores = try? await firestoreManager.fetchBookstores() else {
+                    guard let bookstores = try? await BookstoreRequest().fetch() else {
                         bookstoresRequestTask = nil
                         return
                     }
@@ -283,7 +282,7 @@ extension MyPageViewController: UITableViewDelegate {
         case "로그아웃":
             let alertForSignOut = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
-                self.firestoreManager.signOut()
+                UserManager().signOut()
                 self.user = nil
                 self.setupContainerView(self.tryLoginContainerView)
             })
@@ -298,7 +297,7 @@ extension MyPageViewController: UITableViewDelegate {
         case "회원탈퇴":
             let alertForDeleteUser = UIAlertController(title: "Kindy 회원 탈퇴하기", message: "탈퇴하더라도 삭제하지 않은\n작성 글과 댓글은 유지됩니다.\n그래도 정말 탈퇴하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "탈퇴하기", style: .destructive, handler: { _ in
-                self.firestoreManager.deleteUser()
+                UserManager().delete()
                 self.user = nil
                 self.setupContainerView(self.tryLoginContainerView)
             })

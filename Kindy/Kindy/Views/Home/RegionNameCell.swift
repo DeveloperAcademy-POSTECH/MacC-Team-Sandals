@@ -1,5 +1,5 @@
 //
-//  RegionCollectionViewCell.swift
+//  RegionCell.swift
 //  Kindy
 //
 //  Created by 정호윤 on 2022/10/19.
@@ -9,7 +9,7 @@ import UIKit
 
 // 지역별 서점 섹션의 지역 셀
 // TODO: Line view 클래스도 도 따로 만들어 보면 괜찮을듯?
-final class RegionCollectionViewCell: UICollectionViewCell {
+final class RegionNameCell: UICollectionViewCell {
     
     private let regionLabel: UILabel = {
         let label = UILabel()

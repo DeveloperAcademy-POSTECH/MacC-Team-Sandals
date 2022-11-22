@@ -1,5 +1,5 @@
 //
-//  NoPermissionCollectionViewCell.swift
+//  NoPermissionCell.swift
 //  Kindy
 //
 //  Created by 정호윤 on 2022/10/26.
@@ -8,7 +8,7 @@
 import UIKit
 
 // 위치 정보 수집 권한 없을때 내 주변 서점 섹션에 보여줄 셀
-final class NoPermissionCollectionViewCell: UICollectionViewCell {
+final class NoPermissionCell: UICollectionViewCell {
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()

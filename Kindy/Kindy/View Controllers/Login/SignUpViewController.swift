@@ -11,8 +11,7 @@ import FirebaseAuth
 import FirebaseFirestoreSwift
 
 final class SignUpViewController: UIViewController {
-    
-    private let firestoreManager = FirestoreManager()
+
     let db = Firestore.firestore()
     
     var credential: AuthCredential?
@@ -53,7 +52,7 @@ final class SignUpViewController: UIViewController {
         db.collection("Users").getDocuments(completion: { (documents, error) in
             self.nickNameArray = documents?.documents.map{ $0.data() }.map{ String(describing: $0["nickName"]!) }
             Task {
-                if try await self.firestoreManager.isExistingNickname(self.nickName) {
+                if try await UserManager().isExistingNickname(self.nickName) {
                     self.signUpView.isAlreadyLabel.alpha = 1
                     self.signUpView.underLineView.layer.borderColor = UIColor.red.cgColor
                 } else {

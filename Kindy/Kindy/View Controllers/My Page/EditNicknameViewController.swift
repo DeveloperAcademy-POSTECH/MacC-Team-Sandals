@@ -7,10 +7,10 @@
 
 import UIKit
 
+// TODO: MVC 패턴에 맞게 수정
 final class EditNicknameViewController: UIViewController {
     
     // MARK: Properties
-    private let firestoreManager = FirestoreManager()
     private var userNicknameRequestTask: Task<Void, Never>?
     
     private let maxNicknameLength = 10
@@ -106,7 +106,7 @@ extension EditNicknameViewController: UITextFieldDelegate {
         
         // 유저 닉네임 중복 검사
         userNicknameRequestTask = Task {
-            guard let isExistingNickname = try? await firestoreManager.isExistingNickname(text) else { return }
+            guard let isExistingNickname = try? await UserManager().isExistingNickname(text) else { return }
             
             switch isExistingNickname {
             // 닉네임이 중복될때 UI 변경
