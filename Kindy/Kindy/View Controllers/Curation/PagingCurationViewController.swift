@@ -23,7 +23,6 @@ final class PagingCurationViewController: UIViewController {
 
     private var curationRequestTask: Task<Void, Never>?
     private var imageRequestTask: Task<Void, Never>?
-    private let firestoreManager = FirestoreManager()
 
     private var images: [UIImage] = []
 
@@ -81,7 +80,7 @@ final class PagingCurationViewController: UIViewController {
 
         self.curationRequestTask = Task {
             curationRequestTask?.cancel()
-            if let curation = try? await firestoreManager.fetchCuration(with: curation.id) {
+            if let curation = try? await CurationRequest().fetch(with: curation.id) {
                 self.curation = curation
             }
             curationRequestTask = nil
