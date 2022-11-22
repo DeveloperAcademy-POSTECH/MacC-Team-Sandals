@@ -48,7 +48,7 @@ extension UserManager {
     }
     
     // 이미 가입한 유저인지 확인
-    func isExisting(_ email: String?, _ provider: String) async throws -> Bool {
+    func isExistingUser(_ email: String?, _ provider: String) async throws -> Bool {
         if let email = email {
             return try await !db.collection(users).whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map{ $0.documentID }.isEmpty
         } else {
