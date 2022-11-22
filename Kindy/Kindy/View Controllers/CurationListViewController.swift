@@ -21,8 +21,6 @@ final class CurationListViewController: UIViewController {
         userRequestTask?.cancel()
     }
     
-    private let firestoreManager = FirestoreManager()
-    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -124,7 +122,7 @@ final class CurationListViewController: UIViewController {
     private func update() {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
-            if let curations = try? await firestoreManager.fetchCurations() {
+            if let curations = try? await CurationRequest().fetch() {
                 mainDummy = curations
             } else {
                 mainDummy = []
@@ -137,8 +135,8 @@ final class CurationListViewController: UIViewController {
     private func updateUserData() {
         userRequestTask?.cancel()
         userRequestTask = Task {
-            if firestoreManager.isLoggedIn() {
-                if let user = try? await firestoreManager.fetchCurrentUser() {
+            if UserManager().isLoggedIn() {
+                if let user = try? await UserManager().fetchCurrentUser() {
                     self.user = user
                 }
             }

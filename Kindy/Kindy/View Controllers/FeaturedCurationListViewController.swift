@@ -19,8 +19,6 @@ final class FeaturedCurationListViewController: UIViewController {
         imageRequestTask?.cancel()
     }
     
-    private let firestoreManager = FirestoreManager()
-    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -119,8 +117,8 @@ final class FeaturedCurationListViewController: UIViewController {
     private func updateUserData() {
         userRequestTask?.cancel()
         userRequestTask = Task {
-            if firestoreManager.isLoggedIn() {
-                if let user = try? await firestoreManager.fetchCurrentUser() {
+            if UserManager().isLoggedIn() {
+                if let user = try? await UserManager().fetchCurrentUser() {
                     self.user = user
                 }
             }
