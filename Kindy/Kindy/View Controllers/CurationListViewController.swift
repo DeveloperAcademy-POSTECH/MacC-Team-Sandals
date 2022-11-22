@@ -35,13 +35,7 @@ final class CurationListViewController: UIViewController {
     
     private var curationImage = UIImage()
     
-    private var user: User? {
-        didSet {
-            guard let user = user else { return }
-            
-            // user가 좋아요한 큐레이션 게시글 목록 필요함
-        }
-    }
+    private var user: User?
     
     // MARK: - 라이프 사이클
     
@@ -56,7 +50,6 @@ final class CurationListViewController: UIViewController {
         super.viewWillAppear(animated)
         
         update()
-        updateUserData()
     }
     
     // MARK: - 메소드
@@ -80,7 +73,7 @@ final class CurationListViewController: UIViewController {
     }
     
     @objc func writeButtonTapped() {
-        if let user = user {
+        if UserManager().isLoggedIn() {
             // TODO: 큐레이션 작성 페이지 연결
             let waitAlert = UIAlertController(title: "작성 폼을 준비중입니다 🛠", message: "조금만 기다려주세요!", preferredStyle: .alert)
             let okay = UIAlertAction(title: "확인", style: .cancel)
@@ -131,19 +124,6 @@ final class CurationListViewController: UIViewController {
             curationsRequestTask = nil
         }
     }
-    
-    private func updateUserData() {
-        userRequestTask?.cancel()
-        userRequestTask = Task {
-            if UserManager().isLoggedIn() {
-                if let user = try? await UserManager().fetchCurrentUser() {
-                    self.user = user
-                }
-            }
-            userRequestTask = nil
-        }
-    }
-    
 }
 
 // MARK: - DataSource
