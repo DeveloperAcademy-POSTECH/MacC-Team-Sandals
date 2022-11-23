@@ -69,7 +69,7 @@ final class CurationListViewController: UIViewController {
     
     @objc func searchButtonTapped() {
         let searchViewController = SearchViewController()
-        searchViewController.setupData(items: [mainDummy], itemType: .curationType)
+        searchViewController.setupData(items: mainDummy, itemType: .curationType)
         show(searchViewController, sender: nil)
     }
     

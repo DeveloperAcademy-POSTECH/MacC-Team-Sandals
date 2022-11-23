@@ -48,7 +48,7 @@ final class SearchViewController: UIViewController, UISearchResultsUpdating {
 
         setupSearchController()
         setupCustomCancelButton(of: searchController)
-        searchController.searchBar.placeholder = searchObjectType == .bookstoreType ? "서점 이름, 주소 검색" : "큐레이션 제목, 부제목 검색"
+        searchController.searchBar.placeholder = searchObjectType == .bookstoreType ? "서점 이름, 주소 검색" : "게시글 제목, 내용 검색"
         setupTableView()
         dismissKeyboard()
     }
@@ -125,7 +125,7 @@ final class SearchViewController: UIViewController, UISearchResultsUpdating {
                 
             case .curationType:
                 filteredItems = receivedData.filter{ (item) -> Bool in
-                    (item as? Curation)!.title.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || (item as? Curation)!.subTitle!.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
+                    (item as? Curation)!.title.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || (item as? Curation)!.subTitle!.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString) || (item as? Curation)!.headText.components(separatedBy: " ").joined(separator: "").localizedCaseInsensitiveContains(searchString)
                 }
                 
             default: filteredItems = []
@@ -137,7 +137,6 @@ final class SearchViewController: UIViewController, UISearchResultsUpdating {
         }
         
         tableView.reloadData()
-        print(searchObjectType)
     }
     
     func setupData(items: [Any], itemType: SearchObjectType) {
