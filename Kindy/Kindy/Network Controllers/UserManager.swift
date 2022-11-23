@@ -81,3 +81,10 @@ extension UserManager {
         user.updateData(["nickName": newNickname])
     }
 }
+
+extension UserManager {
+    func fetchUserWithDocID(documentID: String) async throws -> User {
+        let user = try await db.collection(users).document(documentID).getDocument(as: User.self)
+        return user
+    }
+}

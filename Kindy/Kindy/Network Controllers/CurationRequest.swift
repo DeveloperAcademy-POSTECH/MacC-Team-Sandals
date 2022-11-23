@@ -16,9 +16,7 @@ struct CurationRequest: FirestoreRequest {
     
     // 댓글을 포함한 큐레이션 fetch
     func fetchWithComment(with id: String) async throws -> Curation {
-        var curation = try await db.collection(collectionPath).document(id).getDocument(as: Curation.self)
-        let querySnapshot = try await db.collection(collectionPath).document(curation.id).collection(CollectionPath.comments).getDocuments()
-        curation.comments = try querySnapshot.documents.map { try $0.data(as: Comment.self) }
+        let curation = try await db.collection(collectionPath).document(id).getDocument(as: Curation.self)
         return curation
     }
     
@@ -47,4 +45,21 @@ struct CurationRequest: FirestoreRequest {
 //            return []
 //        }
 //    }
+}
+
+extension CurationRequest {
+    func createComment(curationID: String, userID: String ,content: String) throws {
+        let comment = Comment(id: UUID().uuidString, userID: userID, content: content, createdAt: Date())
+        try db.collection(collectionPath).document(curationID).collection("Comment").document(comment.id).setData(from: comment)
+    }
+    
+    func deleteComment(curationID: String, commentID: String) {
+        db.collection(collectionPath).document(curationID).collection("Comment").document(commentID).delete()
+    }
+    
+    func fetchComments(curationID: String, completion: @escaping (QuerySnapshot?, Error?) -> Void) -> ListenerRegistration {
+        return db.collection(collectionPath).document(curationID).collection("Comment").addSnapshotListener { querySnapshot, error in
+            completion(querySnapshot,error)
+        }
+    }
 }
