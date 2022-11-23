@@ -4,8 +4,11 @@
 //
 //  Created by rbwo on 2022/11/09.
 //
-
 import UIKit
+
+protocol ReplyButtonAction: AnyObject {
+    func showingKeyboard()
+}
 
 final class CurationButtonItemView: UIView {
 
@@ -13,6 +16,8 @@ final class CurationButtonItemView: UIView {
         case heart
         case reply
     }
+
+    weak var delegate: ReplyButtonAction?
 
     private var isLoggedIn: Bool = false
     private var userID: String = ""
@@ -28,7 +33,15 @@ final class CurationButtonItemView: UIView {
     private let buttonImage: String
 
     private lazy var heartCount: Int = curation.likes.count
-//    private lazy var replyCount: Int = curation.replys.count
+    private var commentCount: Int {
+        get {
+            if let count = curation.comments?.count {
+                return count
+            } else {
+                return 0
+            }
+        }
+    }
 
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
@@ -51,7 +64,7 @@ final class CurationButtonItemView: UIView {
         return view
     }()
 
-    private let countLabel: UILabel = {
+    let countLabel: UILabel = {
         let view = UILabel()
         view.numberOfLines = 0
         view.font = .headline
@@ -65,14 +78,14 @@ final class CurationButtonItemView: UIView {
         case .heart:
             self.view = .heart
             self.buttonImage = "heart"
-            print(curation.likes.count)
             self.countLabel.text = String(curation.likes.count)
+            super.init(frame: frame)
         case .reply:
             self.view = .reply
             self.buttonImage = "bubble.left"
-            self.countLabel.text = String(curation.likes.count)
+            super.init(frame: frame)
+            self.countLabel.text = String(commentCount)
         }
-        super.init(frame: frame)
         setupUI()
         checkLiked()
 
@@ -99,22 +112,28 @@ final class CurationButtonItemView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-    private func checkLiked() {
-        if isLoggedIn || firestoreManager.isLoggedIn() {
-            isLoggedIn = true
-            userRequestTask = Task {
-                userRequestTask?.cancel()
-                if userID == "" {
-                    self.userID = firestoreManager.getUserID()
-                }
 
-                if curation.likes.contains(userID) {
-                    let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
-                    let image = UIImage(systemName: "heart.fill", withConfiguration: imageConfig)
-                    buttonView.setImage(image, for: .normal)
+    private func checkLiked() {
+        switch view {
+        case .heart:
+            if isLoggedIn || firestoreManager.isLoggedIn() {
+                isLoggedIn = true
+                userRequestTask = Task {
+                    userRequestTask?.cancel()
+                    if userID == "" {
+                        self.userID = firestoreManager.getUserID()
+                    }
+
+                    if curation.likes.contains(userID) {
+                        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+                        let image = UIImage(systemName: "heart.fill", withConfiguration: imageConfig)
+                        buttonView.setImage(image, for: .normal)
+                    }
+                    userRequestTask = nil
                 }
-                userRequestTask = nil
             }
+        case .reply:
+            return
         }
     }
 
@@ -150,7 +169,7 @@ private extension CurationButtonItemView {
                     likeUpdateTask = nil
                 }
             case .reply:
-                print("reply")
+                delegate?.showingKeyboard()
             }
         } else {
             NotificationCenter.default.post(name: .Loggin, object: nil)

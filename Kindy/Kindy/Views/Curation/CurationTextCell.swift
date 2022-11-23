@@ -67,6 +67,8 @@ final class CurationTextCell: UICollectionViewCell {
         stackView.addArrangedSubview(dividerView)
 
         NSLayoutConstraint.activate([
+            textLabel.topAnchor.constraint(equalTo: topAnchor, constant: -16),
+            textLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             textLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             textLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
