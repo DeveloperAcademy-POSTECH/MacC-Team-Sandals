@@ -37,6 +37,8 @@ final class CurationListViewController: UIViewController {
     
     private var user: User?
     
+    private let refreshControl = UIRefreshControl()
+    
     // MARK: - 라이프 사이클
     
     override func viewDidLoad() {
@@ -44,12 +46,7 @@ final class CurationListViewController: UIViewController {
 
         createBarButtonItems()
         setupTableView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        update()
+        fetchCuration()
     }
     
     // MARK: - 메소드
@@ -102,7 +99,9 @@ final class CurationListViewController: UIViewController {
         tableView.rowHeight = CurationListCell.rowHeight
         tableView.register(CurationListCell.self, forCellReuseIdentifier: CurationListCell.identifier)
         tableView.register(CurationListHeaderView.self, forHeaderFooterViewReuseIdentifier: CurationListHeaderView.identifier)
-
+        tableView.refreshControl = refreshControl
+        tableView.refreshControl?.addTarget(self, action: #selector(refreshControlled), for: .valueChanged)
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -111,9 +110,16 @@ final class CurationListViewController: UIViewController {
         ])
     }
     
+    @objc func refreshControlled() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.fetchCuration()
+            self.refreshControl.endRefreshing()
+        }
+    }
+    
     // MARK: - 파이어베이스 update
     
-    private func update() {
+    private func fetchCuration() {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await CurationRequest().fetch() {
