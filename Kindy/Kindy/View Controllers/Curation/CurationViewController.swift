@@ -17,7 +17,6 @@ final class CurationViewController: UIViewController {
     private var replyCount: Int = 0
 
     private var bookstoresRequestTask: Task<Void, Never>?
-    private let firestoreManager = FirestoreManager()
     private let images: [UIImage]
 
     private var bookStore: Bookstore?
@@ -47,7 +46,7 @@ final class CurationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.bookstoresRequestTask = Task {
-            self.bookStore = try? await firestoreManager.fetchBookstore(with: curation.bookstoreID)
+            self.bookStore = try? await BookstoreRequest().fetch(with: curation.bookstoreID)
             bookstoresRequestTask = nil
         }
     }

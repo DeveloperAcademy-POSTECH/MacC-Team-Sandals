@@ -17,10 +17,6 @@ final class HomeSearchViewController: UIViewController, UISearchResultsUpdating 
         imageRequestTask?.cancel()
     }
     
-    // MARK: - 파이어베이스 매니저
-    
-    private let firestoreManager = FirestoreManager()
-    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -137,7 +133,7 @@ extension HomeSearchViewController: UITableViewDataSource {
         cell.bookstore = filteredItems[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await firestoreManager.fetchImage(with: cell.bookstore!.images?.first ?? "") {
+            if let image = try? await ImageCache.shared.load(cell.bookstore!.images?.first) {
                 cell.photoImageView.image = image
             }
             imageRequestTask = nil

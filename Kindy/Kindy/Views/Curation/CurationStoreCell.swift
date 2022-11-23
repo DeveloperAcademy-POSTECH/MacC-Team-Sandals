@@ -47,7 +47,6 @@ final class CurationStoreCell: UICollectionViewCell {
         return view
     }()
 
-    private let firestoreManager = FirestoreManager()
     private var bookstoresRequestTask: Task<Void, Never>?
     private var bookStore: Bookstore?
 
@@ -105,8 +104,8 @@ final class CurationStoreCell: UICollectionViewCell {
     // 서점 들고와야하나
     func configure(bookStore: String) {
         self.bookstoresRequestTask = Task {
-            self.bookStore = try? await firestoreManager.fetchBookstore(with: bookStore)
-            guard let image = try? await firestoreManager.fetchImage(with: self.bookStore?.images?[0]) else { return }
+            self.bookStore = try? await BookstoreRequest().fetch(with: bookStore)
+            guard let image = try? await ImageCache.shared.load(self.bookStore?.images?[0]) else { return }
             self.titleLabel.text = self.bookStore?.name
             self.imageView.image = image
             self.descriptionLabel.text = self.bookStore?.shortAddress

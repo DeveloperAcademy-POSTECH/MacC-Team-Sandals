@@ -23,7 +23,6 @@ final class PagingCurationViewController: UIViewController {
 
     private var curationRequestTask: Task<Void, Never>?
     private var imageRequestTask: Task<Void, Never>?
-    private let firestoreManager = FirestoreManager()
 
     private var images: [UIImage] = []
 
@@ -69,7 +68,7 @@ final class PagingCurationViewController: UIViewController {
         super.viewWillAppear(animated)
 
         self.imageRequestTask = Task {
-            if let mainImage = try? await firestoreManager.fetchImage(with: curation.mainImage) {
+            if let mainImage = try? await ImageCache.shared.load(curation.mainImage) {
                 guard let view = self.headerView as? CurationHeaderView else { return }
                 view.imageView.image = mainImage
                 self.images.append(mainImage)
@@ -81,7 +80,7 @@ final class PagingCurationViewController: UIViewController {
 
         self.curationRequestTask = Task {
             curationRequestTask?.cancel()
-            if let curation = try? await firestoreManager.fetchCuration(with: curation.id) {
+            if let curation = try? await CurationRequest().fetch(with: curation.id) {
                 self.curation = curation
             }
             curationRequestTask = nil
@@ -103,7 +102,7 @@ final class PagingCurationViewController: UIViewController {
         self.imageRequestTask = Task {
             let descriptions = curation.descriptions
             for i in 0..<curation.descriptions.count {
-                if let image = try? await firestoreManager.fetchImage(with: descriptions[i].image) {
+                if let image = try? await ImageCache.shared.load(curation.descriptions[i].image) {
                     self.images.append(image)
                 } else {
                     self.images.append(UIImage())

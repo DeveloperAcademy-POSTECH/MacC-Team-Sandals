@@ -9,15 +9,17 @@ import UIKit
 
 struct Curation {
     var id: String = UUID().uuidString
-    var userID: String
-    var bookstoreID: String
-    var mainImage: String
-    var title: String
-    var subTitle: String?
+    let userID: String
+    let bookstoreID: String
+    let category: String
+    let mainImage: String
+    let title: String
+    let subTitle: String?
     var createdAt: Date? = Date()
     var headText: String
     var descriptions: [Description]
     var likes: [String]
+    var comments: [Comment]?
 }
 
 extension Curation: Codable { }
