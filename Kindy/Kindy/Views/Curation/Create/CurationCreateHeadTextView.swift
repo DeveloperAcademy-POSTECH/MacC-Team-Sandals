@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CurationCreateHeadTextView: UIView {
+final class CurationCreateHeadTextView: UIView {
     
     private let textViewPlaceHolder:String = "본문 내용을 작성해 주세요"
 

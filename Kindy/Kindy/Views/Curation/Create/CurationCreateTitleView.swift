@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CurationCreateTitleView: UIView {
+final class CurationCreateTitleView: UIView {
     
     var mainText: String = ""
     let mainMaxCount: Int = 14

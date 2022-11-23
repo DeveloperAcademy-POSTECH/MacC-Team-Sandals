@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CurationCreateAddDescriptionButton: UIView {
+final class CurationCreateAddDescriptionButton: UIView {
     
     var delegate: CurationCreateDelegate?
 

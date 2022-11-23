@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CurationCreateDescriptionTableViewCell: UITableViewCell {
+final class CurationCreateDescriptionTableViewCell: UITableViewCell {
     
     private var textViewDelegate: UITextViewDelegate?
     private var delegate: CurationCreateDelegate?

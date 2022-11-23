@@ -8,7 +8,7 @@
 import UIKit
 import Photos
 
-class CurationCreateViewController: UIViewController {
+final class CurationCreateViewController: UIViewController {
     // descriptionTable의 높이를 변화시키기 위한 변수
     private var tableHeight: NSLayoutConstraint?
     
