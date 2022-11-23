@@ -131,7 +131,10 @@ final class FeaturedCurationListViewController: UIViewController {
 
 extension FeaturedCurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+        if curationList?.count == 0 {
+            tableView.setCurationEmptyView(text: "아직 작성된 큐레이션이 없어요 🥲")
+        }
+        
         return curationList?.count ?? 0
     }
     
