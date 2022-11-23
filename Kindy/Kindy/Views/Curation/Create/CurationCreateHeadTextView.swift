@@ -124,7 +124,7 @@ class CurationCreateHeadTextView: UIView {
         self.delegate = curationCreateDelegate
     }
     
-    func setupCategor(_ string: String) {
+    func setupCategory(_ string: String) {
         categoryLabel.text = string
     }
     

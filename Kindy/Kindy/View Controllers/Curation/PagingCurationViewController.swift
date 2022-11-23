@@ -101,8 +101,8 @@ final class PagingCurationViewController: UIViewController {
 
         self.imageRequestTask = Task {
             let descriptions = curation.descriptions
-            for i in 0..<curation.descriptions.count {
-                if let image = try? await ImageCache.shared.load(curation.descriptions[i].image) {
+            for i in 0..<descriptions.count {
+                if let image = try? await ImageCache.shared.load(descriptions[i].image) {
                     self.images.append(image)
                 } else {
                     self.images.append(UIImage())

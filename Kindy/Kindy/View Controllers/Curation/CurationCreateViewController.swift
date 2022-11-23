@@ -63,7 +63,7 @@ class CurationCreateViewController: UIViewController {
             self.mainImage = mainImage!
             self.descriptionImages = descriptionImage
         } else {
-            self.curation = Curation(userID: "", bookstoreID: "", mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [])
+            self.curation = Curation(userID: "", bookstoreID: "", category: "" , mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [])
         }
         super.init(nibName: nil, bundle: nil)
     }
@@ -227,6 +227,7 @@ class CurationCreateViewController: UIViewController {
     }
     
     private func setupHeadTextView() {
+        headTextView.setupCategory(curation.category)
         headTextView.setupText(string: curation.headText)
         NSLayoutConstraint.activate([
             headTextView.topAnchor.constraint(equalTo: titleView.bottomAnchor),
@@ -525,10 +526,12 @@ extension CurationCreateViewController: CurationCreateDelegate {
     func selectCategory() {
         let actionSheet = UIAlertController(title: "*게시글의 카테고리를 선택해 주세요", message: nil, preferredStyle: .actionSheet)
         let bookstore = UIAlertAction(title: "서점", style: .default, handler: { _ in
-            self.headTextView.setupCategor("서점")
+            self.curation.category = "서점"
+            self.headTextView.setupCategory("서점")
         })
-        let book = UIAlertAction(title: "책", style: .default, handler: { _ in
-            self.headTextView.setupCategor("책")
+        let book = UIAlertAction(title: "도서", style: .default, handler: { _ in
+            self.curation.category = "도서"
+            self.headTextView.setupCategory("도서")
         })
         actionSheet.addAction(bookstore)
         actionSheet.addAction(book)
