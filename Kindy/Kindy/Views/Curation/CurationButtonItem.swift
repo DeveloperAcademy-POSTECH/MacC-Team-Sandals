@@ -113,6 +113,8 @@ final class CurationButtonItemView: UIView {
     }
 
     private func checkLiked() {
+        switch view {
+        case .heart:
         if isLoggedIn || UserManager().isLoggedIn() {
             isLoggedIn = true
             userRequestTask = Task {

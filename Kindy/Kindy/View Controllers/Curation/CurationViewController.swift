@@ -23,10 +23,13 @@ final class CurationViewController: UIViewController {
 
     private lazy var cellCount: Int = curation.descriptions.count
     private lazy var replyCount: Int = curation.comments?.count ?? 0
+    
+    private let userManager = UserManager()
+    private let curationManager = CurationRequest()
 
     private var updateUserNicknameTask: Task<Void, Never>?
     private var curationRequestTask: Task<Void, Never>?
-    private let firestoreManager = FirestoreManager()
+    
     private let images: [UIImage]
 
 //    private var bookstoresRequestTask: Task<Void, Never>?
@@ -38,7 +41,7 @@ final class CurationViewController: UIViewController {
     private var isViewingKeyboard = false
     
     private lazy var userID: String = {
-        let id = firestoreManager.getUserID()
+        let id = userManager.getID()
         return id
     }()
 
@@ -62,15 +65,7 @@ final class CurationViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.bookstoresRequestTask = Task {
-            self.bookStore = try? await BookstoreRequest().fetch(with: curation.bookstoreID)
-            bookstoresRequestTask = nil
-        }
-    }
-
+    
     private lazy var bottomView: UIView = {
         let view = CurationButtonStackView(frame: .zero, curation: curation)
         guard let replyView = view.replyView as? CurationButtonItemView else { return UIView()}
@@ -89,17 +84,21 @@ final class CurationViewController: UIViewController {
 //        }
 // --------------
         
-        listener = firestoreManager.fetchComments(curationID: curation.id) { querySnapshot, error in
+        listener = curationManager.fetchComments(curationID: curation.id) { querySnapshot, error in
             self.updateUserNicknameTask = Task {
                 var index = 0
                 self.curation.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
                 self.curation.comments?.sort(by: { first, second in
                     first.createdAt < second.createdAt
                 })
+                
                 for comment in self.curation.comments ?? [] {
+                    print("hi", comment)
                     if comment.userNickname == nil {
-                        self.curation.comments?[index].userNickname = try? await self.firestoreManager.fetchUserWithDocID(documentID: comment.userID).nickName
+                        self.curation.comments?[index].userNickname = try? await self.userManager.fetchUserWithDocID(documentID: comment.userID).nickName
+                        print(self.curation.comments?[index].userNickname)
                     }
+                    print("bye", comment)
                    index += 1
                 }
                 self.changeReplyCount()
@@ -273,7 +272,7 @@ extension CurationViewController: UICollectionViewDelegateFlowLayout {
 extension CurationViewController: PostComment {
     func postComment(content: String) {
         collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-        try? firestoreManager.createComment(curationID: curation.id, userID: userID, content: content)
+        try? curationManager.createComment(curationID: curation.id, userID: userID, content: content)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
             self.handleRefreshControl()
         }
@@ -360,7 +359,7 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                 
                                 let okAction = UIAlertAction(title: "확인", style: .default) { _ in
                                     self.curationRequestTask = Task {
-                                        self.firestoreManager.deleteComment(curationID: self.curation.id, commentID: self.curation.comments![indexPath.row].id)
+                                        self.curationManager.deleteComment(curationID: self.curation.id, commentID: self.curation.comments![indexPath.row].id)
                                     
                                         collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                                     }
