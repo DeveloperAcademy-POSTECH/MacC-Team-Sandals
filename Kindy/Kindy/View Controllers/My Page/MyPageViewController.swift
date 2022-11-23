@@ -15,10 +15,10 @@ final class MyPageViewController: UIViewController {
     private var userRequestTask: Task<Void, Never>?
     private var bookstoresRequestTask: Task<Void, Never>?
     
-    private let loginCellLabel: [[String]] = [["독립서점 제보하기", "의견 보내기"],
+    private let loginCellLabels: [[String]] = [["독립서점 제보하기", "의견 보내기"],
                                           ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"],
                                           ["로그아웃", "회원탈퇴"]]
-    private let logoutCellLabel: [[String]] = [["독립서점 제보하기", "의견 보내기"],
+    private let logoutCellLabels: [[String]] = [["독립서점 제보하기", "의견 보내기"],
                                            ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"]]
     
     private var user: User? {
@@ -53,7 +53,6 @@ final class MyPageViewController: UIViewController {
     }
             
     override func viewWillAppear(_ animated: Bool) {
-        print(#function)
         updateUserData()
     }
     
@@ -143,14 +142,12 @@ final class MyPageViewController: UIViewController {
     }
     
     private func updateMyPageViewWithUserInfo() {
-        print(#function)
-        print("Hi")
         if let user = user {
-            myPageCellLabel = loginCellLabel
+            myPageCellLabel = loginCellLabels
             setupContainerView(userInfoContainerView)
             userInfoContainerView.user = user
         } else {
-            myPageCellLabel = logoutCellLabel
+            myPageCellLabel = logoutCellLabels
             setupContainerView(tryLoginContainerView)
         }
     }
