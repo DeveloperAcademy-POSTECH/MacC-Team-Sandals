@@ -11,8 +11,6 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     
     private var imageRequestTask: Task<Void, Never>?
     
-    private let firestoreManager = FirestoreManager()
-    
     private var bookstore: Bookstore?
     private var currentPage: Int = 0 {
         didSet {
@@ -194,7 +192,7 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCarouselCollectionViewCell.identifier, for: indexPath) as? ImageCarouselCollectionViewCell else {return UICollectionViewCell()}
         self.imageRequestTask = Task {
-            if let image = try? await firestoreManager.fetchImage(with: bookstore!.images![indexPath.row]) {
+            if let image = try? await ImageCache.shared.load(bookstore!.images![indexPath.row]) {
                 cell.configureCell(image: image)
             }
             imageRequestTask = nil

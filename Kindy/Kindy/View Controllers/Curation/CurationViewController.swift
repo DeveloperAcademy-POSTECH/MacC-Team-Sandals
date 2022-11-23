@@ -63,6 +63,14 @@ final class CurationViewController: UIViewController {
         return view
     }()
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.bookstoresRequestTask = Task {
+            self.bookStore = try? await BookstoreRequest().fetch(with: curation.bookstoreID)
+            bookstoresRequestTask = nil
+        }
+    }
+
     private lazy var bottomView: UIView = {
         let view = CurationButtonStackView(frame: .zero, curation: curation)
         guard let replyView = view.replyView as? CurationButtonItemView else { return UIView()}
