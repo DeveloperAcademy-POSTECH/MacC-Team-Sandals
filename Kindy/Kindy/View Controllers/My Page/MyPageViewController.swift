@@ -122,6 +122,7 @@ final class MyPageViewController: UIViewController {
                 if let user = try? await userManager.fetchCurrentUser() {
                     self.user = user
                 } else {
+                    self.user = nil
                     userRequestTask = nil
                     return
                 }
