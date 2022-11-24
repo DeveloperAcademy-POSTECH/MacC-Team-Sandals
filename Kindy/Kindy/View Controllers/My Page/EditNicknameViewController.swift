@@ -112,10 +112,10 @@ extension EditNicknameViewController: UITextFieldDelegate {
             
             switch isExistingNickname {
             case true:
-                changeViewComponents(with: true)
+                changeViewComponents(with: isExistingNickname)
                 
             case false:
-                changeViewComponents(with: false)
+                changeViewComponents(with: isExistingNickname)
             }
             userNicknameRequestTask = nil
         }
