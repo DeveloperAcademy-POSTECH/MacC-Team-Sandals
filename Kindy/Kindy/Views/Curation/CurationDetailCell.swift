@@ -9,6 +9,13 @@ import UIKit
 
 final class CurationDetailCell: UICollectionViewCell {
 
+    private lazy var lineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .kindyLightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
@@ -53,7 +60,7 @@ final class CurationDetailCell: UICollectionViewCell {
 
         var frame = layoutAttributes.frame
         frame.size.width = UIScreen.main.bounds.width
-        frame.size.height = stackView.bounds.height
+        frame.size.height = stackView.bounds.height + 24
 
         layoutAttributes.frame = frame
         return layoutAttributes
@@ -70,9 +77,25 @@ final class CurationDetailCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
         ])
     }
+
     func configure(description: Description, image: UIImage) {
-        //        imageView.image = UIImage(named: description.image ?? "")
         imageView.image = image
         descriptionLabel.text = description.content
+    }
+
+    func addLineView() {
+        self.addSubview(lineView)
+        NSLayoutConstraint.activate([
+            lineView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            lineView.heightAnchor.constraint(equalToConstant: 4),
+            lineView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            lineView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+
+    func removeLineView() {
+        if subviews.contains(lineView) {
+            lineView.removeFromSuperview()
+        }
     }
 }

@@ -14,5 +14,5 @@ enum CollectionPath {
     static let bookstores = "Bookstores"
     static let curations = "Curations"
     static let users = "Users"
-    static let comments = "Comments"
+    static let comments = "Comment"
 }
