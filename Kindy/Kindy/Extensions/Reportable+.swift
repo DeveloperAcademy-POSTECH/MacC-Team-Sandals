@@ -14,6 +14,7 @@ extension Reportable {
     /// 아래 함수를 변수에 클로저를 담아서 구현을 하는게 나은지 그냥 아래가 나은지.. ?
     /// 아니면 다른 방법? 취소 액션이 중복인데 이를 따로 함수로 만들어야 할지? 고작 두번이긴한데 ,, 잘 판단이 안섭니다 ㅜㅜㅜ
     func showReportController(_ self: UIViewController, style: UIAlertController.Style, title: String = "댓글 신고") {
+        self.hideKeyboard()
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: style)
 
         let okAction = UIAlertAction(title: title, style: .destructive) { _ in
