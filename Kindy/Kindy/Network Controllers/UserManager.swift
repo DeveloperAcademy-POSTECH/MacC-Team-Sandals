@@ -13,7 +13,6 @@ import FirebaseAuth
 struct UserManager: FirestoreRequest {
     typealias Response = User
     let collectionPath = CollectionPath.users
-    let db = Firestore.firestore()
 }
 
 // MARK: 유저 데이터
@@ -61,7 +60,7 @@ extension UserManager {
     func delete() {
         let auth = Auth.auth().currentUser
 
-        db.collection(users).document(auth?.uid ?? "al").delete() { _ in
+        db.collection(collectionPath).document(auth?.uid ?? "al").delete() { _ in
             auth?.delete()
         }
     }
