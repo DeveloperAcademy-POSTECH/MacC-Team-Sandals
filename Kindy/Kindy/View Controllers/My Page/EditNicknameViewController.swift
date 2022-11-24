@@ -99,7 +99,6 @@ extension EditNicknameViewController: UITextFieldDelegate {
     
     // 텍스트필드 입력이 완료되었을때
     func textFieldDidEndEditing(_ textField: UITextField) {
-        // 키보드를 내리고
         editNicknameView.nicknameTextField.resignFirstResponder()
         
         // 텍스트가 입력되었으면
@@ -112,11 +111,9 @@ extension EditNicknameViewController: UITextFieldDelegate {
             guard let isExistingNickname = try? await userManager.isExistingNickname(text) else { return }
             
             switch isExistingNickname {
-            // 닉네임이 중복될때 UI 변경
             case true:
                 changeViewComponents(with: true)
                 
-            // 닉네임이 중복되지 않을때 UI 변경
             case false:
                 changeViewComponents(with: false)
             }
