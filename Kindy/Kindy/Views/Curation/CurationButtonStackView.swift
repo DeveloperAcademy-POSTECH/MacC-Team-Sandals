@@ -26,7 +26,7 @@ final class CurationButtonStackView: UIView {
     }()
 
     lazy var replyView: UIView = {
-        let view = CurationButtonItemView(frame: .zero, curation: curation, viewName: .reply)
+        let view = CurationButtonItemView(frame: .zero, curation: curation, viewName: .comment)
         return view
     }()
 

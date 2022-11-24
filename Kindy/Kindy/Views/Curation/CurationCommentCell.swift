@@ -51,7 +51,7 @@ final class CurationCommentCell: UICollectionViewCell {
     private lazy var dateLabel: UILabel = {
         let view = UILabel()
         view.font = .footnote
-        view.textColor = .kindyLightGray
+        view.textColor = .kindyGray
         view.numberOfLines = 0
         view.textAlignment = .left
         return view
@@ -60,7 +60,7 @@ final class CurationCommentCell: UICollectionViewCell {
     private lazy var dotLabel: UILabel = {
         let view = UILabel()
         view.font = .footnote
-        view.textColor = .kindyLightGray
+        view.textColor = .kindyGray
         view.text = "•"
         return view
     }()
@@ -68,7 +68,7 @@ final class CurationCommentCell: UICollectionViewCell {
     private lazy var reportBtn: UIButton = {
         let view = UIButton(frame: CGRect(x: 0, y: 0, width: 23, height: 18))
         view.setTitle("신고", for: .normal)
-        view.setTitleColor(.kindyLightGray, for: .normal)
+        view.setTitleColor(.kindyGray, for: .normal)
         view.setBackgroundImage(UIImage(), for: .normal)
         view.titleLabel?.font = UIFont.footnote
         view.addTarget(self, action: #selector(presentReportView), for: .touchUpInside)

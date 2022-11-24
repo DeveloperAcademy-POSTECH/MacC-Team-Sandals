@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 protocol SetSheetDefault: AnyObject {
     func setDefaultSheet()
@@ -13,7 +14,7 @@ protocol SetSheetDefault: AnyObject {
 
 final class CurationViewController: UIViewController {
     
-    private var listener: Any?
+    private var listener: ListenerRegistration?
     
     private var curation: Curation
     
@@ -27,7 +28,7 @@ final class CurationViewController: UIViewController {
     private let userManager = UserManager()
     private let curationManager = CurationRequest()
 
-    private var updateUserNicknameTask: Task<Void, Never>?
+    private var fetchCommentTask: Task<Void, Never>?
     private var curationRequestTask: Task<Void, Never>?
     
     private let images: [UIImage]
@@ -35,7 +36,7 @@ final class CurationViewController: UIViewController {
 //    private var bookstoresRequestTask: Task<Void, Never>?
 //    private var bookStore: Bookstore?
 
-    private var collectionViewBottomConstant: CGFloat = -72
+    private var collectionViewBottomConstant: CGFloat = -62
     private var collectionViewBottomContraint: NSLayoutConstraint!
     
     private var isViewingKeyboard = false
@@ -84,25 +85,11 @@ final class CurationViewController: UIViewController {
 //        }
 // --------------
         
-        listener = curationManager.fetchComments(curationID: curation.id) { querySnapshot, error in
-            self.updateUserNicknameTask = Task {
-                var index = 0
-                self.curation.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
-                self.curation.comments?.sort(by: { first, second in
-                    first.createdAt < second.createdAt
-                })
-                
-                for comment in self.curation.comments ?? [] {
-                    if comment.userNickname == nil {
-                        self.curation.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
-                    }
-                   index += 1
-                }
-                self.changeReplyCount()
-                self.replyCount = self.curation.comments?.count ?? 0
-                self.collectionView.reloadData()
-                self.updateUserNicknameTask = nil
+        fetchCommentTask = Task {
+            if curation.comments == nil {
+                curation.comments = try? await CommentRequest().fetchComment(id: curation.id)
             }
+            await afterFetachComment()
         }
     }
 
@@ -119,11 +106,6 @@ final class CurationViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        listener = nil
-    }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -135,12 +117,16 @@ final class CurationViewController: UIViewController {
     }
 
     @objc private func handleRefreshControl() {
+        self.resignFirstResponder()
         UIView.animate(withDuration: 0.5, delay: 0) {
-            self.resignFirstResponder()
             self.collectionView.contentOffset.y = -50
             self.collectionView.refreshControl?.beginRefreshing()
         }
-        collectionView.reloadData()
+        
+        fetchCommentTask = Task {
+            curation.comments = try? await CommentRequest().fetchComment(id: curation.id)
+            await afterFetachComment()
+        }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             self.collectionView.refreshControl?.endRefreshing()
@@ -151,6 +137,23 @@ final class CurationViewController: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tap.cancelsTouchesInView = true
         view.addGestureRecognizer(tap)
+    }
+    
+    private func afterFetachComment() async {
+        self.curation.comments?.sort(by: { first, second in
+            first.createdAt < second.createdAt
+        })
+        var index = 0
+        for comment in self.curation.comments ?? [] {
+            if comment.userNickname == nil {
+                self.curation.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
+            }
+           index += 1
+        }
+        
+        self.changeReplyCount()
+        self.replyCount = self.curation.comments?.count ?? 0
+        self.collectionView.reloadData()
     }
 }
 
@@ -302,7 +305,7 @@ extension CurationViewController: KeyboardActionable {
     }
 }
 
-extension CurationViewController: ReplyButtonAction {
+extension CurationViewController: CommentButtonAction {
     func showingKeyboard() {
         collectionView.scrollToItem(at: IndexPath(row: replyCount, section: 1), at: .bottom, animated: true)
 

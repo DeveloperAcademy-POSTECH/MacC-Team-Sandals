@@ -6,7 +6,7 @@
 //
 import UIKit
 
-protocol ReplyButtonAction: AnyObject {
+protocol CommentButtonAction: AnyObject {
     func showingKeyboard()
 }
 
@@ -14,10 +14,10 @@ final class CurationButtonItemView: UIView {
 
     enum Views {
         case heart
-        case reply
+        case comment
     }
 
-    weak var delegate: ReplyButtonAction?
+    weak var delegate: CommentButtonAction?
 
     private var isLoggedIn: Bool = false
     private var userID: String = ""
@@ -79,8 +79,8 @@ final class CurationButtonItemView: UIView {
             self.buttonImage = "heart"
             self.countLabel.text = String(curation.likes.count)
             super.init(frame: frame)
-        case .reply:
-            self.view = .reply
+        case .comment:
+            self.view = .comment
             self.buttonImage = "bubble.left"
             super.init(frame: frame)
             self.countLabel.text = String(commentCount)
@@ -131,7 +131,7 @@ final class CurationButtonItemView: UIView {
                     userRequestTask = nil
                 }
             }
-        case .reply:
+        case .comment:
             return
         }
     }
@@ -167,7 +167,7 @@ private extension CurationButtonItemView {
                     }
                     likeUpdateTask = nil
                 }
-            case .reply:
+            case .comment:
                 delegate?.showingKeyboard()
             }
         } else {
