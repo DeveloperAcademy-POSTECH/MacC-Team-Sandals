@@ -13,7 +13,9 @@ import FirebaseAuth
 struct BookstoreRequest: FirestoreRequest {
     typealias Response = Bookstore
     let collectionPath = CollectionPath.bookstores
-    
+}
+ 
+extension BookstoreRequest {
     // 서점 추가
     func add(_ bookstore: Bookstore) throws {
         try db.collection(collectionPath).document(bookstore.id).setData(from: bookstore)
