@@ -6,14 +6,12 @@
 //
 
 import Foundation
-import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseAuth
 
 struct UserManager: FirestoreRequest {
     typealias Response = User
     let collectionPath = CollectionPath.users
-    let db = Firestore.firestore()
 }
 
 // MARK: 유저 데이터
