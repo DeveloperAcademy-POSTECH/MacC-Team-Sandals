@@ -63,6 +63,10 @@ final class BottomSheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        guard let vc = contentViewController as? CurationViewController else { return }
+        vc.delegate = self
+
         NotificationCenter.default.addObserver(self, selector: #selector(presentReport(_:)), name: .Report, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(checkLogin(_:)), name: .Loggin, object: nil)
@@ -211,5 +215,12 @@ extension BottomSheetViewController: Reportable {
 extension BottomSheetViewController: LoginCheckable {
     @objc private func checkLogin(_ notification: Notification) {
         showLoginController(self)
+    }
+}
+
+extension BottomSheetViewController: SetSheetDefault {
+    func setDefaultSheet() {
+        showBottomSheet()
+        delegate?.defaultHeaderLayout()
     }
 }
