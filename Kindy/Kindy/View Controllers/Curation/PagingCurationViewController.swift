@@ -100,8 +100,9 @@ final class PagingCurationViewController: UIViewController {
         dimmingView.alpha = 1
 
         self.imageRequestTask = Task {
-            for i in 0..<curation.descriptions.count {
-                if let image = try? await ImageCache.shared.load(curation.descriptions[i].image) {
+            let descriptions = curation.descriptions
+            for i in 0..<descriptions.count {
+                if let image = try? await ImageCache.shared.load(descriptions[i].image) {
                     self.images.append(image)
                 } else {
                     self.images.append(UIImage())
