@@ -1,5 +1,5 @@
 //
-//  CurationReplyCell.swift
+//  CurationCommentCell.swift
 //  Kindy
 //
 //  Created by rbwo on 2022/11/08.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CurationReplyCell: UICollectionViewCell {
+final class CurationCommentCell: UICollectionViewCell {
 
     private let stackView: UIStackView = {
         let view = UIStackView()
@@ -19,7 +19,7 @@ final class CurationReplyCell: UICollectionViewCell {
         return view
     }()
 
-    private lazy var userLabel: UILabel = {
+    lazy var userLabel: UILabel = {
         let view = UILabel()
         view.font = .subhead
         view.textColor = .black
@@ -50,19 +50,27 @@ final class CurationReplyCell: UICollectionViewCell {
 
     private lazy var dateLabel: UILabel = {
         let view = UILabel()
-        view.font = .subhead
-        view.textColor = .kindyLightGray
+        view.font = .footnote
+        view.textColor = .kindyGray
         view.numberOfLines = 0
         view.textAlignment = .left
+        return view
+    }()
+
+    private lazy var dotLabel: UILabel = {
+        let view = UILabel()
+        view.font = .footnote
+        view.textColor = .kindyGray
+        view.text = "•"
         return view
     }()
 
     private lazy var reportBtn: UIButton = {
         let view = UIButton(frame: CGRect(x: 0, y: 0, width: 23, height: 18))
         view.setTitle("신고", for: .normal)
-        view.setTitleColor(.kindyLightGray, for: .normal)
+        view.setTitleColor(.kindyGray, for: .normal)
         view.setBackgroundImage(UIImage(), for: .normal)
-        view.titleLabel?.font = UIFont.subhead
+        view.titleLabel?.font = UIFont.footnote
         view.addTarget(self, action: #selector(presentReportView), for: .touchUpInside)
         return view
     }()
@@ -94,18 +102,28 @@ final class CurationReplyCell: UICollectionViewCell {
         stackView.addArrangedSubview(descriptionLabel)
         stackView.addArrangedSubview(bottomStackView)
         bottomStackView.addArrangedSubview(dateLabel)
+        bottomStackView.addArrangedSubview(dotLabel)
         bottomStackView.addArrangedSubview(reportBtn)
 
         NSLayoutConstraint.activate([
+            userLabel.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 16),
             descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
         ])
     }
 
-    func configure(data: [String]) {
-        userLabel.text = data[0]
-        descriptionLabel.text = data[1]
-        dateLabel.text = data[2]
+    private func dateToString(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let nowDateStr = dateFormatter.string(from: Date())
+        let createDateStr = dateFormatter.string(from: date)
+        let dateText: String = nowDateStr == createDateStr ? "오늘" : createDateStr
+        return dateText
+    }
+
+    func configure(data: Comment) {
+        descriptionLabel.text = data.content
+        dateLabel.text = dateToString(data.createdAt)
     }
 
     @objc func presentReportView() {

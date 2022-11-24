@@ -10,9 +10,10 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseAuth
 
-struct UserManager {
+struct UserManager: FirestoreRequest {
+    typealias Response = User
+    let collectionPath = CollectionPath.users
     let db = Firestore.firestore()
-    let users = CollectionPath.users
 }
 
 // MARK: 유저 데이터
@@ -24,12 +25,12 @@ extension UserManager {
     
     // 현재 로그인되어 있는 정보로 유저 데이터 fetch
     func fetchCurrentUser() async throws -> User {
-        return try await db.collection(users).document(Auth.auth().currentUser?.uid ?? "").getDocument(as: User.self)
+        return try await db.collection(collectionPath).document(Auth.auth().currentUser?.uid ?? "").getDocument(as: User.self)
     }
     
     // 북마크 데이터 변경
     func updateBookmark(email: String, provider: String, bookmarkedBookstores: [String]) async throws {
-        let querySnapshot = try await db.collection(users).whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments()
+        let querySnapshot = try await db.collection(collectionPath).whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments()
         let document = querySnapshot.documents.first
         try await document?.reference.updateData(["bookmarkedBookstores" : bookmarkedBookstores])
     }
@@ -50,7 +51,7 @@ extension UserManager {
     // 이미 가입한 유저인지 확인
     func isExistingUser(_ email: String?, _ provider: String) async throws -> Bool {
         if let email = email {
-            return try await !db.collection(users).whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map{ $0.documentID }.isEmpty
+            return try await !db.collection(collectionPath).whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map{ $0.documentID }.isEmpty
         } else {
             return false
         }
@@ -59,9 +60,9 @@ extension UserManager {
     // 유저 삭제
     func delete() {
         signOut()
-        db.collection(users)
+        db.collection(collectionPath)
         
-        db.collection(users).document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
+        db.collection(collectionPath).document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
             Auth.auth().currentUser?.delete()
         }
     }
@@ -71,13 +72,13 @@ extension UserManager {
 extension UserManager {
     // 닉네임 중복확인
     func isExistingNickname(_ nickName: String) async throws -> Bool {
-        let nickNames = try await db.collection(users).getDocuments().documents.map{ $0.data() }.filter{ String(describing: $0["nickName"]!) == nickName }
+        let nickNames = try await db.collection(collectionPath).getDocuments().documents.map{ $0.data() }.filter{ String(describing: $0["nickName"]!) == nickName }
         return !nickNames.isEmpty
     }
 
     // 닉네임 수정
     func editNickname(_ newNickname: String) {
-        let user = db.collection(users).document(Auth.auth().currentUser?.uid ?? "")
+        let user = db.collection(collectionPath).document(Auth.auth().currentUser?.uid ?? "")
         user.updateData(["nickName": newNickname])
     }
 }

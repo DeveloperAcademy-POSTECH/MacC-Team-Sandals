@@ -2,15 +2,17 @@
 //  Comment.swift
 //  Kindy
 //
-//  Created by 정호윤 on 2022/11/21.
+//  Created by rbwo on 2022/11/21.
 //
 
 import Foundation
 
 struct Comment {
+    let id: String
     let userID: String
     let content: String
-    var createdAt = Date()
+    var createdAt: Date = Date()
+    var userNickname: String?
 }
 
 extension Comment: Codable { }
