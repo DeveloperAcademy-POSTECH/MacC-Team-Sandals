@@ -107,7 +107,6 @@ final class PagingCurationViewController: UIViewController {
                     self.images.append(UIImage())
                 }
             }
-            imageRequestTask = nil
 
             let bottomVC = BottomSheetViewController(contentViewController: CurationViewController(curation: curation, images: images))
             bottomVC.modalPresentationStyle = .overFullScreen
@@ -122,6 +121,7 @@ final class PagingCurationViewController: UIViewController {
                     self.dimmingView.alpha = 0
                 }
             }
+            imageRequestTask = nil
         }
     }
 

@@ -93,12 +93,9 @@ final class CurationViewController: UIViewController {
                 })
                 
                 for comment in self.curation.comments ?? [] {
-                    print("hi", comment)
                     if comment.userNickname == nil {
-                        self.curation.comments?[index].userNickname = try? await self.userManager.fetchUserWithDocID(documentID: comment.userID).nickName
-                        print(self.curation.comments?[index].userNickname)
+                        self.curation.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
                     }
-                    print("bye", comment)
                    index += 1
                 }
                 self.changeReplyCount()
@@ -139,7 +136,7 @@ final class CurationViewController: UIViewController {
 
     @objc private func handleRefreshControl() {
         UIView.animate(withDuration: 0.5, delay: 0) {
-            self.hideKeyboard()
+            self.resignFirstResponder()
             self.collectionView.contentOffset.y = -50
             self.collectionView.refreshControl?.beginRefreshing()
         }
@@ -360,12 +357,11 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                 let okAction = UIAlertAction(title: "확인", style: .default) { _ in
                                     self.curationRequestTask = Task {
                                         self.curationManager.deleteComment(curationID: self.curation.id, commentID: self.curation.comments![indexPath.row].id)
-                                    
+                                        self.handleRefreshControl()
                                         collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                                     }
                                 }
                                 let cancelAction = UIAlertAction(title: "취소", style: .default)
-                                
                                 alertController.addAction(cancelAction)
                                 alertController.addAction(okAction)
                                 self.present(alertController, animated: true)
