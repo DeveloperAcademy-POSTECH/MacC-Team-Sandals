@@ -17,6 +17,14 @@ extension UITableView: MFMailComposeViewControllerDelegate{
         self.backgroundView = emptyView
     }
     
+    func setCurationEmptyView(text message: String) {
+        let emptyView = EmptyView()
+        emptyView.emptyViewMessage = message
+        emptyView.reportButton.isHidden = true
+        
+        self.backgroundView = emptyView
+    }
+    
     func restore() {
         self.backgroundView = nil
     }

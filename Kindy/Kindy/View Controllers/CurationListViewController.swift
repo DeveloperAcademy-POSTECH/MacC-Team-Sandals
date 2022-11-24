@@ -35,13 +35,9 @@ final class CurationListViewController: UIViewController {
     
     private var curationImage = UIImage()
     
-    private var user: User? {
-        didSet {
-            guard let user = user else { return }
-            
-            // user가 좋아요한 큐레이션 게시글 목록 필요함
-        }
-    }
+    private var user: User?
+    
+    private let refreshControl = UIRefreshControl()
     
     // MARK: - 라이프 사이클
     
@@ -50,13 +46,7 @@ final class CurationListViewController: UIViewController {
 
         createBarButtonItems()
         setupTableView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        update()
-        updateUserData()
+        fetchCuration()
     }
     
     // MARK: - 메소드
@@ -75,17 +65,14 @@ final class CurationListViewController: UIViewController {
     }
     
     @objc func searchButtonTapped() {
-        let homeSearchViewController = HomeSearchViewController()
-        show(homeSearchViewController, sender: nil)
+        let searchViewController = SearchViewController()
+        searchViewController.setupData(items: mainDummy, itemType: .curationType)
+        show(searchViewController, sender: nil)
     }
     
     @objc func writeButtonTapped() {
-        if let user = user {
-            // TODO: 큐레이션 작성 페이지 연결
-            let waitAlert = UIAlertController(title: "작성 폼을 준비중입니다 🛠", message: "조금만 기다려주세요!", preferredStyle: .alert)
-            let okay = UIAlertAction(title: "확인", style: .cancel)
-            waitAlert.addAction(okay)
-            present(waitAlert, animated: true, completion: nil)
+        if UserManager().isLoggedIn() {
+            self.navigationController?.pushViewController(CurationCreateViewController(nil, nil, []), animated: true)
         } else {
             let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "로그인", style: .default, handler: { _ in
@@ -108,7 +95,9 @@ final class CurationListViewController: UIViewController {
         tableView.rowHeight = CurationListCell.rowHeight
         tableView.register(CurationListCell.self, forCellReuseIdentifier: CurationListCell.identifier)
         tableView.register(CurationListHeaderView.self, forHeaderFooterViewReuseIdentifier: CurationListHeaderView.identifier)
-
+        tableView.refreshControl = refreshControl
+        tableView.refreshControl?.addTarget(self, action: #selector(refreshControlled), for: .valueChanged)
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -117,9 +106,16 @@ final class CurationListViewController: UIViewController {
         ])
     }
     
+    @objc func refreshControlled() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.fetchCuration()
+            self.refreshControl.endRefreshing()
+        }
+    }
+    
     // MARK: - 파이어베이스 update
     
-    private func update() {
+    private func fetchCuration() {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await CurationRequest().fetch() {
@@ -131,19 +127,6 @@ final class CurationListViewController: UIViewController {
             curationsRequestTask = nil
         }
     }
-    
-    private func updateUserData() {
-        userRequestTask?.cancel()
-        userRequestTask = Task {
-            if UserManager().isLoggedIn() {
-                if let user = try? await UserManager().fetchCurrentUser() {
-                    self.user = user
-                }
-            }
-            userRequestTask = nil
-        }
-    }
-    
 }
 
 // MARK: - DataSource
