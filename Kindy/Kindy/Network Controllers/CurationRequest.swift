@@ -13,7 +13,9 @@ import FirebaseAuth
 struct CurationRequest: FirestoreRequest {
     typealias Response = Curation
     let collectionPath = CollectionPath.curations
-    
+}
+
+extension CurationRequest {
     // 댓글을 포함한 큐레이션 fetch
     func fetchWithComment(with id: String) async throws -> Curation {
         var curation = try await db.collection(collectionPath).document(id).getDocument(as: Curation.self)
