@@ -60,8 +60,8 @@ extension CurationRequest {
         db.collection(collectionPath).document(curationID).collection("Comment").document(commentID).delete()
     }
     
-    func uploadImage(image: UIImage, pathRoot: String, completion: @escaping (String?) -> Void) {
-        guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
+    func curationUploadImage(image: UIImage, pathRoot: String, completion: @escaping (String?) -> Void) {
+        guard let imageData = image.jpegData(compressionQuality: 0.1) else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"
         let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)

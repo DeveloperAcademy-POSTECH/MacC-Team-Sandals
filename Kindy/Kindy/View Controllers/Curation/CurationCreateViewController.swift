@@ -323,7 +323,7 @@ final class CurationCreateViewController: UIViewController {
                     }
                 }
                 if isMainImageChanged {
-                    CurationRequest().uploadImage(image: mainImage ?? UIImage(), pathRoot: "Curations", completion: { url in
+                    CurationRequest().curationUploadImage(image: mainImage ?? UIImage(), pathRoot: "Curations/\(curation.title)/main", completion: { url in
                         self.curation.mainImage = url ?? ""
                         self.completeCount += 1
                         if self.completeCount == self.descriptionImages.count {
@@ -338,7 +338,7 @@ final class CurationCreateViewController: UIViewController {
                 }
                 for i in 0..<descriptionImages.count {
                     if addIndex <= i {
-                        CurationRequest().uploadImage(image: descriptionImages[i], pathRoot: "Curations/test_\(i)") { url in
+                        CurationRequest().curationUploadImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
                             self.curation.descriptions[i].image = url
                             self.completeCount += 1
 //                            print("add description Image \(url) \(self.completeCount) \(self.descriptionImages.count)")
