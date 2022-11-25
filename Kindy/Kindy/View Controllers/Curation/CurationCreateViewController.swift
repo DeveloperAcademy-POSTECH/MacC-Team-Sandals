@@ -594,9 +594,11 @@ extension CurationCreateViewController: CurationCreateDelegate {
             self.curation.category = "도서"
             self.headTextView.setupCategory("도서")
         })
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
         actionSheet.addAction(bookstore)
         actionSheet.addAction(book)
-        present(actionSheet, animated: true, completion: nil)
+        actionSheet.addAction(cancel)
+        present(actionSheet, animated: true, completion: nil )
     }
     
     func deleteItem(index: Int) {
