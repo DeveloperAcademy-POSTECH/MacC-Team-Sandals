@@ -9,13 +9,13 @@ import UIKit
 
 final class UserInfoContainerView: UIView {
     
+    // MARK: Properties
     var user: User? {
         didSet {
             nicknameLabel.text = user?.nickName
         }
     }
     
-    // MARK: Properties
     let nicknameLabel: UILabel = {
         let label = UILabel()
         label.text = "닉네임"
@@ -129,6 +129,7 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
+    // TODO: 추후 커뮤니티 기능이 생기면 첫줄의 주석처리된 스택뷰를 사용하면 됩니다.
     private lazy var infoButtonStackView: UIStackView = {
 //        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
         let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView])
@@ -159,7 +160,6 @@ final class UserInfoContainerView: UIView {
     // MARK: Helpers
     private func setupUI() {
         backgroundColor = .white
-        
         addSubview(userInfoContainerStackView)
         
         setupFixedLayout()
@@ -170,6 +170,11 @@ final class UserInfoContainerView: UIView {
             userInfoContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
             userInfoContainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24),
         ])
+        
+        clipsToBounds = true
+        layer.cornerRadius = 8
+        layer.borderWidth = 1
+        layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
     }
     
     private func setupFixedLayout() {
@@ -180,6 +185,7 @@ final class UserInfoContainerView: UIView {
         NSLayoutConstraint.activate([
             nicknameStackView.heightAnchor.constraint(equalToConstant: 25),
             
+            divider.widthAnchor.constraint(equalToConstant: 326),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
             nicknameEditButton.widthAnchor.constraint(equalToConstant: 24),
