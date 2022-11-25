@@ -73,12 +73,15 @@ final class MyPageViewController: UIViewController {
         setupTableView()
         setupUI()
         setupAddTarget()
-        tabBarController?.tabBar.isHidden = false
-        navigationController?.navigationBar.topItem?.title = "마이페이지"
     }
             
     override func viewWillAppear(_ animated: Bool) {
         updateUserData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.navigationBar.topItem?.title = "마이페이지"
+        tabBarController?.tabBar.isHidden = false
     }
         
     // MARK: Helpers
@@ -135,6 +138,7 @@ final class MyPageViewController: UIViewController {
         case true:
             userRequestTask = Task {
                 guard let user = try? await firestoreManager.fetchCurrentUser() else {
+                    self.user = nil
                     userRequestTask = nil
                     return
                 }
@@ -157,6 +161,7 @@ final class MyPageViewController: UIViewController {
             
         // 로그인 안되어있을때 UI로 수정
         case false:
+            self.user = nil
             cellTitle = logoutTitle
             setupContainerView(tryLoginContainerView)
         }

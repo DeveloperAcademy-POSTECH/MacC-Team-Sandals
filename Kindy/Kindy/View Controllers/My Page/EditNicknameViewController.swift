@@ -60,13 +60,21 @@ final class EditNicknameViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         nicknameTextField.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavigationBar()
         tabBarController?.tabBar.isHidden = true
-        navigationItem.rightBarButtonItem = navigationEditButton
-        navigationController?.navigationBar.tintColor = UIColor.black
-        navigationController?.navigationBar.topItem?.title = ""
     }
     
     // MARK: Helpers
+    private func setupNavigationBar() {
+        navigationItem.rightBarButtonItem = navigationEditButton
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationItem.title = "내 정보 수정"
+        navigationController?.navigationBar.tintColor = UIColor.black
+    }
+    
     private func setupUI() {
         view.backgroundColor = .white
         view.addSubview(nicknameGuideLabel)
@@ -112,7 +120,7 @@ final class EditNicknameViewController: UIViewController {
             case false:
                 firestoreManager.editNickname(text)
                 userNicknameRequestTask = nil
-                navigationController?.popViewController(animated: true)
+                _ = navigationController?.popViewController(animated: true)
             }
             
         }
