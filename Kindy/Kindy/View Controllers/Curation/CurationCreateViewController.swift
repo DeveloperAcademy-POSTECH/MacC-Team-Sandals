@@ -14,16 +14,14 @@ final class CurationCreateViewController: UIViewController {
     
     private var keyboardHeight: CGFloat = 0 {
         didSet {
-            if let _ = keyboardHeightAnchor {
-                NSLayoutConstraint.deactivate([keyboardHeightAnchor!])
-                keyboardHeightAnchor = keyboardView.heightAnchor.constraint(equalToConstant: keyboardHeight)
-                NSLayoutConstraint.activate([keyboardHeightAnchor!])
-                mainScrollView.updateContentSize()
-                if needToScroll {
-                    mainScrollView.scrollToTextView(self.offset, height: view.frame.height, keyboardHeight: keyboardHeight)
-                }
+            guard let _ = keyboardHeightAnchor else { return }
+            NSLayoutConstraint.deactivate([keyboardHeightAnchor!])
+            keyboardHeightAnchor = keyboardView.heightAnchor.constraint(equalToConstant: keyboardHeight)
+            NSLayoutConstraint.activate([keyboardHeightAnchor!])
+            mainScrollView.updateContentSize()
+            if needToScroll {
+                mainScrollView.scrollToTextView(self.offset, height: view.frame.height, keyboardHeight: keyboardHeight)
             }
-            
         }
     }
     // 키보드뷰의 높이값을 변화시켜주기 위함
@@ -354,6 +352,7 @@ final class CurationCreateViewController: UIViewController {
                             }
                         }
                     } else {
+                        self.completeCount += 1
                         if i == descriptionImages.count - 1 {
                             do {
                                 try CurationRequest().add(curation: self.curation)
@@ -361,7 +360,6 @@ final class CurationCreateViewController: UIViewController {
                             } catch {
                                 print("call error")
                             }
-                            
                         }
                     }
                 }
