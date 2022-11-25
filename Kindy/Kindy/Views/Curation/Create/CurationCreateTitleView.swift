@@ -21,11 +21,18 @@ final class CurationCreateTitleView: UIView {
     
     private let backgroundImage: UIImageView = {
         let image = UIImageView ()
+        image.contentMode = .scaleAspectFill
         image.backgroundColor = .black.withAlphaComponent(0.4)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     } ()
 
+    private let opacityView: UIView = {
+        let view = UIView()
+        view.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4).cgColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    } ()
     private let addImageButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .white
@@ -102,8 +109,6 @@ final class CurationCreateTitleView: UIView {
         return label
     } ()
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -112,14 +117,10 @@ final class CurationCreateTitleView: UIView {
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
-    override func layoutSubviews() {
         
-    }
-    
-    
     private func setupUI() {
         setupBackgrouhndImage()
+        setupOpacityView()
         setupSubtitleView()
         setupMaintitleView()
         setupAddImageButton()
@@ -134,6 +135,16 @@ final class CurationCreateTitleView: UIView {
             backgroundImage.trailingAnchor.constraint(equalTo: trailingAnchor),
             backgroundImage.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundImage.leadingAnchor.constraint(equalTo: leadingAnchor),
+        ])
+    }
+    
+    private func setupOpacityView() {
+        addSubview(opacityView)
+        NSLayoutConstraint.activate([
+            opacityView.topAnchor.constraint(equalTo: topAnchor),
+            opacityView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            opacityView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            opacityView.leadingAnchor.constraint(equalTo: leadingAnchor),
         ])
     }
     

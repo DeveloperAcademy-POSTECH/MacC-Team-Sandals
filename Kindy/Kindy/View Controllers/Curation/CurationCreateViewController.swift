@@ -55,15 +55,19 @@ final class CurationCreateViewController: UIViewController {
             previousDataCount = descriptionImages.count
         }
     }
-    
+    private var addIndex:Int = 0
+    private var deleteImageURL:[String] = []
+    private var completeCount: Int = 0
+    private var isMainImageChanged: Bool = false
     /// init (nil, nil, []) : 이경우는 작성, / init(curation, mainImage, descriptionImages): 는 수정
     init(_ curation: Curation?,_ mainImage: UIImage?,_ descriptionImage: [UIImage]) {
         if let curation = curation {
             self.curation = curation
             self.mainImage = mainImage!
             self.descriptionImages = descriptionImage
+            self.addIndex = descriptionImage.count
         } else {
-            self.curation = Curation(userID: "", bookstoreID: "", category: "" , mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [])
+            self.curation = Curation(userID: UserManager().getID(), bookstoreID: "", category: "" , mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [])
         }
         super.init(nibName: nil, bundle: nil)
     }
@@ -297,6 +301,7 @@ final class CurationCreateViewController: UIViewController {
     @objc private func buttonPressed(_ sender: Any) {
         if let button = sender as? UIBarButtonItem {
             switch button.tag {
+                //BackButton Action
             case 1:
                 let alert = UIAlertController(title: nil, message: "작성 중인 내용을\n 저장 하지 않고 나가시겠습니까?", preferredStyle: .alert)
                 let cancel = UIAlertAction(title: "취소", style: .cancel)
@@ -306,9 +311,60 @@ final class CurationCreateViewController: UIViewController {
                 alert.addAction(cancel)
                 alert.addAction(complete)
                 present(alert, animated: true, completion: nil)
+                
+                //CompleteButton Action
             case 2:
                 // Change the background color to red.
-                print(curation)
+                rightButton.isEnabled = false
+                view.endEditing(true)
+                for url in deleteImageURL {
+                    do {
+                        try CurationRequest().curationDeleteImage(url: url)
+                    } catch {
+                        print("delete Error")
+                    }
+                }
+                if isMainImageChanged {
+                    CurationRequest().uploadImage(image: mainImage ?? UIImage(), pathRoot: "Curations", completion: { url in
+                        self.curation.mainImage = url ?? ""
+                        self.completeCount += 1
+                        if self.completeCount == self.descriptionImages.count {
+                            do {
+                                try CurationRequest().add(curation: self.curation)
+                                self.navigationController?.popViewController(animated: true)
+                            } catch {
+                                print("erroe curation add")
+                            }
+                        }
+                    })
+                }
+                for i in 0..<descriptionImages.count {
+                    if addIndex <= i {
+                        CurationRequest().uploadImage(image: descriptionImages[i], pathRoot: "Curations/test_\(i)") { url in
+                            self.curation.descriptions[i].image = url
+                            self.completeCount += 1
+//                            print("add description Image \(url) \(self.completeCount) \(self.descriptionImages.count)")
+                            if self.completeCount == self.descriptionImages.count {
+                                do {
+                                    try CurationRequest().add(curation: self.curation)
+                                    self.navigationController?.popViewController(animated: true)
+                                } catch {
+                                    print("erroe curation add")
+                                }
+                            }
+                        }
+                    } else {
+                        if i == descriptionImages.count - 1 {
+                            do {
+                                try CurationRequest().add(curation: self.curation)
+                                self.navigationController?.popViewController(animated: true)
+                            } catch {
+                                print("call error")
+                            }
+                            
+                        }
+                    }
+                }
             default:
                 print("error")
             }
@@ -398,15 +454,22 @@ extension CurationCreateViewController: UIImagePickerControllerDelegate, UINavig
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[.originalImage] as? UIImage {
-//            self.uiImage = image
             switch self.imagePickerOpenSource {
             case "descriptionAdd":
-                descriptionImages.append(image)
+                descriptionImages.append(image.resizeImage(size: CGSize(width: 1024, height: 1024)))
                 curation.descriptions.append(Description(image: "", content: ""))
                 imagePickerOpenSource = ""
             case "mainImage":
                 mainImage = image
                 titleView.setupImage(image)
+                imagePickerOpenSource = ""
+                if !isMainImageChanged {
+                    isMainImageChanged = true
+                    completeCount -= 1
+                    if !curation.mainImage.isEmpty {
+                        deleteImageURL.append(curation.mainImage)
+                    }
+                }
             default:
                 return
             }
@@ -447,7 +510,6 @@ extension CurationCreateViewController: UIImagePickerControllerDelegate, UINavig
                 DispatchQueue.main.async {
                     self.present(alertController, animated: true)
                 }
-            
                 break
             }
         }
@@ -498,6 +560,7 @@ extension CurationCreateViewController: UITextViewDelegate {
             switch textView.tag {
             case 99:
                 curation.headText = textView.text!
+                print(curation.headText)
             default:
                 curation.descriptions[textView.tag].content = textView.text!
             }
@@ -540,7 +603,11 @@ extension CurationCreateViewController: CurationCreateDelegate {
     
     func deleteItem(index: Int) {
         descriptionImages.remove(at: index)
-        curation.descriptions.remove(at: index)
+        let deleteDescription = curation.descriptions.remove(at: index)
+        if index < addIndex {
+            addIndex -= 1
+            deleteImageURL.append(deleteDescription.image ?? "")
+        }
     }
     
     func setupMainTitle(string: String) {
@@ -552,9 +619,11 @@ extension CurationCreateViewController: CurationCreateDelegate {
     }
     
     func addDescriptionButtonAction() {
-        photoAuth {
-            self.imagePickerOpenSource = "descriptionAdd"
-            self.presentAlbum()
+        if descriptionImages.count < 10 {
+            photoAuth {
+                self.imagePickerOpenSource = "descriptionAdd"
+                self.presentAlbum()
+            }
         }
     }
 }
