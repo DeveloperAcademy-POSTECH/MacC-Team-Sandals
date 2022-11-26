@@ -8,7 +8,7 @@
 import UIKit
 
 final class CurationListViewController: UIViewController {
-
+    
     // MARK: - 파이어베이스 Task
     
     private var curationsRequestTask: Task<Void, Never>?
@@ -43,10 +43,17 @@ final class CurationListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         createBarButtonItems()
         setupTableView()
         fetchCuration()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        fetchUserData()
+        self.tableView.reloadData()
     }
     
     // MARK: - 메소드
@@ -127,6 +134,19 @@ final class CurationListViewController: UIViewController {
             curationsRequestTask = nil
         }
     }
+    
+    private func fetchUserData() {
+        if UserManager().isLoggedIn() {
+            userRequestTask = Task {
+                guard let user = try? await UserManager().fetchCurrentUser() else {
+                    userRequestTask = nil
+                    return
+                }
+                self.user = user
+                userRequestTask = nil
+            }
+        }
+    }
 }
 
 // MARK: - DataSource
@@ -149,6 +169,10 @@ extension CurationListViewController: UITableViewDataSource {
             }
             imageRequestTask = nil
         }
+        
+        guard UserManager().isLoggedIn() else { cell.curationIsLiked = false; return cell }
+        let userID = UserManager().getID()
+        cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
         
         return cell
     }

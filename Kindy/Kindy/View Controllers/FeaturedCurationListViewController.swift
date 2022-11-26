@@ -59,6 +59,8 @@ final class FeaturedCurationListViewController: UIViewController {
         navigationItem.title = category == "bookstore" ? "서점" : "도서"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
         navigationController?.navigationBar.tintColor = .black
         updateUserData()
+        fetchUserData()
+        self.tableView.reloadData()
     }
     
     // MARK: - 메소드
@@ -125,6 +127,19 @@ final class FeaturedCurationListViewController: UIViewController {
             userRequestTask = nil
         }
     }
+    
+    private func fetchUserData() {
+        if UserManager().isLoggedIn() {
+            userRequestTask = Task {
+                guard let user = try? await UserManager().fetchCurrentUser() else {
+                    userRequestTask = nil
+                    return
+                }
+                self.user = user
+                userRequestTask = nil
+            }
+        }
+    }
 }
 
 // MARK: - 데이터소스
@@ -149,6 +164,10 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
             }
             imageRequestTask = nil
         }
+        
+        guard UserManager().isLoggedIn() else { cell.curationIsLiked = false; return cell }
+        let userID = UserManager().getID()
+        cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
         
         return cell
     }

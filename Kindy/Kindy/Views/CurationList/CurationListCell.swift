@@ -17,6 +17,12 @@ final class CurationListCell: UITableViewCell {
         }
     }
     
+    var curationIsLiked: Bool = false {
+        didSet {
+            configureCell(item: curation!)
+        }
+    }
+    
     // MARK: - 프로퍼티
     
     let photoImageView: UIImageView = {
@@ -192,8 +198,8 @@ final class CurationListCell: UITableViewCell {
         categoryTypeLabel.text = item.category == "bookstore" ? "서점" : "도서"
         
         // 좋아요 & 댓글 개수
-        configureImageAndTextLabel(for: likeLabel, imageName: "heart", text: item.likes.count)
-        configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: 100)
+        configureImageAndTextLabel(for: likeLabel, imageName: curationIsLiked ? "heart.fill" : "heart", text: item.likes.count)
+        configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: item.comments?.count ?? 0)
         
         // 날짜
         configureDateLabel(for: dateLabel, date: item.createdAt!)

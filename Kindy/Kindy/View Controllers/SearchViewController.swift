@@ -186,6 +186,10 @@ extension SearchViewController: UITableViewDataSource {
                 imageRequestTask = nil
             }
             
+            guard UserManager().isLoggedIn() else { cell.curationIsLiked = false; return cell }
+            let userID = UserManager().getID()
+            cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
+            
             return cell
             
         default: return UITableViewCell()
