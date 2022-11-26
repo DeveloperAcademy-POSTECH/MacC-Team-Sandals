@@ -229,7 +229,9 @@ final class CurationCreateViewController: UIViewController {
     }
     
     private func setupHeadTextView() {
-        headTextView.setupCategory(curation.category)
+        if !curation.category.isEmpty {
+            headTextView.setupCategory(curation.category)
+        }
         headTextView.setupText(string: curation.headText)
         NSLayoutConstraint.activate([
             headTextView.topAnchor.constraint(equalTo: titleView.bottomAnchor),
