@@ -533,18 +533,18 @@ extension CurationCreateViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         needToScroll = true
         if textView.tag == 99 {
-            if let text = textView.text, text == headTextViewPlaceHolder {
+            if let text = textView.text, text == headTextViewPlaceHolder && textView.textColor == UIColor.kindyGray {
                 textView.text = nil
                 textView.textColor = .black
-                self.offset = headTextView.frame.minY + headTextView.frame.size.height
                 
             }
+            self.offset = headTextView.frame.minY + headTextView.frame.size.height
         } else {
-            if let text = textView.text, text == descriptionTextViewPlaceHolder {
+            if let text = textView.text, text == descriptionTextViewPlaceHolder && textView.textColor == UIColor.kindyGray  {
                 textView.text = nil
                 textView.textColor = .black
-                self.offset = descriptionTableView.frame.minY + CGFloat((textView.tag + 1) * 116)
             }
+            self.offset = descriptionTableView.frame.minY + CGFloat((textView.tag + 1) * 116)
         }
         
     }
