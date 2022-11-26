@@ -51,6 +51,7 @@ final class CurationCreateViewController: UIViewController {
                 mainScrollView.scrollToBottom()
             }
             previousDataCount = descriptionImages.count
+            print(descriptionImages)
         }
     }
     private var addIndex:Int = 0
@@ -392,7 +393,7 @@ extension CurationCreateViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return descriptionImages.count
+        return curation.descriptions.count
         
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -462,12 +463,13 @@ extension CurationCreateViewController: PHPickerViewControllerDelegate {
                 DispatchQueue.main.async {
                     switch self.imagePickerOpenSource {
                     case "descriptionAdd":
-                        self.descriptionImages.append(image.resizeImage(size: CGSize(width: 1024, height: 1024)))
                         self.curation.descriptions.append(Description(image: "", content: ""))
+                        self.descriptionImages.append(image.resizeImage(size: CGSize(width: 1024, height: 1024)))
                         self.imagePickerOpenSource = ""
                     case "mainImage":
-                        self.mainImage = image
-                        self.titleView.setupImage(image)
+                        let resizeImage = image.resizeImage(size: CGSize(width: 1024, height: 1024))
+                        self.mainImage = resizeImage
+                        self.titleView.setupImage(resizeImage)
                         self.imagePickerOpenSource = ""
                         if !self.isMainImageChanged {
                             self.isMainImageChanged = true
