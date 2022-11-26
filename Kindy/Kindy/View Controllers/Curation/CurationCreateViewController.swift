@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Photos
+import PhotosUI
 
 final class CurationCreateViewController: UIViewController {
     // descriptionTable의 높이를 변화시키기 위한 변수
@@ -274,15 +274,18 @@ final class CurationCreateViewController: UIViewController {
         ])
     }
     
-    // MARK: 포토 라이브러리 sheet present
-    func presentAlbum() {
+    // MARK: PHPickerViewController Present
+    func presentPHPicker() {
         DispatchQueue.main.async {
-            let pickerVC = UIImagePickerController()
-            pickerVC.sourceType = .photoLibrary
-            pickerVC.delegate = self
-            self.present(pickerVC, animated: true, completion: nil)
+            var configuration = PHPickerConfiguration()
+            configuration.selectionLimit = 1
+            configuration.filter = .images
+            let picker = PHPickerViewController(configuration: configuration)
+            picker.delegate = self
+            self.present(picker, animated: true, completion: nil)
         }
     }
+    
     // 키보드 올라올 경우 키보드 높이값을 확인해서 변수에 저장
     @objc private func handle(keyboardShowNotification notification: Notification) {
         if let userInfo = notification.userInfo, let keyboardRectangle = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect, self.keyboardHeight == 0 {
@@ -317,13 +320,13 @@ final class CurationCreateViewController: UIViewController {
                 view.endEditing(true)
                 for url in deleteImageURL {
                     do {
-                        try CurationRequest().curationDeleteImage(url: url)
+                        try CurationRequest().deleteCurationImage(url: url)
                     } catch {
                         print("delete Error")
                     }
                 }
                 if isMainImageChanged {
-                    CurationRequest().curationUploadImage(image: mainImage ?? UIImage(), pathRoot: "Curations/\(curation.title)/main", completion: { url in
+                    CurationRequest().uploadCurationImage(image: mainImage ?? UIImage(), pathRoot: "Curations/\(curation.title)/main", completion: { url in
                         self.curation.mainImage = url ?? ""
                         self.completeCount += 1
                         if self.completeCount == self.descriptionImages.count {
@@ -338,7 +341,7 @@ final class CurationCreateViewController: UIViewController {
                 }
                 for i in 0..<descriptionImages.count {
                     if addIndex <= i {
-                        CurationRequest().curationUploadImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
+                        CurationRequest().uploadCurationImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
                             self.curation.descriptions[i].image = url
                             self.completeCount += 1
 //                            print("add description Image \(url) \(self.completeCount) \(self.descriptionImages.count)")
@@ -347,7 +350,7 @@ final class CurationCreateViewController: UIViewController {
                                     try CurationRequest().add(curation: self.curation)
                                     self.navigationController?.popViewController(animated: true)
                                 } catch {
-                                    print("erroe curation add")
+                                    self.rightButton.isEnabled = true
                                 }
                             }
                         }
@@ -358,7 +361,7 @@ final class CurationCreateViewController: UIViewController {
                                 try CurationRequest().add(curation: self.curation)
                                 self.navigationController?.popViewController(animated: true)
                             } catch {
-                                print("call error")
+                                self.rightButton.isEnabled = true
                             }
                         }
                     }
@@ -444,36 +447,43 @@ extension UIScrollView {
     }
 }
 
-// MARK: Image Picker Controller Delegate
-extension CurationCreateViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
+extension CurationCreateViewController: PHPickerViewControllerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[.originalImage] as? UIImage {
-            switch self.imagePickerOpenSource {
-            case "descriptionAdd":
-                descriptionImages.append(image.resizeImage(size: CGSize(width: 1024, height: 1024)))
-                curation.descriptions.append(Description(image: "", content: ""))
-                imagePickerOpenSource = ""
-            case "mainImage":
-                mainImage = image
-                titleView.setupImage(image)
-                imagePickerOpenSource = ""
-                if !isMainImageChanged {
-                    isMainImageChanged = true
-                    completeCount -= 1
-                    if !curation.mainImage.isEmpty {
-                        deleteImageURL.append(curation.mainImage)
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass:  UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                guard let image = image as? UIImage else { return }
+                DispatchQueue.main.async {
+                    switch self.imagePickerOpenSource {
+                    case "descriptionAdd":
+                        self.descriptionImages.append(image.resizeImage(size: CGSize(width: 1024, height: 1024)))
+                        self.curation.descriptions.append(Description(image: "", content: ""))
+                        self.imagePickerOpenSource = ""
+                    case "mainImage":
+                        self.mainImage = image
+                        self.titleView.setupImage(image)
+                        self.imagePickerOpenSource = ""
+                        if !self.isMainImageChanged {
+                            self.isMainImageChanged = true
+                            self.completeCount -= 1
+                            if !self.curation.mainImage.isEmpty {
+                                self.deleteImageURL.append(self.curation.mainImage)
+                            }
+                        }
+                    default:
+                        return
                     }
                 }
-            default:
-                return
             }
+        } else {
+            print("phpicker Error")
         }
-        dismiss(animated: true, completion: nil)
     }
+    
     
     // 사진 권한
     func photoAuth(completion: @escaping () -> Void) {
@@ -514,6 +524,7 @@ extension CurationCreateViewController: UIImagePickerControllerDelegate, UINavig
     }
     
 }
+
 
 // MARK: TextViewDelegate -> 각 TextView 값의 변화에 따라 placeholder 및 curation 변수에 값 할당
 extension CurationCreateViewController: UITextViewDelegate {
@@ -580,7 +591,7 @@ extension CurationCreateViewController: CurationCreateDelegate {
     func openImagePickerForMainImage() {
         photoAuth {
             self.imagePickerOpenSource = "mainImage"
-            self.presentAlbum()
+            self.presentPHPicker()
         }
     }
     
@@ -622,7 +633,8 @@ extension CurationCreateViewController: CurationCreateDelegate {
         if descriptionImages.count < 10 {
             photoAuth {
                 self.imagePickerOpenSource = "descriptionAdd"
-                self.presentAlbum()
+//                self.presentAlbum()
+                self.presentPHPicker()
             }
         }
     }

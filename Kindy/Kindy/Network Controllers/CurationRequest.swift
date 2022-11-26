@@ -26,7 +26,6 @@ extension CurationRequest {
     
     // 큐레이션 추가
     func add(curation: Curation) throws {
-        print("add curation")
         try db.collection(collectionPath).document(curation.id).setData(from: curation)
     }
     
@@ -60,7 +59,7 @@ extension CurationRequest {
         db.collection(collectionPath).document(curationID).collection("Comment").document(commentID).delete()
     }
     
-    func curationUploadImage(image: UIImage, pathRoot: String, completion: @escaping (String?) -> Void) {
+    func uploadCurationImage(image: UIImage, pathRoot: String, completion: @escaping (String?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.1) else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"
@@ -75,7 +74,7 @@ extension CurationRequest {
         }
     }
     
-    func curationDeleteImage(url: String) throws {
+    func deleteCurationImage(url: String) throws {
         let storage = Storage.storage()
         let httpsReference = storage.reference(forURL: url)
         httpsReference.delete{ error in
