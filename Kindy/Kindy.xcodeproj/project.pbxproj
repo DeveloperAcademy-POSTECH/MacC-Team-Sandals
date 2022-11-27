@@ -52,6 +52,7 @@
 		6E359EEB29278EBC00139F6F /* CurationCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E359EEA29278EBC00139F6F /* CurationCommentCell.swift */; };
 		6E6BA20D292B5BDC00757A9B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6BA20C292B5BDC00757A9B /* Comment.swift */; };
 		6E6BA20F292BACCB00757A9B /* CurationCommentTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6BA20E292BACCB00757A9B /* CurationCommentTextFieldCell.swift */; };
+		6E86440D293349D1007B2796 /* Sequence+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E86440C293349D1007B2796 /* Sequence+.swift */; };
 		6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39A28FD313C00EA7413 /* AppDelegate.swift */; };
 		6EE5E39D28FD313C00EA7413 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39C28FD313C00EA7413 /* SceneDelegate.swift */; };
 		6EE5E39F28FD313C00EA7413 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE5E39E28FD313C00EA7413 /* HomeViewController.swift */; };
@@ -165,6 +166,7 @@
 		6E359EEA29278EBC00139F6F /* CurationCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCommentCell.swift; sourceTree = "<group>"; };
 		6E6BA20C292B5BDC00757A9B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		6E6BA20E292BACCB00757A9B /* CurationCommentTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCommentTextFieldCell.swift; sourceTree = "<group>"; };
+		6E86440C293349D1007B2796 /* Sequence+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+.swift"; sourceTree = "<group>"; };
 		6E8D396E290B551B00E62876 /* Kindy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Kindy.entitlements; sourceTree = "<group>"; };
 		6EE5E39728FD313C00EA7413 /* Kindy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kindy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EE5E39A28FD313C00EA7413 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -474,6 +476,7 @@
 				6E359EDC29278DC500139F6F /* LoginCheckable+.swift */,
 				6E359EE429278E6E00139F6F /* Notification+.swift */,
 				6E359EE829278E9200139F6F /* Reportable+.swift */,
+				6E86440C293349D1007B2796 /* Sequence+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -708,8 +711,8 @@
 				7BF9AACD2909200100C80F72 /* NoPermissionCell.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				315785312929EEFE008EC439 /* CurationCreateAddDescriptionButton.swift in Sources */,
-				7BDAE69F2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift in Sources */,
-				7B404C2B28FFD3CF00A24C89 /* RegionCollectionViewCell.swift in Sources */,
+				7BDAE69F2905107900BC41E9 /* EmptyNearbyCell.swift in Sources */,
+				7B404C2B28FFD3CF00A24C89 /* RegionNameCell.swift in Sources */,
 				7BDAE69F2905107900BC41E9 /* EmptyNearbyCell.swift in Sources */,
 				7B404C2B28FFD3CF00A24C89 /* RegionNameCell.swift in Sources */,
 				7BCB1A0A29163D7400B357D5 /* Description.swift in Sources */,
@@ -726,8 +729,7 @@
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
 				31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */,
-				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift in Sources */,
-				A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */,
+				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */,
 				6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */,
 				31578533292A778C008EC439 /* CurationCreateDescriptionTableViewCell.swift in Sources */,
@@ -736,8 +738,8 @@
 				3157852D2929EEE8008EC439 /* CurationCreateTitleView.swift in Sources */,
 				A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */,
 				3157852F2929EEF3008EC439 /* CurationCreateHeadTextView.swift in Sources */,
-				7B404C2328FFD26100A24C89 /* CurationCollectionViewCell.swift in Sources */,
-				7B404C2728FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift in Sources */,
+				7B404C2328FFD26100A24C89 /* CurationCell.swift in Sources */,
+				7B404C2728FFD36E00A24C89 /* NearByBookstoreCell.swift in Sources */,
 				7B404C2328FFD26100A24C89 /* CurationCell.swift in Sources */,
 				7B404C2728FFD36E00A24C89 /* NearByBookstoreCell.swift in Sources */,
 				7BCB1A07291633E300B357D5 /* Contact.swift in Sources */,
@@ -769,6 +771,7 @@
 				77CF0A3A291F5C7D00670BF4 /* CurationCategoryButton.swift in Sources */,
 				6EE5E4282905661E00EA7413 /* UIViewController+.swift in Sources */,
 				369CC07D29241681000D7B96 /* MyWritingViewController.swift in Sources */,
+				6E86440D293349D1007B2796 /* Sequence+.swift in Sources */,
 				31F5A02429261606002C1FAD /* SignUpView.swift in Sources */,
 				6E6BA20F292BACCB00757A9B /* CurationCommentTextFieldCell.swift in Sources */,
 				77DCB1802909085F00EAB5D5 /* EmptyView.swift in Sources */,
