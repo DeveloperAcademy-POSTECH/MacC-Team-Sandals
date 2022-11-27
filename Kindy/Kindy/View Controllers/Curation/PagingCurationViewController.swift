@@ -68,7 +68,7 @@ final class PagingCurationViewController: UIViewController {
         super.viewWillAppear(animated)
 
         self.imageRequestTask = Task {
-            if let mainImage = try? await ImageCache.shared.load(curation.mainImage) {
+            if let mainImage = try? await ImageCache.shared.load(curation.mainImage, size: ImageSize.medium) {
                 guard let view = self.headerView as? CurationHeaderView else { return }
                 view.imageView.image = mainImage
                 self.images.append(mainImage)
@@ -102,7 +102,7 @@ final class PagingCurationViewController: UIViewController {
         self.imageRequestTask = Task {
             let descriptions = curation.descriptions
             for i in 0..<descriptions.count {
-                if let image = try? await ImageCache.shared.load(descriptions[i].image) {
+                if let image = try? await ImageCache.shared.load(descriptions[i].image, size: ImageSize.medium) {
                     self.images.append(image)
                 } else {
                     self.images.append(UIImage())

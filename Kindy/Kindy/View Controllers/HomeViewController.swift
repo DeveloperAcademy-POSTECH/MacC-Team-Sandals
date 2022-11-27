@@ -87,7 +87,7 @@ final class HomeViewController: UIViewController {
         // MARK: Location Manager
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
         updateCurations()
         updateBookstores()
@@ -395,47 +395,47 @@ final class HomeViewController: UIViewController {
     private func configureDataSource() {
         // MARK: Cell Registration
         let curationCellRegistration = UICollectionView.CellRegistration<CurationCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.curation!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.curation?.mainImage) {
+                if let image = try? await ImageCache.shared.load(item.curation?.mainImage, size: ImageSize.big) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.curation!)
         }
         
         let bookstoreCellRegistration = UICollectionView.CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.bookstore!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.bookstore!)
         }
         
         let nearbyBookstoreCellRegistration = UICollectionView.CellRegistration<NearByBookstoreCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.bookstore!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.small) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.bookstore!)
         }
         
         let bookmarkedBookstoreCellRegistration = UICollectionView.CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.bookstore!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.bookstore!)
         }
         
         let regionNameCellRegistration = UICollectionView.CellRegistration<RegionNameCell, ViewModel.Item> { cell, indexPath, item in
@@ -619,11 +619,11 @@ extension HomeViewController: CLLocationManagerDelegate {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
         var sortedBookstores = bookstores
         
-        for i in 0..<bookstores.count {
-            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude))) / 1000
+        for i in bookstores.indices {
+            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude)))
         }
-        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
-        sortedBookstores = sortedBookstores.filter { $0.distance < 100 }.sorted { $0.distance < $1.distance }
+        
+        sortedBookstores = sortedBookstores.filter { $0.distance < 100000 }.sorted { $0.distance < $1.distance }
         
         return Array(sortedBookstores.prefix(3))
     }
@@ -633,10 +633,8 @@ extension HomeViewController: CLLocationManagerDelegate {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return "" }
         
         let location = CLLocation(latitude: myLocation.latitude, longitude: myLocation.longitude)
-        let geocoder = CLGeocoder()
-        let locale = Locale(identifier: "Ko-kr")
         
-        let placemarks = try await geocoder.reverseGeocodeLocation(location, preferredLocale: locale)
+        let placemarks = try await CLGeocoder().reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "Ko-kr"))
         let locality = placemarks.first?.locality ?? ""
         let subLocality = placemarks.first?.subLocality ?? ""
         
