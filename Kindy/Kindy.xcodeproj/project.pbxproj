@@ -30,6 +30,7 @@
 		31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */; };
 		31F7DD652904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */; };
 		31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */; };
+		36002A8A29325EBE00AE432A /* WritingListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36002A8929325EBE00AE432A /* WritingListViewController.swift */; };
 		361D54CF2901CABB00ACA11E /* DetailBookstoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */; };
 		363B56EF29263252008AF99C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B56EE29263252008AF99C /* Constants.swift */; };
 		36671EB429222E7E003BC7F7 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36671EB329222E7E003BC7F7 /* ImageCache.swift */; };
@@ -143,6 +144,7 @@
 		31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCarouselCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDelegate.swift; sourceTree = "<group>"; };
+		36002A8929325EBE00AE432A /* WritingListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingListViewController.swift; sourceTree = "<group>"; };
 		361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookstoreViewController.swift; sourceTree = "<group>"; };
 		363B56EE29263252008AF99C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		36671EB329222E7E003BC7F7 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -519,6 +521,7 @@
 				369CC07A29241661000D7B96 /* EditNicknameViewController.swift */,
 				369CC07C29241681000D7B96 /* MyWritingViewController.swift */,
 				369CC07E292416A7000D7B96 /* MyActivitiesViewController.swift */,
+				36002A8929325EBE00AE432A /* WritingListViewController.swift */,
 			);
 			path = "My Page";
 			sourceTree = "<group>";
@@ -708,8 +711,8 @@
 				7BF9AACD2909200100C80F72 /* NoPermissionCell.swift in Sources */,
 				7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */,
 				315785312929EEFE008EC439 /* CurationCreateAddDescriptionButton.swift in Sources */,
-				7BDAE69F2905107900BC41E9 /* EmptyNearbyCollectionViewCell.swift in Sources */,
-				7B404C2B28FFD3CF00A24C89 /* RegionCollectionViewCell.swift in Sources */,
+				7BDAE69F2905107900BC41E9 /* EmptyNearbyCell.swift in Sources */,
+				7B404C2B28FFD3CF00A24C89 /* RegionNameCell.swift in Sources */,
 				7BDAE69F2905107900BC41E9 /* EmptyNearbyCell.swift in Sources */,
 				7B404C2B28FFD3CF00A24C89 /* RegionNameCell.swift in Sources */,
 				7BCB1A0A29163D7400B357D5 /* Description.swift in Sources */,
@@ -726,8 +729,7 @@
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
 				31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */,
-				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCollectionViewCell.swift in Sources */,
-				A06954F42907C84A00C09D1D /* DetailMyPageView.swift in Sources */,
+				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */,
 				6EE5E42E290571BC00EA7413 /* PagingCurationViewController.swift in Sources */,
 				31578533292A778C008EC439 /* CurationCreateDescriptionTableViewCell.swift in Sources */,
@@ -736,8 +738,8 @@
 				3157852D2929EEE8008EC439 /* CurationCreateTitleView.swift in Sources */,
 				A06954EF2906D9D800C09D1D /* Privacy.swift in Sources */,
 				3157852F2929EEF3008EC439 /* CurationCreateHeadTextView.swift in Sources */,
-				7B404C2328FFD26100A24C89 /* CurationCollectionViewCell.swift in Sources */,
-				7B404C2728FFD36E00A24C89 /* NearByBookstoreCollectionViewCell.swift in Sources */,
+				7B404C2328FFD26100A24C89 /* CurationCell.swift in Sources */,
+				7B404C2728FFD36E00A24C89 /* NearByBookstoreCell.swift in Sources */,
 				7B404C2328FFD26100A24C89 /* CurationCell.swift in Sources */,
 				7B404C2728FFD36E00A24C89 /* NearByBookstoreCell.swift in Sources */,
 				7BCB1A07291633E300B357D5 /* Contact.swift in Sources */,
@@ -752,6 +754,7 @@
 				77DCB198291A706400EAB5D5 /* CurationListHeaderView.swift in Sources */,
 				36BD7D64290404C200CBC879 /* UILabel+.swift in Sources */,
 				77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */,
+				36002A8A29325EBE00AE432A /* WritingListViewController.swift in Sources */,
 				7BFE3BCF292BB6FF00370AC9 /* BookstoreRequest.swift in Sources */,
 				77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */,
 				31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */,
