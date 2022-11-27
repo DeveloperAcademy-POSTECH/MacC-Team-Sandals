@@ -17,7 +17,7 @@ final class CurationCreateTitleView: UIView {
     let subMaxCount: Int = 17
     var isSubEditable: Bool = true
     
-    var delegate: CurationCreateDelegate?
+    weak var delegate: CurationCreateDelegate?
     
     private let backgroundImage: UIImageView = {
         let image = UIImageView ()

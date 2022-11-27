@@ -9,7 +9,7 @@ import UIKit
 
 final class CurationCreateAddDescriptionButton: UIView {
     
-    var delegate: CurationCreateDelegate?
+    weak var delegate: CurationCreateDelegate?
 
     private let addImageButton: UIButton = {
         let button = UIButton()
