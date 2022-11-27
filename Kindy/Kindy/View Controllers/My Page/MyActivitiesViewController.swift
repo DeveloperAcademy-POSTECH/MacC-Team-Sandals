@@ -13,7 +13,7 @@ final class MyActivitiesViewController: UIViewController {
     private let myActivitiesCellLabels: [String] = ["좋아요 한 글", "댓글 단 글"]
     
     private let tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -25,22 +25,37 @@ final class MyActivitiesViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavigationBar()
+        tabBarController?.tabBar.isHidden = true
+    }
+    
     // MARK: Helpers
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
-        tableView.rowHeight = 56
+        tableView.rowHeight = 55
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
     }
     
     private func setupUI() {
+        view.backgroundColor = .white
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+    }
+    
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.tintColor = UIColor.black
+        navigationItem.title = "활동 내역"
     }
     
 }
