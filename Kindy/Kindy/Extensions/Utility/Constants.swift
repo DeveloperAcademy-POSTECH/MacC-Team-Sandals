@@ -7,6 +7,7 @@
 
 import Foundation
 
+let padding8: CGFloat = 8
 let padding16: CGFloat = 16
 let padding24: CGFloat = 24
 
