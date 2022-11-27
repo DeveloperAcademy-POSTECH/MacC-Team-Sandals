@@ -75,7 +75,7 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
-    private let myWritingButton: UIButton = {
+    lazy var myWritingButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "text.book.closed.fill"), for: .normal)
         button.tintColor = .black
@@ -102,7 +102,7 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
-    private let myActivitiesButton: UIButton = {
+    lazy var myActivitiesButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.tintColor = .black
@@ -131,8 +131,7 @@ final class UserInfoContainerView: UIView {
     
     // TODO: 추후 커뮤니티 기능이 생기면 첫줄의 주석처리된 스택뷰를 사용하면 됩니다.
     private lazy var infoButtonStackView: UIStackView = {
-//        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
-        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView])
+        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
