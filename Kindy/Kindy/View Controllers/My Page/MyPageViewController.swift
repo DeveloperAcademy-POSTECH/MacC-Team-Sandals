@@ -71,7 +71,7 @@ final class MyPageViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
-        tableView.rowHeight = 56
+        tableView.rowHeight = 55
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
     }
@@ -175,7 +175,7 @@ final class MyPageViewController: UIViewController {
     
     @objc func myActivitiesButtonTapped() {
 //        let myActivitiesVC = MyActivitiesViewController()
-//        
+//
 //        show(myActivitiesVC, sender: nil)
     }
     
