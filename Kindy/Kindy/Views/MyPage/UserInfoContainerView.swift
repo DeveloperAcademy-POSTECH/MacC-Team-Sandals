@@ -48,7 +48,7 @@ final class UserInfoContainerView: UIView {
         return view
     }()
     
-    lazy var bookmarkedBookstoreButton: UIButton = {
+    let bookmarkedBookstoreButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
         button.tintColor = .black
@@ -75,7 +75,7 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
-    lazy var myWritingButton: UIButton = {
+    let myWritingButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "text.book.closed.fill"), for: .normal)
         button.tintColor = .black
@@ -102,7 +102,7 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
-    lazy var myActivitiesButton: UIButton = {
+    let myActivitiesButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.tintColor = .black
