@@ -167,16 +167,17 @@ final class MyPageViewController: UIViewController {
         show(bookmarkVC, sender: nil)
     }
     
+    // TODO: 스몰톡 업데이트 되면 MyWritingViewController으로 연결
     @objc func myWritingButtonTapped() {
-//        let bookmarkVC = BookmarkViewController()
-//        bookmarkVC.setupData(items: bookmarkedBookstores)
-//        show(bookmarkVC, sender: nil)
+        let writingListVC = WritingListViewController()
+        writingListVC.previousSelectedCell = .myCuration
+        show(writingListVC, sender: nil)
     }
     
     @objc func myActivitiesButtonTapped() {
-//        let myActivitiesVC = MyActivitiesViewController()
-//
-//        show(myActivitiesVC, sender: nil)
+        let myActivitiesVC = MyActivitiesViewController()
+
+        show(myActivitiesVC, sender: nil)
     }
     
     @objc func signInButtonTapped() {
