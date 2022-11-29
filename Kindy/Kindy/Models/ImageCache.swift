@@ -187,7 +187,7 @@ extension ImageCache {
         try await withThrowingTaskGroup(of: (String, UIImage).self) { group in
             for url in URLs {
                 group.addTask {
-                    let image = try? await ImageCache.shared.load(url)
+                    let image = try? await ImageCache.shared.load(url, size: ImageSize.big)
                     return (url, image ?? UIImage())
                 }
             }
@@ -201,7 +201,7 @@ extension ImageCache {
     }
     func loadImageArray(URLs: [String]) async throws -> [UIImage] {
         let images: [UIImage] = try await URLs.concurrentMap { url in
-            return try! await ImageCache.shared.load(url) ?? UIImage()
+            return try! await ImageCache.shared.load(url, size: ImageSize.big) ?? UIImage()
         }
         return images
     }
