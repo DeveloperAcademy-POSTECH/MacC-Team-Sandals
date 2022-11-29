@@ -129,7 +129,6 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
-    // TODO: 추후 커뮤니티 기능이 생기면 첫줄의 주석처리된 스택뷰를 사용하면 됩니다.
     private lazy var infoButtonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
         stackView.axis = .horizontal
