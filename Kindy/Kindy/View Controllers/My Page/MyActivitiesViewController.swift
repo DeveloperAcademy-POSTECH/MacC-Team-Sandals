@@ -86,12 +86,14 @@ extension MyActivitiesViewController: UITableViewDelegate {
         
         switch myActivitiesCellLabels[indexPath.row] {
         case "좋아요 한 글":
-            // TODO: 좋아요 한 큐레이션 페이지 불러오기
-            print("좋아요 한 글")
+            let writingListVC = WritingListViewController()
+            writingListVC.previousSelectedCell = .likeList
+            show(writingListVC, sender: nil)
 
-            // TODO: 댓글 단 큐레이션 페이지 불러오기
         case "댓글 단 글":
-            print("댓글 단 글")
+            let writingListVC = WritingListViewController()
+            writingListVC.previousSelectedCell = .commentList
+            show(writingListVC, sender: nil)
             
         default:
             break
