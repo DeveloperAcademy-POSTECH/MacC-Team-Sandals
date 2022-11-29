@@ -34,7 +34,7 @@ extension ImageCache {
     }
     
     // 메모리나 디스크에 캐시된 이미지가 있으면 리턴, 없으면 네트워킹 후 캐싱
-    func load(_ url: String?) async throws -> UIImage? {
+    func load(_ url: String?, size: CGSize) async throws -> UIImage? {
         guard let urlString = url,
               let url = NSURL(string: urlString),
               let fileName = createFileName(with: url.pathComponents)
@@ -46,8 +46,14 @@ extension ImageCache {
         } else if let image = checkDisk(with: fileName) {
             // 메모리에 캐시된 이미지 없다면 디스크 확인
             // 디스크에 저장된 이미지 있다면 메모리에 저장 후 리턴
-            saveToMemory(image, key: url)
-            return image
+            if #available(iOS 15.0, *) {
+                guard let preparedImage = await image.byPreparingThumbnail(ofSize: size) else { return nil }
+                saveToMemory(preparedImage, key: url)
+                return preparedImage
+            } else {
+                saveToMemory(image, key: url)
+                return image
+            }
         }
         
         // 메모리, 디스크 모두에 이미지 없다면 fetch
@@ -58,22 +64,26 @@ extension ImageCache {
         guard let image = UIImage(data: data) else { throw ImageRequestError.couldNotInitializeFromData }
         
         // fetch 후 메모리와 디스크에 이미지 저장
-        saveToMemory(image, key: url)
-        saveToDisk(image, name: fileName)
-        
-        return image
+        if #available(iOS 15.0, *) {
+            guard let preparedImage = await image.byPreparingThumbnail(ofSize: size) else { return nil }
+            saveToMemory(preparedImage, key: url)
+            saveToDisk(image, name: fileName)
+            return preparedImage
+        } else {
+            saveToMemory(image, key: url)
+            saveToDisk(image, name: fileName)
+            return image
+        }
     }
     
     // 메모리 캐싱만 하는 함수 (커뮤니티 게시글에 사용)
-    func loadFromMemory(_ url: String?) async throws -> UIImage? {
+    func loadFromMemory(_ url: String?, size: CGSize) async throws -> UIImage? {
         guard let urlString = url,
               let url = NSURL(string: urlString)
         else { throw ImageRequestError.invalidURL }
         
         // 메모리 확인
-        if let image = checkMemory(with: url) {
-            return image
-        }
+        if let image = checkMemory(with: url) { return image }
         
         // 메모리에 이미지 없다면 fetch
         let (data, response) = try await URLSession.shared.data(from: url as URL)
@@ -81,13 +91,16 @@ extension ImageCache {
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw ImageRequestError.imageDataMissing }
         
         guard let image = UIImage(data: data) else { throw ImageRequestError.couldNotInitializeFromData }
-        
-        // fetch 후 메모리에 이미지 저장
-        saveToMemory(image, key: url)
-        
-        return image
+        // fetch 후 메모리와 디스크에 이미지 저장
+        if #available(iOS 15.0, *) {
+            guard let preparedImage = await image.byPreparingThumbnail(ofSize: size) else { return nil }
+            saveToMemory(preparedImage, key: url)
+            return preparedImage
+        } else {
+            saveToMemory(image, key: url)
+            return image
+        }
     }
-    
 }
 
 // MARK: 메모리 캐싱
@@ -165,5 +178,31 @@ extension ImageCache {
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?
             .appendingPathComponent(directoryName)
             .appendingPathComponent(name)
+    }
+}
+
+// MARK: 여러장의 이미지를 동시에 fetch하는 함수들
+extension ImageCache {
+    func loadImageDictionary(URLs: [String]) async throws -> [String : UIImage] {
+        try await withThrowingTaskGroup(of: (String, UIImage).self) { group in
+            for url in URLs {
+                group.addTask {
+                    let image = try? await ImageCache.shared.load(url)
+                    return (url, image ?? UIImage())
+                }
+            }
+            var images = [String : UIImage]()
+            
+            for try await (url, image) in group {
+                images[url] = image
+            }
+            return images
+        }
+    }
+    func loadImageArray(URLs: [String]) async throws -> [UIImage] {
+        let images: [UIImage] = try await URLs.concurrentMap { url in
+            return try! await ImageCache.shared.load(url) ?? UIImage()
+        }
+        return images
     }
 }

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Photos
+import PhotosUI
 
 final class CurationCreateViewController: UIViewController {
     // descriptionTable의 높이를 변화시키기 위한 변수
@@ -14,16 +14,14 @@ final class CurationCreateViewController: UIViewController {
     
     private var keyboardHeight: CGFloat = 0 {
         didSet {
-            if let _ = keyboardHeightAnchor {
-                NSLayoutConstraint.deactivate([keyboardHeightAnchor!])
-                keyboardHeightAnchor = keyboardView.heightAnchor.constraint(equalToConstant: keyboardHeight)
-                NSLayoutConstraint.activate([keyboardHeightAnchor!])
-                mainScrollView.updateContentSize()
-                if needToScroll {
-                    mainScrollView.scrollToTextView(self.offset, height: view.frame.height, keyboardHeight: keyboardHeight)
-                }
+            guard let _ = keyboardHeightAnchor else { return }
+            NSLayoutConstraint.deactivate([keyboardHeightAnchor!])
+            keyboardHeightAnchor = keyboardView.heightAnchor.constraint(equalToConstant: keyboardHeight)
+            NSLayoutConstraint.activate([keyboardHeightAnchor!])
+            mainScrollView.updateContentSize()
+            if needToScroll {
+                mainScrollView.scrollToTextView(self.offset, height: view.frame.height, keyboardHeight: keyboardHeight)
             }
-            
         }
     }
     // 키보드뷰의 높이값을 변화시켜주기 위함
@@ -53,17 +51,22 @@ final class CurationCreateViewController: UIViewController {
                 mainScrollView.scrollToBottom()
             }
             previousDataCount = descriptionImages.count
+            print(descriptionImages)
         }
     }
-    
+    private var addIndex:Int = 0
+    private var deleteImageURL:[String] = []
+    private var completeCount: Int = 0
+    private var isMainImageChanged: Bool = false
     /// init (nil, nil, []) : 이경우는 작성, / init(curation, mainImage, descriptionImages): 는 수정
     init(_ curation: Curation?,_ mainImage: UIImage?,_ descriptionImage: [UIImage]) {
         if let curation = curation {
             self.curation = curation
             self.mainImage = mainImage!
             self.descriptionImages = descriptionImage
+            self.addIndex = descriptionImage.count
         } else {
-            self.curation = Curation(userID: "", bookstoreID: "", category: "" , mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [])
+            self.curation = Curation(userID: UserManager().getID(), bookstoreID: "", category: "" , mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [])
         }
         super.init(nibName: nil, bundle: nil)
     }
@@ -227,7 +230,9 @@ final class CurationCreateViewController: UIViewController {
     }
     
     private func setupHeadTextView() {
-        headTextView.setupCategory(curation.category)
+        if !curation.category.isEmpty {
+            headTextView.setupCategory(curation.category)
+        }
         headTextView.setupText(string: curation.headText)
         NSLayoutConstraint.activate([
             headTextView.topAnchor.constraint(equalTo: titleView.bottomAnchor),
@@ -272,15 +277,18 @@ final class CurationCreateViewController: UIViewController {
         ])
     }
     
-    // MARK: 포토 라이브러리 sheet present
-    func presentAlbum() {
+    // MARK: PHPickerViewController Present
+    func presentPHPicker() {
         DispatchQueue.main.async {
-            let pickerVC = UIImagePickerController()
-            pickerVC.sourceType = .photoLibrary
-            pickerVC.delegate = self
-            self.present(pickerVC, animated: true, completion: nil)
+            var configuration = PHPickerConfiguration()
+            configuration.selectionLimit = 1
+            configuration.filter = .images
+            let picker = PHPickerViewController(configuration: configuration)
+            picker.delegate = self
+            self.present(picker, animated: true, completion: nil)
         }
     }
+    
     // 키보드 올라올 경우 키보드 높이값을 확인해서 변수에 저장
     @objc private func handle(keyboardShowNotification notification: Notification) {
         if let userInfo = notification.userInfo, let keyboardRectangle = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect, self.keyboardHeight == 0 {
@@ -297,6 +305,7 @@ final class CurationCreateViewController: UIViewController {
     @objc private func buttonPressed(_ sender: Any) {
         if let button = sender as? UIBarButtonItem {
             switch button.tag {
+                //BackButton Action
             case 1:
                 let alert = UIAlertController(title: nil, message: "작성 중인 내용을\n 저장 하지 않고 나가시겠습니까?", preferredStyle: .alert)
                 let cancel = UIAlertAction(title: "취소", style: .cancel)
@@ -306,9 +315,60 @@ final class CurationCreateViewController: UIViewController {
                 alert.addAction(cancel)
                 alert.addAction(complete)
                 present(alert, animated: true, completion: nil)
+                
+                //CompleteButton Action
             case 2:
                 // Change the background color to red.
-                print(curation)
+                rightButton.isEnabled = false
+                view.endEditing(true)
+                for url in deleteImageURL {
+                    do {
+                        try CurationRequest().deleteCurationImage(url: url)
+                    } catch {
+                        print("delete Error")
+                    }
+                }
+                if isMainImageChanged {
+                    CurationRequest().uploadCurationImage(image: mainImage ?? UIImage(), pathRoot: "Curations/\(curation.title)/main", completion: { url in
+                        self.curation.mainImage = url ?? ""
+                        self.completeCount += 1
+                        if self.completeCount == self.descriptionImages.count {
+                            do {
+                                try CurationRequest().add(curation: self.curation)
+                                self.navigationController?.popViewController(animated: true)
+                            } catch {
+                                print("erroe curation add")
+                            }
+                        }
+                    })
+                }
+                for i in 0..<descriptionImages.count {
+                    if addIndex <= i {
+                        CurationRequest().uploadCurationImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
+                            self.curation.descriptions[i].image = url
+                            self.completeCount += 1
+//                            print("add description Image \(url) \(self.completeCount) \(self.descriptionImages.count)")
+                            if self.completeCount == self.descriptionImages.count {
+                                do {
+                                    try CurationRequest().add(curation: self.curation)
+                                    self.navigationController?.popViewController(animated: true)
+                                } catch {
+                                    self.rightButton.isEnabled = true
+                                }
+                            }
+                        }
+                    } else {
+                        self.completeCount += 1
+                        if i == descriptionImages.count - 1 {
+                            do {
+                                try CurationRequest().add(curation: self.curation)
+                                self.navigationController?.popViewController(animated: true)
+                            } catch {
+                                self.rightButton.isEnabled = true
+                            }
+                        }
+                    }
+                }
             default:
                 print("error")
             }
@@ -333,7 +393,7 @@ extension CurationCreateViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return descriptionImages.count
+        return curation.descriptions.count
         
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -390,29 +450,44 @@ extension UIScrollView {
     }
 }
 
-// MARK: Image Picker Controller Delegate
-extension CurationCreateViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+extension CurationCreateViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass:  UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                guard let image = image as? UIImage else { return }
+                DispatchQueue.main.async {
+                    switch self.imagePickerOpenSource {
+                    case "descriptionAdd":
+                        self.curation.descriptions.append(Description(image: "", content: ""))
+                        self.descriptionImages.append(image.resizeImage(size: CGSize(width: 1024, height: 1024)))
+                        self.imagePickerOpenSource = ""
+                    case "mainImage":
+                        let resizeImage = image.resizeImage(size: CGSize(width: 1024, height: 1024))
+                        self.mainImage = resizeImage
+                        self.titleView.setupImage(resizeImage)
+                        self.imagePickerOpenSource = ""
+                        if !self.isMainImageChanged {
+                            self.isMainImageChanged = true
+                            self.completeCount -= 1
+                            if !self.curation.mainImage.isEmpty {
+                                self.deleteImageURL.append(self.curation.mainImage)
+                            }
+                        }
+                    default:
+                        return
+                    }
+                }
+            }
+        } else {
+            print("phpicker Error")
+        }
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[.originalImage] as? UIImage {
-//            self.uiImage = image
-            switch self.imagePickerOpenSource {
-            case "descriptionAdd":
-                descriptionImages.append(image)
-                curation.descriptions.append(Description(image: "", content: ""))
-                imagePickerOpenSource = ""
-            case "mainImage":
-                mainImage = image
-                titleView.setupImage(image)
-            default:
-                return
-            }
-        }
-        dismiss(animated: true, completion: nil)
-    }
     
     // 사진 권한
     func photoAuth(completion: @escaping () -> Void) {
@@ -447,7 +522,6 @@ extension CurationCreateViewController: UIImagePickerControllerDelegate, UINavig
                 DispatchQueue.main.async {
                     self.present(alertController, animated: true)
                 }
-            
                 break
             }
         }
@@ -455,23 +529,24 @@ extension CurationCreateViewController: UIImagePickerControllerDelegate, UINavig
     
 }
 
+
 // MARK: TextViewDelegate -> 각 TextView 값의 변화에 따라 placeholder 및 curation 변수에 값 할당
 extension CurationCreateViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         needToScroll = true
         if textView.tag == 99 {
-            if let text = textView.text, text == headTextViewPlaceHolder {
+            if let text = textView.text, text == headTextViewPlaceHolder && textView.textColor == UIColor.kindyGray {
                 textView.text = nil
                 textView.textColor = .black
-                self.offset = headTextView.frame.minY + headTextView.frame.size.height
                 
             }
+            self.offset = headTextView.frame.minY + headTextView.frame.size.height
         } else {
-            if let text = textView.text, text == descriptionTextViewPlaceHolder {
+            if let text = textView.text, text == descriptionTextViewPlaceHolder && textView.textColor == UIColor.kindyGray  {
                 textView.text = nil
                 textView.textColor = .black
-                self.offset = descriptionTableView.frame.minY + CGFloat((textView.tag + 1) * 116)
             }
+            self.offset = descriptionTableView.frame.minY + CGFloat((textView.tag + 1) * 116)
         }
         
     }
@@ -498,6 +573,7 @@ extension CurationCreateViewController: UITextViewDelegate {
             switch textView.tag {
             case 99:
                 curation.headText = textView.text!
+                print(curation.headText)
             default:
                 curation.descriptions[textView.tag].content = textView.text!
             }
@@ -519,7 +595,7 @@ extension CurationCreateViewController: CurationCreateDelegate {
     func openImagePickerForMainImage() {
         photoAuth {
             self.imagePickerOpenSource = "mainImage"
-            self.presentAlbum()
+            self.presentPHPicker()
         }
     }
     
@@ -533,14 +609,20 @@ extension CurationCreateViewController: CurationCreateDelegate {
             self.curation.category = "도서"
             self.headTextView.setupCategory("도서")
         })
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
         actionSheet.addAction(bookstore)
         actionSheet.addAction(book)
-        present(actionSheet, animated: true, completion: nil)
+        actionSheet.addAction(cancel)
+        present(actionSheet, animated: true, completion: nil )
     }
     
     func deleteItem(index: Int) {
         descriptionImages.remove(at: index)
-        curation.descriptions.remove(at: index)
+        let deleteDescription = curation.descriptions.remove(at: index)
+        if index < addIndex {
+            addIndex -= 1
+            deleteImageURL.append(deleteDescription.image ?? "")
+        }
     }
     
     func setupMainTitle(string: String) {
@@ -552,9 +634,12 @@ extension CurationCreateViewController: CurationCreateDelegate {
     }
     
     func addDescriptionButtonAction() {
-        photoAuth {
-            self.imagePickerOpenSource = "descriptionAdd"
-            self.presentAlbum()
+        if descriptionImages.count < 10 {
+            photoAuth {
+                self.imagePickerOpenSource = "descriptionAdd"
+//                self.presentAlbum()
+                self.presentPHPicker()
+            }
         }
     }
 }

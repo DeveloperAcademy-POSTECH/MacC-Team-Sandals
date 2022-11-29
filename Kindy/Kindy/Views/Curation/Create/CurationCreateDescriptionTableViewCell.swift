@@ -10,7 +10,7 @@ import UIKit
 final class CurationCreateDescriptionTableViewCell: UITableViewCell {
     
     private var textViewDelegate: UITextViewDelegate?
-    private var delegate: CurationCreateDelegate?
+    private weak var delegate: CurationCreateDelegate?
     private var index: Int = 0
     
     private let photoView: UIImageView = {
