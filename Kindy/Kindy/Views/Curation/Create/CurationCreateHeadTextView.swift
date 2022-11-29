@@ -11,7 +11,7 @@ final class CurationCreateHeadTextView: UIView {
     
     private let textViewPlaceHolder:String = "본문 내용을 작성해 주세요"
 
-    private var delegate: CurationCreateDelegate?
+    private weak var delegate: CurationCreateDelegate?
 
     private let categoryStackView: UIStackView = {
         let stackView = UIStackView()
