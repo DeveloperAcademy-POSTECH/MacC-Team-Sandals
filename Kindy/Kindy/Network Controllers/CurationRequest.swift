@@ -5,6 +5,7 @@
 //  Created by 정호윤 on 2022/11/21.
 //
 
+
 import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
@@ -18,12 +19,6 @@ struct CurationRequest: FirestoreRequest {
 }
 
 extension CurationRequest {
-    // 댓글을 포함한 큐레이션 fetch
-    func fetchWithComment(with id: String) async throws -> Curation {
-        let curation = try await db.collection(collectionPath).document(id).getDocument(as: Curation.self)
-        return curation
-    }
-    
     // 큐레이션 추가
     func add(curation: Curation) throws {
         try db.collection(collectionPath).document(curation.id).setData(from: curation)
@@ -35,8 +30,18 @@ extension CurationRequest {
         let document = querySnapshot.documents.first
         try await document?.reference.updateData(["likes" : likes])
     }
+    
+    func createComment(curationID: String, userID: String ,content: String) throws {
+        let comment = Comment(id: UUID().uuidString, userID: userID, content: content, createdAt: Date())
+        try db.collection(collectionPath).document(curationID).collection("Comment").document(comment.id).setData(from: comment)
+    }
+    
+    func deleteComment(curationID: String, commentID: String) {
+        db.collection(collectionPath).document(curationID).collection("Comment").document(commentID).delete()
+    }
+}
 
-    // 큐레이션이 가진 좋아요 값으로 fetch
+// 큐레이션이 가진 좋아요 값으로 fetch
 //    func fetchLikesCurtions() async throws -> [Curation] {
 //        if isLoggedIn() {
 //            let user = try await fetchCurrentUser()
@@ -49,6 +54,7 @@ extension CurationRequest {
 //            return []
 //        }
 //    }
+
     
     func createComment(curationID: String, userID: String ,content: String) throws {
         let comment = Comment(id: UUID().uuidString, userID: userID, content: content, createdAt: Date())

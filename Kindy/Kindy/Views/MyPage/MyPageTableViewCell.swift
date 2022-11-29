@@ -9,6 +9,7 @@ import UIKit
 
 final class MyPageTableViewCell: UITableViewCell {
     
+    // MARK: Properties
     var myPageCellLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -31,6 +32,7 @@ final class MyPageTableViewCell: UITableViewCell {
         return stackView
     }()
     
+    // MARK: LifeCycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -39,7 +41,8 @@ final class MyPageTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    // MARK: Helpers
     private func setupUI() {
         addSubview(myPageCellStackView)
         
