@@ -167,3 +167,29 @@ extension ImageCache {
             .appendingPathComponent(name)
     }
 }
+
+// MARK: 여러장의 이미지를 동시에 fetch하는 함수들
+extension ImageCache {
+    func loadImageDictionary(URLs: [String]) async throws -> [String : UIImage] {
+        try await withThrowingTaskGroup(of: (String, UIImage).self) { group in
+            for url in URLs {
+                group.addTask {
+                    let image = try? await ImageCache.shared.load(url)
+                    return (url, image ?? UIImage())
+                }
+            }
+            var images = [String : UIImage]()
+            
+            for try await (url, image) in group {
+                images[url] = image
+            }
+            return images
+        }
+    }
+    func loadImageArray(URLs: [String]) async throws -> [UIImage] {
+        let images: [UIImage] = try await URLs.concurrentMap { url in
+            return try! await ImageCache.shared.load(url) ?? UIImage()
+        }
+        return images
+    }
+}
