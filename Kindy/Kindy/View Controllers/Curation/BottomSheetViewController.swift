@@ -79,7 +79,7 @@ final class BottomSheetViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    @objc private func dismissView() {
+    @objc func dismissView() {
         self.dismiss(animated: false)
         self.popDelegate?.dismissHeaderView()
 

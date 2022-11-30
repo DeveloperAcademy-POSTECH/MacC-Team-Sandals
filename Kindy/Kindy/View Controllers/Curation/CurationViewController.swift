@@ -15,10 +15,14 @@ protocol SetSheetDefault: AnyObject {
 final class CurationViewController: UIViewController {
     
     private var listener: ListenerRegistration?
+    private var commentManager = CommentRequest()
     
     private var curation: Curation
-    
     weak var delegate: SetSheetDefault?
+    
+    private var isFirstShowingView: Bool = true
+    private var isPostComment: Bool = false
+    private var isDeleteComment: Bool = false
     
     private var currentLongPressedCell: UICollectionViewCell?
 
@@ -28,8 +32,9 @@ final class CurationViewController: UIViewController {
     private let userManager = UserManager()
     private let curationManager = CurationRequest()
 
-    private var fetchCommentTask: Task<Void, Never>?
+    private var commentTask: Task<Void, Never>?
     private var curationRequestTask: Task<Void, Never>?
+    private var userNameTask: Task<Void, Never>?
     
     private let images: [UIImage]
 
@@ -71,6 +76,8 @@ final class CurationViewController: UIViewController {
         let view = CurationButtonStackView(frame: .zero, curation: curation)
         guard let replyView = view.replyView as? CurationButtonItemView else { return UIView()}
         replyView.delegate = self
+        guard let settingView = view.settingView as? CurationButtonItemView else { return UIView() }
+        settingView.menuDelegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -84,13 +91,35 @@ final class CurationViewController: UIViewController {
 //            bookstoresRequestTask = nil
 //        }
 // --------------
-        
-        fetchCommentTask = Task {
-            if curation.comments == nil {
-                curation.comments = try? await CommentRequest().fetchComment(id: curation.id)
+        listener = commentManager.fetchUpdateComments(curationID: curation.id, completion: { querySnapshot, error in
+            
+            if self.isFirstShowingView {
+                self.curation.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
+                self.afterFetachComment()
+                self.isFirstShowingView = false
+                return
             }
-            await afterFetachComment()
-        }
+            
+            querySnapshot?.documentChanges.forEach { diff in
+                if (diff.type == .added) {
+                    try? self.curation.comments?.append(diff.document.data(as: Comment.self))
+                }
+                if (diff.type == .modified) {
+                    print("Modified : \(diff.document.data())")
+                }
+                if (diff.type == .removed) {
+                    self.curation.comments = self.curation.comments?.filter { comment in
+                        try! comment.id != diff.document.data(as: Comment.self).id
+                    }
+                }
+            }
+            
+            self.isPostComment ? self.postRefresh() : ()
+            self.isDeleteComment ? self.handleRefreshControl() : ()
+            
+            self.isPostComment = false
+            self.isDeleteComment = false
+        })
     }
 
     override func viewDidLoad() {
@@ -106,6 +135,11 @@ final class CurationViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        listener?.remove()
+    }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -115,22 +149,24 @@ final class CurationViewController: UIViewController {
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
+    
+    private func postRefresh() {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.handleRefreshControl()
+        }
+    }
 
     @objc private func handleRefreshControl() {
-        self.resignFirstResponder()
-        UIView.animate(withDuration: 0.5, delay: 0) {
-            self.collectionView.contentOffset.y = -50
+        UIView.animate(withDuration: 0.6, delay: 0.3) {
+            self.hideKeyboard()
+            self.collectionView.contentOffset.y = -60
             self.collectionView.refreshControl?.beginRefreshing()
         }
         
-        fetchCommentTask = Task {
-            curation.comments = try? await CommentRequest().fetchComment(id: curation.id)
-            await afterFetachComment()
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            self.collectionView.refreshControl?.endRefreshing()
-        }
+        afterFetachComment()
+        self.view.isUserInteractionEnabled = false
+        collectionView.refreshControl?.endRefreshing()
+        self.view.isUserInteractionEnabled = true
     }
     
     private func delieverAction() {
@@ -139,21 +175,24 @@ final class CurationViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
-    private func afterFetachComment() async {
-        self.curation.comments?.sort(by: { first, second in
-            first.createdAt < second.createdAt
-        })
-        var index = 0
-        for comment in self.curation.comments ?? [] {
-            if comment.userNickname == nil {
-                self.curation.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
+    private func afterFetachComment() {
+        userNameTask = Task {
+            self.curation.comments?.sort(by: { first, second in
+                first.createdAt < second.createdAt
+            })
+            
+            var index = 0
+            for comment in self.curation.comments ?? [] {
+                if comment.userNickname == nil {
+                    self.curation.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
+                }
+               index += 1
             }
-           index += 1
+            
+            self.replyCount = self.curation.comments?.count ?? 0
+            self.changeReplyCount()
+            self.collectionView.reloadData()
         }
-        
-        self.changeReplyCount()
-        self.replyCount = self.curation.comments?.count ?? 0
-        self.collectionView.reloadData()
     }
 }
 
@@ -200,7 +239,6 @@ extension CurationViewController: UICollectionViewDataSource {
 //            return cell
 //        } else
 // --- 서점 스토어셀은 추후에 추가
-
         if indexPath.section == 0 {
             if indexPath.item == 0 {
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
@@ -271,10 +309,12 @@ extension CurationViewController: UICollectionViewDelegateFlowLayout {
 
 extension CurationViewController: PostComment {
     func postComment(content: String) {
-        collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-        try? curationManager.createComment(curationID: curation.id, userID: userID, content: content)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-            self.handleRefreshControl()
+        commentTask = Task {
+            isPostComment = true
+            curation.commentCount += 1
+            let tempCuration = curation
+            try? await curationManager.createComment(curationID: tempCuration.id, userID: userID, content: content, count: tempCuration.commentCount)
+            commentTask = nil
         }
     }
 }
@@ -359,9 +399,11 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                 
                                 let okAction = UIAlertAction(title: "확인", style: .default) { _ in
                                     self.curationRequestTask = Task {
-                                        self.curationManager.deleteComment(curationID: self.curation.id, commentID: self.curation.comments![indexPath.row].id)
-                                        self.handleRefreshControl()
-                                        collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                                        self.curation.commentCount -= 1
+                                        let tempCuration = self.curation
+                                        self.isDeleteComment = true
+                                        
+                                        try? await self.curationManager.deleteComment(curationID: tempCuration.id, commentID: tempCuration.comments![indexPath.row].id, count: tempCuration.commentCount)
                                     }
                                 }
                                 let cancelAction = UIAlertAction(title: "취소", style: .default)
@@ -383,7 +425,50 @@ private extension CurationViewController {
     func changeReplyCount() {
         guard let stackView = bottomView as? CurationButtonStackView else { return }
         guard let replyView = stackView.replyView as? CurationButtonItemView else { return }
-        replyView.countLabel.text = String(curation.comments?.count ?? 0)
+        replyView.countLabel.text = String(replyCount)
+    }
+}
+
+extension CurationViewController: ShowingMenu, Reportable {
+    
+    func showingMenu() {
+        self.hideKeyboard()
+        if curation.userID == userID {
+            if self.userID == self.curation.userID {
+                let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+                let updateAction = UIAlertAction(title: "게시글 수정", style: .default) { _ in
+                    self.curationRequestTask = Task {
+                        
+                        let curationCreateVC = CurationViewController(curation: self.curation, images: self.images)
+                        
+                        let naviVC = UINavigationController(rootViewController: curationCreateVC)
+                        naviVC.modalPresentationStyle = .overFullScreen
+                        self.show(naviVC, sender: nil)
+                        
+                        self.curationRequestTask = nil
+                    }
+                }
+                
+                let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                    self.curationRequestTask = Task {
+                        guard let view = self.next as? UIView, let vc = view.findViewController() as? BottomSheetViewController else { return }
+                        //                        try? await self.curationManager.delete(curationID: self.curation.id)
+                        vc.dismissView()
+                        self.curationRequestTask = nil
+                    }
+                }
+                
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                alertController.addAction(updateAction)
+                alertController.addAction(deleteAction)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true)
+            }
+            
+        } else {
+            showReportController(self, style: .actionSheet, title: "게시글 신고")
+        }
     }
 }
 
