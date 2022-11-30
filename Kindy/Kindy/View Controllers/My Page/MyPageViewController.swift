@@ -71,7 +71,7 @@ final class MyPageViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
-        tableView.rowHeight = 56
+        tableView.rowHeight = 55
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
     }
@@ -107,6 +107,8 @@ final class MyPageViewController: UIViewController {
     private func setupAddTarget() {
         userInfoContainerView.nicknameEditButton.addTarget(self, action: #selector(nicknameEditButtonTapped), for: .touchUpInside)
         userInfoContainerView.bookmarkedBookstoreButton.addTarget(self, action: #selector(bookmarkedBookstoreButtonTapped), for: .touchUpInside)
+        userInfoContainerView.myWritingButton.addTarget(self, action: #selector(myWritingButtonTapped), for: .touchUpInside)
+        userInfoContainerView.myActivitiesButton.addTarget(self, action: #selector(myActivitiesButtonTapped), for: .touchUpInside)
         tryLoginContainerView.signInButton.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
 //        tryLoginContainerView.signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
@@ -163,6 +165,19 @@ final class MyPageViewController: UIViewController {
         let bookmarkVC = BookmarkViewController()
         bookmarkVC.setupData(items: bookmarkedBookstores)
         show(bookmarkVC, sender: nil)
+    }
+    
+    // TODO: 스몰톡 업데이트 되면 MyWritingViewController으로 연결
+    @objc func myWritingButtonTapped() {
+        let writingListVC = WritingListViewController()
+        writingListVC.previousSelectedCell = .myCuration
+        show(writingListVC, sender: nil)
+    }
+    
+    @objc func myActivitiesButtonTapped() {
+        let myActivitiesVC = MyActivitiesViewController()
+
+        show(myActivitiesVC, sender: nil)
     }
     
     @objc func signInButtonTapped() {

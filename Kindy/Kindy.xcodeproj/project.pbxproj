@@ -30,6 +30,8 @@
 		31F7DD632904EAE9007E6E99 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */; };
 		31F7DD652904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */; };
 		31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */; };
+		36002A8A29325EBE00AE432A /* WritingListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36002A8929325EBE00AE432A /* WritingListViewController.swift */; };
+		36002AAE2933AB5100AE432A /* NoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36002AAD2933AB5100AE432A /* NoWritingView.swift */; };
 		361D54CF2901CABB00ACA11E /* DetailBookstoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */; };
 		363B56EF29263252008AF99C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B56EE29263252008AF99C /* Constants.swift */; };
 		36671EB429222E7E003BC7F7 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36671EB329222E7E003BC7F7 /* ImageCache.swift */; };
@@ -144,6 +146,8 @@
 		31F7DD622904EAE9007E6E99 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD642904EB0C007E6E99 /* ImageCarouselCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCarouselCollectionViewCell.swift; sourceTree = "<group>"; };
 		31F7DD6829058A4C007E6E99 /* BookmarkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDelegate.swift; sourceTree = "<group>"; };
+		36002A8929325EBE00AE432A /* WritingListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingListViewController.swift; sourceTree = "<group>"; };
+		36002AAD2933AB5100AE432A /* NoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoWritingView.swift; sourceTree = "<group>"; };
 		361D54CE2901CABB00ACA11E /* DetailBookstoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookstoreViewController.swift; sourceTree = "<group>"; };
 		363B56EE29263252008AF99C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		36671EB329222E7E003BC7F7 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -522,6 +526,7 @@
 				369CC07A29241661000D7B96 /* EditNicknameViewController.swift */,
 				369CC07C29241681000D7B96 /* MyWritingViewController.swift */,
 				369CC07E292416A7000D7B96 /* MyActivitiesViewController.swift */,
+				36002A8929325EBE00AE432A /* WritingListViewController.swift */,
 			);
 			path = "My Page";
 			sourceTree = "<group>";
@@ -604,6 +609,7 @@
 				36E6CCE829236B4100E0F709 /* UserInfoContainerView.swift */,
 				36F6198A292406000085791C /* TryLoginContainerView.swift */,
 				36D881B8292951FC0089D2FF /* EditNicknameView.swift */,
+				36002AAD2933AB5100AE432A /* NoWritingView.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -754,6 +760,7 @@
 				77DCB198291A706400EAB5D5 /* CurationListHeaderView.swift in Sources */,
 				36BD7D64290404C200CBC879 /* UILabel+.swift in Sources */,
 				77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */,
+				36002A8A29325EBE00AE432A /* WritingListViewController.swift in Sources */,
 				7BFE3BCF292BB6FF00370AC9 /* BookstoreRequest.swift in Sources */,
 				77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */,
 				31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */,
@@ -785,6 +792,7 @@
 				6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */,
 				6E359EDF29278DF100139F6F /* CurationButtonItem.swift in Sources */,
 				36D881B9292951FC0089D2FF /* EditNicknameView.swift in Sources */,
+				36002AAE2933AB5100AE432A /* NoWritingView.swift in Sources */,
 				77DCB16A29053B9900EAB5D5 /* HomeSearchCell.swift in Sources */,
 				6E359EDD29278DC500139F6F /* LoginCheckable+.swift in Sources */,
 				6E359EEB29278EBC00139F6F /* CurationCommentCell.swift in Sources */,

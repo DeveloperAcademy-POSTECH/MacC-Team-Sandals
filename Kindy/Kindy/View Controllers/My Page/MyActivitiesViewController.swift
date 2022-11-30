@@ -13,7 +13,7 @@ final class MyActivitiesViewController: UIViewController {
     private let myActivitiesCellLabels: [String] = ["좋아요 한 글", "댓글 단 글"]
     
     private let tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -25,22 +25,37 @@ final class MyActivitiesViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavigationBar()
+        tabBarController?.tabBar.isHidden = true
+    }
+    
     // MARK: Helpers
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "MyPageTableViewCell")
-        tableView.rowHeight = 56
+        tableView.rowHeight = 55
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
     }
     
     private func setupUI() {
+        view.backgroundColor = .white
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+    }
+    
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.tintColor = UIColor.black
+        navigationItem.title = "활동 내역"
     }
     
 }
@@ -71,12 +86,14 @@ extension MyActivitiesViewController: UITableViewDelegate {
         
         switch myActivitiesCellLabels[indexPath.row] {
         case "좋아요 한 글":
-            // TODO: 좋아요 한 큐레이션 페이지 불러오기
-            print("좋아요 한 글")
+            let writingListVC = WritingListViewController()
+            writingListVC.previousSelectedCell = .likeList
+            show(writingListVC, sender: nil)
 
-            // TODO: 댓글 단 큐레이션 페이지 불러오기
         case "댓글 단 글":
-            print("댓글 단 글")
+            let writingListVC = WritingListViewController()
+            writingListVC.previousSelectedCell = .commentList
+            show(writingListVC, sender: nil)
             
         default:
             break
