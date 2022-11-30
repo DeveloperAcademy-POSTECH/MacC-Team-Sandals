@@ -18,7 +18,6 @@ final class TryLoginContainerView: UIView {
         return label
     }()
     
-    // TODO: divider 안보임
     private let divider: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "kindyLightGray3")
@@ -70,6 +69,7 @@ final class TryLoginContainerView: UIView {
         addSubview(tryLogincontainerStackView)
         
         NSLayoutConstraint.activate([
+            divider.widthAnchor.constraint(equalToConstant: 326),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
             tryLogincontainerStackView.topAnchor.constraint(equalTo: topAnchor, constant: padding24),
@@ -77,6 +77,11 @@ final class TryLoginContainerView: UIView {
             tryLogincontainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
             tryLogincontainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24),
         ])
+        
+        clipsToBounds = true
+        layer.cornerRadius = 8
+        layer.borderWidth = 1
+        layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
     }
     
 }

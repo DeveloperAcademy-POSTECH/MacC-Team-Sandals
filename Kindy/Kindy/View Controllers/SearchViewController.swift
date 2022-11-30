@@ -170,7 +170,7 @@ extension SearchViewController: UITableViewDataSource {
             cell.bookstore = filteredItems[indexPath.row] as? Bookstore
             
             self.imageRequestTask = Task {
-                if let image = try? await ImageCache.shared.load(cell.bookstore!.images?.first) {
+                if let image = try? await ImageCache.shared.load(cell.bookstore!.images?.first, size: ImageSize.small) {
                     cell.photoImageView.image = image
                 }
                 imageRequestTask = nil

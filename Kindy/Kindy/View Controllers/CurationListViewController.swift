@@ -8,7 +8,7 @@
 import UIKit
 
 final class CurationListViewController: UIViewController {
-    
+
     // MARK: - 파이어베이스 Task
     
     private var curationsRequestTask: Task<Void, Never>?
@@ -45,7 +45,7 @@ final class CurationListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         createBarButtonItems()
         setupTableView()
         fetchCuration()
