@@ -37,6 +37,8 @@ final class CurationListViewController: UIViewController {
     
     private var user: User?
     
+    private var kinditorOfCuration: [String : String] = [:]
+    
     private let refreshControl = UIRefreshControl()
     
     // MARK: - 라이프 사이클
@@ -73,7 +75,7 @@ final class CurationListViewController: UIViewController {
     
     @objc func searchButtonTapped() {
         let searchViewController = SearchViewController()
-        searchViewController.setupData(items: mainDummy, itemType: .curationType)
+        searchViewController.setupData(items: mainDummy, itemType: .curationType, kinditorOfCuration: kinditorOfCuration)
         show(searchViewController, sender: nil)
     }
     
@@ -130,6 +132,13 @@ final class CurationListViewController: UIViewController {
             } else {
                 mainDummy = []
             }
+            
+            for curation in mainDummy {
+                if let nickname = try? await UserManager().fetch(with: curation.userID).nickName {
+                    self.kinditorOfCuration[curation.userID] = nickname
+                }
+            }
+            
             self.tableView.reloadData()
             curationsRequestTask = nil
         }
@@ -169,7 +178,13 @@ extension CurationListViewController: UITableViewDataSource {
             imageRequestTask = nil
         }
         
-        guard UserManager().isLoggedIn() else { cell.curationIsLiked = false; return cell }
+        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? "킨디"]
+
+        guard UserManager().isLoggedIn() else {
+            cell.curationIsLiked = false
+            return cell
+        }
+        
         let userID = UserManager().getID()
         cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
         
@@ -212,7 +227,7 @@ extension CurationListViewController: UITableViewDelegate {
     
     @objc func buttonTapped(_ sender: UIButton) {
         let vc = FeaturedCurationListViewController()
-        vc.setupData(items: mainDummy, tag: sender.tag)
+        vc.setupData(items: mainDummy, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
         
         show(vc, sender: nil)
     }
