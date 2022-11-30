@@ -31,7 +31,7 @@ final class CurationListViewController: UIViewController {
         return tableView
     }()
     
-    private var mainDummy: [Curation] = []
+    private var curations: [Curation] = []
     
     private var curationImage = UIImage()
     
@@ -75,7 +75,7 @@ final class CurationListViewController: UIViewController {
     
     @objc func searchButtonTapped() {
         let searchViewController = SearchViewController()
-        searchViewController.setupData(items: mainDummy, itemType: .curationType, kinditorOfCuration: kinditorOfCuration)
+        searchViewController.setupData(items: curations, itemType: .curationType, kinditorOfCuration: kinditorOfCuration)
         show(searchViewController, sender: nil)
     }
     
@@ -128,12 +128,12 @@ final class CurationListViewController: UIViewController {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await CurationRequest().fetch() {
-                mainDummy = curations
+                curations = curations
             } else {
-                mainDummy = []
+                curations = []
             }
             
-            for curation in mainDummy {
+            for curation in curations {
                 if let nickname = try? await UserManager().fetch(with: curation.userID).nickName {
                     self.kinditorOfCuration[curation.userID] = nickname
                 }
@@ -163,12 +163,12 @@ final class CurationListViewController: UIViewController {
 extension CurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return mainDummy.count
+        return curations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
-        cell.curation = mainDummy[indexPath.row]
+        cell.curation = curations[indexPath.row]
         
         self.imageRequestTask = Task {
             if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage, size: ImageSize.big) {
@@ -200,7 +200,7 @@ extension CurationListViewController: UITableViewDataSource {
 
 extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curationVC = PagingCurationViewController(curation: mainDummy[indexPath.row])
+        let curationVC = PagingCurationViewController(curation: curations[indexPath.row])
         curationVC.modalPresentationStyle = .overFullScreen
         curationVC.modalTransitionStyle = .crossDissolve
         
@@ -212,7 +212,7 @@ extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
 
-        headerView.isHidden = mainDummy.isEmpty
+        headerView.isHidden = curations.isEmpty
         
         let bookstoreBtn = headerView.bookstoreButton
         let bookBtn = headerView.bookButton
@@ -227,7 +227,7 @@ extension CurationListViewController: UITableViewDelegate {
     
     @objc func buttonTapped(_ sender: UIButton) {
         let vc = FeaturedCurationListViewController()
-        vc.setupData(items: mainDummy, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
+        vc.setupData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
         
         show(vc, sender: nil)
     }
