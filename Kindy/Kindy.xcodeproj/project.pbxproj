@@ -965,7 +965,7 @@
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "'Kindy'이(가) 사용자의 사진에 접근하려고 합니다";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "'Kindy'이(가) 사용자의 사진에 접근하려고 합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -1006,7 +1006,7 @@
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "'Kindy'이(가) 사용자의 사진에 접근하려고 합니다";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "'Kindy'이(가) 사용자의 사진에 접근하려고 합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
