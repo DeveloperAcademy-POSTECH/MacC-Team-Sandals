@@ -87,6 +87,15 @@ final class CurationListCell: UITableViewCell {
         return label
     }()
     
+    private let categoryTypeLabel = {
+        let label = UILabel()
+        label.font = .footnote
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     private let likeLabel: UILabel = {
         let label = UILabel()
         label.font = .subhead
@@ -147,7 +156,7 @@ final class CurationListCell: UITableViewCell {
     private func setup() {
         [likeLabel, commentLabel].forEach{ leftInfoStackView.addArrangedSubview($0) }
         [dateLabel, kinditorLabel].forEach{ rightInfoStackView.addArrangedSubview($0) }
-        [titleLabel, subTitleLabel].forEach{ titleInfoStackView.addArrangedSubview($0) }
+        [categoryTypeLabel, titleLabel, subTitleLabel].forEach{ titleInfoStackView.addArrangedSubview($0) }
         titleLabelView.addSubview(titleInfoStackView)
         [photoImageView, titleLabelView, leftInfoStackView, rightInfoStackView].forEach{ contentView.addSubview($0) }
     }
@@ -165,7 +174,7 @@ final class CurationListCell: UITableViewCell {
             titleLabelView.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor),
             
             titleInfoStackView.leadingAnchor.constraint(equalTo: titleLabelView.leadingAnchor, constant: 16),
-            titleInfoStackView.topAnchor.constraint(equalTo: titleLabelView.topAnchor, constant: 113),
+            titleInfoStackView.topAnchor.constraint(equalTo: titleLabelView.topAnchor, constant: 97),
             titleInfoStackView.trailingAnchor.constraint(equalTo: titleLabelView.trailingAnchor, constant: -10),
 
             leftInfoStackView.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor, constant: 8),
@@ -177,9 +186,10 @@ final class CurationListCell: UITableViewCell {
     }
 
     private func configureCell(item: Curation) {
-        // 타이틀 & 서브 타이틀
+        // 타이틀 & 서브 타이틀 & 카테고리 분류
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
+        categoryTypeLabel.text = item.category == "bookstore" ? "서점" : "도서"
         
         // 좋아요 & 댓글 개수
         configureImageAndTextLabel(for: likeLabel, imageName: "heart", text: item.likes.count)

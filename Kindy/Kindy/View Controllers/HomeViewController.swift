@@ -7,8 +7,6 @@
 
 import UIKit
 import CoreLocation
-import FirebaseFirestore
-import FirebaseFirestoreSwift
 
 final class HomeViewController: UIViewController {
     
@@ -89,16 +87,16 @@ final class HomeViewController: UIViewController {
         // MARK: Location Manager
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
-        // 큐레이션은 1번만 fetch
-        updateCuration()
+        updateCurations()
+        updateBookstores()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        update()
+        updateBookmarkedBookstores()
         
         // MARK: Nav Bar Appearance
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정
@@ -129,9 +127,9 @@ final class HomeViewController: UIViewController {
     
     // MARK:  - Navigation Bar
     
-    func createNavBarButtonItems() {
+    private func createNavBarButtonItems() {
         let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: self, action: #selector(scrollToTop))
         
         let bellButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(bellButtonTapped))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
@@ -143,27 +141,31 @@ final class HomeViewController: UIViewController {
         navigationItem.rightBarButtonItems = [searchButton]
     }
     
+    @objc private func scrollToTop() {
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+    }
+    
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
-    @objc func searchButtonTapped() {
-        let homeSearchViewController = HomeSearchViewController()
-        homeSearchViewController.setupData(items: model.bookstores)
+    @objc private func searchButtonTapped() {
+        let homeSearchViewController = SearchViewController()
+        homeSearchViewController.setupData(items: model.bookstores, itemType: .bookstoreType)
         show(homeSearchViewController, sender: nil)
     }
     
     // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수
-    @objc func bellButtonTapped() {
+    @objc private func bellButtonTapped() {
         
     }
     
     // MARK: - Refresh Control
     
-    func configureRefreshControl() {
+    private func configureRefreshControl() {
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
     
     @objc func handleRefreshControl() {
-        update()
+        updateBookstores()
         
         DispatchQueue.main.async {
             self.collectionView.refreshControl?.endRefreshing()
@@ -172,7 +174,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Update
     
-    func update() {
+    private func updateBookstores() {
         bookstoresTask?.cancel()
         bookstoresTask = Task {
             if let bookstores = try? await BookstoreRequest().fetch() {
@@ -202,7 +204,9 @@ final class HomeViewController: UIViewController {
             
             bookstoresTask = nil
         }
-        
+    }
+     
+    private func updateBookmarkedBookstores() {
         bookmarkedBookstoresTask?.cancel()
         bookmarkedBookstoresTask = Task {
             if let bookmarkedBookstores = try? await BookstoreRequest().fetchBookmarkedBookstores() {
@@ -216,7 +220,7 @@ final class HomeViewController: UIViewController {
         }
     }
     
-    func updateCuration() {
+    private func updateCurations() {
         curationsTask?.cancel()
         curationsTask = Task {
             if let curations = try? await CurationRequest().fetch() {
@@ -236,10 +240,6 @@ final class HomeViewController: UIViewController {
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let section = self.dataSource.snapshot().sectionIdentifiers[sectionIndex]
-            
-            // 재사용되는 edge inset을 정의했습니다.
-            let padding8: CGFloat = 8
-            let padding16: CGFloat = 16
             
             // MARK: Section Header
             let headerItemSize = NSCollectionLayoutSize(
@@ -395,47 +395,47 @@ final class HomeViewController: UIViewController {
     private func configureDataSource() {
         // MARK: Cell Registration
         let curationCellRegistration = UICollectionView.CellRegistration<CurationCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.curation!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.curation?.mainImage) {
+                if let image = try? await ImageCache.shared.load(item.curation?.mainImage, size: ImageSize.big) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.curation!)
         }
         
         let bookstoreCellRegistration = UICollectionView.CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.bookstore!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.bookstore!)
         }
         
         let nearbyBookstoreCellRegistration = UICollectionView.CellRegistration<NearByBookstoreCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.bookstore!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.small) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.bookstore!)
         }
         
         let bookmarkedBookstoreCellRegistration = UICollectionView.CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
+            cell.configureCell(item.bookstore!)
+            
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
             }
-            
-            cell.configureCell(item.bookstore!)
         }
         
         let regionNameCellRegistration = UICollectionView.CellRegistration<RegionNameCell, ViewModel.Item> { cell, indexPath, item in
@@ -619,11 +619,11 @@ extension HomeViewController: CLLocationManagerDelegate {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
         var sortedBookstores = bookstores
         
-        for i in 0..<bookstores.count {
-            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude))) / 1000
+        for i in bookstores.indices {
+            sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude)))
         }
-        // TODO: 거리 범위 조절, 거리에 따라 m, km 조정 로직 구현 필요
-        sortedBookstores = sortedBookstores.filter { $0.distance < 100 }.sorted { $0.distance < $1.distance }
+        
+        sortedBookstores = sortedBookstores.filter { $0.distance < 100000 }.sorted { $0.distance < $1.distance }
         
         return Array(sortedBookstores.prefix(3))
     }
@@ -633,10 +633,8 @@ extension HomeViewController: CLLocationManagerDelegate {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return "" }
         
         let location = CLLocation(latitude: myLocation.latitude, longitude: myLocation.longitude)
-        let geocoder = CLGeocoder()
-        let locale = Locale(identifier: "Ko-kr")
         
-        let placemarks = try await geocoder.reverseGeocodeLocation(location, preferredLocale: locale)
+        let placemarks = try await CLGeocoder().reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "Ko-kr"))
         let locality = placemarks.first?.locality ?? ""
         let subLocality = placemarks.first?.subLocality ?? ""
         

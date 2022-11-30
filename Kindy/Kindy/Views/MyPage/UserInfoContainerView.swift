@@ -9,13 +9,13 @@ import UIKit
 
 final class UserInfoContainerView: UIView {
     
+    // MARK: Properties
     var user: User? {
         didSet {
             nicknameLabel.text = user?.nickName
         }
     }
     
-    // MARK: Properties
     let nicknameLabel: UILabel = {
         let label = UILabel()
         label.text = "닉네임"
@@ -48,7 +48,7 @@ final class UserInfoContainerView: UIView {
         return view
     }()
     
-    lazy var bookmarkedBookstoreButton: UIButton = {
+    let bookmarkedBookstoreButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
         button.tintColor = .black
@@ -75,7 +75,7 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
-    private let myWritingButton: UIButton = {
+    let myWritingButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "text.book.closed.fill"), for: .normal)
         button.tintColor = .black
@@ -102,7 +102,7 @@ final class UserInfoContainerView: UIView {
         return stackView
     }()
     
-    private let myActivitiesButton: UIButton = {
+    let myActivitiesButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.tintColor = .black
@@ -130,8 +130,7 @@ final class UserInfoContainerView: UIView {
     }()
     
     private lazy var infoButtonStackView: UIStackView = {
-//        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
-        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView])
+        let stackView = UIStackView(arrangedSubviews: [bookmarkedBookstoreStackView, myWritingStackView, myActivitiesStackView])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -159,7 +158,6 @@ final class UserInfoContainerView: UIView {
     // MARK: Helpers
     private func setupUI() {
         backgroundColor = .white
-        
         addSubview(userInfoContainerStackView)
         
         setupFixedLayout()
@@ -170,6 +168,11 @@ final class UserInfoContainerView: UIView {
             userInfoContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
             userInfoContainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24),
         ])
+        
+        clipsToBounds = true
+        layer.cornerRadius = 8
+        layer.borderWidth = 1
+        layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
     }
     
     private func setupFixedLayout() {
@@ -180,6 +183,7 @@ final class UserInfoContainerView: UIView {
         NSLayoutConstraint.activate([
             nicknameStackView.heightAnchor.constraint(equalToConstant: 25),
             
+            divider.widthAnchor.constraint(equalToConstant: 326),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
             nicknameEditButton.widthAnchor.constraint(equalToConstant: 24),

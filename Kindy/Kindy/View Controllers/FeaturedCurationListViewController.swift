@@ -47,7 +47,7 @@ final class FeaturedCurationListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = category == "bookstore" ? "서점" : "책"
+        navigationItem.title = category == "bookstore" ? "서점" : "도서"
         createBarButtonItems()
         setupTableView()
     }
@@ -56,7 +56,7 @@ final class FeaturedCurationListViewController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.topItem?.title = ""         // back 버튼 없애기
-        navigationItem.title = category == "bookstore" ? "서점" : "책"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
+        navigationItem.title = category == "bookstore" ? "서점" : "도서"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
         navigationController?.navigationBar.tintColor = .black
         updateUserData()
     }
@@ -131,7 +131,10 @@ final class FeaturedCurationListViewController: UIViewController {
 
 extension FeaturedCurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+        if curationList?.count == 0 {
+            tableView.setCurationEmptyView(text: "아직 작성된 큐레이션이 없어요 🥲")
+        }
+        
         return curationList?.count ?? 0
     }
     
@@ -140,7 +143,7 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
         cell.curation = curationList?[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage) {
+            if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage, size: ImageSize.big) {
                 curationImage = image
                 cell.photoImageView.image = curationImage
             }

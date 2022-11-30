@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import FirebaseFirestore
 import FirebaseFirestoreSwift
-import FirebaseAuth
 
 struct BookstoreRequest: FirestoreRequest {
     typealias Response = Bookstore
     let collectionPath = CollectionPath.bookstores
-    
+}
+ 
+extension BookstoreRequest {
     // 서점 추가
     func add(_ bookstore: Bookstore) throws {
         try db.collection(collectionPath).document(bookstore.id).setData(from: bookstore)
@@ -21,19 +21,15 @@ struct BookstoreRequest: FirestoreRequest {
     
     // 유저가 가진 서점 id 값으로 북마크된 서점 fetch
     func fetchBookmarkedBookstores() async throws -> [Bookstore] {
-        let authManager = UserManager()
+        guard UserManager().isLoggedIn() else { return [] }
         
-        if authManager.isLoggedIn() {
-            let user = try await UserManager().fetchCurrentUser()
-            var bookmarkedBookstores = [Bookstore]()
-            
-            for index in user.bookmarkedBookstores.indices {
-                bookmarkedBookstores.append(try await fetch(with: user.bookmarkedBookstores[index]))
-            }
-
-            return bookmarkedBookstores
-        } else {
-            return []
+        let user = try await UserManager().fetchCurrentUser()
+        var bookmarkedBookstores = [Bookstore]()
+        
+        for index in user.bookmarkedBookstores.indices {
+            bookmarkedBookstores.append(try await fetch(with: user.bookmarkedBookstores[index]))
         }
+        
+        return bookmarkedBookstores
     }
 }
