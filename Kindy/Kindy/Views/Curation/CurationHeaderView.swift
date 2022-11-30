@@ -9,7 +9,7 @@ import UIKit
 
 final class CurationHeaderView: UIView {
 
-    lazy var imageView: UIImageView = {
+    private(set) lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
