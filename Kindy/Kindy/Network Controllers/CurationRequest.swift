@@ -7,10 +7,7 @@
 
 
 import UIKit
-import FirebaseFirestore
 import FirebaseFirestoreSwift
-import FirebaseAuth
-import Firebase
 import FirebaseStorage
 
 struct CurationRequest: FirestoreRequest {
