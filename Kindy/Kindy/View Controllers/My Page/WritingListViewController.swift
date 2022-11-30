@@ -84,19 +84,19 @@ final class WritingListViewController: UIViewController {
         
         switch previousSelectedCell {
         case .myCuration:
-            noWritingView.noWritingLable.text = "내 글이 메인에 소개될 기회를 잡아보세요!"
+            noWritingView.noWritingLabel.text = "내 글이 메인에 소개될 기회를 잡아보세요!"
             noWritingView.noWritingButton.setTitle("큐레이션 작성하기", for: .normal)
             noWritingView.noWritingButton.addTarget(self, action: #selector(writeCurationButtonTapped), for: .touchUpInside)
             
 //        case .smallTalk:
             
         case .likeList:
-            noWritingView.noWritingLable.text = "아직 좋아요 한 글이 없어요"
+            noWritingView.noWritingLabel.text = "아직 좋아요 한 글이 없어요"
             noWritingView.noWritingButton.setTitle("큐레이션 보러가기", for: .normal)
             noWritingView.noWritingButton.addTarget(self, action: #selector(readCurationsButtonTapped), for: .touchUpInside)
             
         case .commentList:
-            noWritingView.noWritingLable.text = "아직 댓글 단 글이 없어요"
+            noWritingView.noWritingLabel.text = "아직 댓글 단 글이 없어요"
             noWritingView.noWritingButton.setTitle("큐레이션 보러가기", for: .normal)
             noWritingView.noWritingButton.addTarget(self, action: #selector(readCurationsButtonTapped), for: .touchUpInside)
         }

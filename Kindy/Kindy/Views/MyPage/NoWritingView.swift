@@ -10,7 +10,7 @@ import UIKit
 final class NoWritingView: UIView {
     
     // MARK: Properties
-    let noWritingLable: UILabel = {
+    let noWritingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,7 +25,7 @@ final class NoWritingView: UIView {
     }()
     
     private lazy var noWritingStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [noWritingLable, noWritingButton])
+        let stackView = UIStackView(arrangedSubviews: [noWritingLabel, noWritingButton])
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.alignment = .center
