@@ -20,6 +20,7 @@ struct Curation {
     let descriptions: [Description]
     var likes: [String]
     var comments: [Comment]?
+    var commentCount: Int
 }
 
 extension Curation: Codable { }
