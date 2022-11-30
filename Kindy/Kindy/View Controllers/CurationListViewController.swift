@@ -89,8 +89,8 @@ final class CurationListViewController: UIViewController {
                 self.navigationController?.pushViewController(signInViewController, animated: true)
             })
             let cancel = UIAlertAction(title: "취소", style: .cancel)
-            alertForSignIn.addAction(cancel)
-            alertForSignIn.addAction(action)
+            [cancel, action].forEach{ alertForSignIn.addAction($0) }
+            
             present(alertForSignIn, animated: true, completion: nil)
         }
     }

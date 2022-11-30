@@ -75,13 +75,8 @@ final class FeaturedCurationListViewController: UIViewController {
     }
     
     @objc func writeButtonTapped() {
-        if let user = user {
-            // TODO: 큐레이션 작성 페이지 연결
-            let waitAlert = UIAlertController(title: "작성 폼을 준비중입니다 🛠", message: "조금만 기다려주세요!", preferredStyle: .alert)
-            let okay = UIAlertAction(title: "확인", style: .cancel)
-            waitAlert.addAction(okay)
-            present(waitAlert, animated: true, completion: nil)
-            
+        if UserManager().isLoggedIn() {
+            self.navigationController?.pushViewController(CurationCreateViewController(nil, nil, []), animated: true)
         } else {
             let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "로그인", style: .default, handler: { _ in
@@ -89,8 +84,8 @@ final class FeaturedCurationListViewController: UIViewController {
                 self.navigationController?.pushViewController(signInViewController, animated: true)
             })
             let cancel = UIAlertAction(title: "취소", style: .cancel)
-            alertForSignIn.addAction(cancel)
-            alertForSignIn.addAction(action)
+            [cancel, action].forEach{ alertForSignIn.addAction($0) }
+            
             present(alertForSignIn, animated: true, completion: nil)
         }
     }
