@@ -602,11 +602,11 @@ extension CurationCreateViewController: CurationCreateDelegate {
     func selectCategory() {
         let actionSheet = UIAlertController(title: "*게시글의 카테고리를 선택해 주세요", message: nil, preferredStyle: .actionSheet)
         let bookstore = UIAlertAction(title: "서점", style: .default, handler: { _ in
-            self.curation.category = "서점"
+            self.curation.category = "bookstore"
             self.headTextView.setupCategory("서점")
         })
         let book = UIAlertAction(title: "도서", style: .default, handler: { _ in
-            self.curation.category = "도서"
+            self.curation.category = "book"
             self.headTextView.setupCategory("도서")
         })
         let cancel = UIAlertAction(title: "취소", style: .cancel)

@@ -22,7 +22,7 @@ final class FeaturedCurationListViewController: UIViewController {
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
+        let tableView = UITableView()
         tableView.backgroundColor = .white
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
