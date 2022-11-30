@@ -18,7 +18,7 @@ final class CurationHeaderView: UIView {
         return view
     }()
 
-    private lazy var titleLabel: UILabel = {
+    private(set) lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .white
         view.font = .title2
@@ -27,7 +27,7 @@ final class CurationHeaderView: UIView {
         return view
     }()
 
-    private lazy var subtitleLabel: UILabel = {
+    private(set) lazy var subtitleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .white
         view.font = .title3

@@ -28,6 +28,7 @@ final class CurationTextCell: UICollectionViewCell {
         view.textColor = .black
         view.font = .body2
         view.textAlignment = .left
+        view.isScrollEnabled = false
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -58,7 +59,7 @@ final class CurationTextCell: UICollectionViewCell {
         viewSize = NSString(string: textView.text!).boundingRect(with: maxSize,options: heightOnFont, attributes: [.font: UIFont.body2!], context: nil)
         
         viewSize.size.width = UIScreen.main.bounds.width
-        viewSize.size.height += 50
+        viewSize.size.height += 80
         
         layoutAttributes.frame = viewSize
         return layoutAttributes
