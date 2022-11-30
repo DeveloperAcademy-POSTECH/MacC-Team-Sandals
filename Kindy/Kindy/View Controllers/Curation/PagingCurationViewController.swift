@@ -18,6 +18,10 @@ protocol PopView: AnyObject {
     func dismissHeaderView()
 }
 
+protocol ChangeHeaderView: AnyObject {
+    func changeHeaderView(title: String, subtitle: String, image: UIImage)
+}
+
 final class PagingCurationViewController: UIViewController {
     
     private var curation: Curation
@@ -41,7 +45,7 @@ final class PagingCurationViewController: UIViewController {
     
     private var headerViewHeightConstraint: NSLayoutConstraint!
     
-    private lazy var headerView: UIView = {
+    private(set) lazy var headerView: UIView = {
         let view = CurationHeaderView(frame: .zero, curation: curation)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -99,13 +103,14 @@ final class PagingCurationViewController: UIViewController {
         changeGradientLayer(view: headerView)
 
         self.imageRequestTask = Task {
-            let descriptionImages = try! await loadImageArray(URLs: self.curation.descriptions.map { $0.image ?? "" })
+            let descriptionImages = try! await ImageCache.shared.loadImageArray(URLs: self.curation.descriptions.map { $0.image ?? "" })
             images.append(contentsOf: descriptionImages.map { $0 })
 
             let bottomVC = BottomSheetViewController(contentViewController: CurationViewController(curation: curation, images: images))
             bottomVC.modalPresentationStyle = .overFullScreen
             bottomVC.delegate = self
             bottomVC.popDelegate = self
+            bottomVC.changeHeaderViewDelegate = self
             
             dimmingView.alpha = 1
             self.present(bottomVC, animated: false)
@@ -202,5 +207,14 @@ extension PagingCurationViewController: PopView {
     
     func dismissHeaderView() {
         self.dismiss(animated: true)
+    }
+}
+
+extension PagingCurationViewController: ChangeHeaderView {
+    func changeHeaderView(title: String, subtitle: String, image: UIImage) {
+        guard let headerView = headerView as? CurationHeaderView else { return }
+        headerView.titleLabel.text = title
+        headerView.subtitleLabel.text = subtitle
+        headerView.imageView.image = image
     }
 }

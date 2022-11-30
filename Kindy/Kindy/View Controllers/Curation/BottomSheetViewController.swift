@@ -16,6 +16,7 @@ final class BottomSheetViewController: UIViewController {
 
     weak var delegate: ChangeLayout?
     weak var popDelegate: PopView?
+    weak var changeHeaderViewDelegate: ChangeHeaderView?
 
     private let contentViewController: UIViewController
 
