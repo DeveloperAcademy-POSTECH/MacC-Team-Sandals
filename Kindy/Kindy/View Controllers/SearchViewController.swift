@@ -184,7 +184,7 @@ extension SearchViewController: UITableViewDataSource {
             cell.curation = filteredItems[indexPath.row] as? Curation
             
             self.imageRequestTask = Task {
-                if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage) {
+                if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage, size: ImageSize.big) {
                     cell.photoImageView.image = image
                 }
                 imageRequestTask = nil
