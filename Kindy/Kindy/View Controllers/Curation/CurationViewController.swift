@@ -493,7 +493,7 @@ extension CurationViewController: ShowingMenu, Reportable {
                 }
                 
                 let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
-                    let deleteAlert = UIAlertController(title: "글을 삭제하시겠습니까?", message: "삭제된 글은 복구할 수 없습니다.", preferredStyle: .alert)
+                    let deleteAlertController = UIAlertController(title: "글을 삭제하시겠습니까?", message: "삭제된 글은 복구할 수 없습니다.", preferredStyle: .alert)
                     
                     let okAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
                         self.curationRequestTask = Task {
@@ -512,9 +512,9 @@ extension CurationViewController: ShowingMenu, Reportable {
                         }
                     }
                     let cancelAction = UIAlertAction(title: "취소", style: .default)
-                    alertController.addAction(cancelAction)
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true)
+                    deleteAlertController.addAction(cancelAction)
+                    deleteAlertController.addAction(okAction)
+                    self.present(deleteAlertController, animated: true)
                 }
                 
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel)
