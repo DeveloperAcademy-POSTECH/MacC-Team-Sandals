@@ -5,9 +5,6 @@
 //  Created by Park Kangwook on 2022/10/19.
 //
 
-// TODO: 더미데이터 삭제 후 기존 모델 데이터와 연결 | UITable, UIbutton extension 따로 빼기 | extensinon 빼서 정리, PR
-// 이외 ToDoList는 코드 속에 있으니 참조
-
 import UIKit
    
 final class NearbyViewController: UIViewController, UISearchResultsUpdating {
@@ -29,10 +26,7 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
         return tableView
     }()
     
-    // 검색된 프로퍼티 담을 배열 생성 (초기값은 전체가 담겨있는 배열) -> 이 기준으로 cell 나타낼 것이기 때문에 DataSource, Delegate에 이 프로퍼티 적용
-    // TODO: 파이어베이스 데이터 연결
     private var filteredItems: [Bookstore] = []
-    
     private var receivedData: [Bookstore] = []
     
     private let searchController = UISearchController()
@@ -45,7 +39,6 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
         setupSearchController()
         setupCustomCancelButton(of: searchController)
         setupTableView()
-        
         dismissKeyboard()
     }
     
@@ -55,8 +48,6 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
         
         navigationController?.setNavigationBarHidden(false, animated: false)
         
-        // MARK: Navigation Bar Appearance
-        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
@@ -64,15 +55,22 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+        
+        tabBarController?.tabBar.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     // MARK: - 메소드
     
     private func setupTableView() {
         view.addSubview(tableView)
+        
         tableView.dataSource = self
         tableView.delegate = self
-        
         tableView.register(NearbyCell.self, forCellReuseIdentifier: NearbyCell.reuseID)   // Cell 등록 (코드 베이스라서)
         tableView.rowHeight = NearbyCell.rowHeight
         tableView.translatesAutoresizingMaskIntoConstraints = false
