@@ -64,7 +64,6 @@ final class CurationCreateViewController: UIViewController {
     init(_ curation: Curation?,_ mainImage: UIImage?,_ descriptionImage: [UIImage]) {
         if let curation = curation {
             self.curation = curation
-            print("curation description Count : \(curation.descriptions.count)")
             self.mainImage = mainImage!
             self.descriptionImages = descriptionImage
             self.addIndex = descriptionImage.count
@@ -375,7 +374,6 @@ final class CurationCreateViewController: UIViewController {
                             CurationRequest().uploadCurationImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
                                 self.curation.descriptions[i].image = url
                                 self.completeCount += 1
-                                //                            print("add description Image \(url) \(self.completeCount) \(self.descriptionImages.count)")
                                 if self.completeCount == self.descriptionImages.count {
                                     do {
                                         try CurationRequest().add(curation: self.curation)
@@ -615,7 +613,6 @@ extension CurationCreateViewController: UITextViewDelegate {
             switch textView.tag {
             case 99:
                 curation.headText = textView.text!
-                print(curation.headText)
             default:
                 curation.descriptions[textView.tag].content = textView.text!
             }
