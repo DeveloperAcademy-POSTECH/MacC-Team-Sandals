@@ -31,11 +31,10 @@ final class CurationListViewController: UIViewController {
         return tableView
     }()
     
-    private var mainDummy: [Curation] = []
-    
-    private var curationImage = UIImage()
-    
     private var user: User?
+    private var curations: [Curation] = []
+    private var curationImage = UIImage()
+    private var kinditorOfCuration: [String : String] = [:]
     
     private let refreshControl = UIRefreshControl()
     
@@ -46,44 +45,82 @@ final class CurationListViewController: UIViewController {
 
         createBarButtonItems()
         setupTableView()
-        fetchCuration()
+        fetchCurations()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        fetchUserData()
+        self.tableView.reloadData()
     }
     
     // MARK: - 메소드
     
     private func createBarButtonItems() {
-        let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: nil, action: nil)
+        let logoImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
         
-        let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonTapped))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
+        let logoButton = UIBarButtonItem(
+            image: logoImage,
+            style: .plain,
+            target: nil,
+            action: nil)
+        let writeButton = UIBarButtonItem(
+            image: UIImage(systemName: "square.and.pencil"),
+            style: .plain,
+            target: self,
+            action: #selector(writeButtonDidTap))
+        let searchButton = UIBarButtonItem(
+            barButtonSystemItem: .search,
+            target: self,
+            action: #selector(searchButtonDidTap))
         
         writeButton.tintColor = .black
         searchButton.tintColor = .black
         
+        navigationItem.leftBarButtonItem = logoButton
         navigationItem.rightBarButtonItems = [writeButton, searchButton]
     }
     
-    @objc func searchButtonTapped() {
+    @objc func searchButtonDidTap() {
         let searchViewController = SearchViewController()
-        searchViewController.setupData(items: mainDummy, itemType: .curationType)
+        
+        searchViewController.setupData(
+            items: curations,
+            itemType: .curationType,
+            kinditorOfCuration: kinditorOfCuration)
+        
         show(searchViewController, sender: nil)
     }
     
-    @objc func writeButtonTapped() {
-        if UserManager().isLoggedIn() {
-            self.navigationController?.pushViewController(CurationCreateViewController(nil, nil, []), animated: true)
-        } else {
-            let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
-            let action = UIAlertAction(title: "로그인", style: .default, handler: { _ in
+    @objc func writeButtonDidTap() {
+        guard UserManager().isLoggedIn() else {
+            presentLogInAlert()
+            return
+        }
+        
+        self.navigationController?.pushViewController(CurationCreateViewController(nil, nil, []), animated: true)
+    }
+    
+    private func presentLogInAlert() {
+        let alertForLogIn = UIAlertController(
+            title: "로그인이 필요한 기능입니다",
+            message: "로그인하시겠습니까?",
+            preferredStyle: .alert)
+        
+        let logInAction = UIAlertAction(
+            title: "로그인",
+            style: .default,
+            handler: { _ in
                 let signInViewController = SignInViewController()
                 self.navigationController?.pushViewController(signInViewController, animated: true)
             })
-            let cancel = UIAlertAction(title: "취소", style: .cancel)
-            alertForSignIn.addAction(cancel)
-            alertForSignIn.addAction(action)
-            present(alertForSignIn, animated: true, completion: nil)
-        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        alertForLogIn.addAction(cancelAction)
+        alertForLogIn.addAction(logInAction)
+        
+        present(alertForLogIn, animated: true, completion: nil)
     }
     
     private func setupTableView() {
@@ -96,7 +133,7 @@ final class CurationListViewController: UIViewController {
         tableView.register(CurationListCell.self, forCellReuseIdentifier: CurationListCell.identifier)
         tableView.register(CurationListHeaderView.self, forHeaderFooterViewReuseIdentifier: CurationListHeaderView.identifier)
         tableView.refreshControl = refreshControl
-        tableView.refreshControl?.addTarget(self, action: #selector(refreshControlled), for: .valueChanged)
+        tableView.refreshControl?.addTarget(self, action: #selector(refreshDidControl), for: .valueChanged)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -106,25 +143,43 @@ final class CurationListViewController: UIViewController {
         ])
     }
     
-    @objc func refreshControlled() {
+    @objc func refreshDidControl() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.fetchCuration()
+            self.fetchCurations()
             self.refreshControl.endRefreshing()
         }
     }
     
     // MARK: - 파이어베이스 update
     
-    private func fetchCuration() {
+    private func fetchCurations() {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await CurationRequest().fetch() {
-                mainDummy = curations
-            } else {
-                mainDummy = []
+                self.curations = curations
+            } else { self.curations = [] }
+            
+            for curation in curations {
+                if let nickname = try? await UserManager().fetch(with: curation.userID).nickName {
+                    self.kinditorOfCuration[curation.userID] = nickname
+                }
             }
+            
             self.tableView.reloadData()
             curationsRequestTask = nil
+        }
+    }
+    
+    private func fetchUserData() {
+        if UserManager().isLoggedIn() {
+            userRequestTask = Task {
+                guard let user = try? await UserManager().fetchCurrentUser() else {
+                    userRequestTask = nil
+                    return
+                }
+                self.user = user
+                userRequestTask = nil
+            }
         }
     }
 }
@@ -134,21 +189,30 @@ final class CurationListViewController: UIViewController {
 extension CurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return mainDummy.count
+        return curations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
-        cell.curation = mainDummy[indexPath.row]
+        cell.curation = curations[indexPath.row]
         
         self.imageRequestTask = Task {
-            let descriptions = mainDummy[indexPath.row].descriptions
-            if let image = try? await ImageCache.shared.loadFromMemory(descriptions[indexPath.item].image, size: ImageSize.big) {
+            if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage, size: ImageSize.big) {
                 curationImage = image
                 cell.photoImageView.image = curationImage
             }
             imageRequestTask = nil
         }
+        
+        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? "킨디"]
+
+        guard UserManager().isLoggedIn() else {
+            cell.curationIsLiked = false
+            return cell
+        }
+        
+        let userID = UserManager().getID()
+        cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
         
         return cell
     }
@@ -162,7 +226,7 @@ extension CurationListViewController: UITableViewDataSource {
 
 extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curationVC = PagingCurationViewController(curation: mainDummy[indexPath.row])
+        let curationVC = PagingCurationViewController(curation: curations[indexPath.row])
         curationVC.modalPresentationStyle = .overFullScreen
         curationVC.modalTransitionStyle = .crossDissolve
         
@@ -174,7 +238,7 @@ extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CurationListHeaderView.identifier) as? CurationListHeaderView else { return UIView() }
 
-        headerView.isHidden = mainDummy.isEmpty
+        headerView.isHidden = curations.isEmpty
         
         let bookstoreBtn = headerView.bookstoreButton
         let bookBtn = headerView.bookButton
@@ -189,7 +253,7 @@ extension CurationListViewController: UITableViewDelegate {
     
     @objc func buttonTapped(_ sender: UIButton) {
         let vc = FeaturedCurationListViewController()
-        vc.setupData(items: mainDummy, tag: sender.tag)
+        vc.setupData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
         
         show(vc, sender: nil)
     }

@@ -13,7 +13,19 @@ final class CurationListCell: UITableViewCell {
     
     var curation: Curation? {
         didSet {
-            configureCell(item: curation!)
+            configureCell(item: curation!, kinditor: kinditor ?? "")
+        }
+    }
+    
+    var curationIsLiked: Bool = false {
+        didSet {
+            configureCell(item: curation!, kinditor: kinditor ?? "")
+        }
+    }
+    
+    var kinditor: String? {
+        didSet {
+            configureCell(item: curation!, kinditor: kinditor ?? "" )
         }
     }
     
@@ -185,21 +197,21 @@ final class CurationListCell: UITableViewCell {
         ])
     }
 
-    private func configureCell(item: Curation) {
+    private func configureCell(item: Curation, kinditor: String) {
         // 타이틀 & 서브 타이틀 & 카테고리 분류
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
         categoryTypeLabel.text = item.category == "bookstore" ? "서점" : "도서"
         
         // 좋아요 & 댓글 개수
-        configureImageAndTextLabel(for: likeLabel, imageName: "heart", text: item.likes.count)
-        configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: 100)
+        configureImageAndTextLabel(for: likeLabel, imageName: curationIsLiked ? "heart.fill" : "heart", text: item.likes.count)
+        configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: item.comments?.count ?? 0)
         
         // 날짜
         configureDateLabel(for: dateLabel, date: item.createdAt!)
         
         // 킨디터
-        configureKinditorLabel(for: kinditorLabel, kinditor: item.userID)
+        configureKinditorLabel(for: kinditorLabel, kinditor: kinditor)
     }
     
     private func configureImageAndTextLabel(for view: UILabel, imageName: String, text: Int) {

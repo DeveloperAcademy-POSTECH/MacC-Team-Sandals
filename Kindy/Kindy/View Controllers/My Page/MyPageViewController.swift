@@ -54,11 +54,11 @@ final class MyPageViewController: UIViewController {
             
     override func viewWillAppear(_ animated: Bool) {
         updateUserData()
+        tabBarController?.tabBar.isHidden = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         navigationItem.title = "마이페이지"
-        tabBarController?.tabBar.isHidden = false
     }
     
     deinit {

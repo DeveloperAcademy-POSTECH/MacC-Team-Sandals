@@ -12,7 +12,8 @@ final class SearchViewController: UIViewController, UISearchResultsUpdating {
     // MARK: - 파이어베이스 Task
 
     private var imageRequestTask: Task<Void, Never>?
-    
+    private var userRequestTask: Task<Void, Never>?
+
     deinit {
         imageRequestTask?.cancel()
     }
@@ -32,6 +33,8 @@ final class SearchViewController: UIViewController, UISearchResultsUpdating {
     private var receivedData: [Any] = []
     
     private var filteredItems: [Any] = []
+    
+    private var kinditorOfCuration: [String : String] = [:]
     
     private let searchController = UISearchController()
     
@@ -139,9 +142,10 @@ final class SearchViewController: UIViewController, UISearchResultsUpdating {
         tableView.reloadData()
     }
     
-    func setupData(items: [Any], itemType: SearchObjectType) {
+    func setupData(items: [Any], itemType: SearchObjectType, kinditorOfCuration: [String : String]) {
         self.receivedData = items
         self.searchObjectType = itemType
+        self.kinditorOfCuration = kinditorOfCuration
     }
 }
 
@@ -180,11 +184,17 @@ extension SearchViewController: UITableViewDataSource {
             cell.curation = filteredItems[indexPath.row] as? Curation
             
             self.imageRequestTask = Task {
-                if let image = try? await ImageCache.shared.load(cell.curation!.mainImage, size: ImageSize.big) {
+                if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage, size: ImageSize.big) {
                     cell.photoImageView.image = image
                 }
                 imageRequestTask = nil
             }
+            
+            cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? ""]
+            
+            guard UserManager().isLoggedIn() else { cell.curationIsLiked = false; return cell }
+            let userID = UserManager().getID()
+            cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
             
             return cell
             
