@@ -16,11 +16,13 @@
 <br/>
 
 ## 👥 Contributors
+### 디자이너
 |<img src="https://user-images.githubusercontent.com/103024858/204976384-68bbf947-03a8-4714-927b-7c25318145bc.jpeg" width="125" height="150">|<img src="https://user-images.githubusercontent.com/103024858/204976471-7df8df7b-8a39-46ce-9ba3-81c35228f43c.jpg" width="125" height="150">|
 |:-:|:-:|
 |[김승훈(Teddy)](https://github.com/seunghoonkim34)|[백서현(Louie)](https://github.com/100seo)|
 <br/>
 
+### 개발자  
 |<img src="https://user-images.githubusercontent.com/103024858/204986631-83bd4984-ba1d-49bc-bd05-65e3c35f5d9d.jpeg" width="125" height="150">|<img src="https://user-images.githubusercontent.com/103024858/204976462-3f8af76b-3d12-41d0-8c70-355a050b881b.jpeg" width="125" height="150">|<img src="https://user-images.githubusercontent.com/103024858/204976477-8336d3ee-b4aa-4bd9-8ace-a732db00bdd4.jpeg" width="125" height="150">|<img src="https://user-images.githubusercontent.com/103024858/204976500-d5f6fa00-ad6c-42a1-87c8-a07712b4dd0f.JPG" width="125" height="150">|<img src="https://user-images.githubusercontent.com/103024858/204976506-1ad820e1-9397-44c7-ad93-77d70cb35dae.jpeg" width="125" height="150">|
 |:-:|:-:|:-:|:-:|:-:|
 |[김수익(X)](https://github.com/profit0124)|[박강욱(K)](https://github.com/rkddnr330)|[조규재(Niber)](https://github.com/im-niber)|[전윤준(Joon)](https://github.com/WooriJoon)|[정호윤(Stem)](https://github.com/stemmmm)|
