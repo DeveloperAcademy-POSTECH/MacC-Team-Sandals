@@ -179,8 +179,8 @@ final class CurationViewController: UIViewController {
             self.collectionView.refreshControl?.beginRefreshing()
             self.view.isUserInteractionEnabled = false
         }
-    
-
+        
+        
         afterFetachComment()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -279,7 +279,7 @@ extension CurationViewController: UICollectionViewDataSource {
             cell.configure(description: curation.descriptions[indexPath.item - 1], image: images[indexPath.item])
             return cell
         }
-    
+        
         if indexPath.item != replyCount {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentCell.identifier, for: indexPath) as? CurationCommentCell else { return UICollectionViewCell() }
             
@@ -455,76 +455,69 @@ extension CurationViewController: ShowingMenu, Reportable {
     func showingMenu() {
         self.hideKeyboard()
         if curation.userID == userID {
-            if self.userID == self.curation.userID {
-                let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                
-                let updateAction = UIAlertAction(title: "게시글 수정", style: .default) { _ in
-                    self.curationRequestTask = Task {
-                        var tempImages = self.images
-                        let mainImage = tempImages.removeFirst()
-                        let curationCreateVC = CurationCreateViewController(self.curation, mainImage, tempImages)
-                        
-                        curationCreateVC.postSignal = { (flag) in
-                            if flag {
-                                self.curationRequestTask = Task {
-                                    self.curation = try! await self.curationManager.fetch(with: self.curation.id)
-                                    self.cellCount = self.curation.descriptions.count
-                                    
-                                    let newimage = await self.refetchImages(curation: self.curation)
-                                    self.images = newimage
-                                    
-                                    guard let view = self.next as? UIView, let vc = view.findViewController() as? BottomSheetViewController else { return }
-                                    
-                                    vc.changeHeaderViewDelegate?.changeHeaderView(title: self.curation.title, subtitle: self.curation.subTitle ?? "", image: self.images[0])
-                                    
-                                    self.handleRefreshControl()
-                                    self.curationRequestTask = nil
-                                }
-                            }
-                        }
-                        
-                        let naviVC = UINavigationController(rootViewController: curationCreateVC)
-                        naviVC.modalPresentationStyle = .overFullScreen
-                        self.show(naviVC, sender: nil)
-                        self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-                        
-                        self.curationRequestTask = nil
-                    }
-                }
-                
-                let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
-                    let deleteAlertController = UIAlertController(title: "글을 삭제하시겠습니까?", message: "삭제된 글은 복구할 수 없습니다.", preferredStyle: .alert)
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let updateAction = UIAlertAction(title: "게시글 수정", style: .default) { _ in
+                self.curationRequestTask = Task {
+                    var tempImages = self.images
+                    let mainImage = tempImages.removeFirst()
+                    let curationCreateVC = CurationCreateViewController(self.curation, mainImage, tempImages)
                     
-                    let okAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                    curationCreateVC.newImageAndCuration = { newImages, newCuration in
                         self.curationRequestTask = Task {
+                            self.curation = newCuration
+                            self.cellCount = self.curation.descriptions.count
+                            
+                            self.images = newImages
+                            
                             guard let view = self.next as? UIView, let vc = view.findViewController() as? BottomSheetViewController else { return }
                             
-                            try? self.curationManager.deleteCurationImage(url: self.curation.mainImage)
+                            vc.changeHeaderViewDelegate?.changeHeaderView(title: self.curation.title, subtitle: self.curation.subTitle ?? "", image: self.images[0])
                             
-                            let _ = try? await self.curation.descriptions.concurrentMap { description in
-                                try self.curationManager.deleteCurationImage(url: description.image ?? "")
-                            }
-                            
-                            try? await self.curationManager.delete(curationID: self.curation.id)
-                            
-                            vc.dismissView()
+                            self.handleRefreshControl()
                             self.curationRequestTask = nil
                         }
                     }
-                    let cancelAction = UIAlertAction(title: "취소", style: .default)
-                    deleteAlertController.addAction(cancelAction)
-                    deleteAlertController.addAction(okAction)
-                    self.present(deleteAlertController, animated: true)
+                    let naviVC = UINavigationController(rootViewController: curationCreateVC)
+                    naviVC.modalPresentationStyle = .overFullScreen
+                    self.show(naviVC, sender: nil)
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    
+                    self.curationRequestTask = nil
                 }
-                
-                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-                alertController.addAction(updateAction)
-                alertController.addAction(deleteAction)
-                alertController.addAction(cancelAction)
-                self.present(alertController, animated: true)
             }
             
-        } else {
+            let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                let deleteAlertController = UIAlertController(title: "글을 삭제하시겠습니까?", message: "삭제된 글은 복구할 수 없습니다.", preferredStyle: .alert)
+                
+                let okAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                    self.curationRequestTask = Task {
+                        guard let view = self.next as? UIView, let vc = view.findViewController() as? BottomSheetViewController else { return }
+                        
+                        try? self.curationManager.deleteCurationImage(url: self.curation.mainImage)
+                        
+                        let _ = try? await self.curation.descriptions.concurrentMap { description in
+                            try self.curationManager.deleteCurationImage(url: description.image ?? "")
+                        }
+                        
+                        try? await self.curationManager.delete(curationID: self.curation.id)
+                        
+                        vc.dismissView()
+                        self.curationRequestTask = nil
+                    }
+                }
+                let cancelAction = UIAlertAction(title: "취소", style: .default)
+                deleteAlertController.addAction(cancelAction)
+                deleteAlertController.addAction(okAction)
+                self.present(deleteAlertController, animated: true)
+            }
+            
+            let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+            alertController.addAction(updateAction)
+            alertController.addAction(deleteAction)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true)
+        }
+        else {
             showReportController(self, style: .actionSheet, title: "게시글 신고")
         }
     }
