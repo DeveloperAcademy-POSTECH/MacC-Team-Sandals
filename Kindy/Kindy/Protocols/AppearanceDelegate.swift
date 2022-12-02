@@ -25,11 +25,11 @@ extension TabBarAppearanceDelegate {
 }
 
 extension NavBarAppearanceDelegate {
-    func configureNavBarAppearance() {
+    func configureNavBarAppearance(title: String) {
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.backgroundColor = .white
         
-        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.topItem?.title = title
         navigationController?.navigationBar.standardAppearance = navBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
         navigationController?.navigationBar.compactAppearance = navBarAppearance
