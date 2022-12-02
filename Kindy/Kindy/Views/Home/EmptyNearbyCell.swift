@@ -14,7 +14,7 @@ final class EmptyNearbyCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = .body2
-        label.text = "현재 계신 곳 주변에 독립서점이 없어요."
+        label.text = "현재 계신 곳 주변에 독립서점이 없어요"
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
