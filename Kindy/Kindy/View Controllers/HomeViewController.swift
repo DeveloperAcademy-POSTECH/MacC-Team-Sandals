@@ -103,19 +103,11 @@ final class HomeViewController: UIViewController {
         
         updateBookmarkedBookstores()
         
-        // MARK: Nav Bar Appearance
-        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정
-        let customNavBarAppearance = UINavigationBarAppearance()
-        customNavBarAppearance.backgroundColor = .white
-        
-        navigationController?.navigationBar.topItem?.title = ""
-        navigationController?.navigationBar.standardAppearance = customNavBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
-        navigationController?.navigationBar.compactAppearance = customNavBarAppearance
-        
-        // MARK: Tab Bar Appearance
-        // 서점 상세화면으로 넘어갔다 오면 상세화면의 탭 바 설정이 적용되기에 재설정
+        // MARK: Bar Appearance
+        configureTabBarAppearance()
+        // 서점 상세화면으로 넘어갔다 오면 상세화면의 설정이 적용되기에 재설정
         tabBarController?.tabBar.isHidden = false
+        configureNavBarAppearance()
         
         dataSource.apply(snapshot)
     }
@@ -215,7 +207,7 @@ final class HomeViewController: UIViewController {
             bookstoresTask = nil
         }
     }
-     
+    
     private func updateBookmarkedBookstores() {
         bookmarkedBookstoresTask?.cancel()
         bookmarkedBookstoresTask = Task {
@@ -225,7 +217,7 @@ final class HomeViewController: UIViewController {
                 model.bookmarkedBookstores = []
             }
             dataSource.apply(snapshot)
-
+            
             bookmarkedBookstoresTask = nil
         }
     }
@@ -467,7 +459,7 @@ final class HomeViewController: UIViewController {
         let headerRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>(elementKind: SupplementaryViewKind.header) { headerView, kind, indexPath in
             
             headerView.delegate = self
-
+            
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             let sectionName: String
             let hideSeeAllButton: Bool
@@ -542,6 +534,10 @@ final class HomeViewController: UIViewController {
     }
 }
 
+// MARK: - Bar Appearance Delegate
+
+extension HomeViewController: BarAppearanceDelegate { }
+
 // MARK: - Collection View Delegate
 
 extension HomeViewController: UICollectionViewDelegate {
@@ -573,13 +569,13 @@ extension HomeViewController: UICollectionViewDelegate {
             let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore! }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookmarkedBookstores[indexPath.item]
-
+            
             show(detailBookstoreViewController, sender: nil)
         case .regions:
             let region = model.regions[indexPath.item].region
             let regionViewController = RegionViewController()
             regionViewController.setupData(regionName: region!, items: model.bookstores)
-
+            
             show(regionViewController, sender: nil)
         default:
             return
@@ -590,7 +586,7 @@ extension HomeViewController: UICollectionViewDelegate {
 // MARK: - Section Header Delegate
 
 extension HomeViewController: SectionHeaderDelegate {
-
+    
     func segueWithSectionIndex(_ sectionIndex: Int) {
         switch sectionIndex {
         case 2:
