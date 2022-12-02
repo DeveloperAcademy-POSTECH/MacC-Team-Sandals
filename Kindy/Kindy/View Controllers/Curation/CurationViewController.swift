@@ -27,10 +27,10 @@ final class CurationViewController: UIViewController {
     private var isPostComment: Bool = false
     private var isDeleteComment: Bool = false
     
-    private var isReloadView: Bool = false {
+    private var viewNeedsReload: Bool = false {
         didSet {
-            isReloadView ? handleRefreshControl() : ()
-            isReloadView = false
+            viewNeedsReload ? handleRefreshControl() : ()
+            viewNeedsReload = false
         }
     }
     
@@ -107,7 +107,7 @@ final class CurationViewController: UIViewController {
             
             if self.isFirstShowingView {
                 self.curation.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
-                self.afterFetachComment()
+                self.afterFetchComment()
                 self.isFirstShowingView = false
                 return
             }
@@ -126,7 +126,7 @@ final class CurationViewController: UIViewController {
                 }
             }
             if self.isPostComment || self.isDeleteComment {
-                self.isReloadView = true
+                self.viewNeedsReload = true
                 self.isPostComment = false
                 self.isDeleteComment = false
                 
@@ -180,8 +180,7 @@ final class CurationViewController: UIViewController {
             self.view.isUserInteractionEnabled = false
         }
         
-        
-        afterFetachComment()
+        afterFetchComment()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.view.isUserInteractionEnabled = true
@@ -195,7 +194,7 @@ final class CurationViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
-    private func afterFetachComment() {
+    private func afterFetchComment() {
         userNameTask = Task {
             self.curation.comments?.sort(by: { first, second in
                 first.createdAt < second.createdAt

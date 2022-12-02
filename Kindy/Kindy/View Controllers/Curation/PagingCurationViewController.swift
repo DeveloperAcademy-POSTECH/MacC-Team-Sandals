@@ -103,8 +103,8 @@ final class PagingCurationViewController: UIViewController {
         changeGradientLayer(view: headerView)
 
         self.imageRequestTask = Task {
-            let descriptionImages = try! await ImageCache.shared.loadImageArray(URLs: self.curation.descriptions.map { $0.image ?? "" })
-            images.append(contentsOf: descriptionImages.map { $0 })
+            let descriptionImages = try? await ImageCache.shared.loadImageArray(URLs: self.curation.descriptions.map { $0.image ?? "" })
+            images.append(contentsOf: descriptionImages.map { $0 } ?? [UIImage()])
 
             let bottomVC = BottomSheetViewController(contentViewController: CurationViewController(curation: curation, images: images))
             bottomVC.modalPresentationStyle = .overFullScreen
