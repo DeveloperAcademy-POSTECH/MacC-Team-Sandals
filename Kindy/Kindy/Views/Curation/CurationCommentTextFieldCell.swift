@@ -19,6 +19,8 @@ protocol KeyboardActionable: AnyObject {
 final class CurationCommentTextFieldCell: UICollectionViewCell {
 
     private var isSetLayout = false
+    
+    private var commentTask: Task<Void, Never>?
 
     private var enableButton: Bool {
         didSet {
@@ -39,7 +41,7 @@ final class CurationCommentTextFieldCell: UICollectionViewCell {
         return view
     }()
 
-    lazy var bottomTextFieldView: UITextField = {
+    private(set) lazy var bottomTextFieldView: UITextField = {
         let view = UITextField()
         view.backgroundColor = UIColor(red: 118 / 255, green: 118 / 255, blue: 128 / 255, alpha: 0.12)
         view.borderStyle = .roundedRect
@@ -53,7 +55,7 @@ final class CurationCommentTextFieldCell: UICollectionViewCell {
         return view
     }()
 
-    lazy var submitBtn: UIButton = {
+    private(set) lazy var submitBtn: UIButton = {
         let view = UIButton()
         view.setTitle("등록", for: .normal)
         view.setTitleColor(.kindyLightGray2, for: .normal)
@@ -108,10 +110,12 @@ final class CurationCommentTextFieldCell: UICollectionViewCell {
     }
 
     @objc private func submitComment() {
-        if self.enableButton {
-            delegate?.postComment(content: bottomTextFieldView.text!)
-            bottomTextFieldView.text = nil
-            self.enableButton = false
+        commentTask = Task {
+            if self.enableButton {
+                delegate?.postComment(content: bottomTextFieldView.text!)
+                bottomTextFieldView.text = nil
+                self.enableButton = false
+            }
         }
     }
 

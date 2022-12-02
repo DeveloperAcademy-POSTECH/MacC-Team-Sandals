@@ -19,7 +19,7 @@ final class CurationCommentCell: UICollectionViewCell {
         return view
     }()
 
-    lazy var userLabel: UILabel = {
+    private(set) lazy var userLabel: UILabel = {
         let view = UILabel()
         view.font = .subhead
         view.textColor = .black

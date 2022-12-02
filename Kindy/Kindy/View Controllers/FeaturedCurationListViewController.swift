@@ -22,7 +22,7 @@ final class FeaturedCurationListViewController: UIViewController {
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
+        let tableView = UITableView()
         tableView.backgroundColor = .white
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -30,7 +30,10 @@ final class FeaturedCurationListViewController: UIViewController {
     }()
     
     private var category: String = ""
-    private var curationList: [Curation]? = []
+    
+    private var curations: [Curation]? = []
+    
+    private var kinditorOfCuration: [String : String] = [:]
     
     private var curationImage = UIImage()
     
@@ -59,6 +62,8 @@ final class FeaturedCurationListViewController: UIViewController {
         navigationItem.title = category == "bookstore" ? "서점" : "도서"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
         navigationController?.navigationBar.tintColor = .black
         updateUserData()
+        fetchUserData()
+        self.tableView.reloadData()
     }
     
     // MARK: - 메소드
@@ -70,13 +75,8 @@ final class FeaturedCurationListViewController: UIViewController {
     }
     
     @objc func writeButtonTapped() {
-        if let user = user {
-            // TODO: 큐레이션 작성 페이지 연결
-            let waitAlert = UIAlertController(title: "작성 폼을 준비중입니다 🛠", message: "조금만 기다려주세요!", preferredStyle: .alert)
-            let okay = UIAlertAction(title: "확인", style: .cancel)
-            waitAlert.addAction(okay)
-            present(waitAlert, animated: true, completion: nil)
-            
+        if UserManager().isLoggedIn() {
+            self.navigationController?.pushViewController(CurationCreateViewController(nil, nil, []), animated: true)
         } else {
             let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
             let action = UIAlertAction(title: "로그인", style: .default, handler: { _ in
@@ -84,8 +84,8 @@ final class FeaturedCurationListViewController: UIViewController {
                 self.navigationController?.pushViewController(signInViewController, animated: true)
             })
             let cancel = UIAlertAction(title: "취소", style: .cancel)
-            alertForSignIn.addAction(cancel)
-            alertForSignIn.addAction(action)
+            [cancel, action].forEach{ alertForSignIn.addAction($0) }
+            
             present(alertForSignIn, animated: true, completion: nil)
         }
     }
@@ -107,9 +107,10 @@ final class FeaturedCurationListViewController: UIViewController {
         ])
     }
     
-    func setupData(items: [Curation]?, tag: Int) {
+    func setupData(items: [Curation]?, tag: Int, kinditorOfCuration: [String : String]) {
         category = tag == 1 ? "bookstore" : "book"
-        curationList = items?.filter{ $0.category == category }
+        curations = items?.filter{ $0.category == category }
+        self.kinditorOfCuration = kinditorOfCuration
     }
     
     // MARK: - 파이어베이스 update
@@ -125,22 +126,35 @@ final class FeaturedCurationListViewController: UIViewController {
             userRequestTask = nil
         }
     }
+    
+    private func fetchUserData() {
+        if UserManager().isLoggedIn() {
+            userRequestTask = Task {
+                guard let user = try? await UserManager().fetchCurrentUser() else {
+                    userRequestTask = nil
+                    return
+                }
+                self.user = user
+                userRequestTask = nil
+            }
+        }
+    }
 }
 
 // MARK: - 데이터소스
 
 extension FeaturedCurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if curationList?.count == 0 {
+        if curations?.count == 0 {
             tableView.setCurationEmptyView(text: "아직 작성된 큐레이션이 없어요 🥲")
         }
         
-        return curationList?.count ?? 0
+        return curations?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
-        cell.curation = curationList?[indexPath.row]
+        cell.curation = curations?[indexPath.row]
         
         self.imageRequestTask = Task {
             if let image = try? await ImageCache.shared.loadFromMemory(cell.curation?.mainImage, size: ImageSize.big) {
@@ -150,6 +164,12 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
             imageRequestTask = nil
         }
         
+        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? ""]
+        
+        guard UserManager().isLoggedIn() else { cell.curationIsLiked = false; return cell }
+        let userID = UserManager().getID()
+        cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
+        
         return cell
     }
 }
@@ -158,7 +178,7 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
 
 extension FeaturedCurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curationVC = PagingCurationViewController(curation: (curationList![indexPath.row]))
+        let curationVC = PagingCurationViewController(curation: (curations![indexPath.row]))
         curationVC.modalPresentationStyle = .overFullScreen
         curationVC.modalTransitionStyle = .crossDissolve
         

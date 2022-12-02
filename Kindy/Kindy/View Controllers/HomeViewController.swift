@@ -150,7 +150,7 @@ final class HomeViewController: UIViewController {
     // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
     @objc private func searchButtonTapped() {
         let homeSearchViewController = SearchViewController()
-        homeSearchViewController.setupData(items: model.bookstores, itemType: .bookstoreType)
+        homeSearchViewController.setupData(items: model.bookstores, itemType: .bookstoreType, kinditorOfCuration: [:])
         show(homeSearchViewController, sender: nil)
     }
     

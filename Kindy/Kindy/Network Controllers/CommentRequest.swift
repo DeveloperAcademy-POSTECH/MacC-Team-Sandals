@@ -19,4 +19,10 @@ extension CommentRequest {
         let responses = try querySnapshot.documents.map { try $0.data(as: Comment.self) }
         return responses
     }
+    
+    func fetchUpdateComments(curationID: String, completion: @escaping (QuerySnapshot?, Error?) -> Void) -> ListenerRegistration {
+        return db.collection(CollectionPath.curations).document(curationID).collection(collectionPath).addSnapshotListener { querySnapshot, error in
+            completion(querySnapshot,error)
+        }
+    }
 }

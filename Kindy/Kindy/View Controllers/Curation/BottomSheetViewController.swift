@@ -16,6 +16,7 @@ final class BottomSheetViewController: UIViewController {
 
     weak var delegate: ChangeLayout?
     weak var popDelegate: PopView?
+    weak var changeHeaderViewDelegate: ChangeHeaderView?
 
     private let contentViewController: UIViewController
 
@@ -79,7 +80,7 @@ final class BottomSheetViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    @objc private func dismissView() {
+    @objc func dismissView() {
         self.dismiss(animated: false)
         self.popDelegate?.dismissHeaderView()
 

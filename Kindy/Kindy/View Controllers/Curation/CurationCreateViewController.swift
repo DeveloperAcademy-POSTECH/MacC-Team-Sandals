@@ -12,6 +12,9 @@ final class CurationCreateViewController: UIViewController {
     // descriptionTable의 높이를 변화시키기 위한 변수
     private var tableHeight: NSLayoutConstraint?
     
+    typealias newImageAndCuration = ([UIImage], Curation) -> Void
+    var newImageAndCuration: newImageAndCuration!
+    
     private var keyboardHeight: CGFloat = 0 {
         didSet {
             guard let _ = keyboardHeightAnchor else { return }
@@ -51,7 +54,6 @@ final class CurationCreateViewController: UIViewController {
                 mainScrollView.scrollToBottom()
             }
             previousDataCount = descriptionImages.count
-            print(descriptionImages)
         }
     }
     private var addIndex:Int = 0
@@ -66,7 +68,7 @@ final class CurationCreateViewController: UIViewController {
             self.descriptionImages = descriptionImage
             self.addIndex = descriptionImage.count
         } else {
-            self.curation = Curation(userID: UserManager().getID(), bookstoreID: "", category: "" , mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [])
+            self.curation = Curation(userID: UserManager().getID(), bookstoreID: "", category: "" , mainImage: "", title: "", subTitle: "", headText: "", descriptions: [], likes: [], commentCount: 0)
         }
         super.init(nibName: nil, bundle: nil)
     }
@@ -310,7 +312,10 @@ final class CurationCreateViewController: UIViewController {
                 let alert = UIAlertController(title: nil, message: "작성 중인 내용을\n 저장 하지 않고 나가시겠습니까?", preferredStyle: .alert)
                 let cancel = UIAlertAction(title: "취소", style: .cancel)
                 let complete = UIAlertAction(title: "나가기", style: .destructive, handler: { _ in
-                    self.navigationController?.popViewController(animated: true)
+                    guard let _ = self.navigationController?.popViewController(animated: true) else {
+                        self.dismiss(animated: true)
+                        return
+                    }
                 })
                 alert.addAction(cancel)
                 alert.addAction(complete)
@@ -335,36 +340,73 @@ final class CurationCreateViewController: UIViewController {
                         if self.completeCount == self.descriptionImages.count {
                             do {
                                 try CurationRequest().add(curation: self.curation)
-                                self.navigationController?.popViewController(animated: true)
+                                guard let _ = self.navigationController?.popViewController(animated: true) else {
+                                    var newImages: [UIImage] = []
+                                    newImages.append(self.mainImage ?? UIImage())
+                                    newImages.append(contentsOf: self.descriptionImages)
+                                    self.newImageAndCuration(newImages, self.curation)
+                                    self.dismiss(animated: true)
+                                    return
+                                }
                             } catch {
                                 print("erroe curation add")
                             }
                         }
                     })
                 }
-                for i in 0..<descriptionImages.count {
-                    if addIndex <= i {
-                        CurationRequest().uploadCurationImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
-                            self.curation.descriptions[i].image = url
+                if descriptionImages.isEmpty {
+                    do {
+                        try CurationRequest().add(curation: self.curation)
+                        guard let _ = self.navigationController?.popViewController(animated: true) else {
+                            var newImages: [UIImage] = []
+                            newImages.append(self.mainImage ?? UIImage())
+                            self.newImageAndCuration(newImages, self.curation)
+                            self.dismiss(animated: true)
+                            return
+                        }
+                    } catch {
+                        print("erroe curation add")
+                    }
+                }
+                else {
+                    for i in 0..<descriptionImages.count {
+                        if addIndex <= i {
+                            CurationRequest().uploadCurationImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
+                                self.curation.descriptions[i].image = url
+                                self.completeCount += 1
+                                if self.completeCount == self.descriptionImages.count {
+                                    do {
+                                        try CurationRequest().add(curation: self.curation)
+                                        guard let _ = self.navigationController?.popViewController(animated: true) else {
+                                            var newImages: [UIImage] = []
+                                            newImages.append(self.mainImage ?? UIImage())
+                                            newImages.append(contentsOf: self.descriptionImages)
+                                            self.newImageAndCuration(newImages, self.curation)
+                                            self.dismiss(animated: true)
+                                            
+                                            return
+                                        }
+                                    } catch {
+                                        self.rightButton.isEnabled = true
+                                    }
+                                }
+                            }
+                        } else {
                             self.completeCount += 1
-//                            print("add description Image \(url) \(self.completeCount) \(self.descriptionImages.count)")
-                            if self.completeCount == self.descriptionImages.count {
+                            if i == descriptionImages.count - 1 {
                                 do {
                                     try CurationRequest().add(curation: self.curation)
-                                    self.navigationController?.popViewController(animated: true)
+                                    guard let _ = self.navigationController?.popViewController(animated: true) else {
+                                        var newImages: [UIImage] = []
+                                        newImages.append(self.mainImage ?? UIImage())
+                                        newImages.append(contentsOf: self.descriptionImages)
+                                        self.newImageAndCuration(newImages, self.curation)
+                                        self.dismiss(animated: true)
+                                        return
+                                    }
                                 } catch {
                                     self.rightButton.isEnabled = true
                                 }
-                            }
-                        }
-                    } else {
-                        self.completeCount += 1
-                        if i == descriptionImages.count - 1 {
-                            do {
-                                try CurationRequest().add(curation: self.curation)
-                                self.navigationController?.popViewController(animated: true)
-                            } catch {
-                                self.rightButton.isEnabled = true
                             }
                         }
                     }
@@ -377,13 +419,13 @@ final class CurationCreateViewController: UIViewController {
     
     // 완료 버튼 활성화를 판단해주는 함수
     private func checkIsEnable() {
-        if !curation.title.isEmpty && !curation.headText.isEmpty && mainImage != nil {
+        if !curation.title.isEmpty && !curation.headText.isEmpty && mainImage != nil && !curation.category.isEmpty {
             self.rightButton.isEnabled = true
         } else {
             self.rightButton.isEnabled = false
         }
     }
-
+    
 }
 
 // MARK: descriptionTableView Delegate
@@ -393,9 +435,9 @@ extension CurationCreateViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return curation.descriptions.count
-        
+        return descriptionImages.count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationCreateDescriptionTableViewCell.identifier, for: indexPath) as? CurationCreateDescriptionTableViewCell else { return UITableViewCell() }
         if let content = curation.descriptions[indexPath.row].content {
@@ -413,8 +455,7 @@ extension CurationCreateViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 10
     }
-//
-   
+    
 }
 
 // MARK: 동적 셀 높이 변화에 따른 ScrollView의 Scroll 높이를 조정해주는 Extension > 리팩토링 시 extension으로 빼기
@@ -464,12 +505,11 @@ extension CurationCreateViewController: PHPickerViewControllerDelegate {
                     switch self.imagePickerOpenSource {
                     case "descriptionAdd":
                         self.curation.descriptions.append(Description(image: "", content: ""))
-                        self.descriptionImages.append(image.resizeImage(size: CGSize(width: 1024, height: 1024)))
+                        self.descriptionImages.append(image)
                         self.imagePickerOpenSource = ""
                     case "mainImage":
-                        let resizeImage = image.resizeImage(size: CGSize(width: 1024, height: 1024))
-                        self.mainImage = resizeImage
-                        self.titleView.setupImage(resizeImage)
+                        self.mainImage = image
+                        self.titleView.setupImage(image)
                         self.imagePickerOpenSource = ""
                         if !self.isMainImageChanged {
                             self.isMainImageChanged = true
@@ -499,25 +539,25 @@ extension CurationCreateViewController: PHPickerViewControllerDelegate {
                 completion()
             default:
                 let alertController = UIAlertController(
-                      title: "해당 기능을 사용하려면 사진 접근 권한이 필요합니다",
-                      message: "앱 설정에서 권한을 수정할 수 있습니다.",
-                      preferredStyle: .alert
-                    )
+                    title: "해당 기능을 사용하려면 사진 접근 권한이 필요합니다",
+                    message: "앱 설정에서 권한을 수정할 수 있습니다.",
+                    preferredStyle: .alert
+                )
                 let cancelAlert = UIAlertAction(
-                  title: "닫기",
-                  style: .cancel
+                    title: "닫기",
+                    style: .cancel
                 ) { _ in
                     alertController.dismiss(animated: true, completion: nil)
-                  }
+                }
                 let goToSettingAlert = UIAlertAction(
-                  title: "설정하기",
-                  style: .default) { _ in
-                    guard
-                      let settingURL = URL(string: UIApplication.openSettingsURLString),
-                      UIApplication.shared.canOpenURL(settingURL)
-                    else { return }
-                    UIApplication.shared.open(settingURL, options: [:])
-                  }
+                    title: "설정하기",
+                    style: .default) { _ in
+                        guard
+                            let settingURL = URL(string: UIApplication.openSettingsURLString),
+                            UIApplication.shared.canOpenURL(settingURL)
+                        else { return }
+                        UIApplication.shared.open(settingURL, options: [:])
+                    }
                 [cancelAlert, goToSettingAlert].forEach(alertController.addAction(_:))
                 DispatchQueue.main.async {
                     self.present(alertController, animated: true)
@@ -573,7 +613,6 @@ extension CurationCreateViewController: UITextViewDelegate {
             switch textView.tag {
             case 99:
                 curation.headText = textView.text!
-                print(curation.headText)
             default:
                 curation.descriptions[textView.tag].content = textView.text!
             }
@@ -582,7 +621,7 @@ extension CurationCreateViewController: UITextViewDelegate {
         self.keyboardHeight = 0
         
     }
-
+    
 }
 
 extension CurationCreateViewController: CurationCreateDelegate {
@@ -602,11 +641,11 @@ extension CurationCreateViewController: CurationCreateDelegate {
     func selectCategory() {
         let actionSheet = UIAlertController(title: "*게시글의 카테고리를 선택해 주세요", message: nil, preferredStyle: .actionSheet)
         let bookstore = UIAlertAction(title: "서점", style: .default, handler: { _ in
-            self.curation.category = "서점"
+            self.curation.category = "bookstore"
             self.headTextView.setupCategory("서점")
         })
         let book = UIAlertAction(title: "도서", style: .default, handler: { _ in
-            self.curation.category = "도서"
+            self.curation.category = "book"
             self.headTextView.setupCategory("도서")
         })
         let cancel = UIAlertAction(title: "취소", style: .cancel)
@@ -637,7 +676,7 @@ extension CurationCreateViewController: CurationCreateDelegate {
         if descriptionImages.count < 10 {
             photoAuth {
                 self.imagePickerOpenSource = "descriptionAdd"
-//                self.presentAlbum()
+                //                self.presentAlbum()
                 self.presentPHPicker()
             }
         }
