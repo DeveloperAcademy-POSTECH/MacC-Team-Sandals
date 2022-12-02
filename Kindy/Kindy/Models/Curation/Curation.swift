@@ -5,7 +5,7 @@
 //  Created by rbwo on 2022/10/18.
 //
 
-import UIKit
+import Foundation
 
 struct Curation {
     var id: String = UUID().uuidString
@@ -25,3 +25,5 @@ struct Curation {
 extension Curation: Codable { }
 
 extension Curation: Hashable { }
+
+extension Curation: Identifiable { }

@@ -15,3 +15,7 @@ struct User {
 }
 
 extension User: Codable { }
+
+extension User: Identifiable {
+    var id: String { email + nickName }
+}

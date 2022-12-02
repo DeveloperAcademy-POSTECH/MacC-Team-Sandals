@@ -18,3 +18,5 @@ struct Comment {
 extension Comment: Codable { }
 
 extension Comment: Hashable { }
+
+extension Comment: Identifiable { }

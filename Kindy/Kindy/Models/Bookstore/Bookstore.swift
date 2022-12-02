@@ -5,8 +5,7 @@
 //  Created by 정호윤 on 2022/10/18.
 //
 
-import UIKit
-import FirebaseFirestoreSwift
+import Foundation
 
 struct Bookstore {
     var id: String = UUID().uuidString
@@ -30,4 +29,6 @@ extension Bookstore {
 extension Bookstore: Codable { }
 
 extension Bookstore: Hashable { }
+
+extension Bookstore: Identifiable { }
 
