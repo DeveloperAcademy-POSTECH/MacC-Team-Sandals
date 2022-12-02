@@ -13,12 +13,7 @@ struct BookstoreRequest: FirestoreRequest {
     let collectionPath = CollectionPath.bookstores
 }
  
-extension BookstoreRequest {
-    // 서점 추가
-    func add(_ bookstore: Bookstore) throws {
-        try db.collection(collectionPath).document(bookstore.id).setData(from: bookstore)
-    }
-    
+extension BookstoreRequest {   
     // 유저가 가진 서점 id 값으로 북마크된 서점 fetch
     func fetchBookmarkedBookstores() async throws -> [Bookstore] {
         guard UserManager().isLoggedIn() else { return [] }

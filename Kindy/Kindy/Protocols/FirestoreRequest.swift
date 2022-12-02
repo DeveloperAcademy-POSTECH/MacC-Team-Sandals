@@ -10,7 +10,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseAuth
 
-protocol FirestoreRequest where Response: Codable {
+protocol FirestoreRequest where Response: Codable & Identifiable {
     associatedtype Response
     
     var collectionPath: String { get }
@@ -31,5 +31,13 @@ extension FirestoreRequest {
     // id로 fetch
     func fetch(with id: String) async throws -> Response {
         return try await db.collection(collectionPath).document(id).getDocument(as: Response.self)
+    }
+    
+    func add(_ document: Response) throws {
+        try db.collection(collectionPath).document(document.id as? String ?? UUID().uuidString).setData(from: document)
+    }
+    
+    func delete(_ document: Response) {
+        db.collection(collectionPath).document(document.id as? String ?? UUID().uuidString).delete()
     }
 }

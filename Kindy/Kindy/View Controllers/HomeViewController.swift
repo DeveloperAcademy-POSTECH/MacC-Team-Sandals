@@ -51,8 +51,13 @@ final class HomeViewController: UIViewController {
             snapshot.appendSections([.noPermission])
             snapshot.appendItems([.noPermission])
         default:
-            snapshot.appendSections([.nearbys])
-            snapshot.appendItems(model.nearbyBookstores)
+            if model.nearbyBookstores.isEmpty {
+                snapshot.appendSections([.emptyNearbys])
+                snapshot.appendItems([.noNearbyBookstore])
+            } else {
+                snapshot.appendSections([.nearbys])
+                snapshot.appendItems(model.nearbyBookstores)
+            }
         }
         
         if model.bookmarkedBookstores.isEmpty || !UserManager().isLoggedIn() {
@@ -113,6 +118,11 @@ final class HomeViewController: UIViewController {
         tabBarController?.tabBar.isHidden = false
         
         dataSource.apply(snapshot)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -366,7 +376,7 @@ final class HomeViewController: UIViewController {
                 section.contentInsets = sectionContentInsets
                 
                 return section
-            case .noPermission, .emptyBookmarks:
+            case .noPermission, .emptyNearbys, .emptyBookmarks:
                 let item = NSCollectionLayoutItem(layoutSize: fullSize)
                 
                 let groupSize = NSCollectionLayoutSize(
@@ -445,6 +455,8 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.region!, hideTopLine: isTopCell, hideRightLine: isOddNumber)
         }
         
+        let emptyNearbyCellRegistration = UICollectionView.CellRegistration<EmptyNearbyCell, ViewModel.Item> { _, _, _ in }
+        
         let noPermissionCellRegistration = UICollectionView.CellRegistration<NoPermissionCell, ViewModel.Item> { _, _, _ in }
         
         let exceptionBookmarkCellRegistration = UICollectionView.CellRegistration<ExceptionBookmarkCell, ViewModel.Item> { cell, indexPath, item in
@@ -470,7 +482,7 @@ final class HomeViewController: UIViewController {
                 sectionName = "이런 서점은 어때요"
                 hideSeeAllButton = true
                 hideBottomStackView = true
-            case .nearbys, .noPermission:
+            case .nearbys, .emptyNearbys, .noPermission:
                 sectionName = "내 주변 서점"
                 
                 switch self.locationManager.authorizationStatus {
@@ -512,6 +524,8 @@ final class HomeViewController: UIViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: bookmarkedBookstoreCellRegistration, for: indexPath, item: item)
             case .regions:
                 return collectionView.dequeueConfiguredReusableCell(using: regionNameCellRegistration, for: indexPath, item: item)
+            case .emptyNearbys:
+                return collectionView.dequeueConfiguredReusableCell(using: emptyNearbyCellRegistration, for: indexPath, item: item)
             case .noPermission:
                 return collectionView.dequeueConfiguredReusableCell(using: noPermissionCellRegistration, for: indexPath, item: item)
             case .emptyBookmarks:
@@ -539,7 +553,7 @@ extension HomeViewController: UICollectionViewDelegate {
         case .curations:
             let curation = model.curation.map { $0.curation! }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
-            curationViewController.modalPresentationStyle = .overFullScreen
+            curationViewController.modalPresentationStyle = .fullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
             
             present(curationViewController, animated: true)

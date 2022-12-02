@@ -6,9 +6,7 @@
 //
 
 import Foundation
-import FirebaseFirestore
 import FirebaseFirestoreSwift
-import FirebaseAuth
 
 struct CommentRequest: FirestoreRequest {
     typealias Response = Comment
