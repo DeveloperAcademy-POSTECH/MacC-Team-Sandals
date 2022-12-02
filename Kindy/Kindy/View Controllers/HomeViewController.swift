@@ -115,6 +115,11 @@ final class HomeViewController: UIViewController {
         dataSource.apply(snapshot)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -539,7 +544,7 @@ extension HomeViewController: UICollectionViewDelegate {
         case .curations:
             let curation = model.curation.map { $0.curation! }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
-            curationViewController.modalPresentationStyle = .overFullScreen
+            curationViewController.modalPresentationStyle = .fullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
             
             present(curationViewController, animated: true)
