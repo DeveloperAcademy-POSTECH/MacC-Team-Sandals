@@ -107,7 +107,7 @@ final class HomeViewController: UIViewController {
         configureTabBarAppearance()
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 설정이 적용되기에 재설정
         tabBarController?.tabBar.isHidden = false
-        configureNavBarAppearance(title: "")
+        configureNavBarAppearance()
         
         dataSource.apply(snapshot)
     }

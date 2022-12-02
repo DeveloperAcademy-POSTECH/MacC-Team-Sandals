@@ -25,7 +25,7 @@ extension TabBarAppearanceDelegate {
 }
 
 extension NavBarAppearanceDelegate {
-    func configureNavBarAppearance(title: String) {
+    func configureNavBarAppearance(title: String = "") {
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.backgroundColor = .white
         
