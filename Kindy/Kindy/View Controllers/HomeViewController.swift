@@ -227,7 +227,7 @@ final class HomeViewController: UIViewController {
         curationsTask = Task {
             if let curations = try? await CurationRequest().fetch() {
                 model.curations = curations
-                model.curation = [curations.randomElement()!].map { .curation($0) }
+                model.curation = [curations.randomElement() ?? Curation.error].map { .curation($0) }
             } else {
                 model.curations = []
             }
@@ -397,7 +397,7 @@ final class HomeViewController: UIViewController {
     private func configureDataSource() {
         // MARK: Cell Registration
         let curationCellRegistration = UICollectionView.CellRegistration<CurationCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.curation!)
+            cell.configureCell(item.curation ?? Curation.error)
             
             self.imagesTask = Task {
                 if let image = try? await ImageCache.shared.load(item.curation?.mainImage, size: ImageSize.big) {
@@ -408,7 +408,7 @@ final class HomeViewController: UIViewController {
         }
         
         let bookstoreCellRegistration = UICollectionView.CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.bookstore!)
+            cell.configureCell(item.bookstore ?? Bookstore.error)
             
             self.imagesTask = Task {
                 if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
@@ -419,7 +419,7 @@ final class HomeViewController: UIViewController {
         }
         
         let nearbyBookstoreCellRegistration = UICollectionView.CellRegistration<NearByBookstoreCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.bookstore!)
+            cell.configureCell(item.bookstore ?? Bookstore.error)
             
             self.imagesTask = Task {
                 if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.small) {
@@ -430,7 +430,7 @@ final class HomeViewController: UIViewController {
         }
         
         let bookmarkedBookstoreCellRegistration = UICollectionView.CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
-            cell.configureCell(item.bookstore!)
+            cell.configureCell(item.bookstore ?? Bookstore.error)
             
             self.imagesTask = Task {
                 if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
@@ -547,26 +547,26 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch section {
         case .curations:
-            let curation = model.curation.map { $0.curation! }.first!
+            let curation = model.curation.map { $0.curation ?? Curation.error }.first!
             let curationViewController = PagingCurationViewController(curation: curation)
             curationViewController.modalPresentationStyle = .fullScreen
             curationViewController.modalTransitionStyle = .crossDissolve
             
             present(curationViewController, animated: true)
         case .featured:
-            let featuredBookstores = model.featuredBookstores.map { $0.bookstore! }
+            let featuredBookstores = model.featuredBookstores.map { $0.bookstore ?? Bookstore.error }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = featuredBookstores[indexPath.item]
             
             show(detailBookstoreViewController, sender: nil)
         case .nearbys:
-            let bookstores = model.nearbyBookstores.map { $0.bookstore! }
+            let bookstores = model.nearbyBookstores.map { $0.bookstore ?? Bookstore.error }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookstores[indexPath.item]
             
             show(detailBookstoreViewController, sender: nil)
         case .bookmarks:
-            let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore! }
+            let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore ?? Bookstore.error }
             let detailBookstoreViewController = DetailBookstoreViewController()
             detailBookstoreViewController.bookstore = bookmarkedBookstores[indexPath.item]
             
@@ -590,12 +590,12 @@ extension HomeViewController: SectionHeaderDelegate {
     func segueWithSectionIndex(_ sectionIndex: Int) {
         switch sectionIndex {
         case 2:
-            let nearbyBookstores = model.nearbyBookstores.map { $0.bookstore! }
+            let nearbyBookstores = model.nearbyBookstores.map { $0.bookstore ?? Bookstore.error }
             let nearbyViewController = NearbyViewController()
             nearbyViewController.setupData(items: nearbyBookstores)
             show(nearbyViewController, sender: nil)
         case 3:
-            let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore! }
+            let bookmarkedBookstores = model.bookmarkedBookstores.map { $0.bookstore ?? Bookstore.error }
             let bookmarkViewController = BookmarkViewController()
             bookmarkViewController.setupData(items: bookmarkedBookstores)
             show(bookmarkViewController, sender: nil)

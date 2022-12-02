@@ -23,6 +23,20 @@ struct Curation {
     var commentCount: Int
 }
 
+extension Curation {
+    static let error = Curation(
+        userID: "",
+        bookstoreID: "",
+        category: "",
+        mainImage: "",
+        title: "오류가 발생했어요",
+        headText: "",
+        descriptions: [],
+        likes: [],
+        commentCount: 0
+    )
+}
+
 extension Curation: Codable { }
 
 extension Curation: Hashable { }
