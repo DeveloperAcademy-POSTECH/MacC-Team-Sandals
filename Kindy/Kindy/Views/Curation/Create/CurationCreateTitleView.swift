@@ -23,6 +23,7 @@ final class CurationCreateTitleView: UIView {
         let image = UIImageView ()
         image.contentMode = .scaleAspectFill
         image.backgroundColor = .black.withAlphaComponent(0.4)
+        image.layer.masksToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     } ()

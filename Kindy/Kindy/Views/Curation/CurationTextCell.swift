@@ -7,6 +7,8 @@
 
 import UIKit
 
+// dividerView는 BookStoreCell을 사용하는 날이 온다면 부활시키겠습니다.
+
 final class CurationTextCell: UICollectionViewCell {
 
     private var viewSize = CGRect()
@@ -20,22 +22,23 @@ final class CurationTextCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
-    private lazy var textLabel: UILabel = {
-        let view = UILabel()
+    
+    private lazy var textView: UITextView = {
+        let view = UITextView()
         view.textColor = .black
-        view.numberOfLines = 0
         view.font = .body2
         view.textAlignment = .left
+        view.isScrollEnabled = false
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
-    private lazy var dividerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .kindyLightGray
-        view.alpha = 0
-        return view
-    }()
+//    private lazy var dividerView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .kindyLightGray
+//        view.alpha = 0
+//        return view
+//    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,9 +56,11 @@ final class CurationTextCell: UICollectionViewCell {
         let maxSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         let heightOnFont = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
 
-        viewSize = NSString(string: textLabel.text!).boundingRect(with: maxSize,options: heightOnFont, attributes: [.font: UIFont.body2!], context: nil)
-
-        viewSize.size.height += 50
+        viewSize = NSString(string: textView.text!).boundingRect(with: maxSize,options: heightOnFont, attributes: [.font: UIFont.body2!], context: nil)
+        
+        viewSize.size.width = UIScreen.main.bounds.width
+        viewSize.size.height += 80
+        
         layoutAttributes.frame = viewSize
         return layoutAttributes
     }
@@ -63,23 +68,26 @@ final class CurationTextCell: UICollectionViewCell {
     private func setupUI() {
         self.backgroundColor = .white
         self.addSubview(stackView)
-        stackView.addArrangedSubview(textLabel)
-        stackView.addArrangedSubview(dividerView)
+        stackView.addArrangedSubview(textView)
+//        stackView.addArrangedSubview(dividerView)
 
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: topAnchor, constant: -16),
-            textLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
-            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            
+            textView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            textView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor), 
 
-            dividerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            dividerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            dividerView.heightAnchor.constraint(equalToConstant: 8)
+//            dividerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            dividerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+//            dividerView.heightAnchor.constraint(equalToConstant: 8)
         ])
     }
 
     func headConfigure(data: Curation) {
-        textLabel.text = data.headText
-        dividerView.alpha = 0
+        textView.text = data.headText
+//        dividerView.alpha = 0
     }
 }
