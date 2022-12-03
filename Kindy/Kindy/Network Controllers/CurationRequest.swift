@@ -57,3 +57,45 @@ extension CurationRequest {
         }
     }
 }
+
+// MARK: 마이페이지에서 사용하는 CurationRequest
+extension CurationRequest {
+    
+    // 내가 작성한 큐레이션
+    func fetchMyCuration(userID: String) async throws -> [Curation] {
+        let querySnapShot = try await db.collection(collectionPath).whereField("userID", isEqualTo: userID).getDocuments()
+        let document = try querySnapShot.documents.map { try $0.data(as: Curation.self) }
+        return document.reversed()
+    }
+    
+    // 좋아요 한 큐레이션
+    func fetchLikeCurations(userID: String) async throws -> [Curation] {
+        let querySnapshot = try await db.collection(collectionPath).whereField("likes", arrayContains: userID).getDocuments()
+        let document = try querySnapshot.documents.map { try $0.data(as: Curation.self) }
+        return document.reversed()
+    }
+    
+    // 댓글 단 큐레이션
+    func fetchCommentedCurations(userID: String) async throws -> [Curation] {
+        // 현재 유저의 document 데이터를 가져와서
+        let documentSnapshot = try await db.collection(CollectionPath.users).document(userID).getDocument()
+        let user = try documentSnapshot.data(as: User.self)
+        var commentedCurations: [Curation] = []
+        
+        // 유저가 댓글 단 글을 하나씩 순회하며 각 큐레이션을 commentedCurations에 추가
+        for i in user.commentedCurations.indices {
+            let index = (user.commentedCurations.count-1-i)
+            // 최신 댓글 순서로 append
+            let curationID = user.commentedCurations[index]
+            let querysnapShot = try await db.collection(collectionPath).whereField("id", isEqualTo: curationID).getDocuments()
+            let curation = try querysnapShot.documents.map { try $0.data(as: Curation.self) }
+            
+            guard let curation = curation.first else { return commentedCurations }
+            
+            commentedCurations.append(curation)
+        }
+        
+        return commentedCurations
+    }
+    
+}
