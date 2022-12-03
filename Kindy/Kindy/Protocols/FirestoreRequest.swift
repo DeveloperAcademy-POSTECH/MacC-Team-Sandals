@@ -39,7 +39,7 @@ extension FirestoreRequest {
     }
     
     /// id로 특정 도큐먼트 삭제
-    func delete(_ documentID: String) {
-        db.collection(collectionPath).document(documentID).delete()
+    func delete(_ documentID: String) async throws {
+        try await db.collection(collectionPath).document(documentID).delete()
     }
 }
