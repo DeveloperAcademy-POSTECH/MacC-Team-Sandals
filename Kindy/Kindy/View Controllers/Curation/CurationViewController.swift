@@ -335,7 +335,7 @@ extension CurationViewController: PostComment {
             curation.commentCount += 1
             let tempCuration = curation
             try? await commentManager.add(curationID: tempCuration.id, userID: userID, content: content, count: tempCuration.commentCount)
-            try? commentManager.addCommentedCuration(userID: userID, curationID: tempCuration.id)
+            try? userManager.addCommentedCuration(userID: userID, curationID: tempCuration.id)
             commentTask = nil
         }
     }
@@ -426,7 +426,7 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                         self.isDeleteComment = true
                                         
                                         try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempCuration.comments![indexPath.row].id, count: tempCuration.commentCount)
-                                        try? await self.commentManager.deleteCommentedCurationIfNeeded(userID: self.userID, curationID: tempCuration.id)
+                                        try? await self.userManager.deleteCommentedCurationIfNeeded(userID: self.userID, curationID: tempCuration.id)
                                     }
                                 }
                                 let cancelAction = UIAlertAction(title: "취소", style: .default)
@@ -492,7 +492,7 @@ extension CurationViewController: ShowingMenu, Reportable {
                 
                 let okAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
                     self.curationRequestTask = Task {
-                        try? await self.commentManager.deleteAllCommentedCuration(curationID: self.curation.id)
+                        try? await self.userManager.deleteAllCommentedCuration(curationID: self.curation.id)
                         
                         guard let view = self.next as? UIView, let vc = view.findViewController() as? BottomSheetViewController else { return }
                         

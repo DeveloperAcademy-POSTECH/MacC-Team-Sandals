@@ -98,21 +98,21 @@ final class MyPageCurationListViewController: UIViewController {
         curationsRequestTask = Task {
             switch previousSelectedCell {
             case .myCuration:
-                if let curations = try? await CurationRequest().fetchMyCuration(userID: userID) {
+                if let curations = try? await UserManager().fetchMyCurations(userID: userID) {
                     processAfterCurationRequest(curations)
                 } else {
                     setupNoWritingView()
                 }
                 
             case .likeList:
-                if let curations = try? await CurationRequest().fetchLikeCurations(userID: userID) {
+                if let curations = try? await UserManager().fetchLikedCurations(userID: userID) {
                     processAfterCurationRequest(curations)
                 } else {
                     setupNoWritingView()
                 }
                 
             case .commentList:
-                if let curations = try? await CurationRequest().fetchCommentedCurations(userID: userID) {
+                if let curations = try? await UserManager().fetchCommentedCurations(userID: userID) {
                     processAfterCurationRequest(curations)
                 } else {
                     setupNoWritingView()
