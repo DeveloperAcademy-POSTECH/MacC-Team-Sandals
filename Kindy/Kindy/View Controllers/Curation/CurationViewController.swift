@@ -103,7 +103,7 @@ final class CurationViewController: UIViewController {
         //        }
         // --------------
         
-        commentListener = commentManager.updateComments(curationID: curation.id, completion: { querySnapshot, error in
+        commentListener = commentManager.update(curationID: curation.id, completion: { querySnapshot, error in
             
             if self.isFirstShowingView {
                 self.curation.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
@@ -334,7 +334,7 @@ extension CurationViewController: PostComment {
             isPostComment = true
             curation.commentCount += 1
             let tempCuration = curation
-            try? await commentManager.addComment(curationID: tempCuration.id, userID: userID, content: content, count: tempCuration.commentCount)
+            try? await commentManager.add(curationID: tempCuration.id, userID: userID, content: content, count: tempCuration.commentCount)
             commentTask = nil
         }
     }
@@ -424,7 +424,7 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                         let tempCuration = self.curation
                                         self.isDeleteComment = true
                                         
-                                        try? await self.commentManager.deleteComment(curationID: tempCuration.id, commentID: tempCuration.comments![indexPath.row].id, count: tempCuration.commentCount)
+                                        try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempCuration.comments![indexPath.row].id, count: tempCuration.commentCount)
                                     }
                                 }
                                 let cancelAction = UIAlertAction(title: "취소", style: .default)
