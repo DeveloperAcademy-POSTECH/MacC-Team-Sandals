@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 struct CommentRequest: FirestoreRequest {

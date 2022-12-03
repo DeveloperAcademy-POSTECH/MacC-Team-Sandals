@@ -458,6 +458,7 @@
 			isa = PBXGroup;
 			children = (
 				7BFE3BCA292B9E3B00370AC9 /* FirestoreRequest.swift */,
+
 				7BA0EA88293A3419005AC78B /* BarAppearanceDelegate.swift */,
 				6E359EE229278E5200139F6F /* LoginCheckable.swift */,
 				6E359EE629278E8200139F6F /* Reportable.swift */,
