@@ -100,8 +100,8 @@ final class CurationListViewController: UIViewController {
             return
         }
         
-        let createViewController = CurationCreateViewController(nil, nil, [])
-        createViewController.newImageAndCuration = { newImages, newCuration in
+        let curationCreateViewController = CurationCreateViewController(nil, nil, [])
+        curationCreateViewController.newImageAndCuration = { newImages, newCuration in
             self.curationsRequestTask = Task {
                 self.curations.append(newCuration)
                 self.tableView.reloadData()
@@ -109,7 +109,7 @@ final class CurationListViewController: UIViewController {
             }
         }
         
-        self.navigationController?.pushViewController(createViewController, animated: true)
+        self.navigationController?.pushViewController(curationCreateViewController, animated: true)
     }
     
     private func presentLogInAlert() {
@@ -167,6 +167,9 @@ final class CurationListViewController: UIViewController {
         curationsRequestTask = Task {
             if let curations = try? await CurationRequest().fetch() {
                 self.curations = curations
+                self.curations.sort(by: { first, second in
+                    first.createdAt ?? Date() > second.createdAt ?? Date()
+                })
             } else { self.curations = [] }
             
             for curation in curations {
