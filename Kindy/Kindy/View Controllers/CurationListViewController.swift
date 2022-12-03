@@ -46,13 +46,16 @@ final class CurationListViewController: UIViewController {
         createBarButtonItems()
         setupTableView()
         fetchCurations()
+        print("view did load")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         fetchUserData()
+        fetchCurations()
         self.tableView.reloadData()
+        print("view will appear")
     }
     
     // MARK: - 메소드

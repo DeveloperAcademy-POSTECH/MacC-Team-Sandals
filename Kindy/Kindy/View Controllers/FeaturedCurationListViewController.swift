@@ -65,6 +65,7 @@ final class FeaturedCurationListViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .black
         updateUserData()
         fetchUserData()
+        fetchCurations()
         self.tableView.reloadData()
     }
     
@@ -140,6 +141,24 @@ final class FeaturedCurationListViewController: UIViewController {
     
     // MARK: - 파이어베이스 update
     
+    private func fetchCurations() {
+        curationsRequestTask?.cancel()
+        curationsRequestTask = Task {
+            if let curations = try? await CurationRequest().fetch() {
+                self.curations = curations
+            } else { self.curations = [] }
+            
+            for curation in curations ?? [] {
+                if let nickname = try? await UserManager().fetch(with: curation.userID).nickName {
+                    self.kinditorOfCuration[curation.userID] = nickname
+                }
+            }
+            
+            self.tableView.reloadData()
+            curationsRequestTask = nil
+        }
+    }
+    
     private func updateUserData() {
         userRequestTask?.cancel()
         userRequestTask = Task {
@@ -204,7 +223,7 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
 extension FeaturedCurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let curationVC = PagingCurationViewController(curation: (curations![indexPath.row]))
-        curationVC.modalPresentationStyle = .overFullScreen
+        curationVC.modalPresentationStyle = .fullScreen
         curationVC.modalTransitionStyle = .crossDissolve
         
         present(curationVC, animated: true)
