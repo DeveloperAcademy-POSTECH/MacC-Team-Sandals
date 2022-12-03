@@ -340,11 +340,11 @@ final class CurationCreateViewController: UIViewController {
                         if self.completeCount == self.descriptionImages.count {
                             do {
                                 try CurationRequest().add(curation: self.curation)
+                                var newImages: [UIImage] = []
+                                newImages.append(self.mainImage ?? UIImage())
+                                newImages.append(contentsOf: self.descriptionImages)
+                                self.newImageAndCuration(newImages, self.curation)
                                 guard let _ = self.navigationController?.popViewController(animated: true) else {
-                                    var newImages: [UIImage] = []
-                                    newImages.append(self.mainImage ?? UIImage())
-                                    newImages.append(contentsOf: self.descriptionImages)
-                                    self.newImageAndCuration(newImages, self.curation)
                                     self.dismiss(animated: true)
                                     return
                                 }
@@ -357,11 +357,11 @@ final class CurationCreateViewController: UIViewController {
                 if descriptionImages.isEmpty {
                     do {
                         try CurationRequest().add(curation: self.curation)
+                        var newImages: [UIImage] = []
+                        newImages.append(self.mainImage ?? UIImage())
+                        self.newImageAndCuration(newImages, self.curation)
+                        self.dismiss(animated: true)
                         guard let _ = self.navigationController?.popViewController(animated: true) else {
-                            var newImages: [UIImage] = []
-                            newImages.append(self.mainImage ?? UIImage())
-                            self.newImageAndCuration(newImages, self.curation)
-                            self.dismiss(animated: true)
                             return
                         }
                     } catch {
@@ -377,11 +377,11 @@ final class CurationCreateViewController: UIViewController {
                                 if self.completeCount == self.descriptionImages.count {
                                     do {
                                         try CurationRequest().add(curation: self.curation)
+                                        var newImages: [UIImage] = []
+                                        newImages.append(self.mainImage ?? UIImage())
+                                        newImages.append(contentsOf: self.descriptionImages)
+                                        self.newImageAndCuration(newImages, self.curation)
                                         guard let _ = self.navigationController?.popViewController(animated: true) else {
-                                            var newImages: [UIImage] = []
-                                            newImages.append(self.mainImage ?? UIImage())
-                                            newImages.append(contentsOf: self.descriptionImages)
-                                            self.newImageAndCuration(newImages, self.curation)
                                             self.dismiss(animated: true)
                                             
                                             return
@@ -396,11 +396,11 @@ final class CurationCreateViewController: UIViewController {
                             if i == descriptionImages.count - 1 {
                                 do {
                                     try CurationRequest().add(curation: self.curation)
+                                    var newImages: [UIImage] = []
+                                    newImages.append(self.mainImage ?? UIImage())
+                                    newImages.append(contentsOf: self.descriptionImages)
+                                    self.newImageAndCuration(newImages, self.curation)
                                     guard let _ = self.navigationController?.popViewController(animated: true) else {
-                                        var newImages: [UIImage] = []
-                                        newImages.append(self.mainImage ?? UIImage())
-                                        newImages.append(contentsOf: self.descriptionImages)
-                                        self.newImageAndCuration(newImages, self.curation)
                                         self.dismiss(animated: true)
                                         return
                                     }
