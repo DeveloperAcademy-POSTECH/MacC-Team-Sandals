@@ -21,23 +21,25 @@ extension FirestoreRequest {
 }
 
 extension FirestoreRequest {
-    // 전부 fetch
+    /// 모든 도큐먼트 fetch
     func fetch() async throws -> [Response] {
         let querySnapshot = try await db.collection(collectionPath).getDocuments()
         let responses = try querySnapshot.documents.map { try $0.data(as: Response.self) }
         return responses
     }
     
-    // id로 fetch
+    /// id로 특정 도큐먼트 fetch
     func fetch(with id: String) async throws -> Response {
         return try await db.collection(collectionPath).document(id).getDocument(as: Response.self)
     }
     
+    /// 도큐먼트 추가
     func add(_ document: Response) throws {
         try db.collection(collectionPath).document(document.id as? String ?? UUID().uuidString).setData(from: document)
     }
     
-    func delete(_ document: Response) {
-        db.collection(collectionPath).document(document.id as? String ?? UUID().uuidString).delete()
+    /// id로 특정 도큐먼트 삭제
+    func delete(_ documentID: String) {
+        db.collection(collectionPath).document(documentID).delete()
     }
 }

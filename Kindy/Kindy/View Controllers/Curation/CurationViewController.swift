@@ -498,7 +498,7 @@ extension CurationViewController: ShowingMenu, Reportable {
                             try self.curationManager.deleteCurationImage(url: description.image ?? "")
                         }
                         
-                        try? await self.curationManager.delete(curationID: self.curation.id)
+                        self.curationManager.delete(self.curation.id)
                         
                         vc.dismissView()
                         self.curationRequestTask = nil
@@ -527,7 +527,7 @@ extension CurationViewController {
         imageRequestTask = Task {
             imageRequestTask = nil
             var newImages: [UIImage] = []
-            if let mainImage = try? await ImageCache.shared.load(curation.mainImage, size: ImageSize.medium) {
+            if let mainImage = try? await ImageCache.shared.load(curation.mainImage) {
                 newImages.append(mainImage)
             } else {
                 newImages.append(UIImage())

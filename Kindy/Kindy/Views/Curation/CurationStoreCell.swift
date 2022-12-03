@@ -105,7 +105,7 @@ final class CurationStoreCell: UICollectionViewCell {
     func configure(bookStore: String) {
         self.bookstoresRequestTask = Task {
             self.bookStore = try? await BookstoreRequest().fetch(with: bookStore)
-            guard let image = try? await ImageCache.shared.load(self.bookStore?.images?[0], size: ImageSize.medium) else { return }
+            guard let image = try? await ImageCache.shared.load(self.bookStore?.images?[0]) else { return }
             self.titleLabel.text = self.bookStore?.name
             self.imageView.image = image
             self.descriptionLabel.text = self.bookStore?.shortAddress

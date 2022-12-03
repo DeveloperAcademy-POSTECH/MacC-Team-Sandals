@@ -176,7 +176,7 @@ extension WritingListViewController: UITableViewDataSource {
         
         imageRequestTask = Task {
             let descriptions = writings[indexPath.row].descriptions
-            if let image = try? await ImageCache.shared.load(descriptions[indexPath.row].image, size: ImageSize.big) {
+            if let image = try? await ImageCache.shared.load(descriptions[indexPath.row].image) {
                 cell.photoImageView.image = image
             } else {
                 cell.photoImageView.image = UIImage()
