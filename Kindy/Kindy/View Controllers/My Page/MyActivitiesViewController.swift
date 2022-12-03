@@ -13,7 +13,7 @@ final class MyActivitiesViewController: UIViewController {
     private let myActivitiesCellLabels: [String] = ["좋아요 한 글", "댓글 단 글"]
     
     private let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
+        let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -86,12 +86,12 @@ extension MyActivitiesViewController: UITableViewDelegate {
         
         switch myActivitiesCellLabels[indexPath.row] {
         case "좋아요 한 글":
-            let writingListVC = WritingListViewController()
+            let writingListVC = MyPageCurationListViewController()
             writingListVC.previousSelectedCell = .likeList
             show(writingListVC, sender: nil)
 
         case "댓글 단 글":
-            let writingListVC = WritingListViewController()
+            let writingListVC = MyPageCurationListViewController()
             writingListVC.previousSelectedCell = .commentList
             show(writingListVC, sender: nil)
             

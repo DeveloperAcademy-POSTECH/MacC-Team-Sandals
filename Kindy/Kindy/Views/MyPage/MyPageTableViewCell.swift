@@ -63,7 +63,7 @@ final class MyPageTableViewCell: UITableViewCell {
             myPageCellStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
             myPageCellStackView.heightAnchor.constraint(equalToConstant: 25),
             
-            cellSeperator.topAnchor.constraint(equalTo: myPageCellStackView.bottomAnchor, constant: 15),
+            cellSeperator.topAnchor.constraint(equalTo: myPageCellStackView.bottomAnchor, constant: 14),
             cellSeperator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
             cellSeperator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
             cellSeperator.heightAnchor.constraint(equalToConstant: 1),
