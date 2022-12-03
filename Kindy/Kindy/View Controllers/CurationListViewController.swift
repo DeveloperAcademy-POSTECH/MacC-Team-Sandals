@@ -98,15 +98,17 @@ final class CurationListViewController: UIViewController {
             presentLogInAlert()
             return
         }
-        let createVC = CurationCreateViewController(nil, nil, [])
-        createVC.newImageAndCuration = { newImages, newCuration in
+        
+        let createViewController = CurationCreateViewController(nil, nil, [])
+        createViewController.newImageAndCuration = { newImages, newCuration in
             self.curationsRequestTask = Task {
                 self.curations.append(newCuration)
                 self.tableView.reloadData()
                 self.curationsRequestTask = nil
             }
         }
-        self.navigationController?.pushViewController(createVC, animated: true)
+        
+        self.navigationController?.pushViewController(createViewController, animated: true)
     }
     
     private func presentLogInAlert() {

@@ -13,10 +13,12 @@ final class FeaturedCurationListViewController: UIViewController {
 
     private var userRequestTask: Task<Void, Never>?
     private var imageRequestTask: Task<Void, Never>?
+    private var curationsRequestTask: Task<Void, Never>?
     
     deinit {
         userRequestTask?.cancel()
         imageRequestTask?.cancel()
+        curationsRequestTask?.cancel()
     }
     
     // MARK: - 프로퍼티
@@ -69,25 +71,48 @@ final class FeaturedCurationListViewController: UIViewController {
     // MARK: - 메소드
     
     private func createBarButtonItems() {
-        let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonTapped))
+        let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonDidTap))
         writeButton.tintColor = .black
         navigationItem.rightBarButtonItem = writeButton
     }
     
-    @objc func writeButtonTapped() {
-        if UserManager().isLoggedIn() {
-            self.navigationController?.pushViewController(CurationCreateViewController(nil, nil, []), animated: true)
-        } else {
-            let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)
-            let action = UIAlertAction(title: "로그인", style: .default, handler: { _ in
+    @objc func writeButtonDidTap() {
+        guard UserManager().isLoggedIn() else {
+            presentLogInAlert()
+            return
+        }
+        
+        let createViewController = CurationCreateViewController(nil, nil, [])
+        createViewController.newImageAndCuration = { newImages, newCuration in
+            self.curationsRequestTask = Task {
+                self.curations?.append(newCuration)
+                self.tableView.reloadData()
+                self.curationsRequestTask = nil
+            }
+        }
+        
+        self.navigationController?.pushViewController(createViewController, animated: true)
+    }
+    
+    private func presentLogInAlert() {
+        let alertForLogIn = UIAlertController(
+            title: "로그인이 필요한 기능입니다",
+            message: "로그인하시겠습니까?",
+            preferredStyle: .alert)
+        
+        let logInAction = UIAlertAction(
+            title: "로그인",
+            style: .default,
+            handler: { _ in
                 let signInViewController = SignInViewController()
                 self.navigationController?.pushViewController(signInViewController, animated: true)
             })
-            let cancel = UIAlertAction(title: "취소", style: .cancel)
-            [cancel, action].forEach{ alertForSignIn.addAction($0) }
-            
-            present(alertForSignIn, animated: true, completion: nil)
-        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        alertForLogIn.addAction(cancelAction)
+        alertForLogIn.addAction(logInAction)
+        
+        present(alertForLogIn, animated: true, completion: nil)
     }
     
     private func setupTableView() {
