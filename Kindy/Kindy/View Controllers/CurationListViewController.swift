@@ -216,7 +216,7 @@ extension CurationListViewController: UITableViewDataSource {
             imageRequestTask = nil
         }
         
-        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? "킨디"]
+        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? "킨디"] ?? "킨디터"
 
         guard UserManager().isLoggedIn() else {
             cell.curationIsLiked = false
@@ -252,21 +252,21 @@ extension CurationListViewController: UITableViewDelegate {
 
         headerView.isHidden = curations.isEmpty
         
-        let bookstoreBtn = headerView.bookstoreButton
-        let bookBtn = headerView.bookButton
+        let bookstoreButton = headerView.bookstoreButton
+        let bookButton = headerView.bookButton
         
-        bookstoreBtn.tag = 1
-        bookBtn.tag = 2
+        bookstoreButton.tag = 1
+        bookButton.tag = 2
         
-        [bookstoreBtn, bookBtn].forEach{ $0.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside) }
+        [bookstoreButton, bookButton].forEach{ $0.addTarget(self, action: #selector(categoryButtonDidTap), for: .touchUpInside) }
 
         return headerView
     }
     
-    @objc func buttonTapped(_ sender: UIButton) {
-        let vc = FeaturedCurationListViewController()
-        vc.setupData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
+    @objc func categoryButtonDidTap(_ sender: UIButton) {
+        let featuredCurationList = FeaturedCurationListViewController()
+        featuredCurationList.setupData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
         
-        show(vc, sender: nil)
+        show(featuredCurationList, sender: nil)
     }
 }

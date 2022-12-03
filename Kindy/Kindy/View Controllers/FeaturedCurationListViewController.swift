@@ -31,7 +31,7 @@ final class FeaturedCurationListViewController: UIViewController {
         return tableView
     }()
     
-    private var category: String = ""
+    private var category: String = "book"
     
     private var curations: [Curation]? = []
     
@@ -65,7 +65,7 @@ final class FeaturedCurationListViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .black
         updateUserData()
         fetchUserData()
-        fetchCurations()
+        fetchCurations(of: category)
         self.tableView.reloadData()
     }
     
@@ -134,18 +134,18 @@ final class FeaturedCurationListViewController: UIViewController {
     }
     
     func setupData(items: [Curation]?, tag: Int, kinditorOfCuration: [String : String]) {
-        category = tag == 1 ? "bookstore" : "book"
-        curations = items?.filter{ $0.category == category }
+        self.category = tag == 1 ? "bookstore" : "book"
+        self.curations = items?.filter{ $0.category == self.category }
         self.kinditorOfCuration = kinditorOfCuration
     }
     
     // MARK: - 파이어베이스 update
     
-    private func fetchCurations() {
+    private func fetchCurations(of category: String) {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
             if let curations = try? await CurationRequest().fetch() {
-                self.curations = curations
+                self.curations = curations.filter{ $0.category == category}
             } else { self.curations = [] }
             
             for curation in curations ?? [] {
