@@ -58,7 +58,7 @@ extension CurationRequest {
     }
 }
 
-// MARK: 마이페이지에서 사용하는 CurationRequest
+/// 마이페이지에서 사용하는 CurationRequest
 extension CurationRequest {
     
     // 내가 작성한 큐레이션
