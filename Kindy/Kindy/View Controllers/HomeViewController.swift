@@ -130,8 +130,8 @@ final class HomeViewController: UIViewController {
     // MARK:  - Navigation Bar
     
     private func createNavBarButtonItems() {
-        let scaledImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: scaledImage, style: .plain, target: self, action: #selector(scrollToTop))
+        let resizedImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: resizedImage, style: .plain, target: self, action: #selector(scrollToTop))
         
         let bellButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(bellButtonTapped))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
@@ -155,9 +155,7 @@ final class HomeViewController: UIViewController {
     }
     
     // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수
-    @objc private func bellButtonTapped() {
-        
-    }
+    @objc private func bellButtonTapped() { }
     
     // MARK: - Refresh Control
     
@@ -168,7 +166,7 @@ final class HomeViewController: UIViewController {
     
     @objc func handleRefreshControl() {
         updateBookstores()
-        
+
         DispatchQueue.main.async {
             self.collectionView.refreshControl?.endRefreshing()
         }
@@ -400,7 +398,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.curation ?? Curation.error)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.curation?.mainImage, size: ImageSize.big) {
+                if let image = try? await ImageCache.shared.load(item.curation?.mainImage) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
@@ -411,7 +409,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.bookstore ?? Bookstore.error)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
@@ -422,7 +420,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.bookstore ?? Bookstore.error)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.small) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil
@@ -433,7 +431,7 @@ final class HomeViewController: UIViewController {
             cell.configureCell(item.bookstore ?? Bookstore.error)
             
             self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first, size: ImageSize.big) {
+                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
                     cell.imageView.image = image
                 }
                 self.imagesTask = nil

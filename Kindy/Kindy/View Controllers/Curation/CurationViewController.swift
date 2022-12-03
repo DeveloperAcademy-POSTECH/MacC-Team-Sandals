@@ -527,7 +527,7 @@ extension CurationViewController {
         imageRequestTask = Task {
             imageRequestTask = nil
             var newImages: [UIImage] = []
-            if let mainImage = try? await ImageCache.shared.load(curation.mainImage, size: ImageSize.medium) {
+            if let mainImage = try? await ImageCache.shared.load(curation.mainImage) {
                 newImages.append(mainImage)
             } else {
                 newImages.append(UIImage())

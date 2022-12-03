@@ -124,7 +124,7 @@ extension NearbyViewController: UITableViewDataSource {
         cell.bookstore = filteredItems[indexPath.row]
         
         self.imageRequestTask = Task {
-            if let image = try? await ImageCache.shared.load(cell.bookstore!.images?.first, size: ImageSize.small) {
+            if let image = try? await ImageCache.shared.load(cell.bookstore!.images?.first) {
                 cell.photoImageView.image = image
             }
             imageRequestTask = nil
