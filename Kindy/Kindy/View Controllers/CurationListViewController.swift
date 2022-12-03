@@ -98,8 +98,15 @@ final class CurationListViewController: UIViewController {
             presentLogInAlert()
             return
         }
-        
-        self.navigationController?.pushViewController(CurationCreateViewController(nil, nil, []), animated: true)
+        let createVC = CurationCreateViewController(nil, nil, [])
+        createVC.newImageAndCuration = { newImages, newCuration in
+            self.curationsRequestTask = Task {
+                self.curations.append(newCuration)
+                self.tableView.reloadData()
+                self.curationsRequestTask = nil
+            }
+        }
+        self.navigationController?.pushViewController(createVC, animated: true)
     }
     
     private func presentLogInAlert() {
@@ -227,7 +234,7 @@ extension CurationListViewController: UITableViewDataSource {
 extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let curationVC = PagingCurationViewController(curation: curations[indexPath.row])
-        curationVC.modalPresentationStyle = .overFullScreen
+        curationVC.modalPresentationStyle = .fullScreen
         curationVC.modalTransitionStyle = .crossDissolve
         
         present(curationVC, animated: true)
