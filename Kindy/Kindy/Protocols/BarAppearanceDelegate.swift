@@ -1,5 +1,5 @@
 //
-//  AppearanceDelegate.swift
+//  BarAppearanceDelegate.swift
 //  Kindy
 //
 //  Created by 정호윤 on 2022/12/02.
