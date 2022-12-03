@@ -40,8 +40,8 @@ extension CommentRequest {
 
 extension CommentRequest {
     /// 처음에 모든 댓글 불러오는 함수
-    func fetch(id: String) async throws -> [Comment] {
-        let querySnapshot = try await db.collection(CollectionPath.curations).document(id).collection(collectionPath).getDocuments()
+    func fetch(with documentID: String) async throws -> [Comment] {
+        let querySnapshot = try await db.collection(CollectionPath.curations).document(documentID).collection(collectionPath).getDocuments()
         let responses = try querySnapshot.documents.map { try $0.data(as: Comment.self) }
         return responses
     }
