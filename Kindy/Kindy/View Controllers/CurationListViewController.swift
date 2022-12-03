@@ -46,7 +46,6 @@ final class CurationListViewController: UIViewController {
         createBarButtonItems()
         setupTableView()
         fetchCurations()
-        print("view did load")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,7 +54,6 @@ final class CurationListViewController: UIViewController {
         fetchUserData()
         fetchCurations()
         self.tableView.reloadData()
-        print("view will appear")
     }
     
     // MARK: - 메소드
@@ -183,15 +181,16 @@ final class CurationListViewController: UIViewController {
     }
     
     private func fetchUserData() {
-        if UserManager().isLoggedIn() {
-            userRequestTask = Task {
-                guard let user = try? await UserManager().fetchCurrentUser() else {
-                    userRequestTask = nil
-                    return
-                }
-                self.user = user
+        guard UserManager().isLoggedIn() else { return }
+        
+        userRequestTask?.cancel()
+        userRequestTask = Task {
+            guard let user = try? await UserManager().fetchCurrentUser() else {
                 userRequestTask = nil
+                return
             }
+            self.user = user
+            userRequestTask = nil
         }
     }
 }

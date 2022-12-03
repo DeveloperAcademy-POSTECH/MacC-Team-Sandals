@@ -31,21 +31,11 @@ final class FeaturedCurationListViewController: UIViewController {
         return tableView
     }()
     
+    private var user: User?
     private var category: String = "book"
-    
-    private var curations: [Curation]? = []
-    
-    private var kinditorOfCuration: [String : String] = [:]
-    
+    private var curations: [Curation]?
     private var curationImage = UIImage()
-    
-    private var user: User? {
-        didSet {
-            guard let user = user else { return }
-            
-            // user가 좋아요한 큐레이션 게시글 목록 필요함
-        }
-    }
+    private var kinditorOfCuration: [String : String] = [:]
     
     // MARK: - 라이프 사이클
     
@@ -63,7 +53,6 @@ final class FeaturedCurationListViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = ""         // back 버튼 없애기
         navigationItem.title = category == "bookstore" ? "서점" : "도서"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
         navigationController?.navigationBar.tintColor = .black
-        updateUserData()
         fetchUserData()
         fetchCurations(of: category)
         self.tableView.reloadData()
@@ -159,28 +148,17 @@ final class FeaturedCurationListViewController: UIViewController {
         }
     }
     
-    private func updateUserData() {
+    private func fetchUserData() {
+        guard UserManager().isLoggedIn() else { return }
+        
         userRequestTask?.cancel()
         userRequestTask = Task {
-            if UserManager().isLoggedIn() {
-                if let user = try? await UserManager().fetchCurrentUser() {
-                    self.user = user
-                }
-            }
-            userRequestTask = nil
-        }
-    }
-    
-    private func fetchUserData() {
-        if UserManager().isLoggedIn() {
-            userRequestTask = Task {
-                guard let user = try? await UserManager().fetchCurrentUser() else {
-                    userRequestTask = nil
-                    return
-                }
-                self.user = user
+            guard let user = try? await UserManager().fetchCurrentUser() else {
                 userRequestTask = nil
+                return
             }
+            self.user = user
+            userRequestTask = nil
         }
     }
 }
