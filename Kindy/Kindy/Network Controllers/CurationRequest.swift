@@ -13,18 +13,9 @@ import FirebaseStorage
 struct CurationRequest: FirestoreRequest {
     typealias Response = Curation
     let collectionPath = CollectionPath.curations
-    
-    // 큐레이션 fetch
-    func fetch(with id: String) async throws -> Curation {
-        let curation = try await db.collection(collectionPath).document(id).getDocument(as: Curation.self)
-        return curation
-    }
-    
-    // 큐레이션 추가
-    func add(curation: Curation) throws {
-        try db.collection(collectionPath).document(curation.id).setData(from: curation)
-    }
-    
+}
+ 
+extension CurationRequest {
     // 큐레이션의 likes 업데이트
     func updateLike(curationID: String, likes: [String]) async throws {
         let document = db.collection(collectionPath).document(curationID)
@@ -36,24 +27,6 @@ struct CurationRequest: FirestoreRequest {
         let document = db.collection(collectionPath).document(curationID)
         try await document.updateData(["commentCount" : count])
     }
-    
-    func delete(curationID: String) async throws {
-        try await db.collection(collectionPath).document(curationID).delete()
-    }
-
-    // 큐레이션이 가진 좋아요 값으로 fetch
-//    func fetchLikesCurtions() async throws -> [Curation] {
-//        if isLoggedIn() {
-//            let user = try await fetchCurrentUser()
-//            var likesCurations = [Curation]()
-//            for index in user.curationLikes.indices {
-//                likesCurations.append(try await fetchCuration(with: user.curstionLikes[index]))
-//            }
-//            return likesCurations
-//        } else {
-//            return []
-//        }
-//    }
 }
 
 extension CurationRequest {
@@ -68,31 +41,6 @@ extension CurationRequest {
         try await db.collection(collectionPath).document(curationID).collection("Comment").document(commentID).delete()
         try await updateCommentCount(curationID: curationID, count: count)
     }
-    
-    
-    // 큐레이션이 가진 좋아요 값으로 fetch
-    //    func fetchLikesCurtions() async throws -> [Curation] {
-    //        if isLoggedIn() {
-    //            let user = try await fetchCurrentUser()
-    //            var likesCurations = [Curation]()
-    //            for index in user.curationLikes.indices {
-    //                likesCurations.append(try await fetchCuration(with: user.curstionLikes[index]))
-    //            }
-    //            return likesCurations
-    //        } else {
-    //            return []
-    //        }
-    //    }
-    
-    
-    //    func createComment(curationID: String, userID: String ,content: String) throws {
-    //        let comment = Comment(id: UUID().uuidString, userID: userID, content: content, createdAt: Date())
-    //        try db.collection(collectionPath).document(curationID).collection("Comment").document(comment.id).setData(from: comment)
-    //    }
-    //
-    //    func deleteComment(curationID: String, commentID: String) {
-    //        db.collection(collectionPath).document(curationID).collection("Comment").document(commentID).delete()
-    //    }
     
     func uploadCurationImage(image: UIImage, pathRoot: String, completion: @escaping (String?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.1) else { return }

@@ -339,7 +339,7 @@ final class CurationCreateViewController: UIViewController {
                         self.completeCount += 1
                         if self.completeCount == self.descriptionImages.count {
                             do {
-                                try CurationRequest().add(curation: self.curation)
+                                try CurationRequest().add(self.curation)
                                 var newImages: [UIImage] = []
                                 newImages.append(self.mainImage ?? UIImage())
                                 newImages.append(contentsOf: self.descriptionImages)
@@ -356,7 +356,7 @@ final class CurationCreateViewController: UIViewController {
                 }
                 if descriptionImages.isEmpty {
                     do {
-                        try CurationRequest().add(curation: self.curation)
+                        try CurationRequest().add(self.curation)
                         var newImages: [UIImage] = []
                         newImages.append(self.mainImage ?? UIImage())
                         self.newImageAndCuration(newImages, self.curation)
@@ -376,11 +376,12 @@ final class CurationCreateViewController: UIViewController {
                                 self.completeCount += 1
                                 if self.completeCount == self.descriptionImages.count {
                                     do {
-                                        try CurationRequest().add(curation: self.curation)
+                                        try CurationRequest().add(self.curation)
                                         var newImages: [UIImage] = []
                                         newImages.append(self.mainImage ?? UIImage())
                                         newImages.append(contentsOf: self.descriptionImages)
                                         self.newImageAndCuration(newImages, self.curation)
+
                                         guard let _ = self.navigationController?.popViewController(animated: true) else {
                                             self.dismiss(animated: true)
                                             
@@ -395,7 +396,7 @@ final class CurationCreateViewController: UIViewController {
                             self.completeCount += 1
                             if i == descriptionImages.count - 1 {
                                 do {
-                                    try CurationRequest().add(curation: self.curation)
+                                    try CurationRequest().add(self.curation)
                                     var newImages: [UIImage] = []
                                     newImages.append(self.mainImage ?? UIImage())
                                     newImages.append(contentsOf: self.descriptionImages)

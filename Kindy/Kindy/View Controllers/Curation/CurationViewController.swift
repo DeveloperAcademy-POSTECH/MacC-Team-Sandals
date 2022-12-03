@@ -498,7 +498,7 @@ extension CurationViewController: ShowingMenu, Reportable {
                             try self.curationManager.deleteCurationImage(url: description.image ?? "")
                         }
                         
-                        try? await self.curationManager.delete(curationID: self.curation.id)
+                        self.curationManager.delete(self.curation.id)
                         
                         vc.dismissView()
                         self.curationRequestTask = nil
