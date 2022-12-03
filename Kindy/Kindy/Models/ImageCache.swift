@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ImageCache {
+final actor ImageCache {
     static let shared = ImageCache()
     private init() {
         createDirectoryIfNeeded()
@@ -33,7 +33,7 @@ extension ImageCache {
         case couldNotInitializeFromData
     }
     
-    // 메모리나 디스크에 캐시된 이미지가 있으면 리턴, 없으면 네트워킹 후 캐싱
+    /// 메모리, 디스크 캐싱하는 함수
     func load(_ url: String?) async throws -> UIImage? {
         guard let urlString = url,
               let url = NSURL(string: urlString),
@@ -65,7 +65,7 @@ extension ImageCache {
         return preparedImage
     }
     
-    // 메모리 캐싱만 하는 함수 (커뮤니티 게시글에 사용)
+    ///  커뮤니티 게시글에서 사용하는 메모리 캐싱만 하는 함수
     func loadFromMemory(_ url: String?) async throws -> UIImage? {
         guard let urlString = url,
               let url = NSURL(string: urlString)
@@ -124,7 +124,7 @@ extension ImageCache {
     }
     
     // 디스크에 우리 앱 폴더 생성
-    private func createDirectoryIfNeeded() {
+    nonisolated private func createDirectoryIfNeeded() {
         guard let path = FileManager.default
             .urls(for: .cachesDirectory, in: .userDomainMask).first?
             .appendingPathComponent(directoryName)
@@ -137,7 +137,7 @@ extension ImageCache {
     }
     
     // 디스크의 이미지 디렉토리 삭제
-    func deleteDirectory() {
+    nonisolated func deleteDirectory() {
         guard let path = FileManager.default
             .urls(for: .cachesDirectory, in: .userDomainMask).first?
             .appendingPathComponent(directoryName)
@@ -166,7 +166,7 @@ extension ImageCache {
     }
 }
 
-// MARK: 여러장의 이미지를 동시에 fetch하는 함수들
+// MARK: 여러장의 이미지를 동시에 load 하는 함수들
 extension ImageCache {
     func loadImageDictionary(URLs: [String]) async throws -> [String : UIImage] {
         try await withThrowingTaskGroup(of: (String, UIImage).self) { group in
