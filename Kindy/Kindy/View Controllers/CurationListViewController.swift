@@ -112,27 +112,6 @@ final class CurationListViewController: UIViewController {
         self.navigationController?.pushViewController(curationCreateViewController, animated: true)
     }
     
-    private func presentLogInAlert() {
-        let alertForLogIn = UIAlertController(
-            title: "로그인이 필요한 기능입니다",
-            message: "로그인하시겠습니까?",
-            preferredStyle: .alert)
-        
-        let logInAction = UIAlertAction(
-            title: "로그인",
-            style: .default,
-            handler: { _ in
-                let signInViewController = SignInViewController()
-                self.navigationController?.pushViewController(signInViewController, animated: true)
-            })
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        
-        alertForLogIn.addAction(cancelAction)
-        alertForLogIn.addAction(logInAction)
-        
-        present(alertForLogIn, animated: true, completion: nil)
-    }
-    
     private func setupTableView() {
         view.addSubview(tableView)
         
@@ -267,7 +246,7 @@ extension CurationListViewController: UITableViewDelegate {
     
     @objc func categoryButtonDidTap(_ sender: UIButton) {
         let featuredCurationList = FeaturedCurationListViewController()
-        featuredCurationList.setupData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
+        featuredCurationList.setData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
         
         show(featuredCurationList, sender: nil)
     }

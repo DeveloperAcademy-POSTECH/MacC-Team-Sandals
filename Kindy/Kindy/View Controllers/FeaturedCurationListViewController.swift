@@ -35,7 +35,7 @@ final class FeaturedCurationListViewController: UIViewController {
     private var category: String = "book"
     private var curations: [Curation]?
     private var curationImage = UIImage()
-    private var kinditorOfCuration: [String : String] = [:]
+    private var kinditorsByCuration: [String : String] = [:]
     
     // MARK: - 라이프 사이클
     
@@ -51,17 +51,22 @@ final class FeaturedCurationListViewController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.topItem?.title = ""         // back 버튼 없애기
-        navigationItem.title = category == "bookstore" ? "서점" : "도서"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
         navigationController?.navigationBar.tintColor = .black
+        navigationItem.title = category == "bookstore" ? "서점" : "도서"    // 네비게이션 타이틀도 없어져서 다시 설정해주기
+        
         fetchUserData()
         fetchCurations(of: category)
-        self.tableView.reloadData()
     }
     
     // MARK: - 메소드
     
     private func createBarButtonItems() {
-        let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonDidTap))
+        let writeButton = UIBarButtonItem(
+            image: UIImage(systemName: "square.and.pencil"),
+            style: .plain,
+            target: self,
+            action: #selector(writeButtonDidTap))
+        
         writeButton.tintColor = .black
         navigationItem.rightBarButtonItem = writeButton
     }
@@ -83,27 +88,6 @@ final class FeaturedCurationListViewController: UIViewController {
         self.navigationController?.pushViewController(curationCreateViewController, animated: true)
     }
     
-    private func presentLogInAlert() {
-        let alertForLogIn = UIAlertController(
-            title: "로그인이 필요한 기능입니다",
-            message: "로그인하시겠습니까?",
-            preferredStyle: .alert)
-        
-        let logInAction = UIAlertAction(
-            title: "로그인",
-            style: .default,
-            handler: { _ in
-                let signInViewController = SignInViewController()
-                self.navigationController?.pushViewController(signInViewController, animated: true)
-            })
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        
-        alertForLogIn.addAction(cancelAction)
-        alertForLogIn.addAction(logInAction)
-        
-        present(alertForLogIn, animated: true, completion: nil)
-    }
-    
     private func setupTableView() {
         view.addSubview(tableView)
         
@@ -121,27 +105,31 @@ final class FeaturedCurationListViewController: UIViewController {
         ])
     }
     
-    func setupData(items: [Curation]?, tag: Int, kinditorOfCuration: [String : String]) {
+    func setData(items: [Curation]?, tag: Int, kinditorOfCuration: [String : String]) {
         self.category = tag == 1 ? "bookstore" : "book"
         self.curations = items?.filter{ $0.category == self.category }
-        self.kinditorOfCuration = kinditorOfCuration
+        self.kinditorsByCuration = kinditorOfCuration
     }
     
-    // MARK: - 파이어베이스 update
+    // MARK: - 파이어베이스 fetch
     
     private func fetchCurations(of category: String) {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
-            if let curations = try? await CurationRequest().fetch() {
-                self.curations = curations.filter{ $0.category == category}
-                self.curations?.sort(by: { first, second in
-                    first.createdAt ?? Date() > second.createdAt ?? Date()
-                })
-            } else { self.curations = [] }
+            guard let curations = try? await CurationRequest().fetch() else {
+                self.curations = []
+                return
+            }
             
-            for curation in curations ?? [] {
-                if let nickname = try? await UserManager().fetch(with: curation.userID).nickName {
-                    self.kinditorOfCuration[curation.userID] = nickname
+            self.curations = curations.filter{ $0.category == category }
+            self.curations?.sort(by: { first, second in
+                first.createdAt ?? Date() > second.createdAt ?? Date()
+            })
+            
+            for curation in curations {
+                let userID = curation.userID
+                if let nickname = try? await UserManager().fetch(with: userID).nickName {
+                    self.kinditorsByCuration[userID] = nickname
                 }
             }
             
@@ -169,7 +157,7 @@ final class FeaturedCurationListViewController: UIViewController {
 
 extension FeaturedCurationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if curations?.count == 0 {
+        if (curations ?? []).isEmpty {
             tableView.setCurationEmptyView(text: "아직 작성된 큐레이션이 없어요 🥲")
         }
         
@@ -188,9 +176,14 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
             imageRequestTask = nil
         }
         
-        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? ""]
+        cell.kinditor = kinditorsByCuration[cell.curation?.userID ?? ""]
         
-        guard UserManager().isLoggedIn() else { cell.curationIsLiked = false; return cell }
+        guard UserManager().isLoggedIn() else {
+            cell.curationIsLiked = false
+            
+            return cell
+        }
+        
         let userID = UserManager().getID()
         cell.curationIsLiked = (cell.curation?.likes ?? []).contains(userID)
         
@@ -202,12 +195,11 @@ extension FeaturedCurationListViewController: UITableViewDataSource {
 
 extension FeaturedCurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curationVC = PagingCurationViewController(curation: (curations![indexPath.row]))
-        curationVC.modalPresentationStyle = .fullScreen
-        curationVC.modalTransitionStyle = .crossDissolve
+        let curationViewController = PagingCurationViewController(curation: (curations![indexPath.row]))
+        curationViewController.modalPresentationStyle = .fullScreen
+        curationViewController.modalTransitionStyle = .crossDissolve
         
-        present(curationVC, animated: true)
-        
+        present(curationViewController, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
