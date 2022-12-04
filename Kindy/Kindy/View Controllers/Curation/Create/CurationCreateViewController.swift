@@ -60,7 +60,6 @@ final class CurationCreateViewController: UIViewController {
     }
     var addIndex:Int = 0
     var deleteImageURL:[String] = []
-    var completeCount: Int = 0
     var isMainImageChanged: Bool = false
     /// init (nil, nil, []) : 이경우는 작성, / init(curation, mainImage, descriptionImages): 는 수정
     init(_ curation: Curation?,_ mainImage: UIImage?,_ descriptionImage: [UIImage]) {

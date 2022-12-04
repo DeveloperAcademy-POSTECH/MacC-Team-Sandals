@@ -110,7 +110,6 @@ extension CurationCreateViewController: PHPickerViewControllerDelegate {
                         self.imagePickerOpenSource = ""
                         if !self.isMainImageChanged {
                             self.isMainImageChanged = true
-                            self.completeCount -= 1
                             if !self.curation.mainImage.isEmpty {
                                 self.deleteImageURL.append(self.curation.mainImage)
                             }
