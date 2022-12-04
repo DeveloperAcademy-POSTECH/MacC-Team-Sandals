@@ -23,6 +23,8 @@
 		315785312929EEFE008EC439 /* CurationCreateAddDescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315785302929EEFE008EC439 /* CurationCreateAddDescriptionButton.swift */; };
 		31578533292A778C008EC439 /* CurationCreateDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31578532292A778C008EC439 /* CurationCreateDescriptionTableViewCell.swift */; };
 		31578535292BE20B008EC439 /* CurationCraeteDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31578534292BE20B008EC439 /* CurationCraeteDelegate.swift */; };
+		31BB6103293C6CBE00A09A0B /* CurationCreateViewController+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BB6102293C6CBE00A09A0B /* CurationCreateViewController+Delegates.swift */; };
+		31BB6105293C6D4700A09A0B /* UIScrollView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BB6104293C6D4700A09A0B /* UIScrollView+.swift */; };
 		31F5A01E2925DF85002C1FAD /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A01D2925DF85002C1FAD /* SignInView.swift */; };
 		31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A01F2925E095002C1FAD /* SignInDelegate.swift */; };
 		31F5A02429261606002C1FAD /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A02329261606002C1FAD /* SignUpView.swift */; };
@@ -144,6 +146,8 @@
 		315785302929EEFE008EC439 /* CurationCreateAddDescriptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCreateAddDescriptionButton.swift; sourceTree = "<group>"; };
 		31578532292A778C008EC439 /* CurationCreateDescriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCreateDescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		31578534292BE20B008EC439 /* CurationCraeteDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationCraeteDelegate.swift; sourceTree = "<group>"; };
+		31BB6102293C6CBE00A09A0B /* CurationCreateViewController+Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CurationCreateViewController+Delegates.swift"; sourceTree = "<group>"; };
+		31BB6104293C6D4700A09A0B /* UIScrollView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+.swift"; sourceTree = "<group>"; };
 		31F5A01D2925DF85002C1FAD /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		31F5A01F2925E095002C1FAD /* SignInDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInDelegate.swift; sourceTree = "<group>"; };
 		31F5A02329261606002C1FAD /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
@@ -293,6 +297,15 @@
 				3157852E2929EEF3008EC439 /* CurationCreateHeadTextView.swift */,
 				315785302929EEFE008EC439 /* CurationCreateAddDescriptionButton.swift */,
 				31578532292A778C008EC439 /* CurationCreateDescriptionTableViewCell.swift */,
+			);
+			path = Create;
+			sourceTree = "<group>";
+		};
+		31BB6101293C6C3D00A09A0B /* Create */ = {
+			isa = PBXGroup;
+			children = (
+				315785272929EC75008EC439 /* CurationCreateViewController.swift */,
+				31BB6102293C6CBE00A09A0B /* CurationCreateViewController+Delegates.swift */,
 			);
 			path = Create;
 			sourceTree = "<group>";
@@ -492,6 +505,7 @@
 				6E359EE429278E6E00139F6F /* Notification+.swift */,
 				6E359EE829278E9200139F6F /* Reportable+.swift */,
 				6E86440C293349D1007B2796 /* Sequence+.swift */,
+				31BB6104293C6D4700A09A0B /* UIScrollView+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -557,10 +571,10 @@
 		7B7E212A290E22F500B6723D /* Curation */ = {
 			isa = PBXGroup;
 			children = (
+				31BB6101293C6C3D00A09A0B /* Create */,
 				6EE5E3F028FECEE900EA7413 /* CurationViewController.swift */,
 				6EE5E42D290571BC00EA7413 /* PagingCurationViewController.swift */,
 				6EE5E4312905733900EA7413 /* BottomSheetViewController.swift */,
-				315785272929EC75008EC439 /* CurationCreateViewController.swift */,
 			);
 			path = Curation;
 			sourceTree = "<group>";
@@ -758,6 +772,7 @@
 				36B1B3842904102300C91825 /* DetailBookstoreView.swift in Sources */,
 				77DCB1502902987700EAB5D5 /* NearbyViewController.swift in Sources */,
 				7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */,
+				31BB6105293C6D4700A09A0B /* UIScrollView+.swift in Sources */,
 				31F5A0202925E095002C1FAD /* SignInDelegate.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */,
 				7BDAE69D290504A900BC41E9 /* ExceptionBookmarkCell.swift in Sources */,
@@ -774,6 +789,7 @@
 				7B404C2728FFD36E00A24C89 /* NearByBookstoreCell.swift in Sources */,
 				7BCB1A07291633E300B357D5 /* Contact.swift in Sources */,
 				6E359EE929278E9200139F6F /* Reportable+.swift in Sources */,
+				31BB6103293C6CBE00A09A0B /* CurationCreateViewController+Delegates.swift in Sources */,
 				6EE5E39B28FD313C00EA7413 /* AppDelegate.swift in Sources */,
 				31578535292BE20B008EC439 /* CurationCraeteDelegate.swift in Sources */,
 				7B404C1F28FE90B700A24C89 /* ViewModel.swift in Sources */,
