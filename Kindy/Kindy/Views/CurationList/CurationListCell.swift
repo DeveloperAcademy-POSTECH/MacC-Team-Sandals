@@ -205,7 +205,7 @@ final class CurationListCell: UITableViewCell {
         
         // 좋아요 & 댓글 개수
         configureImageAndTextLabel(for: likeLabel, imageName: curationIsLiked ? "heart.fill" : "heart", text: item.likes.count)
-        configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: item.comments?.count ?? 0)
+        configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: item.commentCount)
         
         // 날짜
         configureDateLabel(for: dateLabel, date: item.createdAt!)

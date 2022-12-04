@@ -53,6 +53,7 @@ final class CurationListViewController: UIViewController {
         
         tabBarController?.tabBar.isHidden = false
         fetchUserData()
+        fetchCurations()
         self.tableView.reloadData()
     }
     
@@ -99,36 +100,16 @@ final class CurationListViewController: UIViewController {
             presentLogInAlert()
             return
         }
-        let createVC = CurationCreateViewController(nil, nil, [])
-        createVC.newImageAndCuration = { newImages, newCuration in
+        
+        let curationCreateViewController = CurationCreateViewController(nil, nil, [])
+        curationCreateViewController.newImageAndCuration = { newImages, newCuration in
             self.curationsRequestTask = Task {
-                self.curations.append(newCuration)
-                self.tableView.reloadData()
+                self.fetchCurations()
                 self.curationsRequestTask = nil
             }
         }
-        self.navigationController?.pushViewController(createVC, animated: true)
-    }
-    
-    private func presentLogInAlert() {
-        let alertForLogIn = UIAlertController(
-            title: "로그인이 필요한 기능입니다",
-            message: "로그인하시겠습니까?",
-            preferredStyle: .alert)
         
-        let logInAction = UIAlertAction(
-            title: "로그인",
-            style: .default,
-            handler: { _ in
-                let signInViewController = SignInViewController()
-                self.navigationController?.pushViewController(signInViewController, animated: true)
-            })
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        
-        alertForLogIn.addAction(cancelAction)
-        alertForLogIn.addAction(logInAction)
-        
-        present(alertForLogIn, animated: true, completion: nil)
+        self.navigationController?.pushViewController(curationCreateViewController, animated: true)
     }
     
     private func setupTableView() {
@@ -165,6 +146,9 @@ final class CurationListViewController: UIViewController {
         curationsRequestTask = Task {
             if let curations = try? await CurationRequest().fetch() {
                 self.curations = curations
+                self.curations.sort(by: { first, second in
+                    first.createdAt ?? Date() > second.createdAt ?? Date()
+                })
             } else { self.curations = [] }
             
             for curation in curations {
@@ -179,15 +163,16 @@ final class CurationListViewController: UIViewController {
     }
     
     private func fetchUserData() {
-        if UserManager().isLoggedIn() {
-            userRequestTask = Task {
-                guard let user = try? await UserManager().fetchCurrentUser() else {
-                    userRequestTask = nil
-                    return
-                }
-                self.user = user
+        guard UserManager().isLoggedIn() else { return }
+        
+        userRequestTask?.cancel()
+        userRequestTask = Task {
+            guard let user = try? await UserManager().fetchCurrentUser() else {
                 userRequestTask = nil
+                return
             }
+            self.user = user
+            userRequestTask = nil
         }
     }
 }
@@ -212,7 +197,7 @@ extension CurationListViewController: UITableViewDataSource {
             imageRequestTask = nil
         }
         
-        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? "킨디"]
+        cell.kinditor = kinditorOfCuration[cell.curation?.userID ?? "킨디"] ?? "킨디터"
 
         guard UserManager().isLoggedIn() else {
             cell.curationIsLiked = false
@@ -248,21 +233,21 @@ extension CurationListViewController: UITableViewDelegate {
 
         headerView.isHidden = curations.isEmpty
         
-        let bookstoreBtn = headerView.bookstoreButton
-        let bookBtn = headerView.bookButton
+        let bookstoreButton = headerView.bookstoreButton
+        let bookButton = headerView.bookButton
         
-        bookstoreBtn.tag = 1
-        bookBtn.tag = 2
+        bookstoreButton.tag = 1
+        bookButton.tag = 2
         
-        [bookstoreBtn, bookBtn].forEach{ $0.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside) }
+        [bookstoreButton, bookButton].forEach{ $0.addTarget(self, action: #selector(categoryButtonDidTap), for: .touchUpInside) }
 
         return headerView
     }
     
-    @objc func buttonTapped(_ sender: UIButton) {
-        let vc = FeaturedCurationListViewController()
-        vc.setupData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
+    @objc func categoryButtonDidTap(_ sender: UIButton) {
+        let featuredCurationList = FeaturedCurationListViewController()
+        featuredCurationList.setData(items: curations, tag: sender.tag, kinditorOfCuration: kinditorOfCuration)
         
-        show(vc, sender: nil)
+        show(featuredCurationList, sender: nil)
     }
 }
