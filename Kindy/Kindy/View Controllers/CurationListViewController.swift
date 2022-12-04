@@ -51,6 +51,7 @@ final class CurationListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        tabBarController?.tabBar.isHidden = false
         fetchUserData()
         self.tableView.reloadData()
     }
