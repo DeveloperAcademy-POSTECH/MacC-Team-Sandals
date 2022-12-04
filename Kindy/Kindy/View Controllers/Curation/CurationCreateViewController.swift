@@ -328,13 +328,13 @@ final class CurationCreateViewController: UIViewController {
                 view.endEditing(true)
                 for url in deleteImageURL {
                     do {
-                        try CurationRequest().deleteCurationImage(url: url)
+                        try CurationRequest().deleteImage(url: url)
                     } catch {
                         print("delete Error")
                     }
                 }
                 if isMainImageChanged {
-                    CurationRequest().uploadCurationImage(image: mainImage ?? UIImage(), pathRoot: "Curations/\(curation.title)/main", completion: { url in
+                    CurationRequest().uploadImage(image: mainImage ?? UIImage(), pathRoot: "Curations/\(curation.title)/main", completion: { url in
                         self.curation.mainImage = url ?? ""
                         self.completeCount += 1
                         if self.completeCount == self.descriptionImages.count {
@@ -371,7 +371,7 @@ final class CurationCreateViewController: UIViewController {
                 else {
                     for i in 0..<descriptionImages.count {
                         if addIndex <= i {
-                            CurationRequest().uploadCurationImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
+                            CurationRequest().uploadImage(image: descriptionImages[i], pathRoot: "Curations/\(curation.title)/descriptions") { url in
                                 self.curation.descriptions[i].image = url
                                 self.completeCount += 1
                                 if self.completeCount == self.descriptionImages.count {

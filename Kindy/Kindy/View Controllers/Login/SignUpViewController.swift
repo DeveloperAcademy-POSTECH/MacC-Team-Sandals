@@ -73,7 +73,8 @@ final class SignUpViewController: UIViewController {
                             "email" : self.email!,
                             "provider" : self.provider!,
                             "nickName" : self.nickName,
-                            "bookmarkedBookstores" : []
+                            "bookmarkedBookstores" : [],
+                            "commentedCurations" : []
                         ])  { err in
                             if let err = err {
                                 print("Error writing document: \(err)")

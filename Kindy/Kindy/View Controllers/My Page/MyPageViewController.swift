@@ -169,7 +169,7 @@ final class MyPageViewController: UIViewController {
     
     // TODO: 스몰톡 업데이트 되면 MyWritingViewController으로 연결
     @objc func myWritingButtonTapped() {
-        let writingListVC = WritingListViewController()
+        let writingListVC = MyPageCurationListViewController()
         writingListVC.previousSelectedCell = .myCuration
         show(writingListVC, sender: nil)
     }

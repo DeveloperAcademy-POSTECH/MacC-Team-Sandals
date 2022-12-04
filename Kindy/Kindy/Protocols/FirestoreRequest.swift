@@ -28,9 +28,9 @@ extension FirestoreRequest {
         return responses
     }
     
-    /// id로 특정 도큐먼트 fetch
-    func fetch(with id: String) async throws -> Response {
-        return try await db.collection(collectionPath).document(id).getDocument(as: Response.self)
+    /// 도큐먼트 id로 특정 도큐먼트 fetch
+    func fetch(with documentID: String) async throws -> Response {
+        return try await db.collection(collectionPath).document(documentID).getDocument(as: Response.self)
     }
     
     /// 도큐먼트 추가
@@ -39,7 +39,7 @@ extension FirestoreRequest {
     }
     
     /// id로 특정 도큐먼트 삭제
-    func delete(_ documentID: String) {
-        db.collection(collectionPath).document(documentID).delete()
+    func delete(_ documentID: String) async throws {
+        try await db.collection(collectionPath).document(documentID).delete()
     }
 }

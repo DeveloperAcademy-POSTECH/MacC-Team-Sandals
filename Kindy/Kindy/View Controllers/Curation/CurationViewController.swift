@@ -103,7 +103,7 @@ final class CurationViewController: UIViewController {
         //        }
         // --------------
         
-        commentListener = commentManager.fetchUpdateComments(curationID: curation.id, completion: { querySnapshot, error in
+        commentListener = commentManager.update(curationID: curation.id, completion: { querySnapshot, error in
             
             if self.isFirstShowingView {
                 self.curation.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
@@ -334,7 +334,8 @@ extension CurationViewController: PostComment {
             isPostComment = true
             curation.commentCount += 1
             let tempCuration = curation
-            try? await curationManager.createComment(curationID: tempCuration.id, userID: userID, content: content, count: tempCuration.commentCount)
+            try? await commentManager.add(curationID: tempCuration.id, userID: userID, content: content, count: tempCuration.commentCount)
+            try? userManager.addCommentedCuration(userID: userID, curationID: tempCuration.id)
             commentTask = nil
         }
     }
@@ -424,7 +425,8 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                         let tempCuration = self.curation
                                         self.isDeleteComment = true
                                         
-                                        try? await self.curationManager.deleteComment(curationID: tempCuration.id, commentID: tempCuration.comments![indexPath.row].id, count: tempCuration.commentCount)
+                                        try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempCuration.comments![indexPath.row].id, count: tempCuration.commentCount)
+                                        try? await self.userManager.deleteCommentedCurationIfNeeded(userID: self.userID, curationID: tempCuration.id)
                                     }
                                 }
                                 let cancelAction = UIAlertAction(title: "취소", style: .default)
@@ -490,15 +492,17 @@ extension CurationViewController: ShowingMenu, Reportable {
                 
                 let okAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
                     self.curationRequestTask = Task {
+                        try? await self.userManager.deleteAllCommentedCuration(curationID: self.curation.id)
+                        
                         guard let view = self.next as? UIView, let vc = view.findViewController() as? BottomSheetViewController else { return }
                         
-                        try? self.curationManager.deleteCurationImage(url: self.curation.mainImage)
+                        try? self.curationManager.deleteImage(url: self.curation.mainImage)
                         
                         let _ = try? await self.curation.descriptions.concurrentMap { description in
-                            try self.curationManager.deleteCurationImage(url: description.image ?? "")
+                            try self.curationManager.deleteImage(url: description.image ?? "")
                         }
                         
-                        self.curationManager.delete(self.curation.id)
+                        try? await self.curationManager.delete(self.curation.id)
                         
                         vc.dismissView()
                         self.curationRequestTask = nil
