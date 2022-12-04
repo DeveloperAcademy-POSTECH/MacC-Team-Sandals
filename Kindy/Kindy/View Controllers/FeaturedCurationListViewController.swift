@@ -75,8 +75,7 @@ final class FeaturedCurationListViewController: UIViewController {
         let curationCreateViewController = CurationCreateViewController(nil, nil, [])
         curationCreateViewController.newImageAndCuration = { newImages, newCuration in
             self.curationsRequestTask = Task {
-                self.curations?.append(newCuration)
-                self.tableView.reloadData()
+                self.fetchCurations(of: self.category)
                 self.curationsRequestTask = nil
             }
         }
