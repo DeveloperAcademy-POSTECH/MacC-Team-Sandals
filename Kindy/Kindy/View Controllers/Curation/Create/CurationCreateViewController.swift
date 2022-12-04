@@ -404,7 +404,7 @@ final class CurationCreateViewController: UIViewController {
     private func toogleOfScreenInteractionMode(bool: Bool) {
         self.rightButton.isEnabled = bool
         self.leftButton.isEnabled = bool
-        self.mainScrollView.isScrollEnabled = bool
+        self.view.isUserInteractionEnabled = bool
     }
     
     // 문제 발생시 에러 메시지를 발생시키기 위한 함수
