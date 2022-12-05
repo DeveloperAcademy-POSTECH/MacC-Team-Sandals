@@ -136,8 +136,10 @@ final class CurationListViewController: UIViewController {
     }
     
     @objc func refreshDidControl() {
-        fetchCurations()
-        refreshControl.endRefreshing()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.fetchCurations()
+            self.refreshControl.endRefreshing()
+        }
     }
     
     private func configureActivityIndicatorView() {
