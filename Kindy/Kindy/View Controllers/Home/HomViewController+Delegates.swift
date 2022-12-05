@@ -64,7 +64,7 @@ extension HomeViewController: SectionHeaderDelegate {
     func segueWithSectionIndex(_ sectionIndex: Int) {
         switch sectionIndex {
         case 2:
-            let nearbyBookstores = model.nearbyBookstores.map { $0.bookstore ?? Bookstore.error }
+            let nearbyBookstores = sortBookstoresByMyLocation(model.bookstores)
             let nearbyViewController = NearbyViewController()
             nearbyViewController.setupData(items: nearbyBookstores)
             show(nearbyViewController, sender: nil)
@@ -98,7 +98,7 @@ extension HomeViewController: UIScrollViewDelegate {
 extension HomeViewController: CLLocationManagerDelegate {
     
     // 내 위치를 기준으로 서점 정렬
-    func sortBookstoresByMyLocation(_ bookstores: [Bookstore]) -> [Bookstore] {
+    func sortBookstoresByMyLocation(_ bookstores: [Bookstore], showOnlyThreeItems: Bool = false) -> [Bookstore] {
         guard let myLocation = locationManager.location?.coordinate as? CLLocationCoordinate2D else { return [] }
         var sortedBookstores = bookstores
         
@@ -106,9 +106,13 @@ extension HomeViewController: CLLocationManagerDelegate {
             sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude)))
         }
         
-        sortedBookstores = sortedBookstores.filter { $0.distance < 100000 }.sorted { $0.distance < $1.distance }
+        sortedBookstores = sortedBookstores.filter { $0.distance < 10000 }.sorted { $0.distance < $1.distance }
         
-        return Array(sortedBookstores.prefix(3))
+        if showOnlyThreeItems {
+            return Array(sortedBookstores.prefix(3))
+        } else {
+            return sortedBookstores
+        }
     }
     
     // 내 위치의 지역을 문자열로 반환
@@ -130,7 +134,7 @@ extension HomeViewController: CLLocationManagerDelegate {
             manager.requestWhenInUseAuthorization()
             return
         case .authorizedWhenInUse, .authorizedAlways:
-            model.nearbyBookstores = sortBookstoresByMyLocation(model.bookstores).map { .nearbyBookstore($0) }
+            model.nearbyBookstores = sortBookstoresByMyLocation(model.bookstores, showOnlyThreeItems: true).map { .nearbyBookstore($0) }
             dataSource.apply(snapshot)
             return
         case .restricted, .denied:

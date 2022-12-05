@@ -143,7 +143,7 @@ final class HomeViewController: UIViewController {
                 
                 switch locationManager.authorizationStatus {
                 case .authorizedWhenInUse, .authorizedAlways:
-                    model.nearbyBookstores = sortBookstoresByMyLocation(bookstores).map { .nearbyBookstore($0) }
+                    model.nearbyBookstores = sortBookstoresByMyLocation(bookstores, showOnlyThreeItems: true).map { .nearbyBookstore($0) }
                 default:
                     model.nearbyBookstores = []
                 }
