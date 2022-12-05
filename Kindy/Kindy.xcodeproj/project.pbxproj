@@ -105,6 +105,7 @@
 		7B46BE99293B42250079F33E /* HomeViewController+DiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46BE98293B42250079F33E /* HomeViewController+DiffableDataSource.swift */; };
 		7B46BE9B293B430D0079F33E /* HomViewController+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46BE9A293B430D0079F33E /* HomViewController+Delegates.swift */; };
 		7B46BE9E293B44850079F33E /* HomeViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46BE9D293B44850079F33E /* HomeViewController+Snapshot.swift */; };
+		7B46BEA3293E090B0079F33E /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46BEA2293E090B0079F33E /* ActivityIndicatorView.swift */; };
 		7B529ED0291B8FAD007C023F /* CLLocationCoordinate2D+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B529ECF291B8FAD007C023F /* CLLocationCoordinate2D+.swift */; };
 		7B7B49932917C8A70082E2DA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B49922917C8A70082E2DA /* Model.swift */; };
 		7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7E2124290E20E200B6723D /* BusinessHour.swift */; };
@@ -231,6 +232,7 @@
 		7B46BE98293B42250079F33E /* HomeViewController+DiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewController+DiffableDataSource.swift"; sourceTree = "<group>"; };
 		7B46BE9A293B430D0079F33E /* HomViewController+Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomViewController+Delegates.swift"; sourceTree = "<group>"; };
 		7B46BE9D293B44850079F33E /* HomeViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewController+Snapshot.swift"; sourceTree = "<group>"; };
+		7B46BEA2293E090B0079F33E /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B529ECF291B8FAD007C023F /* CLLocationCoordinate2D+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+.swift"; sourceTree = "<group>"; };
 		7B7B49922917C8A70082E2DA /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		7B7E2124290E20E200B6723D /* BusinessHour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessHour.swift; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 			isa = PBXGroup;
 			children = (
 				7B404C2E29016CAF00A24C89 /* SectionHeaderView.swift */,
+				7B46BEA2293E090B0079F33E /* ActivityIndicatorView.swift */,
 			);
 			path = Supplementary;
 			sourceTree = "<group>";
@@ -831,6 +834,7 @@
 				6EF98086292F45F200D74E5A /* CommentRequest.swift in Sources */,
 				77DCB1662904467B00EAB5D5 /* RegionHeaderView.swift in Sources */,
 				77DCB191291A2FDF00EAB5D5 /* CurationListViewController.swift in Sources */,
+				7B46BEA3293E090B0079F33E /* ActivityIndicatorView.swift in Sources */,
 				6EE5E3AF28FD318A00EA7413 /* MyPageViewController.swift in Sources */,
 				6E359EDF29278DF100139F6F /* CurationButtonItem.swift in Sources */,
 				36D881B9292951FC0089D2FF /* EditNicknameView.swift in Sources */,

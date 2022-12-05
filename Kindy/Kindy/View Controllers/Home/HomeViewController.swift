@@ -31,9 +31,9 @@ final class HomeViewController: UIViewController {
         static let header = "header"
     }
     
-    // MARK: - Collection View
-    
     @IBOutlet weak var collectionView: UICollectionView!
+    
+    private let activityIndicatorView = ActivityIndicatorView()
     
     var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
     
@@ -42,17 +42,16 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createNavBarButtonItems()
-        
         // MARK: Configuration
         collectionView.collectionViewLayout = createLayout()
         configureDataSource()
-        configureRefreshControl()
         
-        // MARK: Delegate
+        configureRefreshControl()
+        configureActivityIndicatorView()
+        configureNavBarButtonItems()
+        
         collectionView.delegate = self
         
-        // MARK: Location Manager
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -92,9 +91,9 @@ final class HomeViewController: UIViewController {
     
     // MARK:  - Navigation Bar
     
-    private func createNavBarButtonItems() {
-        let resizedImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: resizedImage, style: .plain, target: self, action: #selector(scrollToTop))
+    private func configureNavBarButtonItems() {
+        let logoImage = UIImage(named: "KindyLogo")?.resizeImage(size: CGSize(width: 80, height: 20)).withRenderingMode(.alwaysOriginal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: logoImage, style: .plain, target: self, action: #selector(scrollToTop))
         
         let bellButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(bellButtonTapped))
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
@@ -132,11 +131,19 @@ final class HomeViewController: UIViewController {
         collectionView.refreshControl?.endRefreshing()
     }
     
+    // MARK: - Activity Indicator View
+    
+    private func configureActivityIndicatorView() {
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.center = view.center
+    }
+    
     // MARK: - Update
     
     private func updateBookstores() {
         bookstoresTask?.cancel()
         bookstoresTask = Task {
+            activityIndicatorView.startAnimating()
             if let bookstores = try? await BookstoreRequest().fetch() {
                 // 전체 데이터에 추가
                 model.bookstores = bookstores
@@ -160,6 +167,8 @@ final class HomeViewController: UIViewController {
                 model.bookstores = []
                 model.featuredBookstores = []
             }
+            activityIndicatorView.stopAnimating()
+            
             dataSource.apply(snapshot)
             
             bookstoresTask = nil

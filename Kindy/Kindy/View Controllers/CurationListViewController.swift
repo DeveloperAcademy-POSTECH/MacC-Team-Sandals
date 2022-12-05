@@ -31,6 +31,8 @@ final class CurationListViewController: UIViewController {
         return tableView
     }()
     
+    private let activityIndicatorView = ActivityIndicatorView()
+    
     private var user: User?
     private var curations: [Curation] = []
     private var curationImage = UIImage()
@@ -44,6 +46,7 @@ final class CurationListViewController: UIViewController {
         super.viewDidLoad()
 
         createBarButtonItems()
+        configureActivityIndicatorView()
         setupTableView()
         fetchCurations()
     }
@@ -133,10 +136,13 @@ final class CurationListViewController: UIViewController {
     }
     
     @objc func refreshDidControl() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.fetchCurations()
-            self.refreshControl.endRefreshing()
-        }
+        fetchCurations()
+        refreshControl.endRefreshing()
+    }
+    
+    private func configureActivityIndicatorView() {
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.center = view.center
     }
     
     // MARK: - 파이어베이스 update
@@ -144,6 +150,8 @@ final class CurationListViewController: UIViewController {
     private func fetchCurations() {
         curationsRequestTask?.cancel()
         curationsRequestTask = Task {
+            activityIndicatorView.startAnimating()
+            
             if let curations = try? await CurationRequest().fetch() {
                 self.curations = curations
                 self.curations.sort(by: { first, second in
@@ -156,6 +164,7 @@ final class CurationListViewController: UIViewController {
                     self.kinditorOfCuration[curation.userID] = nickname
                 }
             }
+            activityIndicatorView.stopAnimating()
             
             self.tableView.reloadData()
             curationsRequestTask = nil
