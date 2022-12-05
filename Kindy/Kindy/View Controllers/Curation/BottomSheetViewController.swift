@@ -43,7 +43,7 @@ final class BottomSheetViewController: UIViewController {
         return view
     }()
 
-    private lazy var bottomSheetPanMinTopConstant: CGFloat = dismissButton.frame.height + 66.5
+    private(set) lazy var bottomSheetPanMinTopConstant: CGFloat = dismissButton.frame.height + 66.5
 
     private lazy var bottomSheetPanStartingTopConstant: CGFloat = bottomSheetPanMinTopConstant
 
@@ -60,7 +60,7 @@ final class BottomSheetViewController: UIViewController {
         return view
     }()
 
-    private var bottomSheetViewTopConstraint: NSLayoutConstraint!
+    private(set) var bottomSheetViewTopConstraint: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -153,16 +153,16 @@ final class BottomSheetViewController: UIViewController {
         showBottomSheet()
     }
 
-    private func showBottomSheet(atState: BottomSheetViewState = .normal) {
+    func showBottomSheet(atState: BottomSheetViewState = .normal) {
         guard let vc = self.contentViewController as? CurationViewController else { return }
 
         if atState == .normal {
-            vc.view.isUserInteractionEnabled = false
+            vc.collectionView.isUserInteractionEnabled = false
             let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
             let bottomPadding: CGFloat = view.safeAreaInsets.bottom
             bottomSheetViewTopConstraint.constant = (safeAreaHeight + bottomPadding) - defaultHeight
         } else {
-            vc.view.isUserInteractionEnabled = true
+            vc.collectionView.isUserInteractionEnabled = true
             // 확장시 위치
             bottomSheetViewTopConstraint.constant = bottomSheetPanMinTopConstant
 

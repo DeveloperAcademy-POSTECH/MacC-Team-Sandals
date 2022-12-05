@@ -72,7 +72,7 @@ final class CurationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var collectionView: UICollectionView = {
+    private(set) lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
@@ -369,6 +369,10 @@ extension CurationViewController: KeyboardActionable {
 
 extension CurationViewController: CommentButtonAction {
     func showingKeyboard() {
+        guard let view = self.next as? UIView, let vc = view.findViewController() as? BottomSheetViewController else { return }
+        vc.showBottomSheet(atState: .expanded)
+        vc.delegate?.setTopHeaderLayout()
+        
         collectionView.scrollToItem(at: IndexPath(row: replyCount, section: 1), at: .bottom, animated: true)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {

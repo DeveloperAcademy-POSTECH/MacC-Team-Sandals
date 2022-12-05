@@ -187,7 +187,7 @@ extension ImageCache {
     
     func loadImageArray(URLs: [String]) async throws -> [UIImage] {
         let images: [UIImage] = try await URLs.concurrentMap { url in
-            return try! await ImageCache.shared.load(url) ?? UIImage()
+            return try await ImageCache.shared.load(url) ?? UIImage()
         }
         return images
     }
