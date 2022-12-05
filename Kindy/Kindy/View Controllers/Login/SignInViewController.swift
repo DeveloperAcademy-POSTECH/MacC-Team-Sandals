@@ -27,7 +27,10 @@ final class SignInViewController: UIViewController {
     }
     
     private func setupUI() {
+        self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationItem.title = "로그인"
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        tabBarController?.tabBar.isHidden = true
         view.backgroundColor = .white
         signInView.translatesAutoresizingMaskIntoConstraints = false
         signInView.delegate = self

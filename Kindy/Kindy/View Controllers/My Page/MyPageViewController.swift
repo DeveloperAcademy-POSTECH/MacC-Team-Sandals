@@ -53,6 +53,7 @@ final class MyPageViewController: UIViewController {
     }
             
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         updateUserData()
         tabBarController?.tabBar.isHidden = false
     }
@@ -110,7 +111,6 @@ final class MyPageViewController: UIViewController {
         userInfoContainerView.myWritingButton.addTarget(self, action: #selector(myWritingButtonTapped), for: .touchUpInside)
         userInfoContainerView.myActivitiesButton.addTarget(self, action: #selector(myActivitiesButtonTapped), for: .touchUpInside)
         tryLoginContainerView.signInButton.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
-//        tryLoginContainerView.signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
     
     private func updateUserData() {
@@ -184,11 +184,6 @@ final class MyPageViewController: UIViewController {
         let signInViewcontroller = SignInViewController()
         self.navigationController?.pushViewController(signInViewcontroller, animated: true)
     }
-    
-//    @objc func signUpButtonTapped() {
-//        let signUpViewcontroller = SignUpViewController()
-//        self.navigationController?.pushViewController(signUpViewcontroller, animated: true)
-//    }
     
 }
 

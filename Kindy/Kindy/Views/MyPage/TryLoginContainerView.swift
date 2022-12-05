@@ -35,18 +35,8 @@ final class TryLoginContainerView: UIView {
         return button
     }()
     
-    lazy var signUpButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("회원가입", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-//        button.setUnderline()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     private lazy var tryLogincontainerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [tryLoginLabel, divider, signInButton, signUpButton])
+        let stackView = UIStackView(arrangedSubviews: [tryLoginLabel, divider, signInButton])
         stackView.axis = .vertical
         stackView.spacing = padding16
         stackView.alignment = .center
@@ -69,6 +59,8 @@ final class TryLoginContainerView: UIView {
         addSubview(tryLogincontainerStackView)
         
         NSLayoutConstraint.activate([
+            tryLoginLabel.heightAnchor.constraint(equalToConstant: 25),
+            
             divider.widthAnchor.constraint(equalToConstant: 326),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
