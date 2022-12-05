@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="O9Q-w5-zgq">
-                                <rect key="frame" x="0.0" y="91" width="390" height="670"/>
+                                <rect key="frame" x="0.0" y="91" width="390" height="753"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ISY-5c-MJP">
                                     <size key="itemSize" width="128" height="128"/>
@@ -35,7 +35,7 @@
                         <constraints>
                             <constraint firstItem="O9Q-w5-zgq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="3ev-rB-QIE"/>
                             <constraint firstItem="O9Q-w5-zgq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="9EP-W6-sqh"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="O9Q-w5-zgq" secondAttribute="bottom" id="WHM-Pl-hqk"/>
+                            <constraint firstAttribute="bottom" secondItem="O9Q-w5-zgq" secondAttribute="bottom" id="WHM-Pl-hqk"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="O9Q-w5-zgq" secondAttribute="trailing" id="mbl-A8-dCx"/>
                         </constraints>
                     </view>
@@ -57,10 +57,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <color key="selectedImageTintColor" name="kindyGreen"/>
+                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" name="kindyPrimaryGreen"/>
                     </tabBar>
                     <connections>
                         <segue destination="gUh-z9-edb" kind="relationship" relationship="viewControllers" id="XbB-V0-KMK"/>
+                        <segue destination="RSo-Lw-Evv" kind="relationship" relationship="viewControllers" id="1Ln-yE-kEa"/>
                         <segue destination="Jo1-Y7-fdS" kind="relationship" relationship="viewControllers" id="4QD-zN-9tM"/>
                     </connections>
                 </tabBarController>
@@ -87,6 +89,22 @@
             </objects>
             <point key="canvasLocation" x="94" y="518"/>
         </scene>
+        <!--Curation List View Controller-->
+        <scene sceneID="M5L-OK-deW">
+            <objects>
+                <viewController storyboardIdentifier="CurationListViewController" id="phP-Jp-pPd" customClass="CurationListViewController" customModule="Kindy" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZDK-uX-bld">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="7dr-dx-cNl"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Slm-gg-1ej"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MU5-uv-VSW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="922" y="1322"/>
+        </scene>
         <!--My Page View Controller-->
         <scene sceneID="GOZ-HX-Qjb">
             <objects>
@@ -101,7 +119,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VAz-2j-2CE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1628" y="1322"/>
+            <point key="canvasLocation" x="1774" y="1322"/>
         </scene>
         <!--마이페이지-->
         <scene sceneID="KE9-8z-IH0">
@@ -120,14 +138,34 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6g5-QT-Pgb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1628" y="518"/>
+            <point key="canvasLocation" x="1774" y="518"/>
+        </scene>
+        <!--큐레이션-->
+        <scene sceneID="qRz-gs-P0J">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="RSo-Lw-Evv" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="큐레이션" image="books.vertical" catalog="system" id="1YV-Do-ELf"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="QGe-rC-K00">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="phP-Jp-pPd" kind="relationship" relationship="rootViewController" id="JDY-HN-axv"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hz4-bx-575" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="921.53846153846155" y="517.53554502369661"/>
         </scene>
     </scenes>
     <resources>
+        <image name="books.vertical" catalog="system" width="128" height="107"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="person.circle" catalog="system" width="128" height="123"/>
-        <namedColor name="kindyGreen">
-            <color red="0.14509803921568629" green="0.45490196078431372" blue="0.3411764705882353" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="kindyPrimaryGreen">
+            <color red="0.14599999785423279" green="0.45399999618530273" blue="0.34299999475479126" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

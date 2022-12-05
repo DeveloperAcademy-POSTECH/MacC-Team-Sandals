@@ -11,7 +11,6 @@ final class BookmarkViewController: UIViewController {
     
     private var userRequestTask: Task<Void, Never>?
     private var bookmarkUpdateTask: Task<Void, Never>?
-    private let firestoreManager = FirestoreManager()
     
     private var user: User?
     {
@@ -158,8 +157,8 @@ final class BookmarkViewController: UIViewController {
     private func updateUserData() {
         userRequestTask?.cancel()
         userRequestTask = Task {
-            if firestoreManager.isLoggedIn() {
-                if let user = try? await firestoreManager.fetchCurrentUser() {
+            if UserManager().isLoggedIn() {
+                if let user = try? await UserManager().fetchCurrentUser() {
                     self.user = user
                 }
             }
@@ -172,7 +171,7 @@ final class BookmarkViewController: UIViewController {
         let isSuccess = true
         bookmarkUpdateTask?.cancel()
         bookmarkUpdateTask = Task {
-            try? await firestoreManager.updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
+            try? await UserManager().updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
         }
         bookmarkUpdateTask = nil
         return isSuccess

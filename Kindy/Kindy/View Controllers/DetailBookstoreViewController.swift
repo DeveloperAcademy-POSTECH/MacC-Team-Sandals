@@ -13,8 +13,7 @@ final class DetailBookstoreViewController: UIViewController {
     
     // MARK: Properties
     private var defaultScrollYOffset: CGFloat = 0
-    
-    private let firestoreManager = FirestoreManager()
+
     private var userRequestTask: Task<Void, Never>?
     private var bookmarkUpdateTask: Task<Void, Never>?
     private var imageRequestTask: Task<Void, Never>?
@@ -142,7 +141,7 @@ final class DetailBookstoreViewController: UIViewController {
         
         for i in 0..<(bookstore?.images?.count ?? 0) {
             self.imageRequestTask = Task {
-                if let image = try? await firestoreManager.fetchImage(with: bookstore?.images?[i]) {
+                if let image = try? await ImageCache.shared.load(bookstore?.images?[i]) {
                     let imageView = UIImageView()
                     imageView.frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: bookstoreImageScrollView.frame.width, height: bookstoreImageScrollView.frame.height)
                     imageView.image = image
@@ -157,8 +156,8 @@ final class DetailBookstoreViewController: UIViewController {
     private func updateUserData() {
         userRequestTask?.cancel()
         userRequestTask = Task {
-            if firestoreManager.isLoggedIn() {
-                if let user = try? await firestoreManager.fetchCurrentUser() {
+            if UserManager().isLoggedIn() {
+                if let user = try? await UserManager().fetchCurrentUser() {
                     self.user = user
                 }
             }
@@ -171,7 +170,7 @@ final class DetailBookstoreViewController: UIViewController {
         let isSuccess = true
         bookmarkUpdateTask?.cancel()
         bookmarkUpdateTask = Task {
-            try? await firestoreManager.updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
+            try? await UserManager().updateBookmark(email: email, provider: provider, bookmarkedBookstores: bookmarkedBookstores)
         }
         bookmarkUpdateTask = nil
         return isSuccess

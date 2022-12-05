@@ -10,8 +10,8 @@ import Foundation
 enum ViewModel {
     enum Section: Hashable {
         case curations
-        case bookstores
-        case nearbys
+        case featured
+        case nearbys, emptyNearbys
         case bookmarks, emptyBookmarks
         case regions
         case noPermission
@@ -20,7 +20,7 @@ enum ViewModel {
     enum Item: Hashable {
         case curation(Curation)
         case featuredBookstore(Bookstore)
-        case nearbyBookstore(Bookstore)
+        case nearbyBookstore(Bookstore), noNearbyBookstore
         case bookmarkedBookstore(Bookstore), noBookmarkedBookstore
         case region(String)
         case noPermission

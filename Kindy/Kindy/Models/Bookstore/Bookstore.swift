@@ -5,8 +5,7 @@
 //  Created by 정호윤 on 2022/10/18.
 //
 
-import UIKit
-import FirebaseFirestoreSwift
+import Foundation
 
 struct Bookstore {
     var id: String = UUID().uuidString
@@ -21,6 +20,16 @@ struct Bookstore {
 }
 
 extension Bookstore {
+    static let error = Bookstore(
+        images: nil,
+        name: "오류가 발생했어요",
+        address: "",
+        description: "",
+        contact: Contact(telNumber: "", emailAddress: "", instagramURL: ""),
+        businessHour: BusinessHour(),
+        location: Location(latitude: 37.33, longitude: 126.59)
+    )
+    
     // 짧은 주소
     var shortAddress: String {
         return address.components(separatedBy: " ")[0] + " " + address.components(separatedBy: " ")[1]
@@ -30,4 +39,6 @@ extension Bookstore {
 extension Bookstore: Codable { }
 
 extension Bookstore: Hashable { }
+
+extension Bookstore: Identifiable { }
 

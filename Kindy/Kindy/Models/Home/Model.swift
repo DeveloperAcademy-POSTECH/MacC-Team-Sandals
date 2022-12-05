@@ -8,8 +8,10 @@
 import Foundation
 
 struct Model {
-    var curations = [ViewModel.Item]()
+    var curations = [Curation]()
     var bookstores = [Bookstore]()
+    
+    var curation = [ViewModel.Item]()
     
     var featuredBookstores = [ViewModel.Item]()
     var nearbyBookstores = [ViewModel.Item]()

@@ -17,10 +17,6 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         imageRequestTask?.cancel()
     }
     
-    // MARK: - 파이어베이스 매니저
-    
-    private let firestoreManager = FirestoreManager()
-    
     // MARK: - 프로퍼티
     
     private var tableView: UITableView = {
@@ -31,12 +27,9 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         return view
     }()
     
-    // TODO: 파이어베이스 데이터 연결
-    private var filteredItems: [Bookstore] = []
-    
-    private var receivedData: [Bookstore] = []
-    
     private var regionName: String = ""
+    private var receivedData: [Bookstore] = []
+    private var filteredItems: [Bookstore] = []
 
     private let searchController = UISearchController()
 
@@ -58,8 +51,6 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         
         navigationController?.setNavigationBarHidden(false, animated: false)
         
-        // MARK: Navigation Bar Appearance
-        // 서점 상세화면으로 넘어갔다 오면 상세화면의 네비게이션 바 설정이 적용되기에 재설정 해줬습니다.
         let customNavBarAppearance = UINavigationBarAppearance()
         customNavBarAppearance.backgroundColor = .white
         
@@ -67,6 +58,13 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
         navigationController?.navigationBar.standardAppearance = customNavBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = customNavBarAppearance
         navigationController?.navigationBar.compactAppearance = customNavBarAppearance
+        
+        tabBarController?.tabBar.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     // MARK: - 메소드
@@ -154,7 +152,7 @@ extension RegionViewController: UITableViewDataSource {
         cell.bookstore = filteredItems[indexPath.row]
 
         self.imageRequestTask = Task {
-            if let image = try? await firestoreManager.fetchImage(with: cell.bookstore!.images?.first ?? "") {
+            if let image = try? await ImageCache.shared.load(cell.bookstore!.images?.first) {
                 cell.photoImageView.image = image
             }
             imageRequestTask = nil

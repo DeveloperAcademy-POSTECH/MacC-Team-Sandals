@@ -27,6 +27,28 @@ extension UIViewController {
     @objc func hideKeyboard() {
         self.view.window?.endEditing(true)
     }
+    
+    func presentLogInAlert() {
+        let alertForLogIn = UIAlertController(
+            title: "로그인이 필요한 기능입니다",
+            message: "로그인하시겠습니까?",
+            preferredStyle: .alert)
+        let actionToLogIn = UIAlertAction(
+            title: "로그인",
+            style: .default,
+            handler: { _ in
+                let signInViewController = SignInViewController()
+                self.navigationController?.pushViewController(signInViewController, animated: true)
+            })
+        let actionToCancel = UIAlertAction(
+            title: "취소",
+            style: .cancel)
+        
+        alertForLogIn.addAction(actionToCancel)
+        alertForLogIn.addAction(actionToLogIn)
+        
+        present(alertForLogIn, animated: true, completion: nil)
+    }
 }
 
 extension UIViewController: MFMailComposeViewControllerDelegate {

@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: reply 기능은 추가가 되면 주석 해제
 final class CurationButtonStackView: UIView {
 
     private let curation: Curation
@@ -26,8 +25,14 @@ final class CurationButtonStackView: UIView {
         return view
     }()
 
-    private lazy var replyView: UIView = {
-        let view = CurationButtonItemView(frame: .zero, curation: curation, viewName: .reply)
+    private(set) lazy var replyView: UIView = {
+        let view = CurationButtonItemView(frame: .zero, curation: curation, viewName: .comment)
+        return view
+    }()
+    
+    private(set) lazy var settingView: UIView = {
+        let view = CurationButtonItemView(frame: .zero, viewName: .setting)
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
@@ -44,11 +49,15 @@ final class CurationButtonStackView: UIView {
     private func setupUI() {
         self.addSubview(stackView)
         stackView.addArrangedSubview(heartView)
-//        stackView.addArrangedSubview(replyView)
-
+        stackView.addArrangedSubview(replyView)
+        self.addSubview(settingView)
+        
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            
+            settingView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
+            settingView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
     }
 }

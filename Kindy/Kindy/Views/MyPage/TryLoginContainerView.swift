@@ -18,7 +18,6 @@ final class TryLoginContainerView: UIView {
         return label
     }()
     
-    // TODO: divider 안보임
     private let divider: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "kindyLightGray3")
@@ -36,18 +35,8 @@ final class TryLoginContainerView: UIView {
         return button
     }()
     
-    lazy var signUpButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("회원가입", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-//        button.setUnderline()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     private lazy var tryLogincontainerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [tryLoginLabel, divider, signInButton, signUpButton])
+        let stackView = UIStackView(arrangedSubviews: [tryLoginLabel, divider, signInButton])
         stackView.axis = .vertical
         stackView.spacing = padding16
         stackView.alignment = .center
@@ -70,6 +59,9 @@ final class TryLoginContainerView: UIView {
         addSubview(tryLogincontainerStackView)
         
         NSLayoutConstraint.activate([
+            tryLoginLabel.heightAnchor.constraint(equalToConstant: 25),
+            
+            divider.widthAnchor.constraint(equalToConstant: 326),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
             tryLogincontainerStackView.topAnchor.constraint(equalTo: topAnchor, constant: padding24),
@@ -77,6 +69,11 @@ final class TryLoginContainerView: UIView {
             tryLogincontainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
             tryLogincontainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24),
         ])
+        
+        clipsToBounds = true
+        layer.cornerRadius = 8
+        layer.borderWidth = 1
+        layer.borderColor = UIColor(named: "kindyLightGray2")?.cgColor
     }
     
 }
