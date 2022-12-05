@@ -18,14 +18,12 @@ struct CurationRequest: FirestoreRequest {
 extension CurationRequest {
     /// 큐레이션의 likes 업데이트
     func updateLike(curationID: String, likes: [String]) async throws {
-        let document = db.collection(collectionPath).document(curationID)
-        try await document.updateData(["likes" : likes])
+        try await documentReference(curationID).updateData(["likes" : likes])
     }
     
     /// 큐레이션 댓글 수 업데이트
     func updateCommentCount(curationID: String, count: Int) async throws {
-        let document = db.collection(collectionPath).document(curationID)
-        try await document.updateData(["commentCount" : count])
+        try await documentReference(curationID).updateData(["commentCount" : count])
     }
 }
 
@@ -56,4 +54,17 @@ extension CurationRequest {
             }
         }
     }
+    
+    func asyncUploadImage(image: UIImage, pathRoot: String) async throws -> String? {
+        guard let imageData = image.jpegData(compressionQuality: 0.1) else { return nil }
+        let metaData = StorageMetadata()
+        metaData.contentType = "image/jpeg"
+        let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
+        
+        let firebaseReference = Storage.storage().reference().child("\(pathRoot)/\(imageName)")
+        let _ = try await firebaseReference.putDataAsync(imageData, metadata: metaData)
+        let url = try await firebaseReference.downloadURL().absoluteString
+        return url
+    }
+    
 }

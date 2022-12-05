@@ -14,7 +14,7 @@ struct BookstoreRequest: FirestoreRequest {
 }
  
 extension BookstoreRequest {   
-    // 유저가 가진 서점 id 값으로 북마크된 서점 fetch
+    /// 유저가 북마크한 서점 fetch
     func fetchBookmarkedBookstores() async throws -> [Bookstore] {
         guard UserManager().isLoggedIn() else { return [] }
         
