@@ -4,7 +4,6 @@
 //
 //  Created by rbwo on 2022/10/17.
 //
-
 import UIKit
 
 // TODO: 들어올 때 로딩뷰 뜨면 좋을듯
@@ -65,11 +64,6 @@ final class MyPageViewController: UIViewController {
     deinit {
         userRequestTask?.cancel()
         bookstoresRequestTask?.cancel()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        navigationController?.navigationBar.topItem?.title = "마이페이지"
-        tabBarController?.tabBar.isHidden = false
     }
         
     // MARK: Helpers
