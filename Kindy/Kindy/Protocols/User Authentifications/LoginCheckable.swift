@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol LoginCheckable {
+    func showLoginController(_ self: UIViewController)
+}
+
 extension LoginCheckable {
     func showLoginController(_ self: UIViewController) {
         let alertForSignIn = UIAlertController(title: "로그인이 필요한 기능입니다", message: "로그인하시겠습니까?", preferredStyle: .alert)

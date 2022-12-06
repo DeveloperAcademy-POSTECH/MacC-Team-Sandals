@@ -47,6 +47,7 @@ final class CurationListViewController: UIViewController {
 
         createBarButtonItems()
         configureActivityIndicatorView()
+        configureNavBarAppearance()
         setupTableView()
         fetchCurations()
     }
@@ -262,3 +263,5 @@ extension CurationListViewController: UITableViewDelegate {
         show(featuredCurationList, sender: nil)
     }
 }
+
+extension CurationListViewController: BarAppearanceDelegate { }
