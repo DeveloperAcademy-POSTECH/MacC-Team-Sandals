@@ -100,8 +100,8 @@ final class SearchViewController: UIViewController, UISearchResultsUpdating {
         
         switch searchObjectType {
         case .bookstoreType:
-            tableView.register(HomeSearchCell.self, forCellReuseIdentifier: HomeSearchCell.identifier)
-            tableView.rowHeight = HomeSearchCell.rowHeight
+            tableView.register(SearchCell.self, forCellReuseIdentifier: SearchCell.identifier)
+            tableView.rowHeight = SearchCell.rowHeight
             
         case .curationType:
             tableView.register(CurationListCell.self, forCellReuseIdentifier: CurationListCell.identifier)
@@ -167,7 +167,7 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch searchObjectType {
         case .bookstoreType:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchCell.identifier, for: indexPath) as? HomeSearchCell else { return UITableViewCell() }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchCell.identifier, for: indexPath) as? SearchCell else { return UITableViewCell() }
             
             cell.bookstore = filteredItems[indexPath.row] as? Bookstore
             

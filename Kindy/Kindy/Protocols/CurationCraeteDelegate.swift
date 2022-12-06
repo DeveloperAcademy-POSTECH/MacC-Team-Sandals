@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 protocol CurationCreateDelegate: AnyObject {
     func textFieldEndEditing()
     func openImagePickerForMainImage()

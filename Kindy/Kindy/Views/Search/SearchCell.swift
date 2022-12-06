@@ -1,5 +1,5 @@
 //
-//  HomeSearchCell.swift
+//  SearchCell.swift
 //  Kindy
 //
 //  Created by Park Kangwook on 2022/10/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class HomeSearchCell: UITableViewCell {
+final class SearchCell: UITableViewCell {
 
     static let rowHeight: CGFloat = 96
     
