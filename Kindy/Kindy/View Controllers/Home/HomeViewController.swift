@@ -127,6 +127,7 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func handleRefreshControl() {
+        updateCurations()
         updateBookstores()
         collectionView.refreshControl?.endRefreshing()
     }
