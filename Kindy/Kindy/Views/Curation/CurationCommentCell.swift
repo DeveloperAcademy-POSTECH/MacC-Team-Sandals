@@ -74,6 +74,13 @@ final class CurationCommentCell: UICollectionViewCell {
         view.addTarget(self, action: #selector(presentReportView), for: .touchUpInside)
         return view
     }()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        userLabel.text = nil
+        descriptionLabel.text = nil
+        dateLabel.text = nil
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
