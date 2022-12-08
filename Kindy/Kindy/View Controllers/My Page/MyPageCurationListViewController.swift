@@ -176,7 +176,8 @@ final class MyPageCurationListViewController: UIViewController {
     
     // MARK: Actions
     @objc func writeCurationButtonTapped() {
-        print("DEBUG: TO WRITE")
+        // 큐레이션 리스트 탭바 페이지로 이동
+        tabBarController?.selectedIndex = 1
     }
     
     @objc func readCurationsButtonTapped() {
