@@ -40,7 +40,7 @@ final class CurationButtonItemView: UIView {
     private lazy var heartCount: Int = curation?.likes.count ?? 0
     private var commentCount: Int {
         get {
-            if let count = curation?.comments?.count {
+            if let count = curation?.commentCount {
                 return count
             } else {
                 return 0

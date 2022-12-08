@@ -20,6 +20,7 @@ final class CurationViewController: UIViewController {
     private var commentManager = CommentRequest()
     
     private var curation: Curation
+    private var comments: [Comment]?
     weak var delegate: SetSheetDefault?
     
     private var setNeedsFetchCuration: Bool = false
@@ -37,7 +38,7 @@ final class CurationViewController: UIViewController {
     private var currentLongPressedCell: UICollectionViewCell?
     
     private lazy var cellCount: Int = curation.descriptions.count
-    private lazy var replyCount: Int = curation.comments?.count ?? 0
+    private lazy var replyCount: Int = comments?.count ?? 0
     
     private let userManager = UserManager()
     private let curationManager = CurationRequest()
@@ -106,21 +107,23 @@ final class CurationViewController: UIViewController {
         commentListener = commentManager.update(curationID: curation.id, completion: { querySnapshot, error in
             
             if self.isFirstShowingView {
-                self.curation.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
-                self.afterFetchComment()
-                self.isFirstShowingView = false
+                self.commentTask = Task {
+                    self.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
+                    self.afterFetchComment()
+                    self.isFirstShowingView = false
+                }
                 return
             }
             
             querySnapshot?.documentChanges.forEach { diff in
                 if (diff.type == .added) {
-                    try? self.curation.comments?.append(diff.document.data(as: Comment.self))
+                    try? self.comments?.append(diff.document.data(as: Comment.self))
                 }
                 if (diff.type == .modified) {
                     print("Modified : \(diff.document.data())")
                 }
                 if (diff.type == .removed) {
-                    self.curation.comments = self.curation.comments?.filter { comment in
+                    self.comments = self.comments?.filter { comment in
                         try! comment.id != diff.document.data(as: Comment.self).id
                     }
                 }
@@ -196,19 +199,19 @@ final class CurationViewController: UIViewController {
     
     private func afterFetchComment() {
         userNameTask = Task {
-            self.curation.comments?.sort(by: { first, second in
+            self.comments?.sort(by: { first, second in
                 first.createdAt < second.createdAt
             })
             
             var index = 0
-            for comment in self.curation.comments ?? [] {
+            for comment in self.comments ?? [] {
                 if comment.userNickname == nil {
-                    self.curation.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
+                    self.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
                 }
                 index += 1
             }
             
-            self.replyCount = self.curation.comments?.count ?? 0
+            self.replyCount = self.comments?.count ?? 0
             self.changeReplyCount()
             self.collectionView.reloadData()
         }
@@ -282,8 +285,11 @@ extension CurationViewController: UICollectionViewDataSource {
         if indexPath.item != replyCount {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentCell.identifier, for: indexPath) as? CurationCommentCell else { return UICollectionViewCell() }
             
-            cell.userLabel.text = curation.comments?[indexPath.item].userNickname
-            cell.configure(data: curation.comments![indexPath.item])
+            guard let comments = comments else { return UICollectionViewCell() }
+            
+            cell.userLabel.text = comments[indexPath.item].userNickname
+            cell.configure(data: comments[indexPath.item])
+            
             return cell
         }
         else {
@@ -420,16 +426,17 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                     if let cell = self.currentLongPressedCell  {
                         cell.transform = .init(scaleX: 1, y: 1)
                         if cell == collectionView.cellForItem(at: indexPath) as? CurationCommentCell {
-                            if self.userID == self.curation.comments![indexPath.row].userID {
+                            if self.userID == self.comments?[indexPath.row].userID {
                                 let alertController = UIAlertController(title: nil, message: "삭제하시겠습니까?", preferredStyle: .alert)
                                 
                                 let okAction = UIAlertAction(title: "확인", style: .default) { _ in
                                     self.curationRequestTask = Task {
                                         self.curation.commentCount -= 1
                                         let tempCuration = self.curation
+                                        guard let tempComments = self.comments else { return }
                                         self.isDeleteComment = true
                                         
-                                        try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempCuration.comments![indexPath.row].id, count: tempCuration.commentCount)
+                                        try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempComments[indexPath.row].id, count: tempCuration.commentCount)
                                         try? await self.userManager.deleteCommentedCurationIfNeeded(userID: self.userID, curationID: tempCuration.id)
                                     }
                                 }

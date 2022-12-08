@@ -19,7 +19,6 @@ struct Curation {
     var headText: String
     var descriptions: [Description]
     var likes: [String]
-    var comments: [Comment]?
     var commentCount: Int
 }
 
