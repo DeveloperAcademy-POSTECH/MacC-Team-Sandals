@@ -21,6 +21,8 @@ final class MyPageCurationListViewController: UIViewController {
     private var imageRequestTask: Task<Void, Never>?
     private var userRequestTask: Task<Void, Never>?
     
+    private let activityIndicatorView = ActivityIndicatorView()
+    
     var previousSelectedCell: PreviousSelectedCell = .myCuration
     
     private let writingTableView: UITableView = {
@@ -41,6 +43,7 @@ final class MyPageCurationListViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         setupUI()
+        configureActivityIndicatorView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,6 +78,11 @@ final class MyPageCurationListViewController: UIViewController {
         ])
     }
     
+    private func configureActivityIndicatorView() {
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.center = view.center
+    }
+    
     private func setupNavigationBar() {
         navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = UIColor.black
@@ -96,6 +104,7 @@ final class MyPageCurationListViewController: UIViewController {
         curationsRequestTask?.cancel()
         
         curationsRequestTask = Task {
+            activityIndicatorView.startAnimating()
             switch previousSelectedCell {
             case .myCuration:
                 if let curations = try? await UserManager().fetchMyCurations(userID: userID) {
@@ -118,6 +127,7 @@ final class MyPageCurationListViewController: UIViewController {
                     setupNoWritingView()
                 }
             }
+            activityIndicatorView.stopAnimating()
             curationsRequestTask = nil
         }
     }
@@ -176,7 +186,8 @@ final class MyPageCurationListViewController: UIViewController {
     
     // MARK: Actions
     @objc func writeCurationButtonTapped() {
-        print("DEBUG: TO WRITE")
+        // 큐레이션 리스트 탭바 페이지로 이동
+        tabBarController?.selectedIndex = 1
     }
     
     @objc func readCurationsButtonTapped() {
