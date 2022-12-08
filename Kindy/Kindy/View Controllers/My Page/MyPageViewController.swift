@@ -6,13 +6,14 @@
 //
 import UIKit
 
-// TODO: 들어올 때 로딩뷰 뜨면 좋을듯
 final class MyPageViewController: UIViewController {
     
     // MARK: Properties
     private let userManager = UserManager()
     private var userRequestTask: Task<Void, Never>?
     private var bookstoresRequestTask: Task<Void, Never>?
+    
+    private let activityIndicatorView = ActivityIndicatorView()
     
     private let loginCellLabels: [[String]] = [["독립서점 제보하기", "의견 보내기"],
                                           ["이용약관", "개인정보 처리방침", "오픈소스 라이선스"],
@@ -49,6 +50,7 @@ final class MyPageViewController: UIViewController {
         setupTableView()
         setupUI()
         setupAddTarget()
+        configureActivityIndicatorView()
     }
             
     override func viewWillAppear(_ animated: Bool) {
@@ -112,9 +114,15 @@ final class MyPageViewController: UIViewController {
         tryLoginContainerView.signInButton.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
     }
     
+    private func configureActivityIndicatorView() {
+        tableView.addSubview(activityIndicatorView)
+        activityIndicatorView.center = view.center
+    }
+    
     private func updateUserData() {
         userRequestTask?.cancel()
         bookstoresRequestTask?.cancel()
+        activityIndicatorView.startAnimating()
         
         // 로그인 검사
         switch userManager.isLoggedIn() {
@@ -141,6 +149,8 @@ final class MyPageViewController: UIViewController {
         case false:
             self.user = nil
         }
+        
+        activityIndicatorView.stopAnimating()
     }
     
     private func updateMyPageViewWithUserInfo() {

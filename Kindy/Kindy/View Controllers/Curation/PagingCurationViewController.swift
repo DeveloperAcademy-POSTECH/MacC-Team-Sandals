@@ -31,6 +31,8 @@ final class PagingCurationViewController: UIViewController {
     
     private var images: [UIImage] = []
     
+    private let activityIndicatorView = ActivityIndicatorView()
+    
     init(curation: Curation) {
         self.curation = curation
         super.init(nibName: nil, bundle: nil)
@@ -54,6 +56,7 @@ final class PagingCurationViewController: UIViewController {
     private lazy var dimmingView: UIView = {
         let view = UIView()
         view.backgroundColor = .kindyLightGray
+        view.layer.zPosition = 999
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -64,13 +67,14 @@ final class PagingCurationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
         configureUI()
         navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        activityIndicatorView.layer.zPosition = 999
+        activityIndicatorView.startAnimating()
         
         self.imageRequestTask = Task {
             if let mainImage = try? await ImageCache.shared.load(curation.mainImage) {
@@ -114,22 +118,19 @@ final class PagingCurationViewController: UIViewController {
             bottomVC.delegate = self
             bottomVC.popDelegate = self
             bottomVC.changeHeaderViewDelegate = self
+            self.present(bottomVC, animated: false)
             
             dimmingView.alpha = 1
-            self.present(bottomVC, animated: false)
             bottomVC.view.alpha = 0
             self.headerView.alpha = 0
-            
+
             self.view.backgroundColor = .kindyLightGray
-            self.dimmingView.alpha = 0
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                UIView.animate(withDuration: 0.25) {
-                    bottomVC.view.alpha = 1
-                }
-                UIView.animate(withDuration: 0.3, delay: 0.05) {
-                    self.headerView.alpha = 1
-                }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.dimmingView.alpha = 0
+                bottomVC.view.alpha = 1
+                self.headerView.alpha = 1
+                self.activityIndicatorView.stopAnimating()
             }
             imageRequestTask = nil
         }
@@ -138,6 +139,9 @@ final class PagingCurationViewController: UIViewController {
     private func configureUI() {
         view.addSubview(headerView)
         view.addSubview(dimmingView)
+        view.addSubview(activityIndicatorView)
+        
+        activityIndicatorView.center = view.center
         
         headerViewHeightConstraint = headerView.heightAnchor.constraint(equalToConstant: screenHeight * 0.65)
         headerViewHeightConstant = headerViewHeightConstraint.constant
@@ -170,6 +174,11 @@ final class PagingCurationViewController: UIViewController {
             let bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: view.bounds.height)
             gradientLayer.frame = bounds
         }
+    }
+    
+    private func configureActivityIndicatorView() {
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.center = view.center
     }
 }
 

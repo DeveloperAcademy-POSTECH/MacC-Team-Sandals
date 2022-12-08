@@ -106,7 +106,7 @@ extension HomeViewController: CLLocationManagerDelegate {
             sortedBookstores[i].distance = Int(myLocation.distance(from: CLLocationCoordinate2D(latitude: sortedBookstores[i].location.latitude, longitude: sortedBookstores[i].location.longitude)))
         }
         
-        sortedBookstores = sortedBookstores.filter { $0.distance < 10000 }.sorted { $0.distance < $1.distance }
+        sortedBookstores = sortedBookstores.filter { $0.distance < 15000 }.sorted { $0.distance < $1.distance }
         
         if showOnlyThreeItems {
             return Array(sortedBookstores.prefix(3))
