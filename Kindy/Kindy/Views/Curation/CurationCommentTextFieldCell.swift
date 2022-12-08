@@ -22,6 +22,10 @@ final class CurationCommentTextFieldCell: UICollectionViewCell {
     
     private var commentTask: Task<Void, Never>?
 
+    private var isLoggedIn: Bool {
+        return UserManager().isLoggedIn()
+    }
+
     private var enableButton: Bool {
         didSet {
             if enableButton {
@@ -112,9 +116,14 @@ final class CurationCommentTextFieldCell: UICollectionViewCell {
     @objc private func submitComment() {
         commentTask = Task {
             if self.enableButton {
-                delegate?.postComment(content: bottomTextFieldView.text!)
-                bottomTextFieldView.text = nil
-                self.enableButton = false
+                if isLoggedIn {
+                    delegate?.postComment(content: bottomTextFieldView.text!)
+                    bottomTextFieldView.text = nil
+                    self.enableButton = false
+                }
+                else {
+                    NotificationCenter.default.post(name: .Loggin, object: nil)
+                }
             }
         }
     }
