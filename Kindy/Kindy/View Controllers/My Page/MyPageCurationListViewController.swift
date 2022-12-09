@@ -235,7 +235,7 @@ extension MyPageCurationListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let curationVC = PagingCurationViewController(curation: curations[indexPath.row])
-        curationVC.modalPresentationStyle = .overFullScreen
+        curationVC.modalPresentationStyle = .fullScreen
         curationVC.modalTransitionStyle = .crossDissolve
         present(curationVC, animated: true)
         
