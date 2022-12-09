@@ -134,7 +134,9 @@ extension UserManager {
     // 댓글 삭제시 해당 큐레이션에서 자신의 댓글이 0개가 되면, 유저 필드의 commentedCurations에서 해당 큐레이션 id를 제거
     func deleteCommentedCurationIfNeeded(userID: String, curationID: String) async throws {
         let querySnapshot = try await db.collection(CollectionPath.curations).document(curationID).collection(CollectionPath.comments).whereField("userID", isEqualTo: userID).getDocuments()
-        let myComments = try querySnapshot.documents.map { try $0.data(as: Comment.self) }
+        let myComments = querySnapshot.documents.compactMap { comment in
+            try? comment.data(as: Comment.self)
+        }
         
         switch myComments.count {
         case 1:

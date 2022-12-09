@@ -436,8 +436,8 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                         guard let tempComments = self.comments else { return }
                                         self.isDeleteComment = true
                                         
-                                        try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempComments[indexPath.row].id, count: tempCuration.commentCount)
                                         try? await self.userManager.deleteCommentedCurationIfNeeded(userID: self.userID, curationID: tempCuration.id)
+                                        try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempComments[indexPath.row].id, count: tempCuration.commentCount)
                                     }
                                 }
                                 let cancelAction = UIAlertAction(title: "취소", style: .default)
