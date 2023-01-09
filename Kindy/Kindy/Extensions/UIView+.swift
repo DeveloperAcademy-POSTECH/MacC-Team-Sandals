@@ -1,10 +1,3 @@
-//
-//  UIView+.swift
-//  Kindy
-//
-//  Created by Park Kangwook on 2022/10/27.
-//
-
 import UIKit
 
 extension UIView {
@@ -21,6 +14,6 @@ extension UIView {
 
 extension UIView {
     var screenHeight: CGFloat {
-        return UIScreen.main.bounds.height
+        UIScreen.main.bounds.height
     }
 }

@@ -74,7 +74,7 @@ final class CurationDetailCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 326),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
     }
 
@@ -89,7 +89,7 @@ final class CurationDetailCell: UICollectionViewCell {
             lineView.bottomAnchor.constraint(equalTo: bottomAnchor),
             lineView.heightAnchor.constraint(equalToConstant: 4),
             lineView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            lineView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            lineView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
 

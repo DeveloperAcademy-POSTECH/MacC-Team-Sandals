@@ -46,7 +46,7 @@ final class CurationHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func configureUI(){
+    private func configureUI() {
         self.addSubview(imageView)
         self.addSubview(titleLabel)
         self.addSubview(subtitleLabel)

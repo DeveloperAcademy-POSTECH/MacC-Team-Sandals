@@ -1,10 +1,3 @@
-//
-//  BarAppearanceDelegate.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/12/02.
-//
-
 import UIKit
 
 protocol BarAppearanceDelegate: TabBarAppearanceDelegate, NavBarAppearanceDelegate { }
@@ -28,7 +21,7 @@ extension NavBarAppearanceDelegate {
     func configureNavBarAppearance(title: String = "") {
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.backgroundColor = .white
-        
+
         navigationController?.navigationBar.topItem?.title = title
         navigationController?.navigationBar.standardAppearance = navBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance

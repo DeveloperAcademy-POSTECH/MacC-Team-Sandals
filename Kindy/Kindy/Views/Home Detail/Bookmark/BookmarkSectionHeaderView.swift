@@ -8,7 +8,7 @@
 import UIKit
 
 class BookmarkSectionHeaderView: UICollectionReusableView {
-    
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.footnote
@@ -16,13 +16,13 @@ class BookmarkSectionHeaderView: UICollectionReusableView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupTitleLabel()
-        
+
     }
-    
+
     private func setupTitleLabel() {
         addSubview(titleLabel)
         NSLayoutConstraint.activate([
@@ -30,13 +30,13 @@ class BookmarkSectionHeaderView: UICollectionReusableView {
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         ])
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     func setTitle(_ count: Int) {
         titleLabel.text = "총 \(count)개"
     }
-        
+
 }

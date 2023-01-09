@@ -22,7 +22,7 @@ final class CurationTextCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     private lazy var textView: UITextView = {
         let view = UITextView()
         view.textColor = .black
@@ -56,11 +56,11 @@ final class CurationTextCell: UICollectionViewCell {
         let maxSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         let heightOnFont = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
 
-        viewSize = NSString(string: textView.text!).boundingRect(with: maxSize,options: heightOnFont, attributes: [.font: UIFont.body2!], context: nil)
-        
+        viewSize = NSString(string: textView.text!).boundingRect(with: maxSize, options: heightOnFont, attributes: [.font: UIFont.body2!], context: nil)
+
         viewSize.size.width = UIScreen.main.bounds.width
         viewSize.size.height += 80
-        
+
         layoutAttributes.frame = viewSize
         return layoutAttributes
     }
@@ -76,9 +76,9 @@ final class CurationTextCell: UICollectionViewCell {
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            
+
             textView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor), 
+            textView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
 
 //            dividerView.leadingAnchor.constraint(equalTo: leadingAnchor),
 //            dividerView.trailingAnchor.constraint(equalTo: trailingAnchor),

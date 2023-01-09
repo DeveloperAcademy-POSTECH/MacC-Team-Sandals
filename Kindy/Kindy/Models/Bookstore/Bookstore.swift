@@ -1,10 +1,3 @@
-//
-//  BookStore.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/10/18.
-//
-
 import Foundation
 
 struct Bookstore {
@@ -29,10 +22,10 @@ extension Bookstore {
         businessHour: BusinessHour(),
         location: Location(latitude: 37.33, longitude: 126.59)
     )
-    
+
     // 짧은 주소
     var shortAddress: String {
-        return address.components(separatedBy: " ")[0] + " " + address.components(separatedBy: " ")[1]
+        address.components(separatedBy: " ")[0] + " " + address.components(separatedBy: " ")[1]
     }
 }
 
@@ -41,4 +34,3 @@ extension Bookstore: Codable { }
 extension Bookstore: Hashable { }
 
 extension Bookstore: Identifiable { }
-

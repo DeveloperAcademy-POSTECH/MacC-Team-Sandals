@@ -1,17 +1,8 @@
-//
-//  UILabel+.swift
-//  Kindy
-//
-//  Created by WooriJoon on 2022/10/22.
-//
-
 import UIKit
 
 // UILabel의 행간격 조절 메소드 추가
 extension UILabel {
-
     func setLineSpacing(lineSpacing: CGFloat = 0.0, lineHeightMultiple: CGFloat = 0.0) {
-
         guard let labelText = self.text else { return }
 
         let paragraphStyle = NSMutableParagraphStyle()
@@ -26,7 +17,7 @@ extension UILabel {
         }
 
         // (Swift 4.2 and above) Line spacing attribute
-        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attributedString.length))
+        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
 
         self.attributedText = attributedString
     }

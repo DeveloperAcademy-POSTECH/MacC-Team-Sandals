@@ -14,18 +14,17 @@ import AuthenticationServices
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-
 final class SignInViewController: UIViewController {
-    
+
     fileprivate var currentNonce: String?
-    
+
     private let signInView: SignInView = SignInView()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
-    
+
     private func setupUI() {
         self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationItem.title = "로그인"
@@ -39,11 +38,10 @@ final class SignInViewController: UIViewController {
             signInView.topAnchor.constraint(equalTo: view.topAnchor),
             signInView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             signInView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            signInView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            signInView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-    
-    
+
     // MARK: Google SignIn Button Action
     @objc private func googleSignIn() {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
@@ -59,7 +57,7 @@ final class SignInViewController: UIViewController {
             }
 
             guard let authentication = user?.authentication, let idToken = authentication.idToken else { return }
-            
+
             let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
             Task {
                 if try await UserManager().isExistingUser(user?.profile?.email, "google") {
@@ -93,11 +91,11 @@ final class SignInViewController: UIViewController {
             }
         }
     }
-    
+
     // MARK: Apple SignIn Button Action
     @available(iOS 13, *)
     @objc func startSignInWithAppleFlow() {
-      //난수 생성
+      // 난수 생성
       let nonce = randomNonceString()
       currentNonce = nonce
       let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -121,13 +119,13 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
     }
-    
+
     // Adapted from https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce
     // MARK: 난수 생성
     private func randomNonceString(length: Int = 32) -> String {
-        
+
         precondition(length > 0)
-        
+
         let charset: [Character] = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         var result = ""
         var remainingLength = length
@@ -154,14 +152,14 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
         }
         return result
     }
-    
+
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
         let hashString = hashedData.compactMap { String(format: "%02x", $0) }.joined()
         return hashString
     }
-    
+
     // MARK: 실제 로그인 작동하는 로직
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
@@ -184,8 +182,8 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
                                 idToken: idTokenString,
                                 rawNonce: nonce)
             // Sign in with Firebase.
-            let checkEmail: String = self.decode(jwt:idTokenString) ?? ""
-            Task{
+            let checkEmail: String = self.decode(jwt: idTokenString) ?? ""
+            Task {
                 if try await UserManager().isExistingUser(checkEmail, "apple") {
                     Auth.auth().signIn(with: credential) { [weak self] result, error in
                         guard let self = self else { return }
@@ -209,7 +207,7 @@ extension SignInViewController: ASAuthorizationControllerDelegate, ASAuthorizati
                     let vc = SignUpViewController()
                     vc.credential = credential
                     vc.provider = "apple"
-                    vc.email = self.decode(jwt:idTokenString) ?? ""
+                    vc.email = self.decode(jwt: idTokenString) ?? ""
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
@@ -294,18 +292,16 @@ extension SignInViewController {
         } catch {
             return nil
         }
-        
-        
-    }
-    
-}
 
+    }
+
+}
 
 extension SignInViewController: SignInDelegate {
     func googleSignInMethod() {
         googleSignIn()
     }
-    
+
     func appleSignInMethod() {
         startSignInWithAppleFlow()
     }

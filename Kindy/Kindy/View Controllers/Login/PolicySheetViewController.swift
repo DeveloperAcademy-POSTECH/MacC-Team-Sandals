@@ -8,39 +8,37 @@
 import UIKit
 
 final class PolicySheetViewController: UIViewController {
-    
-    private var labelTitle:String = ""
+
+    private var labelTitle: String = ""
     var fromMyPage: Bool = false
-    
+
     let privacy = Privacy()
-    
+
     private let xButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
         button.tintColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    } ()
-    
+    }()
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    } ()
-    
+    }()
+
     private let contentText: UITextView = {
         let label = UITextView()
         label.font = UIFont.footnote
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    } ()
-    
-    
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = .white
         if fromMyPage {
             self.navigationItem.title = labelTitle
@@ -50,11 +48,11 @@ final class PolicySheetViewController: UIViewController {
             setupLabel()
             setupXButton()
         }
-        
+
         setupContentLabel()
         // Do any additional setup after loading the view.
     }
-    
+
     func setupXButton() {
         xButton.addTarget(self, action: #selector(closeAction), for: .touchUpInside)
         view.addSubview(xButton)
@@ -62,10 +60,10 @@ final class PolicySheetViewController: UIViewController {
             xButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             xButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             xButton.widthAnchor.constraint(equalToConstant: 20),
-            xButton.heightAnchor.constraint(equalToConstant: 20),
+            xButton.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
-    
+
     func setupLabel () {
         view.addSubview(titleLabel)
         let newSize = titleLabel.sizeThatFits( CGSize(width: titleLabel.frame.width, height: CGFloat.greatestFiniteMagnitude))
@@ -73,10 +71,10 @@ final class PolicySheetViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.widthAnchor.constraint(equalToConstant: newSize.width),
-            titleLabel.heightAnchor.constraint(equalToConstant: 22),
+            titleLabel.heightAnchor.constraint(equalToConstant: 22)
         ])
     }
-    
+
     func setupContentLabel() {
         switch labelTitle {
         case "회원가입 및 운영 약관 동의":
@@ -116,14 +114,14 @@ final class PolicySheetViewController: UIViewController {
                 contentText.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
         }
-        
+
     }
 
     func setupLabelTitle(_ title: String) {
         self.labelTitle = title
         titleLabel.text = title
     }
-    
+
     @objc func closeAction() {
         self.dismiss(animated: true)
     }

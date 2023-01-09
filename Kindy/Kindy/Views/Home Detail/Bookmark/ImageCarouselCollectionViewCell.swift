@@ -8,24 +8,24 @@
 import UIKit
 
 class ImageCarouselCollectionViewCell: UICollectionViewCell {
-    
-    private lazy var imageView:UIImageView = {
+
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(imageView)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     func setupUI() {
         let imageViewConstraint = [
             imageView.topAnchor.constraint(equalTo: topAnchor),
@@ -35,10 +35,8 @@ class ImageCarouselCollectionViewCell: UICollectionViewCell {
         ]
         NSLayoutConstraint.activate(imageViewConstraint)
     }
-    
+
     public func configureCell(image: UIImage) {
         imageView.image = image
     }
 }
-
-

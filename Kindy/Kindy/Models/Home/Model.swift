@@ -1,18 +1,11 @@
-//
-//  Model.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/11/06.
-//
-
 import Foundation
 
 struct Model {
     var curations = [Curation]()
     var bookstores = [Bookstore]()
-    
+
     var curation = [ViewModel.Item]()
-    
+
     var featuredBookstores = [ViewModel.Item]()
     var nearbyBookstores = [ViewModel.Item]()
     var bookmarkedBookstores = [ViewModel.Item]()
