@@ -20,7 +20,7 @@ extension HomeViewController {
                 self.imagesTask = nil
             }
         }
-        
+
         let bookstoreCellRegistration = UICollectionView.CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, indexPath, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
             
