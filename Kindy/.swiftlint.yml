@@ -74,7 +74,7 @@ opt_in_rules:
     - yoda_condition
 
 # 사용자 설정 규칙
-line_length: 100
+line_length: 110
     
 file_length:
     warning: 500
