@@ -1,13 +1,15 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/103024858/204984536-5c31b60b-bf70-4e15-b353-5c7de275befe.svg" width="2000" height="300"></p>
 <br/>
 
-# Kindy
-### [내 손 안의 독립서점, 킨디]
-> 킨디는 큐레이션과 독립서점(인디 서점) 을 합친 말로, 독립서점과 독자, 그리고 작가까지 연결해주는 독립서점 플랫폼입니다.
-> 킨디에서 흩어져있던 정보를 간편하게 찾고, 다양한 서점을 만나보세요!
+# 킨디
+킨디는 큐레이션과 독립서점(인디 서점) 을 합친 말로, 독립서점과 독자 그리고 작가까지 연결해주는 독립서점 플랫폼입니다.  
+킨디에서 흩어져있던 정보를 간편하게 찾고, 다양한 서점을 만나보세요!
+
+![License](https://img.shields.io/badge/License-MIT-yellowgreen) 
+- [킨디를 만든 팀 샌들즈 소개](https://coffee-beaufort-369.notion.site/b92f3203c7b8402bb3987790c04d4e4d)
+- [킨디 스타일 가이드](https://forest-ocean-bbc.notion.site/ver-1-0-1-e5aba08128de4571a006d84bf3716f2f)
 
 <br/>
-
 
 ## 🎆 Preview
 |<img src="https://user-images.githubusercontent.com/103024858/204985074-6d20aff1-e889-4cc3-8cfe-ffbb1c0a8c3c.svg" width="300" height="500">|<img src="https://user-images.githubusercontent.com/103024858/204985090-33f6a6b7-ca92-4fa6-866b-5455fb7e7870.svg" width="300" height="500">|<img src="https://user-images.githubusercontent.com/103024858/204985096-3f6efb21-4479-4eb9-b5a6-ba906c41b9e9.svg" width="300" height="500">|
@@ -16,6 +18,8 @@
 <br/>
 
 ## 👥 Contributors
+킨디를 만든 팀 샌들즈를 소개합니다!
+
 ### 디자이너
 |<img src="https://user-images.githubusercontent.com/103024858/204976384-68bbf947-03a8-4714-927b-7c25318145bc.jpeg" width="125" height="150">|<img src="https://user-images.githubusercontent.com/103024858/204976471-7df8df7b-8a39-46ce-9ba3-81c35228f43c.jpg" width="125" height="150">|
 |:-:|:-:|
@@ -73,6 +77,3 @@
 | [전윤준(Joon)](https://github.com/WooriJoon) - kpl88@naver.com |
 | [정호윤(Stem)](https://github.com/stemmmm) - jhy9094@gmail.com |
 <br/>
-
-## License
-![License](https://img.shields.io/badge/License-MIT-yellowgreen)
