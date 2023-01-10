@@ -1,5 +1,6 @@
 import Foundation
 
+/// 서점의 영업 시간.
 struct BusinessHour {
     var monday: String?
     var tuesday: String?

@@ -1,5 +1,6 @@
 import Foundation
 
+/// 서점.
 struct Bookstore {
     var id: String = UUID().uuidString
     let images: [String]?
@@ -9,7 +10,9 @@ struct Bookstore {
     let contact: Contact
     let businessHour: BusinessHour
     let location: Location
-    var distance: Int = 0  // 내 주변 서점과 떨어진 거리(m)
+    
+    /// 나와 내 주변 서점과의 거리 (m).
+    var distance: Int = 0
 }
 
 extension Bookstore {
@@ -23,7 +26,7 @@ extension Bookstore {
         location: Location(latitude: 37.33, longitude: 126.59)
     )
 
-    // 짧은 주소
+    /// 서점 주소의 짧은 형태.
     var shortAddress: String {
         address.components(separatedBy: " ")[0] + " " + address.components(separatedBy: " ")[1]
     }
