@@ -13,11 +13,11 @@ extension CurationCreateViewController: UITableViewDelegate, UITableViewDataSour
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return descriptionImages.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationCreateDescriptionTableViewCell.identifier, for: indexPath) as? CurationCreateDescriptionTableViewCell else { return UITableViewCell() }
         if let content = curation.descriptions[indexPath.row].content {
@@ -27,11 +27,11 @@ extension CurationCreateViewController: UITableViewDelegate, UITableViewDataSour
         }
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 116
     }
-    
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 10
     }
@@ -45,18 +45,18 @@ extension CurationCreateViewController: UITextViewDelegate {
             if let text = textView.text, text == headTextViewPlaceHolder && textView.textColor == UIColor.kindyGray {
                 textView.text = nil
                 textView.textColor = .black
-                
+
             }
             self.offset = headTextView.frame.minY + headTextView.frame.size.height
         } else {
-            if let text = textView.text, text == descriptionTextViewPlaceHolder && textView.textColor == UIColor.kindyGray  {
+            if let text = textView.text, text == descriptionTextViewPlaceHolder && textView.textColor == UIColor.kindyGray {
                 textView.text = nil
                 textView.textColor = .black
             }
             self.offset = descriptionTableView.frame.minY + CGFloat((textView.tag + 1) * 116)
         }
     }
-    
+
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         switch textView.tag {
         case 99:
@@ -66,7 +66,7 @@ extension CurationCreateViewController: UITextViewDelegate {
         }
         return true
     }
-    
+
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             if textView.tag == 99 {
@@ -88,15 +88,14 @@ extension CurationCreateViewController: UITextViewDelegate {
     }
 }
 
-
 extension CurationCreateViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-        
+
         let itemProvider = results.first?.itemProvider
-        
+
         if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
-            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, _) in
                 guard let image = image as? UIImage else { return }
                 DispatchQueue.main.async {
                     switch self.imagePickerOpenSource {
@@ -123,7 +122,7 @@ extension CurationCreateViewController: PHPickerViewControllerDelegate {
             print("phpicker Error")
         }
     }
-    
+
     // 사진 권한
     func photoAuth(completion: @escaping () -> Void) {
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { (status) in
@@ -163,21 +162,20 @@ extension CurationCreateViewController: PHPickerViewControllerDelegate {
     }
 }
 
-
 extension CurationCreateViewController: CurationCreateDelegate {
-    
-    ///키보드 높이를 0으로 만들어 줌
+
+    /// 키보드 높이를 0으로 만들어 줌
     func textFieldEndEditing() {
         self.keyboardHeight = 0
     }
-    
+
     func openImagePickerForMainImage() {
         photoAuth {
             self.imagePickerOpenSource = "mainImage"
             self.presentPHPicker()
         }
     }
-    
+
     func selectCategory() {
         let actionSheet = UIAlertController(title: "*게시글의 카테고리를 선택해 주세요", message: nil, preferredStyle: .actionSheet)
         let bookstore = UIAlertAction(title: "서점", style: .default, handler: { _ in
@@ -194,7 +192,7 @@ extension CurationCreateViewController: CurationCreateDelegate {
         actionSheet.addAction(cancel)
         present(actionSheet, animated: true, completion: nil )
     }
-    
+
     func deleteItem(index: Int) {
         descriptionImages.remove(at: index)
         let deleteDescription = curation.descriptions.remove(at: index)
@@ -203,15 +201,15 @@ extension CurationCreateViewController: CurationCreateDelegate {
             deleteImageURL.append(deleteDescription.image ?? "")
         }
     }
-    
+
     func setupMainTitle(string: String) {
         self.curation.title = string
     }
-    
+
     func setupSubTitle(string: String) {
         self.curation.subTitle = string
     }
-    
+
     func addDescriptionButtonAction() {
         if descriptionImages.count < 10 {
             photoAuth {

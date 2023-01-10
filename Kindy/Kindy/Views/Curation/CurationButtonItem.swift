@@ -15,28 +15,28 @@ protocol ShowingMenu: AnyObject {
 }
 
 final class CurationButtonItemView: UIView {
-    
+
     enum Views {
         case heart
         case comment
         case setting
     }
-    
+
     weak var delegate: CommentButtonAction?
     weak var menuDelegate: ShowingMenu?
-    
+
     private var isLoggedIn: Bool = false
     private var userID: String = ""
-    
+
     private var userRequestTask: Task<Void, Never>?
     private var likeUpdateTask: Task<Void, Never>?
-    
+
     private var view: Views
     private var user: User?
-    
+
     private var curation: Curation?
     private let buttonImage: String
-    
+
     private lazy var heartCount: Int = curation?.likes.count ?? 0
     private var commentCount: Int {
         get {
@@ -47,7 +47,7 @@ final class CurationButtonItemView: UIView {
             }
         }
     }
-    
+
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .horizontal
@@ -56,19 +56,19 @@ final class CurationButtonItemView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     private lazy var buttonView: UIButton = {
         let view = UIButton()
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
         let image = UIImage(systemName: buttonImage, withConfiguration: imageConfig)
-        
+
         view.setImage(image, for: .normal)
         view.tintColor = .kindySecondaryGreen
-        
+
         view.addTarget(self, action: #selector(customAction), for: .touchUpInside)
         return view
     }()
-    
+
     private(set) lazy var countLabel: UILabel = {
         let view = UILabel()
         view.numberOfLines = 0
@@ -76,7 +76,7 @@ final class CurationButtonItemView: UIView {
         view.textColor = .black
         return view
     }()
-    
+
     init(frame: CGRect, curation: Curation? = nil, viewName: Views) {
         self.curation = curation
         switch viewName {
@@ -99,18 +99,18 @@ final class CurationButtonItemView: UIView {
         }
         setupUI()
         checkLiked()
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(setupUser(_:)), name: .LoggedIn, object: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     private func setupUI() {
         self.addSubview(stackView)
         stackView.addArrangedSubview(buttonView)
@@ -123,7 +123,7 @@ final class CurationButtonItemView: UIView {
             break
         }
 //        stackView.addArrangedSubview(countLabel)
-        
+
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -131,7 +131,7 @@ final class CurationButtonItemView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-    
+
     private func checkLiked() {
         switch view {
         case .heart:
@@ -158,7 +158,7 @@ final class CurationButtonItemView: UIView {
             return
         }
     }
-    
+
     @objc private func setupUser(_ notification: Notification) {
         checkLiked()
     }
@@ -176,7 +176,7 @@ private extension CurationButtonItemView {
                         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
                         let image = UIImage(systemName: "heart", withConfiguration: imageConfig)
                         buttonView.setImage(image, for: .normal)
-                        
+
                         curation.likes = curation.likes.filter { $0 != userID }
                         self.countLabel.text = String(curation.likes.count)
                         try? await CurationRequest().updateLike(curationID: curation.id, likes: curation.likes)
@@ -184,7 +184,7 @@ private extension CurationButtonItemView {
                         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
                         let image = UIImage(systemName: "heart.fill", withConfiguration: imageConfig)
                         buttonView.setImage(image, for: .normal)
-                        
+
                         curation.likes.append(userID)
                         self.countLabel.text = String(curation.likes.count)
                         try? await CurationRequest().updateLike(curationID: curation.id, likes: curation.likes)
@@ -202,4 +202,3 @@ private extension CurationButtonItemView {
         }
     }
 }
-

@@ -25,13 +25,13 @@ extension FirestoreManager {
         let curations = try querySnapshot.documents.map { try $0.data(as: Curation.self) }
         return curations
     }
-    
+
     // id로 큐레이션 fetch
     func fetchCuration(with id: String) async throws -> Curation {
         let curation = try await curations.document(id).getDocument(as: Curation.self)
         return curation
     }
-    
+
     // 큐레이션 추가
     func add(curation: Curation) throws {
         try curations.document(curation.id).setData(from: curation)
@@ -46,13 +46,13 @@ extension FirestoreManager {
         let bookstores = try querySnapshot.documents.map { try $0.data(as: Bookstore.self) }
         return bookstores
     }
-    
+
     // id로 서점 fetch
     func fetchBookstore(with id: String) async throws -> Bookstore {
         let bookstore = try await bookstores.document(id).getDocument(as: Bookstore.self)
         return bookstore
     }
-    
+
     // 서점 추가
     func add(bookstore: Bookstore) throws {
         try bookstores.document(bookstore.id).setData(from: bookstore)
@@ -66,13 +66,13 @@ extension FirestoreManager {
         let user = User(email: email, nickName: nickName, provider: "", bookmarkedBookstores: [])
         try users.document(user.email).setData(from: user)
     }
-    
+
     // 이메일로 유저 fetch
     func fetchUser(with email: String) async throws -> User {
         let user = try await users.document(email).getDocument(as: User.self)
         return user
     }
-    
+
     // 현재 로그인되어 있는 정보로 유저 데이터 fetch
     // MARK: 회원가입 로직 변경 후 수정 예정
     func fetchCurrentUser() async throws -> User {
@@ -82,23 +82,22 @@ extension FirestoreManager {
         let user = try await users.document(Auth.auth().currentUser?.uid ?? "").getDocument(as: User.self)
         return user
     }
-    
+
     // 이미 존재하는 닉네임 확인
     func isExistingNickname(_ nickName: String) async throws -> Bool {
-        let nickNames = try await FirestoreManager.db.collection("Users").getDocuments().documents.map{ $0.data() }.filter{ String(describing: $0["nickName"]!) == nickName }
+        let nickNames = try await FirestoreManager.db.collection("Users").getDocuments().documents.map { $0.data() }.filter { String(describing: $0["nickName"]!) == nickName }
         return !nickNames.isEmpty
     }
-    
+
     // 이미 가입한 유저인지 확인
     func isExistingUser(_ email: String?, _ provider: String) async throws -> Bool {
         if let email = email {
-            return try await !FirestoreManager.db.collection("Users").whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map{ $0.documentID }.isEmpty
+            return try await !FirestoreManager.db.collection("Users").whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments().documents.map { $0.documentID }.isEmpty
         } else {
             return false
         }
-        
+
     }
-    
 
     // 닉네임 수정
     func editNickname(_ newNickname: String) {
@@ -108,7 +107,7 @@ extension FirestoreManager {
 
     // 유저 삭제
     func deleteUser() {
-        users.document(Auth.auth().currentUser?.uid ?? "al").delete() { _ in
+        users.document(Auth.auth().currentUser?.uid ?? "al").delete { _ in
             Auth.auth().currentUser?.delete()
         }
     }
@@ -130,20 +129,20 @@ extension FirestoreManager {
         case imageDataMissing
         case couldNotInitializeFromData
     }
-    
+
     func fetchImage(with url: String?) async throws -> UIImage {
         let cachedKey = NSString(string: url ?? "")
         if let cachedImage = ImageCacheManager.shared.object(forKey: cachedKey) { return cachedImage }
-        
+
         guard let url = URL(string: url ?? "") else { throw ImageRequestError.invalidURL }
         let (data, response) = try await URLSession.shared.data(from: url)
-        
+
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw ImageRequestError.imageDataMissing }
-        
+
         guard let image = UIImage(data: data) else { throw ImageRequestError.couldNotInitializeFromData }
-        
+
         ImageCacheManager.shared.setObject(image, forKey: cachedKey)
-        
+
         return image
     }
 }
@@ -154,14 +153,14 @@ extension FirestoreManager {
     func isLoggedIn() -> Bool {
         return !(Auth.auth().currentUser == nil)
     }
-    
+
     func signOut() {
         do {
             try Auth.auth().signOut()
         } catch {
             print("fail Sign Out")
         }
-        
+
     }
 }
 
@@ -171,9 +170,9 @@ extension FirestoreManager {
     func updateBookmark(email: String, provider: String, bookmarkedBookstores: [String]) async throws {
         let querySnapshot = try await users.whereField("email", isEqualTo: email).whereField("provider", isEqualTo: provider).getDocuments()
         let document = querySnapshot.documents.first
-        try await document?.reference.updateData(["bookmarkedBookstores" : bookmarkedBookstores])
+        try await document?.reference.updateData(["bookmarkedBookstores": bookmarkedBookstores])
     }
-    
+
     // 유저가 가진 서점 id 값으로 북마크된 서점 fetch
     func fetchBookmarkedBookstores() async throws -> [Bookstore] {
         if isLoggedIn() {
@@ -182,7 +181,7 @@ extension FirestoreManager {
             for index in user.bookmarkedBookstores.indices {
                 bookmarkedBookstores.append(try await fetchBookstore(with: user.bookmarkedBookstores[index]))
             }
-            
+
             return bookmarkedBookstores
         } else {
             return []
@@ -196,7 +195,7 @@ extension FirestoreManager {
     func updateLike(bookstoreID: String, likes: [String]) async throws {
         let querySnapshot = try await curations.whereField("bookstoreID", isEqualTo: bookstoreID).getDocuments()
         let document = querySnapshot.documents.first
-        try await document?.reference.updateData(["likes" : likes])
+        try await document?.reference.updateData(["likes": likes])
     }
 
     // 큐레이션이 가진 좋아요 값으로 fetch

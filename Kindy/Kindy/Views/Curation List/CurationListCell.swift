@@ -8,29 +8,29 @@
 import UIKit
 
 final class CurationListCell: UITableViewCell {
-    
+
     static let rowHeight: CGFloat = 263     // Cell 길이
-    
+
     var curation: Curation? {
         didSet {
             configureCell(item: curation!, kinditor: kinditor ?? "")
         }
     }
-    
+
     var curationIsLiked: Bool = false {
         didSet {
             configureCell(item: curation!, kinditor: kinditor ?? "")
         }
     }
-    
+
     var kinditor: String? {
         didSet {
             configureCell(item: curation!, kinditor: kinditor ?? "" )
         }
     }
-    
+
     // MARK: - 프로퍼티
-    
+
     let photoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -41,26 +41,26 @@ final class CurationListCell: UITableViewCell {
 
         return view
     }()
-    
+
     private let titleLabelView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
         view.layer.backgroundColor = (UIColor.black.cgColor).copy(alpha: 0.4)
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return view
     }()
-    
+
     private let titleInfoStackView: UIStackView = {
         let view = UIStackView()
         view.alignment = .leading
         view.axis = .vertical
         view.spacing = 5
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return view
     }()
-    
+
     private let leftInfoStackView: UIStackView = {
         let view = UIStackView()
         view.alignment = .leading
@@ -70,7 +70,7 @@ final class CurationListCell: UITableViewCell {
 
         return view
     }()
-    
+
     private let rightInfoStackView: UIStackView = {
         let view = UIStackView()
         view.alignment = .trailing
@@ -86,28 +86,28 @@ final class CurationListCell: UITableViewCell {
         label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 20)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return label
     }()
-    
+
     private let subTitleLabel: UILabel = {
         let label = UILabel()
         label.font = .body1
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return label
     }()
-    
+
     private let categoryTypeLabel = {
         let label = UILabel()
         label.font = .footnote
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return label
     }()
-    
+
     private let likeLabel: UILabel = {
         let label = UILabel()
         label.font = .subhead
@@ -125,7 +125,7 @@ final class CurationListCell: UITableViewCell {
 
         return label
     }()
-    
+
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = .footnote
@@ -134,7 +134,7 @@ final class CurationListCell: UITableViewCell {
 
         return label
     }()
-    
+
     private let kinditorLabel: UILabel = {
         let label = UILabel()
         label.font = .footnote
@@ -143,9 +143,9 @@ final class CurationListCell: UITableViewCell {
 
         return label
     }()
-    
+
     // MARK: - 라이프 사이클
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -162,15 +162,15 @@ final class CurationListCell: UITableViewCell {
         photoImageView.image = nil
 //        nameLabel.text = nil
     }
-    
+
     // MARK: - 메소드
-    
+
     private func setup() {
-        [likeLabel, commentLabel].forEach{ leftInfoStackView.addArrangedSubview($0) }
-        [dateLabel, kinditorLabel].forEach{ rightInfoStackView.addArrangedSubview($0) }
-        [categoryTypeLabel, titleLabel, subTitleLabel].forEach{ titleInfoStackView.addArrangedSubview($0) }
+        [likeLabel, commentLabel].forEach { leftInfoStackView.addArrangedSubview($0) }
+        [dateLabel, kinditorLabel].forEach { rightInfoStackView.addArrangedSubview($0) }
+        [categoryTypeLabel, titleLabel, subTitleLabel].forEach { titleInfoStackView.addArrangedSubview($0) }
         titleLabelView.addSubview(titleInfoStackView)
-        [photoImageView, titleLabelView, leftInfoStackView, rightInfoStackView].forEach{ contentView.addSubview($0) }
+        [photoImageView, titleLabelView, leftInfoStackView, rightInfoStackView].forEach { contentView.addSubview($0) }
     }
 
     private func createLayout() {
@@ -179,19 +179,19 @@ final class CurationListCell: UITableViewCell {
             photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             photoImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             photoImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -54),
-            
+
             titleLabelView.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor),
             titleLabelView.topAnchor.constraint(equalTo: photoImageView.topAnchor),
             titleLabelView.trailingAnchor.constraint(equalTo: photoImageView.trailingAnchor),
             titleLabelView.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor),
-            
+
             titleInfoStackView.leadingAnchor.constraint(equalTo: titleLabelView.leadingAnchor, constant: 16),
             titleInfoStackView.topAnchor.constraint(equalTo: titleLabelView.topAnchor, constant: 97),
             titleInfoStackView.trailingAnchor.constraint(equalTo: titleLabelView.trailingAnchor, constant: -10),
 
             leftInfoStackView.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor, constant: 8),
             leftInfoStackView.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 16),
-            
+
             rightInfoStackView.trailingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: -8),
             rightInfoStackView.centerYAnchor.constraint(equalTo: leftInfoStackView.centerYAnchor)
         ])
@@ -202,44 +202,44 @@ final class CurationListCell: UITableViewCell {
         titleLabel.text = item.title
         subTitleLabel.text = item.subTitle
         categoryTypeLabel.text = item.category == "bookstore" ? "서점" : "도서"
-        
+
         // 좋아요 & 댓글 개수
         configureImageAndTextLabel(for: likeLabel, imageName: curationIsLiked ? "heart.fill" : "heart", text: item.likes.count)
         configureImageAndTextLabel(for: commentLabel, imageName: "bubble.left", text: item.commentCount)
-        
+
         // 날짜
         configureDateLabel(for: dateLabel, date: item.createdAt!)
-        
+
         // 킨디터
         configureKinditorLabel(for: kinditorLabel, kinditor: kinditor)
     }
-    
+
     private func configureImageAndTextLabel(for view: UILabel, imageName: String, text: Int) {
         let attributedString = NSMutableAttributedString(string: "")
-        
+
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = UIImage(systemName: imageName)?.withTintColor(.kindySecondaryGreen ?? UIColor())
-        
+
         attributedString.append(NSAttributedString(attachment: imageAttachment))
         attributedString.append(NSAttributedString(string: " \(text)"))
-        
+
         view.attributedText = attributedString
     }
-    
+
     private func configureDateLabel(for view: UILabel, date: Date) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
-        
+
         let dateText = dateFormatter.string(from: date)
         let todayDate = dateFormatter.string(from: Date())
-        
+
         view.text = dateText == todayDate ? "오늘" : dateText
     }
-    
+
     private func configureKinditorLabel(for view: UILabel, kinditor: String) {
-        let kinditorAttributedString = NSMutableAttributedString(string:"킨디터 \(kinditor)")
-        kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4,length: kinditor.count))
-        
+        let kinditorAttributedString = NSMutableAttributedString(string: "킨디터 \(kinditor)")
+        kinditorAttributedString.addAttribute(.font, value: UIFont(name: "AppleSDGothicNeo-Bold", size: 13), range: NSRange(location: 4, length: kinditor.count))
+
         view.attributedText = kinditorAttributedString
     }
 }

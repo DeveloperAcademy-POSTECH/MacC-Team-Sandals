@@ -89,6 +89,7 @@
 		77DCB193291A357E00EAB5D5 /* CurationListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB192291A357E00EAB5D5 /* CurationListCell.swift */; };
 		77DCB198291A706400EAB5D5 /* CurationListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCB197291A706400EAB5D5 /* CurationListHeaderView.swift */; };
 		7B10E564290B8FEA009F543B /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B10E563290B8FEA009F543B /* UIImage+.swift */; };
+		7B18282E296C0ECF00A8A9BE /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 7B18282D296C0ECF00A8A9BE /* .swiftlint.yml */; };
 		7B404C1328FE889200A24C89 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1228FE889200A24C89 /* UIColor+.swift */; };
 		7B404C1B28FE89BA00A24C89 /* Bookstore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1A28FE89BA00A24C89 /* Bookstore.swift */; };
 		7B404C1F28FE90B700A24C89 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B404C1E28FE90B700A24C89 /* ViewModel.swift */; };
@@ -214,6 +215,7 @@
 		77DCB192291A357E00EAB5D5 /* CurationListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationListCell.swift; sourceTree = "<group>"; };
 		77DCB197291A706400EAB5D5 /* CurationListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurationListHeaderView.swift; sourceTree = "<group>"; };
 		7B10E563290B8FEA009F543B /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
+		7B18282D296C0ECF00A8A9BE /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		7B404C1228FE889200A24C89 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		7B404C1A28FE89BA00A24C89 /* Bookstore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookstore.swift; sourceTree = "<group>"; };
 		7B404C1E28FE90B700A24C89 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 		6EE5E38E28FD313C00EA7413 = {
 			isa = PBXGroup;
 			children = (
+				7B18282D296C0ECF00A8A9BE /* .swiftlint.yml */,
 				6EE5E39928FD313C00EA7413 /* Kindy */,
 				6EE5E39828FD313C00EA7413 /* Products */,
 			);
@@ -722,6 +725,7 @@
 				6EE5E39328FD313C00EA7413 /* Sources */,
 				6EE5E39428FD313C00EA7413 /* Frameworks */,
 				6EE5E39528FD313C00EA7413 /* Resources */,
+				7B18282C296C0E4100A8A9BE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -783,6 +787,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B18282E296C0ECF00A8A9BE /* .swiftlint.yml in Resources */,
 				6EE5E3A728FD313D00EA7413 /* LaunchScreen.storyboard in Resources */,
 				7BEDC38E29090A0C002C21B6 /* GoogleService-Info.plist in Resources */,
 				6EE5E3A428FD313D00EA7413 /* Assets.xcassets in Resources */,
@@ -791,6 +796,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7B18282C296C0E4100A8A9BE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6EE5E39328FD313C00EA7413 /* Sources */ = {

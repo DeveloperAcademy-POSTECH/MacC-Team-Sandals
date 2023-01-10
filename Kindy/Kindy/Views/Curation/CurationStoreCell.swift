@@ -97,7 +97,7 @@ final class CurationStoreCell: UICollectionViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
 
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
         ])
     }
 

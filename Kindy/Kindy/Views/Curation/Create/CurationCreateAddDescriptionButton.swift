@@ -8,7 +8,7 @@
 import UIKit
 
 final class CurationCreateAddDescriptionButton: UIView {
-    
+
     weak var delegate: CurationCreateDelegate?
 
     private let addImageButton: UIButton = {
@@ -16,23 +16,23 @@ final class CurationCreateAddDescriptionButton: UIView {
         button.backgroundColor = UIColor.clear
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    } ()
-    
+    }()
+
     private let backGroundView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.kindyLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     private let addImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(systemName: "plus")
         view.tintColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     private let addLabel: UILabel = {
         let label = UILabel()
         label.text = "사진 추가"
@@ -40,8 +40,8 @@ final class CurationCreateAddDescriptionButton: UIView {
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    } ()
-    
+    }()
+
     private let stackView: UIStackView = {
         let view = UIStackView()
         view.distribution = .fill
@@ -50,31 +50,29 @@ final class CurationCreateAddDescriptionButton: UIView {
         view.alignment = .center
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
+    }()
 
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupBackGround()
         setupStackView()
         setupButton()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     private func setupBackGround() {
         addSubview(backGroundView)
         NSLayoutConstraint.activate([
             backGroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backGroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
             backGroundView.topAnchor.constraint(equalTo: topAnchor),
-            backGroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backGroundView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-    
-    
+
     private func setupButton() {
         addImageButton.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
         addSubview(addImageButton)
@@ -82,10 +80,10 @@ final class CurationCreateAddDescriptionButton: UIView {
             addImageButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             addImageButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             addImageButton.topAnchor.constraint(equalTo: topAnchor),
-            addImageButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+            addImageButton.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-    
+
     private func setupStackView() {
         stackView.addArrangedSubview(addImageView)
         stackView.addArrangedSubview(addLabel)
@@ -97,7 +95,7 @@ final class CurationCreateAddDescriptionButton: UIView {
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
-    
+
     @objc private func addButtonAction() {
         delegate?.addDescriptionButtonAction()
     }

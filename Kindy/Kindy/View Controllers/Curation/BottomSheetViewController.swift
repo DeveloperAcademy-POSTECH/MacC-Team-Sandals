@@ -53,8 +53,8 @@ final class BottomSheetViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = .white
         // TODO: 모달로 애니메이션을 준다면 cornerRadius 넣고 아니면 빼기
-        //view.layer.cornerRadius = 30
-        //view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        // view.layer.cornerRadius = 30
+        // view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

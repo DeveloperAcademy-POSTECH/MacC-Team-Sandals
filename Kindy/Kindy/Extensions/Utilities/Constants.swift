@@ -1,10 +1,3 @@
-//
-//  Constants.swift
-//  Kindy
-//
-//  Created by WooriJoon on 2022/11/17.
-//
-
 import Foundation
 
 let padding8: CGFloat = 8

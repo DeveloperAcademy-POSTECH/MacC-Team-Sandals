@@ -74,7 +74,7 @@ final class CurationCommentCell: UICollectionViewCell {
         view.addTarget(self, action: #selector(presentReportView), for: .touchUpInside)
         return view
     }()
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         userLabel.text = nil
@@ -115,7 +115,7 @@ final class CurationCommentCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             userLabel.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 16),
             descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
     }
 

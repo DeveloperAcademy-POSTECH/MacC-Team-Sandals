@@ -8,9 +8,9 @@
 import UIKit
 
 class BookmarkCollectionViewCell: UICollectionViewCell {
-    
+
     private var imageRequestTask: Task<Void, Never>?
-    
+
     private var bookstore: Bookstore?
     private var currentPage: Int = 0 {
         didSet {
@@ -18,9 +18,9 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         }
     }
     private var index: Int = -1
-    
+
     weak var delegate: BookmarkDelegate?
-    
+
     private let imageCarouselCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
         collectionView.showsHorizontalScrollIndicator =  false
@@ -31,7 +31,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
-    
+
     private let pageControl: UIPageControl = {
        let pageControl = UIPageControl()
         pageControl.pageIndicatorTintColor = .gray
@@ -39,7 +39,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
     }()
-    
+
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.tintColor = .black
@@ -47,7 +47,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let addressLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.kindyGray
@@ -56,7 +56,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     lazy var bookmarkButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "bookmark.fill"), for: .normal)
@@ -64,7 +64,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
      }()
-    
+
     private let labelStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -74,7 +74,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageCarouselCollectionView)
@@ -83,20 +83,20 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(bookmarkButton)
         layoutSubviews()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     override func layoutSubviews() {
         setupCollectionView()
         setupPageControlUI()
         setupButtonUI()
         setupLabelStackView()
-        
+
         addTarget()
     }
-    
+
     func setupCollectionView() {
         let height = (frame.width - 32) * 1.02793296
         imageCarouselCollectionView.register(ImageCarouselCollectionViewCell.self, forCellWithReuseIdentifier: ImageCarouselCollectionViewCell.identifier)
@@ -106,18 +106,18 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
             imageCarouselCollectionView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             imageCarouselCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             imageCarouselCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            imageCarouselCollectionView.heightAnchor.constraint(equalToConstant: height),
-            
+            imageCarouselCollectionView.heightAnchor.constraint(equalToConstant: height)
+
         ])
     }
-    
+
     func setupPageControlUI() {
         NSLayoutConstraint.activate([
             pageControl.centerXAnchor.constraint(equalTo: centerXAnchor),
             pageControl.bottomAnchor.constraint(equalTo: imageCarouselCollectionView.bottomAnchor, constant: -16)
         ])
     }
-    
+
     func setupButtonUI() {
         NSLayoutConstraint.activate([
             bookmarkButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
@@ -126,15 +126,15 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
             bookmarkButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
-    
+
     func setupLabelStackView() {
         labelStackView.addArrangedSubview(titleLabel)
         labelStackView.addArrangedSubview(addressLabel)
         NSLayoutConstraint.activate([
             labelStackView.topAnchor.constraint(equalTo: imageCarouselCollectionView.bottomAnchor, constant: 16),
             labelStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            labelStackView.trailingAnchor.constraint(equalTo: bookmarkButton.leadingAnchor),
-            
+            labelStackView.trailingAnchor.constraint(equalTo: bookmarkButton.leadingAnchor)
+
         ])
     }
     // MARK: 추후 argument를 Bookstore 타입으로 바꿔 받아, 각 항목에 적용 예정
@@ -151,7 +151,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
         labelStackView.isUserInteractionEnabled = true
         labelStackView.addGestureRecognizer(tab)
     }
-    
+
     @objc private func deleteBookmark() {
         delegate?.deleteBookmark(bookstore!)
     }
@@ -184,11 +184,11 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return bookstore!.images!.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCarouselCollectionViewCell.identifier, for: indexPath) as? ImageCarouselCollectionViewCell else {return UICollectionViewCell()}
         self.imageRequestTask = Task {
@@ -204,7 +204,7 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         currentPage = getCurrentPage()
     }
-    
+
     // 유저가 스크롤 하는 것을 멈추는 순간
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         currentPage = getCurrentPage()
@@ -214,8 +214,6 @@ extension BookmarkCollectionViewCell: UICollectionViewDelegate, UICollectionView
         currentPage = getCurrentPage()
     }
 }
-
-
 
 extension BookmarkCollectionViewCell {
     // ImageCarouselCollectionView의 현재 페이지를 구한다.

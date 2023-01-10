@@ -8,14 +8,14 @@
 import UIKit
 
 final class SignUpView: UIView {
-    
+
     var provider: String?
     var email: String?
     var nickName: String = ""
     var nickNameArray: [String]?
-    
+
     weak var delegate: SignUpDelegate?
-    
+
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.footnote
@@ -31,15 +31,15 @@ final class SignUpView: UIView {
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
-    
+
     let underLineView: UIView = {
         let view = UIView()
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.black.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     let isAlreadyLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.footnote
@@ -47,17 +47,17 @@ final class SignUpView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let checkPolicyView: CheckPolicyUIView = {
         let view = CheckPolicyUIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     let signUpButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 8
-        
+
         button.backgroundColor = UIColor.kindySecondaryGreen
         button.setBackgroundColor(UIColor.kindySecondaryGreen!, for: .normal)
         button.setBackgroundColor(.white, for: .selected)
@@ -65,16 +65,16 @@ final class SignUpView: UIView {
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    } ()
-    
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     override func layoutSubviews() {
         setupDescriptionLabel()
         setupNickNameTextField()
@@ -83,16 +83,16 @@ final class SignUpView: UIView {
         setupPolicyView()
         setupSignIn()
     }
-    
+
     private func setupDescriptionLabel() {
         descriptionLabel.text = "(필수) 사용하실 닉네임을 입력해주세요"
         addSubview(descriptionLabel)
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: topAnchor, constant: 123),
-            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         ])
     }
-    
+
     private func setupNickNameTextField() {
         nickNameTextField.delegate = self
         nickNameTextField.placeholder = "닉네임을 입력해주세요"
@@ -100,10 +100,10 @@ final class SignUpView: UIView {
         NSLayoutConstraint.activate([
             nickNameTextField.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 23),
             nickNameTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            nickNameTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            nickNameTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
     }
-    
+
     private func setupUnderLineView() {
         addSubview(underLineView)
         NSLayoutConstraint.activate([
@@ -113,7 +113,7 @@ final class SignUpView: UIView {
             underLineView.heightAnchor.constraint(equalToConstant: 1)
         ])
     }
-    
+
     private func setupIsAlreadyLabel() {
         isAlreadyLabel.text = "이미 사용 중인 닉네임입니다."
         isAlreadyLabel.alpha = 0
@@ -123,7 +123,7 @@ final class SignUpView: UIView {
             isAlreadyLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         ])
     }
-    
+
     private func setupPolicyView() {
         checkPolicyView.delegate = delegate
         addSubview(checkPolicyView)
@@ -134,7 +134,7 @@ final class SignUpView: UIView {
             checkPolicyView.heightAnchor.constraint(equalToConstant: 124)
         ])
     }
-    
+
     private func setupSignIn() {
         signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
         signUpButton.setTitle("회원가입", for: .normal)
@@ -147,13 +147,12 @@ final class SignUpView: UIView {
             signUpButton.heightAnchor.constraint(equalToConstant: 48)
         ])
     }
-    
+
     @objc func signUp() {
         nickNameTextField.resignFirstResponder()
         delegate?.signUpDelegate()
     }
 }
-
 
 extension SignUpView: UITextFieldDelegate {
 
@@ -166,14 +165,14 @@ extension SignUpView: UITextFieldDelegate {
         delegate?.textFieldAction(String(newText))
         return true
     }
-    
+
     func textFieldDidBeginEditing(_ textField: UITextField) {
     }
-    
+
 //    func textFieldDidChangeSelection(_ textField: UITextField) {
 //        self.nickName = textField.text!
 //    }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         let text = textField.text!
         delegate?.textFieldAction(text)
@@ -183,7 +182,7 @@ extension SignUpView: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
+
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         delegate?.textFieldAction("")
         return true

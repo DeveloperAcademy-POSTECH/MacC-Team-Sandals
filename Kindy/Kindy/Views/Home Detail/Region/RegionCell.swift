@@ -9,7 +9,7 @@ import UIKit
 final class RegionCell: UITableViewCell {
 
     static let rowHeight: CGFloat = 104     // Cell 길이
-    
+
     var bookstore: Bookstore? {
         didSet {
             configureCell(item: bookstore!)
@@ -17,7 +17,7 @@ final class RegionCell: UITableViewCell {
     }
 
     // MARK: - 프로퍼티
-    
+
     let photoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -57,10 +57,10 @@ final class RegionCell: UITableViewCell {
     }()
 
     // MARK: - 메소드
-    
+
     private func setup() {
-        [nameLabel, addressLabel].forEach{ infoStackView.addArrangedSubview($0) }
-        [photoImageView, infoStackView].forEach{ contentView.addSubview($0) }
+        [nameLabel, addressLabel].forEach { infoStackView.addArrangedSubview($0) }
+        [photoImageView, infoStackView].forEach { contentView.addSubview($0) }
     }
 
     private func createLayout() {
@@ -83,7 +83,7 @@ final class RegionCell: UITableViewCell {
     }
 
     // MARK: - 라이프 사이클
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 

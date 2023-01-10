@@ -8,11 +8,11 @@
 import UIKit
 
 final class CurationCreateDescriptionTableViewCell: UITableViewCell {
-    
+
     private var textViewDelegate: UITextViewDelegate?
     private weak var delegate: CurationCreateDelegate?
     private var index: Int = 0
-    
+
     private let photoView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "AppIcon")
@@ -20,8 +20,8 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
         view.backgroundColor = UIColor.kindyGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     private let textView: UITextView = {
         let view = UITextView()
         view.text = "사진 설명을 입력해 주세요"
@@ -30,16 +30,15 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
         view.layer.borderColor = UIColor.clear.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
-    private let deleteButton:UIButton = {
+    }()
+
+    private let deleteButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.clear
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    } ()
-    
-    
+    }()
+
     private let deleteImage: UIImageView = {
         let image = UIImageView()
         let configuration = UIImage.SymbolConfiguration(pointSize: 20)
@@ -51,14 +50,12 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
         image.clipsToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
-    } ()
-    
-    
-    
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
@@ -67,7 +64,7 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-    
+
     override func layoutSubviews() {
         setupPhotoView()
         setupTextView()
@@ -77,17 +74,17 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     private func setupPhotoView() {
         addSubview(photoView)
         NSLayoutConstraint.activate([
             photoView.topAnchor.constraint(equalTo: topAnchor),
             photoView.leadingAnchor.constraint(equalTo: leadingAnchor),
             photoView.widthAnchor.constraint(equalToConstant: 100),
-            photoView.heightAnchor.constraint(equalToConstant: 100),
+            photoView.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
-    
+
     private func setupTextView() {
         addSubview(textView)
         NSLayoutConstraint.activate([
@@ -97,7 +94,7 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
             textView.leadingAnchor.constraint(equalTo: photoView.trailingAnchor, constant: 16)
         ])
     }
-    
+
     private func setupButton() {
         deleteButton.addTarget(self, action: #selector(deleteItem), for: .touchUpInside)
         addSubview(deleteButton)
@@ -107,14 +104,14 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
             deleteButton.topAnchor.constraint(equalTo: photoView.topAnchor, constant: 4),
             deleteButton.widthAnchor.constraint(equalToConstant: 20),
             deleteButton.heightAnchor.constraint(equalToConstant: 20),
-            
+
             deleteImage.leadingAnchor.constraint(equalTo: photoView.leadingAnchor, constant: 4),
             deleteImage.topAnchor.constraint(equalTo: photoView.topAnchor, constant: 4),
             deleteImage.widthAnchor.constraint(equalToConstant: 20),
             deleteImage.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
-    
+
     func setupData(_ string: String, _ image: UIImage?, index: Int, textViewDelegate: UITextViewDelegate, delegate: CurationCreateDelegate) {
         self.index = index
         self.delegate = delegate
@@ -130,10 +127,9 @@ final class CurationCreateDescriptionTableViewCell: UITableViewCell {
             photoView.image = image
         }
     }
-    
+
     @objc func deleteItem() {
         delegate?.deleteItem(index: index)
     }
-    
-    
+
 }

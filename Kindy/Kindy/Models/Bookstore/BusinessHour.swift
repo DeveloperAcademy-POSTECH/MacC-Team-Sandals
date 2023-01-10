@@ -1,12 +1,6 @@
-//
-//  BusinessHour.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/10/30.
-//
-
 import Foundation
 
+/// 서점의 영업 시간.
 struct BusinessHour {
     var monday: String?
     var tuesday: String?

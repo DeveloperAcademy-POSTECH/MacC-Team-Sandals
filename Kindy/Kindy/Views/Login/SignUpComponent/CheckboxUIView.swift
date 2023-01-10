@@ -8,11 +8,10 @@
 import UIKit
 
 class CheckboxUIView: UIView {
-    
-    
+
     weak var delegate: CheckPolicyDelegate?
     var position: String = ""
-    
+
     var isChecked: Bool = false {
         didSet {
             if isChecked {
@@ -24,7 +23,6 @@ class CheckboxUIView: UIView {
             }
         }
     }
-    
 
     private let checkButton: UIButton = {
         let button = UIButton()
@@ -32,28 +30,28 @@ class CheckboxUIView: UIView {
         button.tintColor = UIColor.kindyGray
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    } ()
-    
+    }()
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = ""
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    } ()
-    
+    }()
+
     private let sheetButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "chevron.forward"), for: .normal)
         button.tintColor = UIColor.black
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    } ()
-    
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
@@ -64,7 +62,7 @@ class CheckboxUIView: UIView {
             setupSheetButton()
         }
     }
-    
+
     private func setupCheckButton() {
         checkButton.addTarget(self, action: #selector(checkAction), for: .touchUpInside)
         addSubview(checkButton)
@@ -75,7 +73,7 @@ class CheckboxUIView: UIView {
             checkButton.widthAnchor.constraint(equalToConstant: 20)
         ])
     }
-    
+
     private func setupTitleLabel() {
         addSubview(titleLabel)
         NSLayoutConstraint.activate([
@@ -84,7 +82,7 @@ class CheckboxUIView: UIView {
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-    
+
     private func setupSheetButton() {
         sheetButton.addTarget(self, action: #selector(sheetOpen), for: .touchUpInside)
         addSubview(sheetButton)
@@ -95,7 +93,7 @@ class CheckboxUIView: UIView {
             sheetButton.heightAnchor.constraint(equalToConstant: 14)
         ])
     }
-    
+
     func setupTitle(type: String, title: String) {
         titleLabel.text = title
         if type == "main" {
@@ -104,7 +102,7 @@ class CheckboxUIView: UIView {
             titleLabel.font = UIFont.footnote
         }
     }
-    
+
     @objc func checkAction() {
         if position == "first" {
             delegate?.isFirstToggle()
@@ -114,7 +112,7 @@ class CheckboxUIView: UIView {
             delegate?.isTotalToogle()
         }
     }
-    
+
     @objc func sheetOpen() {
         var title = ""
         if position == "first" {
