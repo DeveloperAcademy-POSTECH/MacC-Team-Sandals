@@ -1,7 +1,6 @@
 import UIKit
 
 // 내 주변 서점 섹션의 서점 셀
-// TODO: Base class로 쓸 수 있게도 만들어보기
 final class NearByBookstoreCell: UICollectionViewCell {
     private let stackView: UIStackView = {
         let stackView = UIStackView()

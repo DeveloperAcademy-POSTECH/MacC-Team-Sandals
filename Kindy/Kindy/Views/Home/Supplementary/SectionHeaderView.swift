@@ -1,14 +1,6 @@
-//
-//  SectionHeaderView.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/10/20.
-//
-
 import UIKit
 
 final class SectionHeaderView: UICollectionReusableView {
-
     // MARK: Delegate Definition
     weak var delegate: SectionHeaderDelegate?
 
@@ -113,7 +105,12 @@ final class SectionHeaderView: UICollectionReusableView {
         ])
     }
 
-    func configure(title: String, hideSeeAllButton: Bool, hideBottomStackView: Bool, sectionIndex: Int) {
+    func configure(
+        title: String,
+        hideSeeAllButton: Bool,
+        hideBottomStackView: Bool,
+        sectionIndex: Int
+    ) {
         nameLabel.text = title
         seeAllButton.isHidden = hideSeeAllButton
         bottomStackView.isHidden = hideBottomStackView

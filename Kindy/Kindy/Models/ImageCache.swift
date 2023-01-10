@@ -2,9 +2,8 @@ import UIKit
 
 final actor ImageCache {
     static let shared = ImageCache()
-    private init() {
-        createDirectoryIfNeeded()
-    }
+
+    private init() { createDirectoryIfNeeded() }
 
     private let cachedImages: NSCache<NSURL, UIImage> = {
         let cache = NSCache<NSURL, UIImage>()

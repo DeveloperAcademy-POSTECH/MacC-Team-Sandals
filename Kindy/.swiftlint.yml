@@ -84,7 +84,7 @@ function_body_length:
 
 identifier_name:
   min_length:
-    warning: 4
+    warning: 3
   excluded:
     - db
     - id

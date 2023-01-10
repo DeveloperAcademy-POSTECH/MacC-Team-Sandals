@@ -64,7 +64,6 @@ extension HomeViewController {
 
         // MARK: Supplementary view registration
         let headerRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>(elementKind: SupplementaryViewKind.header) { headerView, _, indexPath in
-
             headerView.delegate = self
 
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
@@ -134,7 +133,7 @@ extension HomeViewController {
 
         // MARK: Supplementary view provider
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
         }
 
         dataSource.apply(snapshot)
