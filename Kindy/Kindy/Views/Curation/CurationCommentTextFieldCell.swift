@@ -19,7 +19,7 @@ protocol KeyboardActionable: AnyObject {
 final class CurationCommentTextFieldCell: UICollectionViewCell {
 
     private var isSetLayout = false
-    
+
     private var commentTask: Task<Void, Never>?
 
     private var isLoggedIn: Bool {
@@ -109,7 +109,7 @@ final class CurationCommentTextFieldCell: UICollectionViewCell {
 
             submitBtn.centerYAnchor.constraint(equalTo: bottomTextFieldView.centerYAnchor),
             submitBtn.leadingAnchor.constraint(equalTo: bottomTextFieldView.trailingAnchor, constant: 16),
-            submitBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            submitBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
     }
 
@@ -120,8 +120,7 @@ final class CurationCommentTextFieldCell: UICollectionViewCell {
                     delegate?.postComment(content: bottomTextFieldView.text!)
                     bottomTextFieldView.text = nil
                     self.enableButton = false
-                }
-                else {
+                } else {
                     NotificationCenter.default.post(name: .Loggin, object: nil)
                 }
             }

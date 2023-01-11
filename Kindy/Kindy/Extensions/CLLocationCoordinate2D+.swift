@@ -1,12 +1,5 @@
-//
-//  CLLocationCoordinate2D+.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/11/09.
-//
-
-import Foundation
 import CoreLocation
+import Foundation
 
 extension CLLocationCoordinate2D {
     func distance(from: CLLocationCoordinate2D) -> CLLocationDistance {

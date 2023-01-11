@@ -9,7 +9,7 @@ import UIKit
 final class RegionHeaderView: UITableViewHeaderFooterView {
 
     // MARK: - 프로퍼티
-    
+
     var headerLabel: UILabel = {
         let label = UILabel()
         label.font = .title2
@@ -19,7 +19,7 @@ final class RegionHeaderView: UITableViewHeaderFooterView {
     }()
 
     // MARK: - 라이프 사이클
-    
+
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         setup()
@@ -31,7 +31,7 @@ final class RegionHeaderView: UITableViewHeaderFooterView {
     }
 
     // MARK: - 메소드
-    
+
     private func setup() {
         contentView.addSubview(headerLabel)
     }
@@ -39,7 +39,7 @@ final class RegionHeaderView: UITableViewHeaderFooterView {
     private func configureLayout() {
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
         ])
     }
 }

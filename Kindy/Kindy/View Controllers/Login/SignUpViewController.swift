@@ -13,7 +13,7 @@ import FirebaseFirestoreSwift
 final class SignUpViewController: UIViewController {
 
     let db = Firestore.firestore()
-    
+
     var credential: AuthCredential?
     var provider: String?
     var email: String?
@@ -24,17 +24,16 @@ final class SignUpViewController: UIViewController {
             self.isEnable()
         }
     }
-    
+
     private let signUpView = SignUpView()
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "회원가입"
         view.backgroundColor = .white
         setupView()
     }
-    
+
     private func setupView() {
         signUpView.translatesAutoresizingMaskIntoConstraints = false
         signUpView.delegate = self
@@ -43,14 +42,14 @@ final class SignUpViewController: UIViewController {
             signUpView.topAnchor.constraint(equalTo: view.topAnchor),
             signUpView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             signUpView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            signUpView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            signUpView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-    
+
     func signUp() {
-        
+
         db.collection("Users").getDocuments(completion: { (documents, error) in
-            self.nickNameArray = documents?.documents.map{ $0.data() }.map{ String(describing: $0["nickName"]!) }
+            self.nickNameArray = documents?.documents.map { $0.data() }.map { String(describing: $0["nickName"]!) }
             Task {
                 if try await UserManager().isExistingNickname(self.nickName) {
                     self.signUpView.isAlreadyLabel.alpha = 1
@@ -70,12 +69,12 @@ final class SignUpViewController: UIViewController {
                         // Auth.auth().currentUser.uid 값을 가지고 FireStore에 유저 컬렉션에 해당 도큐먼트가 있는지 확인
                         // 확인 후 없다면 해당 유저 도큐먼트를
                         self.db.collection("Users").document(Auth.auth().currentUser!.uid).setData([
-                            "email" : self.email!,
-                            "provider" : self.provider!,
-                            "nickName" : self.nickName,
-                            "bookmarkedBookstores" : [],
-                            "commentedCurations" : []
-                        ])  { err in
+                            "email": self.email!,
+                            "provider": self.provider!,
+                            "nickName": self.nickName,
+                            "bookmarkedBookstores": [],
+                            "commentedCurations": []
+                        ]) { err in
                             if let err = err {
                                 print("Error writing document: \(err)")
                             } else {
@@ -88,13 +87,13 @@ final class SignUpViewController: UIViewController {
                                 self.navigationController?.popToViewController(viewControllers![viewControllers!.count - 3], animated: true)
                             }
                         }
-                        
+
                     }
                 }
             }
         })
     }
-    
+
     // MARK: 닉네임 입력 및 정책 체크 상태 파악하여 버튼 상태 변경
     func isEnable() {
         if !nickName.isEmpty && isChecked {
@@ -105,25 +104,24 @@ final class SignUpViewController: UIViewController {
     }
 }
 
-
 extension SignUpViewController: SignUpDelegate {
     func isToggle(_ totalCheck: Bool) {
         isChecked = totalCheck
     }
-    
+
     func policySheetOpen(_ title: String) {
         let vc = PolicySheetViewController()
         vc.setupLabelTitle(title)
         present(vc, animated: true)
     }
-    
+
     func signUpDelegate() {
         self.signUp()
     }
-    
+
     func textFieldAction(_ nickname: String) {
         self.nickName = nickname
         self.isEnable()
     }
-    
+
 }

@@ -8,9 +8,9 @@
 import UIKit
 
 class CheckPolicyUIView: UIView {
-    
+
     weak var delegate: SignUpDelegate?
-    
+
     private var isTotalChecked: Bool = false {
         didSet {
             delegate?.isToggle(isTotalChecked)
@@ -25,24 +25,24 @@ class CheckPolicyUIView: UIView {
         view.setupTitle(type: "main", title: "전체 약관 동의")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     private let firstCheckView: CheckboxUIView = {
         let view = CheckboxUIView()
         view.position = "first"
         view.setupTitle(type: "sub", title: "(필수) 회원가입 및 운영 약관 동의")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     private let secondCheckView: CheckboxUIView = {
         let view = CheckboxUIView()
         view.position = "second"
         view.setupTitle(type: "sub", title: "(필수) 개인정보 수집 및 이용 동의")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    } ()
-    
+    }()
+
     private let subStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.spacing = 16
@@ -54,26 +54,24 @@ class CheckPolicyUIView: UIView {
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
-    } ()
-    
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     override func layoutSubviews() {
         setupTotalCheckView()
         setupSubStackView()
-        
+
     }
-    
-    
-    
-    private func setupTotalCheckView()  {
+
+    private func setupTotalCheckView() {
         addSubview(totalCheckView)
         NSLayoutConstraint.activate([
             totalCheckView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -82,7 +80,7 @@ class CheckPolicyUIView: UIView {
             totalCheckView.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
-    
+
     private func setupSubStackView() {
         totalCheckView.delegate = self
         firstCheckView.delegate = self
@@ -98,8 +96,7 @@ class CheckPolicyUIView: UIView {
             subStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             subStackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        
-        
+
     }
 
 }
@@ -108,8 +105,7 @@ extension CheckPolicyUIView: CheckPolicyDelegate {
     func policySheetOpen(_ title: String) {
         self.delegate?.policySheetOpen(title)
     }
-    
-    
+
     func isTotalToogle() {
         isTotalChecked.toggle()
         if isTotalChecked {
@@ -137,7 +133,7 @@ extension CheckPolicyUIView: CheckPolicyDelegate {
             totalCheckView.isChecked = false
         }
     }
-    
+
     func isSecondToggle() {
         secondCheckView.isChecked.toggle()
         isSecondChecked = secondCheckView.isChecked

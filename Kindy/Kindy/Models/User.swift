@@ -1,17 +1,17 @@
-//
-//  User.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/11/08.
-//
-
 import Foundation
 
+/// 유저.
 struct User {
     let email: String
     let nickName: String
+
+    /// 회원가입 경로 (gmail, apple).
     let provider: String
+
+    /// 유저가 북마크에 등록한 서점들의 배열.
     var bookmarkedBookstores: [String]
+
+    /// 유저가 댓글 단 큐레이션들의 배열.
     var commentedCurations: [String]
 }
 

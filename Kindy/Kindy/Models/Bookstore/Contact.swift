@@ -1,12 +1,6 @@
-//
-//  Contact.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/11/05.
-//
-
 import Foundation
 
+/// 서점의 연락처.
 struct Contact {
     let telNumber: String?
     let emailAddress: String?

@@ -12,22 +12,22 @@ extension UIViewController {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.colors = colors
-        
+
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         return gradientLayer
     }
-    
+
     func dismissKeyboard() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    
+
     @objc func hideKeyboard() {
         self.view.window?.endEditing(true)
     }
-    
+
     func presentLogInAlert() {
         let alertForLogIn = UIAlertController(
             title: "로그인이 필요한 기능입니다",
@@ -43,10 +43,10 @@ extension UIViewController {
         let actionToCancel = UIAlertAction(
             title: "취소",
             style: .cancel)
-        
+
         alertForLogIn.addAction(actionToCancel)
         alertForLogIn.addAction(actionToLogIn)
-        
+
         present(alertForLogIn, animated: true, completion: nil)
     }
 }
@@ -56,7 +56,7 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
         controller.dismiss(animated: true)
         showMailAlert(result: result)
     }
-    
+
     private func showMailAlert(result: MFMailComposeResult) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         switch result {
@@ -75,7 +75,7 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
         @unknown default:
             fatalError()
         }
-        
+
         sheet.addAction(UIAlertAction(title: "확인", style: .cancel))
         present(sheet, animated: true)
     }

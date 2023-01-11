@@ -1,10 +1,3 @@
-//
-//  ViewModel.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/10/18.
-//
-
 import Foundation
 
 enum ViewModel {
@@ -24,7 +17,7 @@ enum ViewModel {
         case bookmarkedBookstore(Bookstore), noBookmarkedBookstore
         case region(String)
         case noPermission
-        
+
         var curation: Curation? {
             if case .curation(let curation) = self {
                 return curation
@@ -32,7 +25,7 @@ enum ViewModel {
                 return nil
             }
         }
-        
+
         var bookstore: Bookstore? {
             switch self {
             case .featuredBookstore(let bookstore):
@@ -45,15 +38,13 @@ enum ViewModel {
                 return nil
             }
         }
-        
-        var region: String? {
+
+        var region: String {
             if case .region(let region) = self {
                 return region
             } else {
-                return nil
+                return "지역 없음"
             }
         }
     }
 }
-   
-    

@@ -1,17 +1,15 @@
-//
-//  BarAppearanceDelegate.swift
-//  Kindy
-//
-//  Created by 정호윤 on 2022/12/02.
-//
-
 import UIKit
 
-protocol BarAppearanceDelegate: TabBarAppearanceDelegate, NavBarAppearanceDelegate { }
-protocol TabBarAppearanceDelegate: UIViewController { }
-protocol NavBarAppearanceDelegate: UIViewController { }
+/// 탭 바의 appearance를 불투명한 흰색으로 설정.
+protocol TabBarAppearanceSetting: UIViewController { }
 
-extension TabBarAppearanceDelegate {
+/// 내비게이션 바의 appearance를 불투명한 흰색으로 설정.
+protocol NavBarAppearanceSetting: UIViewController { }
+
+/// 탭 바, 네비게이션 바의 appearance를 불투명한 흰색으로 설정.
+protocol BarAppearanceSetting: TabBarAppearanceSetting, NavBarAppearanceSetting { }
+
+extension TabBarAppearanceSetting {
     func configureTabBarAppearance() {
         if #available(iOS 15.0, *) {
             let tabBarAppearance = UITabBarAppearance()
@@ -24,11 +22,11 @@ extension TabBarAppearanceDelegate {
     }
 }
 
-extension NavBarAppearanceDelegate {
+extension NavBarAppearanceSetting {
     func configureNavBarAppearance(title: String = "") {
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.backgroundColor = .white
-        
+
         navigationController?.navigationBar.topItem?.title = title
         navigationController?.navigationBar.standardAppearance = navBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
