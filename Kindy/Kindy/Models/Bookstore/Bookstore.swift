@@ -10,7 +10,7 @@ struct Bookstore {
     let contact: Contact
     let businessHour: BusinessHour
     let location: Location
-    
+
     /// 나와 내 주변 서점과의 거리 (m).
     var distance: Int = 0
 }

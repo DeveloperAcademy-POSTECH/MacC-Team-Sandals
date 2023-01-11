@@ -27,7 +27,6 @@ final class HomeViewController: UIViewController {
 
     private let activityIndicatorView = ActivityIndicatorView()
 
-    // TODO: 옵셔널 처리
     var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
     // MARK: - Life Cycles

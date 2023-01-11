@@ -264,4 +264,4 @@ extension CurationListViewController: UITableViewDelegate {
     }
 }
 
-extension CurationListViewController: BarAppearanceDelegate { }
+extension CurationListViewController: BarAppearanceSetting { }

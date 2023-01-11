@@ -39,11 +39,11 @@ enum ViewModel {
             }
         }
 
-        var region: String? {
+        var region: String {
             if case .region(let region) = self {
                 return region
             } else {
-                return nil
+                return "지역 없음"
             }
         }
     }

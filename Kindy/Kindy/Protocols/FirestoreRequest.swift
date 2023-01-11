@@ -7,7 +7,7 @@ import FirebaseFirestoreSwift
 /// Firestore와 CRUD를 제공하는 프로토콜.
 protocol FirestoreRequest where Response: Codable & Identifiable {
     associatedtype Response
-    
+
     /// Subcollection에 접근하기 위한  parent collection path.
     var parentCollectionPath: String { get }
     var collectionPath: String { get }

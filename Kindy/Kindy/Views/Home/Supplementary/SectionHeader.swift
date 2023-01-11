@@ -1,6 +1,6 @@
 import UIKit
 
-final class SectionHeaderView: UICollectionReusableView {
+final class SectionHeader: UICollectionReusableView {
     // MARK: Delegate Definition
     weak var delegate: SectionHeaderDelegate?
 
