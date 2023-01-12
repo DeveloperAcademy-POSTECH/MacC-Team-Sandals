@@ -20,7 +20,7 @@ enum Inset {
         bottom: Padding.eight,
         trailing: .zero
     )
-    
+
     static let topBottomSixteen = NSDirectionalEdgeInsets(
         top: .zero,
         leading: Padding.sixteen,
