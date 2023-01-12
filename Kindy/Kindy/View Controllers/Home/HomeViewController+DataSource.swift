@@ -2,28 +2,28 @@ import UIKit
 
 import Kingfisher
 
-// MARK: Registration
 extension HomeViewController {
-    typealias CellRegistration = UICollectionView.CellRegistration
-    typealias SupplementaryRegistration = UICollectionView.SupplementaryRegistration
+    func configureDataSource() {
+        typealias CellRegistration = UICollectionView.CellRegistration
+        typealias SupplementaryRegistration = UICollectionView.SupplementaryRegistration
 
-    func curationCellRegistration() -> CellRegistration<CurationCell, ViewModel.Item> {
-        CellRegistration<CurationCell, ViewModel.Item> { cell, _, item in
+        // MARK: Cell registration
+        let curationCell = CellRegistration<CurationCell, ViewModel.Item> { cell, _, item in
             cell.configureCell(item.curation ?? Curation.error)
 
             let url = URL(string: item.curation?.mainImage ?? "")
             let processor = DownsamplingImageProcessor(size: ImageSize.large)
             cell.imageView.kf.indicatorType = .activity
+
             cell.imageView.kf.setImage(
                 with: url,
                 options: [
                     .processor(processor),
                     .scaleFactor(UIScreen.main.scale),
-                    .transition(.fade(1)),
+                    .transition(.fade(2)),
                     .cacheOriginalImage
                 ]
-            )
-            {
+            ) {
                 result in
                 switch result {
                 case .success(let value):
@@ -40,10 +40,8 @@ extension HomeViewController {
 //                self.imagesTask = nil
 //            }
         }
-    }
 
-    func bookstoreCellRegistration() -> CellRegistration<FeaturedBookstoreCell, ViewModel.Item> {
-        CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, _, item in
+        let bookstoreCell = CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
             self.imagesTask = Task {
@@ -53,10 +51,8 @@ extension HomeViewController {
                 self.imagesTask = nil
             }
         }
-    }
 
-    func nearbyBookstoreCellRegistration() -> CellRegistration<NearByBookstoreCell, ViewModel.Item> {
-        CellRegistration<NearByBookstoreCell, ViewModel.Item> { cell, _, item in
+        let nearbyBookstoreCell = CellRegistration<NearByBookstoreCell, ViewModel.Item> { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
             self.imagesTask = Task {
@@ -66,10 +62,8 @@ extension HomeViewController {
                 self.imagesTask = nil
             }
         }
-    }
 
-    func bookmarkedBookstoreCellRegistration() -> CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> {
-        CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> { cell, _, item in
+        let bookmarkedBookstoreCell = CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
             self.imagesTask = Task {
@@ -79,35 +73,24 @@ extension HomeViewController {
                 self.imagesTask = nil
             }
         }
-    }
 
-    func regionNameCellRegistration() -> CellRegistration<RegionNameCell, ViewModel.Item> {
-        CellRegistration<RegionNameCell, ViewModel.Item> { cell, indexPath, item in
+        let regionNameCell = CellRegistration<RegionNameCell, ViewModel.Item> { cell, indexPath, item in
             let isTopCell = !(indexPath.item < 2)
             let isOddNumber = indexPath.item % 2 == 1
 
             cell.configureCell(item.region, hideTopLine: isTopCell, hideRightLine: isOddNumber)
         }
-    }
 
-    func emptyNearbyCellRegistration() -> CellRegistration<EmptyNearbyCell, ViewModel.Item> {
-        CellRegistration<EmptyNearbyCell, ViewModel.Item> { _, _, _ in }
-    }
+        let emptyNearbyCell = CellRegistration<EmptyNearbyCell, ViewModel.Item> { _, _, _ in }
 
-    func noPermissionCellRegistration() -> CellRegistration<NoPermissionCell, ViewModel.Item> {
-        CellRegistration<NoPermissionCell, ViewModel.Item> { _, _, _ in }
-    }
+        let noPermissionCell = CellRegistration<NoPermissionCell, ViewModel.Item> { _, _, _ in }
 
-    func exceptionBookmarkCellRegistration() -> CellRegistration<ExceptionBookmarkCell, ViewModel.Item> {
-        CellRegistration<ExceptionBookmarkCell, ViewModel.Item> { cell, _, _ in
+        let exceptionBookmarkCell = CellRegistration<ExceptionBookmarkCell, ViewModel.Item> { cell, _, _ in
             cell.label.text = UserManager().isLoggedIn() ? "북마크한 서점이 아직 없어요" : "로그인 후 이용할 수 있는 서비스입니다."
         }
-    }
 
-    func headerRegistration() -> SupplementaryRegistration<SectionHeader> {
-        SupplementaryRegistration<SectionHeader>(elementKind: SupplementaryView.headerKind)
-        {
-            header, _, indexPath in
+        // MARK: Supplementary view registration
+        let header = SupplementaryRegistration<SectionHeader>(elementKind: SupplementaryView.headerKind) { header, _, indexPath in
             header.delegate = self
 
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
@@ -155,83 +138,66 @@ extension HomeViewController {
                 sectionIndex: indexPath.section
             )
         }
-    }
-}
 
-// MARK: Data source initialization
-extension HomeViewController {
-    func configureDataSource() {
+        // MARK: Data source initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-            
-            let curationCellRegistration = self.curationCellRegistration()
-            let bookstoreCellRegistration = self.bookstoreCellRegistration()
-            let nearbyBookstoreCellRegistration = self.nearbyBookstoreCellRegistration()
-            let bookmarkedBookstoreCellRegistration = self.bookmarkedBookstoreCellRegistration()
-            let regionNameCellRegistration = self.regionNameCellRegistration()
-            let emptyNearbyCellRegistration = self.emptyNearbyCellRegistration()
-            let noPermissionCellRegistration = self.noPermissionCellRegistration()
-            let exceptionBookmarkCellRegistration = self.exceptionBookmarkCellRegistration()
-            
+
             switch section {
             case .curations:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: curationCellRegistration,
+                    using: curationCell,
                     for: indexPath,
                     item: item
                 )
             case .featured:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: bookstoreCellRegistration,
+                    using: bookstoreCell,
                     for: indexPath,
                     item: item
                 )
             case .nearbys:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: nearbyBookstoreCellRegistration,
+                    using: nearbyBookstoreCell,
                     for: indexPath,
                     item: item
                 )
             case .bookmarks:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: bookmarkedBookstoreCellRegistration,
+                    using: bookmarkedBookstoreCell,
                     for: indexPath,
                     item: item
                 )
             case .regions:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: regionNameCellRegistration,
+                    using: regionNameCell,
                     for: indexPath,
                     item: item
                 )
             case .emptyNearbys:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: emptyNearbyCellRegistration,
+                    using: emptyNearbyCell,
                     for: indexPath,
                     item: item
                 )
             case .noPermission:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: noPermissionCellRegistration,
+                    using: noPermissionCell,
                     for: indexPath,
                     item: item
                 )
             case .emptyBookmarks:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: exceptionBookmarkCellRegistration,
+                    using: exceptionBookmarkCell,
                     for: indexPath,
                     item: item
                 )
             }
         }
 
+        // MARK: Supplementary view provider
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            let headerRegistration = self.headerRegistration()
- 
-            return collectionView.dequeueConfiguredReusableSupplementary(
-                using: headerRegistration,
-                for: indexPath
-            )
+            collectionView.dequeueConfiguredReusableSupplementary(using: header, for: indexPath)
         }
 
         dataSource.apply(snapshot)
