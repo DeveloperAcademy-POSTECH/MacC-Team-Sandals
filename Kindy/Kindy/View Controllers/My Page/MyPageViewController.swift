@@ -98,8 +98,8 @@ final class MyPageViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: tableView.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.sixteen),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.sixteen),
             containerView.heightAnchor.constraint(equalToConstant: 190)
         ])
 
@@ -205,7 +205,7 @@ extension MyPageViewController: UITableViewDataSource {
         let sectionHeaderView = UIView.init(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 25))
 
         let label = UILabel()
-        label.frame = CGRect.init(x: padding16, y: (padding16 * 2), width: sectionHeaderView.frame.width, height: sectionHeaderView.frame.height)
+        label.frame = CGRect.init(x: Padding.sixteen, y: (Padding.sixteen * 2), width: sectionHeaderView.frame.width, height: sectionHeaderView.frame.height)
         label.font = .systemFont(ofSize: 17, weight: .bold)
         sectionHeaderView.addSubview(label)
 

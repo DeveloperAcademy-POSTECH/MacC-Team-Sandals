@@ -178,8 +178,8 @@ final class MyPageCurationListViewController: UIViewController {
         NSLayoutConstraint.activate([
             noWritingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             noWritingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            noWritingView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding16),
-            noWritingView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding16),
+            noWritingView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.sixteen),
+            noWritingView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.sixteen),
             noWritingView.heightAnchor.constraint(equalToConstant: 60)
         ])
     }

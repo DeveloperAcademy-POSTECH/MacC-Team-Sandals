@@ -35,7 +35,7 @@ final class UserInfoContainerView: UIView {
     private lazy var nicknameStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nicknameLabel, nicknameEditButton])
         stackView.axis = .horizontal
-        stackView.layoutMargins = UIEdgeInsets(top: 0, left: padding16, bottom: 0, right: padding16)
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: Padding.sixteen, bottom: 0, right: Padding.sixteen)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -163,10 +163,10 @@ final class UserInfoContainerView: UIView {
         setupFixedLayout()
 
         NSLayoutConstraint.activate([
-            userInfoContainerStackView.topAnchor.constraint(equalTo: topAnchor, constant: padding24),
-            userInfoContainerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            userInfoContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
-            userInfoContainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24)
+            userInfoContainerStackView.topAnchor.constraint(equalTo: topAnchor, constant: Padding.twentyFour),
+            userInfoContainerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            userInfoContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
+            userInfoContainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Padding.twentyFour)
         ])
 
         clipsToBounds = true

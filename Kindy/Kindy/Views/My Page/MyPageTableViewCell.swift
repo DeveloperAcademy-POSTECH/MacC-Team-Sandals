@@ -59,13 +59,13 @@ final class MyPageTableViewCell: UITableViewCell {
             myPageCellImageView.widthAnchor.constraint(equalToConstant: 14),
 
             myPageCellStackView.topAnchor.constraint(equalTo: topAnchor, constant: 15),
-            myPageCellStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            myPageCellStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            myPageCellStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            myPageCellStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
             myPageCellStackView.heightAnchor.constraint(equalToConstant: 25),
 
             cellSeperator.topAnchor.constraint(equalTo: myPageCellStackView.bottomAnchor, constant: 14),
-            cellSeperator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            cellSeperator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            cellSeperator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            cellSeperator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
             cellSeperator.heightAnchor.constraint(equalToConstant: 1)
         ])
     }

@@ -19,22 +19,18 @@ final class HomeViewController: UIViewController {
 
     var model = Model()
 
-    enum SupplementaryViewKind {
-        static let header = "header"
-    }
-
     @IBOutlet weak var collectionView: UICollectionView!
 
     private let activityIndicatorView = ActivityIndicatorView()
 
     var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
-    // MARK: - Life Cycles
+    // MARK: - Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // MARK: Configuration
-        collectionView.collectionViewLayout = createLayout()
+        collectionView.collectionViewLayout = configureLayout()
         configureDataSource()
 
         configureRefreshControl()
@@ -56,7 +52,7 @@ final class HomeViewController: UIViewController {
 
         updateBookmarkedBookstores()
 
-        // MARK: Bar Appearance
+        // MARK: Bar appearance
         configureTabBarAppearance()
         // 서점 상세화면으로 넘어갔다 오면 상세화면의 설정이 적용되기에 재설정
         tabBarController?.tabBar.isHidden = false
@@ -116,7 +112,7 @@ final class HomeViewController: UIViewController {
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
     }
 
-    // 네비게이션 바의 검색 버튼이 눌렸을때 실행되는 함수
+    /// 네비게이션 바의 검색 버튼이 눌렸을때 실행.
     @objc private func searchButtonTapped() {
         let homeSearchViewController = SearchViewController()
 
@@ -129,11 +125,10 @@ final class HomeViewController: UIViewController {
         show(homeSearchViewController, sender: nil)
     }
 
-    // 네비게이션 바의 종 버튼이 눌렸을때 실행되는 함수
+    /// 네비게이션 바의 종 버튼이 눌렸을때 실행.
     @objc private func bellButtonTapped() { }
 
-    // MARK: - Refresh Control
-
+    // MARK: Refresh control
     private func configureRefreshControl() {
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(
@@ -149,15 +144,13 @@ final class HomeViewController: UIViewController {
         collectionView.refreshControl?.endRefreshing()
     }
 
-    // MARK: - Activity Indicator View
-
+    // MARK: Activity indicator view
     private func configureActivityIndicatorView() {
         view.addSubview(activityIndicatorView)
         activityIndicatorView.center = view.center
     }
 
-    // MARK: - Update
-
+    // MARK: Update
     private func updateBookstores() {
         bookstoresTask?.cancel()
         bookstoresTask = Task {

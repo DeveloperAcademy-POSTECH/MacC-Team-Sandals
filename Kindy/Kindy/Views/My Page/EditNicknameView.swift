@@ -63,21 +63,21 @@ final class EditNicknameView: UIView {
 
         NSLayoutConstraint.activate([
             nicknameGuideLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 32),
-            nicknameGuideLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            nicknameGuideLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            nicknameGuideLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            nicknameGuideLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
 
             nicknameTextField.topAnchor.constraint(equalTo: nicknameGuideLabel.bottomAnchor, constant: 18),
-            nicknameTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            nicknameTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            nicknameTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            nicknameTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
 
             textFieldUnderLine.topAnchor.constraint(equalTo: nicknameTextField.bottomAnchor, constant: 10),
-            textFieldUnderLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            textFieldUnderLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            textFieldUnderLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            textFieldUnderLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
             textFieldUnderLine.heightAnchor.constraint(equalToConstant: 0.5),
 
             warningLabel.topAnchor.constraint(equalTo: textFieldUnderLine.bottomAnchor, constant: 8),
-            warningLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            warningLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16)
+            warningLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            warningLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen)
         ])
     }
 

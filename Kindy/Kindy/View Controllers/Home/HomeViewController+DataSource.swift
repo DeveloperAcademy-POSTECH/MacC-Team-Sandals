@@ -66,7 +66,7 @@ extension HomeViewController {
         }
 
         // MARK: Supplementary view registration
-        let header = SupplementaryRegistration<SectionHeader>(elementKind: SupplementaryViewKind.header) { header, _, indexPath in
+        let header = SupplementaryRegistration<SectionHeader>(elementKind: SupplementaryView.headerKind) { header, _, indexPath in
             header.delegate = self
 
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]

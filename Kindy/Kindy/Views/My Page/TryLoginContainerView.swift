@@ -38,7 +38,7 @@ final class TryLoginContainerView: UIView {
     private lazy var tryLogincontainerStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [tryLoginLabel, divider, signInButton])
         stackView.axis = .vertical
-        stackView.spacing = padding16
+        stackView.spacing = Padding.sixteen
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -64,10 +64,10 @@ final class TryLoginContainerView: UIView {
             divider.widthAnchor.constraint(equalToConstant: 326),
             divider.heightAnchor.constraint(equalToConstant: 1),
 
-            tryLogincontainerStackView.topAnchor.constraint(equalTo: topAnchor, constant: padding24),
-            tryLogincontainerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            tryLogincontainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
-            tryLogincontainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding24)
+            tryLogincontainerStackView.topAnchor.constraint(equalTo: topAnchor, constant: Padding.twentyFour),
+            tryLogincontainerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            tryLogincontainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
+            tryLogincontainerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Padding.twentyFour)
         ])
 
         clipsToBounds = true

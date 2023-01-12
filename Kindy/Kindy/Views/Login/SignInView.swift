@@ -100,15 +100,15 @@ final class SignInView: UIView {
 
             labelStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             labelStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            labelStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            labelStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            labelStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
 
             googleLoginButton.heightAnchor.constraint(equalToConstant: 48),
             appleLoginButton.heightAnchor.constraint(equalToConstant: 48),
 
             loginButtonStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -32),
-            loginButtonStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding16),
-            loginButtonStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding16),
+            loginButtonStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.sixteen),
+            loginButtonStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.sixteen),
             loginButtonStackView.heightAnchor.constraint(equalToConstant: 112)
         ])
     }

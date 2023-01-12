@@ -11,6 +11,7 @@ excluded:
 disabled_rules:
     - multiple_closures_with_trailing_closure
     - opening_brace
+    - closure_parameter_position
 
 # 기본으로 꺼져있던 설정 킴
 opt_in_rules:
@@ -28,7 +29,6 @@ opt_in_rules:
     - fallthrough
     - fatal_error_message
     - file_name_no_space
-    - file_types_order
     - force_unwrapping
     - function_default_parameter_at_end
     - implicit_return
