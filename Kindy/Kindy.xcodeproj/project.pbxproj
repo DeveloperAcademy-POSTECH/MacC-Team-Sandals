@@ -106,6 +106,8 @@
 		7B46BE9E293B44850079F33E /* HomeViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46BE9D293B44850079F33E /* HomeViewController+Snapshot.swift */; };
 		7B46BEA3293E090B0079F33E /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46BEA2293E090B0079F33E /* ActivityIndicatorView.swift */; };
 		7B4B9DC02970265F009FC0D5 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4B9DBF2970265F009FC0D5 /* Layout.swift */; };
+		7B4B9DC22970311A009FC0D5 /* ImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4B9DC12970311A009FC0D5 /* ImageSize.swift */; };
+		7B4B9DC5297031EE009FC0D5 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 7B4B9DC4297031EE009FC0D5 /* Kingfisher */; };
 		7B529ED0291B8FAD007C023F /* CLLocationCoordinate2D+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B529ECF291B8FAD007C023F /* CLLocationCoordinate2D+.swift */; };
 		7B7B49932917C8A70082E2DA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B49922917C8A70082E2DA /* Model.swift */; };
 		7B7E2125290E20E200B6723D /* BusinessHour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7E2124290E20E200B6723D /* BusinessHour.swift */; };
@@ -233,6 +235,7 @@
 		7B46BE9D293B44850079F33E /* HomeViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		7B46BEA2293E090B0079F33E /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B4B9DBF2970265F009FC0D5 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		7B4B9DC12970311A009FC0D5 /* ImageSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSize.swift; sourceTree = "<group>"; };
 		7B529ECF291B8FAD007C023F /* CLLocationCoordinate2D+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+.swift"; sourceTree = "<group>"; };
 		7B7B49922917C8A70082E2DA /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		7B7E2124290E20E200B6723D /* BusinessHour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessHour.swift; sourceTree = "<group>"; };
@@ -263,6 +266,7 @@
 				7B9D70C2290799AB0004AAD6 /* FirebaseAuth in Frameworks */,
 				3101BC4D291BF23500C46195 /* GoogleSignInSwift in Frameworks */,
 				7B9D70C4290799AB0004AAD6 /* FirebaseFirestore in Frameworks */,
+				7B4B9DC5297031EE009FC0D5 /* Kingfisher in Frameworks */,
 				7B9D70C8290799AB0004AAD6 /* FirebaseStorage in Frameworks */,
 				7B9D70C6290799AB0004AAD6 /* FirebaseFirestoreSwift in Frameworks */,
 				3101BC4B291BF23500C46195 /* GoogleSignIn in Frameworks */,
@@ -528,6 +532,7 @@
 			children = (
 				363B56EE29263252008AF99C /* CollectionPath.swift */,
 				7B4B9DBF2970265F009FC0D5 /* Layout.swift */,
+				7B4B9DC12970311A009FC0D5 /* ImageSize.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -751,6 +756,7 @@
 				7B9D70C7290799AB0004AAD6 /* FirebaseStorage */,
 				3101BC4A291BF23500C46195 /* GoogleSignIn */,
 				3101BC4C291BF23500C46195 /* GoogleSignInSwift */,
+				7B4B9DC4297031EE009FC0D5 /* Kingfisher */,
 			);
 			productName = Kindy;
 			productReference = 6EE5E39728FD313C00EA7413 /* Kindy.app */;
@@ -783,6 +789,7 @@
 			packageReferences = (
 				7B9D70BE290799AB0004AAD6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				3101BC49291BF23500C46195 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				7B4B9DC3297031EE009FC0D5 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 6EE5E39828FD313C00EA7413 /* Products */;
 			projectDirPath = "";
@@ -899,6 +906,7 @@
 				36BD7D64290404C200CBC879 /* UILabel+.swift in Sources */,
 				77DCB15429029D1F00EAB5D5 /* UIButton+.swift in Sources */,
 				36002A8A29325EBE00AE432A /* MyPageCurationListViewController.swift in Sources */,
+				7B4B9DC22970311A009FC0D5 /* ImageSize.swift in Sources */,
 				7BFE3BCF292BB6FF00370AC9 /* BookstoreRequest.swift in Sources */,
 				77DCB1612904457600EAB5D5 /* RegionViewController.swift in Sources */,
 				31F7DD6929058A4C007E6E99 /* BookmarkDelegate.swift in Sources */,
@@ -1203,6 +1211,14 @@
 				minimumVersion = 6.0.0;
 			};
 		};
+		7B4B9DC3297031EE009FC0D5 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 		7B9D70BE290799AB0004AAD6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1223,6 +1239,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3101BC49291BF23500C46195 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		7B4B9DC4297031EE009FC0D5 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7B4B9DC3297031EE009FC0D5 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		7B9D70BF290799AB0004AAD6 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
