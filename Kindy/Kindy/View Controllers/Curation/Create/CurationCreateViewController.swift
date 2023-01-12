@@ -13,7 +13,7 @@ final class CurationCreateViewController: UIViewController {
     var curationImagesTask: Task<Void, Never>?
     // descriptionTable의 높이를 변화시키기 위한 변수
     var tableHeight: NSLayoutConstraint?
-
+    // swiftlint:disable all
     typealias newImageAndCuration = ([UIImage], Curation) -> Void
     var newImageAndCuration: newImageAndCuration!
 

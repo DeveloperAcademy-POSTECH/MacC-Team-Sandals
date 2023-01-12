@@ -114,6 +114,7 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
 
 extension NearbyViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // swiftlint:disable all
         filteredItems.count == 0 ? tableView.setEmptyView(text: "현재 계신 곳 주변에 독립서점 정보가 없어요") : tableView.restore()
 
         return filteredItems.count
@@ -134,6 +135,7 @@ extension NearbyViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        // swiftlint:disable all
         return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
     }
 }

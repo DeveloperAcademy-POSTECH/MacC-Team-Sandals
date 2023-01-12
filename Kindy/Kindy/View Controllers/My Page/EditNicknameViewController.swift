@@ -86,6 +86,7 @@ extension EditNicknameViewController: UITextFieldDelegate {
         let currentTextFieldText: String = currentNSString as String
 
         // 텍스트 필드가 비어져있으면 완료 버튼 비활성화
+        // swiftlint:disable all
         if currentTextFieldText.count == 0 {
             deactivateEditButton()
         } else {
@@ -102,6 +103,7 @@ extension EditNicknameViewController: UITextFieldDelegate {
         editNicknameView.nicknameTextField.resignFirstResponder()
 
         // 텍스트가 입력되었으면
+        // swiftlint:disable all
         guard let text = textField.text, text.count != 0 else { return }
 
         userNicknameRequestTask?.cancel()

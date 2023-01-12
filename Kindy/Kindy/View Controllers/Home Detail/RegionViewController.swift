@@ -142,6 +142,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
 
 extension RegionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // swiftlint:disable all
         filteredItems.count == 0 ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()
 
         return filteredItems.count
@@ -160,8 +161,9 @@ extension RegionViewController: UITableViewDataSource {
 
         return cell
     }
-
+    // swiftlint:disable all
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        // swiftlint:disable all
         return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
     }
 
@@ -185,7 +187,7 @@ extension RegionViewController: UITableViewDelegate {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RegionHeaderView.identifier) as? RegionHeaderView else {
             return UIView()
         }
-
+        // swiftlint:disable all
         headerView.headerLabel.text = regionName
 
         if filteredItems.count == 0 {

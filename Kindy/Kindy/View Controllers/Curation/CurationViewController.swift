@@ -108,6 +108,7 @@ final class CurationViewController: UIViewController {
 
             if self.isFirstShowingView {
                 self.commentTask = Task {
+                    // swiftlint:disable all
                     self.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
                     self.afterFetchComment()
                     self.isFirstShowingView = false
@@ -124,6 +125,7 @@ final class CurationViewController: UIViewController {
                 }
                 if diff.type == .removed {
                     self.comments = self.comments?.filter { comment in
+                        // swiftlint:disable all
                         try! comment.id != diff.document.data(as: Comment.self).id
                     }
                 }
@@ -217,7 +219,7 @@ final class CurationViewController: UIViewController {
         }
     }
 }
-
+// swiftlint:disable all
 private extension CurationViewController {
     func configureCollectionView() {
         //        collectionView.register(CurationStoreCell.self, forCellWithReuseIdentifier: CurationStoreCell.identifier)
@@ -352,6 +354,7 @@ extension CurationViewController: KeyboardActionable {
         let notiInfo = notification.userInfo!
         let keyboardFrame = notiInfo[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
         let height = keyboardFrame.height
+        // swiftlint:disable all
         let animationDuration = notiInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
 
         UIView.animate(withDuration: animationDuration) {

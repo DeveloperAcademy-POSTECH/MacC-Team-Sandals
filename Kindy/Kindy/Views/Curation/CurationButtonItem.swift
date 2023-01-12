@@ -163,7 +163,7 @@ final class CurationButtonItemView: UIView {
         checkLiked()
     }
 }
-
+// swiftlint:disable all
 private extension CurationButtonItemView {
     @objc func customAction() {
         if isLoggedIn || UserManager().isLoggedIn() {

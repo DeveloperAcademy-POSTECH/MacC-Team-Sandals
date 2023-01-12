@@ -1,5 +1,7 @@
 import UIKit
 
+import Kingfisher
+
 // MARK: Registration
 extension HomeViewController {
     typealias CellRegistration = UICollectionView.CellRegistration
@@ -9,12 +11,34 @@ extension HomeViewController {
         CellRegistration<CurationCell, ViewModel.Item> { cell, _, item in
             cell.configureCell(item.curation ?? Curation.error)
 
-            self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.curation?.mainImage) {
-                    cell.imageView.image = image
+            let url = URL(string: item.curation?.mainImage ?? "")
+            let processor = DownsamplingImageProcessor(size: ImageSize.large)
+            cell.imageView.kf.indicatorType = .activity
+            cell.imageView.kf.setImage(
+                with: url,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(1)),
+                    .cacheOriginalImage
+                ]
+            )
+            {
+                result in
+                switch result {
+                case .success(let value):
+                    print("Task done for: \(value.source.url?.absoluteString ?? "")")
+                case .failure(let error):
+                    print("Job failed: \(error.localizedDescription)")
                 }
-                self.imagesTask = nil
             }
+
+//            self.imagesTask = Task {
+//                if let image = try? await ImageCache.shared.load(item.curation?.mainImage) {
+//                    cell.imageView.image = image
+//                }
+//                self.imagesTask = nil
+//            }
         }
     }
 
@@ -139,53 +163,62 @@ extension HomeViewController {
     func configureDataSource() {
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-
+            
+            let curationCellRegistration = self.curationCellRegistration()
+            let bookstoreCellRegistration = self.bookstoreCellRegistration()
+            let nearbyBookstoreCellRegistration = self.nearbyBookstoreCellRegistration()
+            let bookmarkedBookstoreCellRegistration = self.bookmarkedBookstoreCellRegistration()
+            let regionNameCellRegistration = self.regionNameCellRegistration()
+            let emptyNearbyCellRegistration = self.emptyNearbyCellRegistration()
+            let noPermissionCellRegistration = self.noPermissionCellRegistration()
+            let exceptionBookmarkCellRegistration = self.exceptionBookmarkCellRegistration()
+            
             switch section {
             case .curations:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.curationCellRegistration(),
+                    using: curationCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .featured:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.bookstoreCellRegistration(),
+                    using: bookstoreCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .nearbys:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.nearbyBookstoreCellRegistration(),
+                    using: nearbyBookstoreCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .bookmarks:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.bookmarkedBookstoreCellRegistration(),
+                    using: bookmarkedBookstoreCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .regions:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.regionNameCellRegistration(),
+                    using: regionNameCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .emptyNearbys:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.emptyNearbyCellRegistration(),
+                    using: emptyNearbyCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .noPermission:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.noPermissionCellRegistration(),
+                    using: noPermissionCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .emptyBookmarks:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: self.exceptionBookmarkCellRegistration(),
+                    using: exceptionBookmarkCellRegistration,
                     for: indexPath,
                     item: item
                 )
@@ -193,8 +226,10 @@ extension HomeViewController {
         }
 
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            collectionView.dequeueConfiguredReusableSupplementary(
-                using: self.headerRegistration(),
+            let headerRegistration = self.headerRegistration()
+ 
+            return collectionView.dequeueConfiguredReusableSupplementary(
+                using: headerRegistration,
                 for: indexPath
             )
         }
