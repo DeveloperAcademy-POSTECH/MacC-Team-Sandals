@@ -6,10 +6,11 @@ extension UIImage {
         let originalSize = self.size
 
         var ratio: CGFloat {
-            return originalSize.width > originalSize.height ? 1 / (size.width / originalSize.width) : 1 / (size.height / originalSize.height)
+            originalSize.width > originalSize.height ?
+            1 / (size.width / originalSize.width) : 1 / (size.height / originalSize.height)
         }
 
-        return UIImage(cgImage: self.cgImage!, scale: self.scale * ratio, orientation: self.imageOrientation)
+        return UIImage(cgImage: cgImage!, scale: scale * ratio, orientation: imageOrientation)
     }
 
     /// 이미지 다운샘플링

@@ -3,12 +3,9 @@ import UIKit
 import Kingfisher
 
 extension HomeViewController {
-    func configureDataSource() {
-        typealias CellRegistration = UICollectionView.CellRegistration
-        typealias SupplementaryRegistration = UICollectionView.SupplementaryRegistration
-
-        // MARK: Cell registration
-        let curationCell = CellRegistration<CurationCell, ViewModel.Item> { cell, _, item in
+    // MARK: Cell registrations
+    func registerCurationCell() {
+        curationCellRegistration = .init { cell, _, item in
             cell.configureCell(item.curation ?? Curation.error)
 
             let url = URL(string: item.curation?.mainImage ?? "")
@@ -20,77 +17,93 @@ extension HomeViewController {
                 options: [
                     .processor(processor),
                     .scaleFactor(UIScreen.main.scale),
-                    .transition(.fade(2)),
+                    .transition(.fade(0.5)),
                     .cacheOriginalImage
                 ]
-            ) {
-                result in
-                switch result {
-                case .success(let value):
-                    print("Task done for: \(value.source.url?.absoluteString ?? "")")
-                case .failure(let error):
-                    print("Job failed: \(error.localizedDescription)")
-                }
-            }
-
-//            self.imagesTask = Task {
-//                if let image = try? await ImageCache.shared.load(item.curation?.mainImage) {
-//                    cell.imageView.image = image
-//                }
-//                self.imagesTask = nil
-//            }
+            )
         }
+    }
 
-        let bookstoreCell = CellRegistration<FeaturedBookstoreCell, ViewModel.Item> { cell, _, item in
+    func registerFeaturedBookstoreCell() {
+        featuredBookstoreCellRegistration = .init { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
-            self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
-                    cell.imageView.image = image
-                }
-                self.imagesTask = nil
-            }
-        }
+            let url = URL(string: item.bookstore?.images?.first ?? "")
+            let processor = DownsamplingImageProcessor(size: ImageSize.medium)
+            cell.imageView.kf.indicatorType = .activity
 
-        let nearbyBookstoreCell = CellRegistration<NearByBookstoreCell, ViewModel.Item> { cell, _, item in
+            cell.imageView.kf.setImage(
+                with: url,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(0.5)),
+                    .cacheOriginalImage
+                ]
+            )
+        }
+    }
+
+    func registerNearbyBookstoreCell() {
+        nearbyBookstoreCellRegistration = .init { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
-            self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
-                    cell.imageView.image = image
-                }
-                self.imagesTask = nil
-            }
-        }
+            let url = URL(string: item.bookstore?.images?.first ?? "")
+            let processor = DownsamplingImageProcessor(size: ImageSize.small)
+            cell.imageView.kf.indicatorType = .activity
 
-        let bookmarkedBookstoreCell = CellRegistration<BookmarkedBookstoreCell, ViewModel.Item> { cell, _, item in
+            cell.imageView.kf.setImage(
+                with: url,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(0.5)),
+                    .cacheOriginalImage
+                ]
+            )
+        }
+    }
+
+    func registerBookmarkedBookstoreCell() {
+        bookmarkedBookstoreCellRegistration = .init { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
-            self.imagesTask = Task {
-                if let image = try? await ImageCache.shared.load(item.bookstore?.images?.first) {
-                    cell.imageView.image = image
-                }
-                self.imagesTask = nil
-            }
-        }
+            let url = URL(string: item.bookstore?.images?.first ?? "")
+            let processor = DownsamplingImageProcessor(size: ImageSize.medium)
+            cell.imageView.kf.indicatorType = .activity
 
-        let regionNameCell = CellRegistration<RegionNameCell, ViewModel.Item> { cell, indexPath, item in
+            cell.imageView.kf.setImage(
+                with: url,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(0.5)),
+                    .cacheOriginalImage
+                ]
+            )
+        }
+    }
+
+    func registerRegionNameCell() {
+        regionNameCellRegistration = .init { cell, indexPath, item in
             let isTopCell = !(indexPath.item < 2)
             let isOddNumber = indexPath.item % 2 == 1
 
             cell.configureCell(item.region, hideTopLine: isTopCell, hideRightLine: isOddNumber)
         }
+    }
 
-        let emptyNearbyCell = CellRegistration<EmptyNearbyCell, ViewModel.Item> { _, _, _ in }
-
-        let noPermissionCell = CellRegistration<NoPermissionCell, ViewModel.Item> { _, _, _ in }
-
-        let exceptionBookmarkCell = CellRegistration<ExceptionBookmarkCell, ViewModel.Item> { cell, _, _ in
+    func registerExceptionCells() {
+        emptyNearbyCellRegistration = .init { _, _, _ in }
+        noPermissionCellRegistration = .init { _, _, _ in }
+        exceptionBookmarkCellRegistration = .init { cell, _, _ in
             cell.label.text = UserManager().isLoggedIn() ? "북마크한 서점이 아직 없어요" : "로그인 후 이용할 수 있는 서비스입니다."
         }
+    }
 
-        // MARK: Supplementary view registration
-        let header = SupplementaryRegistration<SectionHeader>(elementKind: SupplementaryView.headerKind) { header, _, indexPath in
+    // MARK: Header registration
+    func registerHeaderView() {
+        headerRegistration = .init(elementKind: SupplementaryView.headerKind) { header, _, indexPath in
             header.delegate = self
 
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
@@ -138,6 +151,19 @@ extension HomeViewController {
                 sectionIndex: indexPath.section
             )
         }
+    }
+}
+
+// MARK: Configure datasource
+extension HomeViewController {
+    func configureDataSource() {
+        registerCurationCell()
+        registerFeaturedBookstoreCell()
+        registerNearbyBookstoreCell()
+        registerBookmarkedBookstoreCell()
+        registerRegionNameCell()
+        registerExceptionCells()
+        registerHeaderView()
 
         // MARK: Data source initialization
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -146,49 +172,49 @@ extension HomeViewController {
             switch section {
             case .curations:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: curationCell,
+                    using: self.curationCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .featured:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: bookstoreCell,
+                    using: self.featuredBookstoreCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .nearbys:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: nearbyBookstoreCell,
+                    using: self.nearbyBookstoreCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .bookmarks:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: bookmarkedBookstoreCell,
+                    using: self.bookmarkedBookstoreCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .regions:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: regionNameCell,
+                    using: self.regionNameCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .emptyNearbys:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: emptyNearbyCell,
+                    using: self.emptyNearbyCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .noPermission:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: noPermissionCell,
+                    using: self.noPermissionCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case .emptyBookmarks:
                 return collectionView.dequeueConfiguredReusableCell(
-                    using: exceptionBookmarkCell,
+                    using: self.exceptionBookmarkCellRegistration,
                     for: indexPath,
                     item: item
                 )
@@ -197,7 +223,10 @@ extension HomeViewController {
 
         // MARK: Supplementary view provider
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            collectionView.dequeueConfiguredReusableSupplementary(using: header, for: indexPath)
+            collectionView.dequeueConfiguredReusableSupplementary(
+                using: self.headerRegistration,
+                for: indexPath
+            )
         }
 
         dataSource.apply(snapshot)

@@ -25,7 +25,21 @@ final class HomeViewController: UIViewController {
 
     var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
-    // MARK: - Life cycles
+    // MARK: Registrations
+    typealias CellRegistration = UICollectionView.CellRegistration
+    typealias SupplementaryRegistration = UICollectionView.SupplementaryRegistration
+
+    var curationCellRegistration: CellRegistration<CurationCell, ViewModel.Item>!
+    var featuredBookstoreCellRegistration: CellRegistration<FeaturedBookstoreCell, ViewModel.Item>!
+    var nearbyBookstoreCellRegistration: CellRegistration<NearByBookstoreCell, ViewModel.Item>!
+    var bookmarkedBookstoreCellRegistration: CellRegistration<BookmarkedBookstoreCell, ViewModel.Item>!
+    var regionNameCellRegistration: CellRegistration<RegionNameCell, ViewModel.Item>!
+    var emptyNearbyCellRegistration: CellRegistration<EmptyNearbyCell, ViewModel.Item>!
+    var noPermissionCellRegistration: CellRegistration<NoPermissionCell, ViewModel.Item>!
+    var exceptionBookmarkCellRegistration: CellRegistration<ExceptionBookmarkCell, ViewModel.Item>!
+    var headerRegistration: SupplementaryRegistration<SectionHeaderView>!
+
+    // MARK: Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
 
