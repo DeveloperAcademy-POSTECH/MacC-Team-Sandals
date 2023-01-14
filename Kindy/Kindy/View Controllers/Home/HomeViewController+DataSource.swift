@@ -4,18 +4,24 @@ import Kingfisher
 
 extension HomeViewController {
     // MARK: Cell registrations
+    func registerCells() {
+        registerCurationCell()
+        registerFeaturedBookstoreCell()
+        registerNearbyBookstoreCell()
+        registerBookmarkedBookstoreCell()
+        registerRegionNameCell()
+        registerExceptionCells()
+    }
+    
     func registerCurationCell() {
         curationCellRegistration = .init { cell, _, item in
             cell.configureCell(item.curation ?? Curation.error)
-
-            let url = URL(string: item.curation?.mainImage ?? "")
-            let processor = DownsamplingImageProcessor(size: ImageSize.large)
+            
             cell.imageView.kf.indicatorType = .activity
-
             cell.imageView.kf.setImage(
-                with: url,
+                with: URL(string: item.curation?.mainImage ?? ""),
                 options: [
-                    .processor(processor),
+                    .processor(DownsamplingImageProcessor(size: ImageSize.large)),
                     .scaleFactor(UIScreen.main.scale),
                     .transition(.fade(0.5)),
                     .cacheOriginalImage
@@ -28,14 +34,11 @@ extension HomeViewController {
         featuredBookstoreCellRegistration = .init { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
-            let url = URL(string: item.bookstore?.images?.first ?? "")
-            let processor = DownsamplingImageProcessor(size: ImageSize.medium)
             cell.imageView.kf.indicatorType = .activity
-
             cell.imageView.kf.setImage(
-                with: url,
+                with: URL(string: item.bookstore?.images?.first ?? ""),
                 options: [
-                    .processor(processor),
+                    .processor(DownsamplingImageProcessor(size: ImageSize.medium)),
                     .scaleFactor(UIScreen.main.scale),
                     .transition(.fade(0.5)),
                     .cacheOriginalImage
@@ -48,14 +51,11 @@ extension HomeViewController {
         nearbyBookstoreCellRegistration = .init { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
-            let url = URL(string: item.bookstore?.images?.first ?? "")
-            let processor = DownsamplingImageProcessor(size: ImageSize.small)
             cell.imageView.kf.indicatorType = .activity
-
             cell.imageView.kf.setImage(
-                with: url,
+                with: URL(string: item.bookstore?.images?.first ?? ""),
                 options: [
-                    .processor(processor),
+                    .processor(DownsamplingImageProcessor(size: ImageSize.small)),
                     .scaleFactor(UIScreen.main.scale),
                     .transition(.fade(0.5)),
                     .cacheOriginalImage
@@ -68,14 +68,11 @@ extension HomeViewController {
         bookmarkedBookstoreCellRegistration = .init { cell, _, item in
             cell.configureCell(item.bookstore ?? Bookstore.error)
 
-            let url = URL(string: item.bookstore?.images?.first ?? "")
-            let processor = DownsamplingImageProcessor(size: ImageSize.medium)
             cell.imageView.kf.indicatorType = .activity
-
             cell.imageView.kf.setImage(
-                with: url,
+                with: URL(string: item.bookstore?.images?.first ?? ""),
                 options: [
-                    .processor(processor),
+                    .processor(DownsamplingImageProcessor(size: ImageSize.medium)),
                     .scaleFactor(UIScreen.main.scale),
                     .transition(.fade(0.5)),
                     .cacheOriginalImage
@@ -157,12 +154,7 @@ extension HomeViewController {
 // MARK: Configure datasource
 extension HomeViewController {
     func configureDataSource() {
-        registerCurationCell()
-        registerFeaturedBookstoreCell()
-        registerNearbyBookstoreCell()
-        registerBookmarkedBookstoreCell()
-        registerRegionNameCell()
-        registerExceptionCells()
+        registerCells()
         registerHeaderView()
 
         // MARK: Data source initialization
