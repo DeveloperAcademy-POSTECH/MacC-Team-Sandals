@@ -12,11 +12,11 @@ extension HomeViewController {
         registerRegionNameCell()
         registerExceptionCells()
     }
-    
+
     func registerCurationCell() {
         curationCellRegistration = .init { cell, _, item in
             cell.configureCell(item.curation ?? Curation.error)
-            
+
             cell.imageView.kf.indicatorType = .activity
             cell.imageView.kf.setImage(
                 with: URL(string: item.curation?.mainImage ?? ""),
