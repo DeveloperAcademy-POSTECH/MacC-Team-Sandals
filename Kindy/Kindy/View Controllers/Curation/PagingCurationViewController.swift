@@ -98,12 +98,7 @@ final class PagingCurationViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        UIView.animate(withDuration: 0.3, animations: {
-            self.setNeedsStatusBarAppearanceUpdate()
-        })
-
-        createGradient(view: headerView, startAlpha: 0.6)
+//        self.present(bottomVC, animated: false)
         changeGradientLayer(view: headerView)
 
         self.imageRequestTask = Task {

@@ -8,6 +8,7 @@
 import UIKit
 
 final class CurationHeaderView: UIView {
+    private var isFirstViewing: Bool = true
 
     private(set) lazy var imageView: UIImageView = {
         let view = UIImageView()
@@ -42,11 +43,16 @@ final class CurationHeaderView: UIView {
         self.configureData(curationData: curation)
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        isFirstViewing ? createGradient() : ()
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func configureUI() {
+    private func configureUI(){
         self.addSubview(imageView)
         self.addSubview(titleLabel)
         self.addSubview(subtitleLabel)
@@ -70,5 +76,13 @@ final class CurationHeaderView: UIView {
     private func configureData(curationData: Curation) {
         self.titleLabel.text = curationData.title
         self.subtitleLabel.text = curationData.subTitle
+    }
+
+    private func createGradient() {
+        isFirstViewing = false
+        let gradientSize = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+        let gradient = gradientView(bounds: gradientSize, colors: [UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor, UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor])
+
+        layer.insertSublayer(gradient, at: 1)
     }
 }
