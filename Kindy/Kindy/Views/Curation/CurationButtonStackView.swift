@@ -8,7 +8,6 @@
 import UIKit
 
 final class CurationButtonStackView: UIView {
-
     private let curation: Curation
 
     private let stackView: UIStackView = {
@@ -20,7 +19,7 @@ final class CurationButtonStackView: UIView {
         return view
     }()
 
-    private lazy var heartView: UIView = {
+    private(set) lazy var heartView: UIView = {
         let view = CurationButtonItemView(frame: .zero, curation: curation, viewName: .heart)
         return view
     }()

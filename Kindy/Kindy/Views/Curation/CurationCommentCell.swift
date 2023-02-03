@@ -8,7 +8,6 @@
 import UIKit
 
 final class CurationCommentCell: UICollectionViewCell {
-
     private let stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
@@ -131,6 +130,7 @@ final class CurationCommentCell: UICollectionViewCell {
     func configure(data: Comment) {
         descriptionLabel.text = data.content
         dateLabel.text = dateToString(data.createdAt)
+        userLabel.text = data.userNickname
     }
 
     @objc func presentReportView() {
