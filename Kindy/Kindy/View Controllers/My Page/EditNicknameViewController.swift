@@ -84,7 +84,8 @@ extension EditNicknameViewController: UITextFieldDelegate {
         let previousNSString: NSString = (textField.text ?? "") as NSString
         let currentNSString: NSString = previousNSString.replacingCharacters(in: range, with: string) as NSString
         let currentTextFieldText: String = currentNSString as String
-
+        
+        // swiftlint:disable empty_count
         // 텍스트 필드가 비어져있으면 완료 버튼 비활성화
         if currentTextFieldText.count == 0 {
             deactivateEditButton()

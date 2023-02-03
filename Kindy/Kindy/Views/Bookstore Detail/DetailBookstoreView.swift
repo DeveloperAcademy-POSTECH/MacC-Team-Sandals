@@ -8,6 +8,8 @@
 import UIKit
 import MapKit
 
+// swiftlint:disable type_body_length
+
 // FIXME: 주석처리한 부분과 기타 디테일을 수정해주세용
 final class DetailBookstoreView: UIView {
 

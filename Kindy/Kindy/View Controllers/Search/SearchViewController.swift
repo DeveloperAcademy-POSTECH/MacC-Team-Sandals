@@ -203,7 +203,7 @@ extension SearchViewController: UITableViewDataSource {
         default: return UITableViewCell()
         }
     }
-
+    // swiftlint:disable empty_count
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return filteredItems.count == 0 ? nil : "총 \(filteredItems.count)개"
     }
