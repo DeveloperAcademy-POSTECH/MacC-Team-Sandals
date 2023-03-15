@@ -303,19 +303,34 @@ extension CurationViewController: UICollectionViewDataSource {
                 cell.removeLineView()
             }
 
-            imageRequestTask = Task {
-                let curation = curation
-                if let image = try? await ImageCache.shared.load(curation.descriptions[indexPath.item - 1].image) {
-                    cell.imageView.image = image
+            let index = indexPath.item - 1
+            cell.url = curation.descriptions[index].image
 
-                    if !images.contains(where: { $0 == image }) {
-                        images.append(image)
+            imageRequestTask = Task {
+                let imageTask = Task.detached(
+                    priority: .high,
+                    operation: { [curation] in
+                        let imageUrl = curation.descriptions[index].image
+                        let image = try await ImageCache.shared.load(curation.descriptions[index].image)
+                        return (imageUrl, image)
                     }
+                )
+                do {
+                    let (imageUrl, image) = try await imageTask.value
+                    guard cell.url == imageUrl && cell.imageView.image == nil else {
+                        print("task cancel")
+                        imageTask.cancel()
+
+                        return
+                    }
+                    cell.imageView.image = image
+                } catch {
+                    print("image error")
+                    cell.imageView.image = UIImage(named: "kindyGray2")
                 }
                 imageRequestTask = nil
             }
-
-            cell.configure(description: curation.descriptions[indexPath.item - 1].content ?? "")
+            cell.configure(description: curation.descriptions[index].content ?? "")
 
             return cell
 
