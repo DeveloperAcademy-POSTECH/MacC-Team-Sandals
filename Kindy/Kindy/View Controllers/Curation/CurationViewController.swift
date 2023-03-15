@@ -288,14 +288,13 @@ extension CurationViewController: UICollectionViewDataSource {
         //            return cell
         //        } else
         // --- 서점 스토어셀은 추후에 추가
-        if indexPath.section == 0 {
-            if indexPath.item == 0 {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
-                cell.headConfigure(data: curation)
+        switch (indexPath.section, indexPath.item) {
+        case (0, 0):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
+            cell.headConfigure(data: curation)
+            return cell
 
-                return cell
-            }
-
+        case (0, 1...):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationDetailCell.identifier, for: indexPath) as? CurationDetailCell else { return UICollectionViewCell() }
 
             if indexPath.item == cellCount {
@@ -319,21 +318,23 @@ extension CurationViewController: UICollectionViewDataSource {
             cell.configure(description: curation.descriptions[indexPath.item - 1].content ?? "")
 
             return cell
-        }
 
-        if indexPath.item != replyCount {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentCell.identifier, for: indexPath) as? CurationCommentCell else { return UICollectionViewCell() }
-
-            guard let comments else { return UICollectionViewCell()}
+        case (1, 0..<replyCount):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentCell.identifier, for: indexPath) as? CurationCommentCell,
+                  let comments = comments else { return UICollectionViewCell() }
             cell.configure(data: comments[indexPath.item])
 
             return cell
-        } else {
+
+        case (1, replyCount):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentTextFieldCell.identifier, for: indexPath) as? CurationCommentTextFieldCell else { return UICollectionViewCell() }
             cell.bottomTextFieldView.delegate = self
             cell.delegate = self
 
             return cell
+
+        default:
+            return UICollectionViewCell()
         }
     }
 }
