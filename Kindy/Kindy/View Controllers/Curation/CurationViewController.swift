@@ -13,17 +13,13 @@ protocol SetSheetDefault: AnyObject {
 }
 
 final class CurationViewController: UIViewController {
-
-    private var commentListener: ListenerRegistration?
-    private var curationListener: ListenerRegistration?
-
-    private var commentManager = CommentRequest()
+    private let commentManager = CommentRequest()
 
     private var curation: Curation
     private var comments: [Comment]?
+    private var updatedComments: [Comment] = []
     weak var delegate: SetSheetDefault?
 
-    private var setNeedsFetchCuration: Bool = false
     private var isFirstShowingView: Bool = true
     private var isPostComment: Bool = false
     private var isDeleteComment: Bool = false
@@ -39,11 +35,13 @@ final class CurationViewController: UIViewController {
 
     private lazy var cellCount: Int = curation.descriptions.count
     private lazy var replyCount: Int = comments?.count ?? 0
+    private lazy var likeCount: Int = curation.likes.count
+    private var serverReplyCount: Int = 0
 
     private let userManager = UserManager()
     private let curationManager = CurationRequest()
 
-    private var imageRequestTask: Task<[UIImage], Never>?
+    private var imageRequestTask: Task<Void, Never>?
     private var commentTask: Task<Void, Never>?
     private var curationRequestTask: Task<Void, Never>?
     private var userNameTask: Task<Void, Never>?
@@ -63,10 +61,64 @@ final class CurationViewController: UIViewController {
         return id
     }()
 
+    private lazy var listener: ListenerRegistration = {
+        return commentManager.subcollectionReference(curation.id).addSnapshotListener { querySnapshot, error in
+            guard let snapshot = querySnapshot else {
+                print("Error fetching snapshots: \(error!)")
+
+                return
+            }
+
+            if self.isFirstShowingView {
+                self.commentTask = Task {
+                    self.comments = snapshot.documents.compactMap { comment in
+                        try? comment.data(as: Comment.self)
+                    }
+
+                    self.updatedComments = self.comments ?? []
+                    self.serverReplyCount = self.updatedComments.count
+                    self.reFetch()
+                    self.isFirstShowingView = false
+                    self.commentTask = nil
+                }
+
+                return
+            }
+
+            snapshot.documentChanges.forEach { diff in
+                switch diff.type {
+                case .added:
+                    try? self.updatedComments.append(diff.document.data(as: Comment.self))
+                    self.serverReplyCount = self.updatedComments.count
+
+                case .removed:
+                    guard let removedComment = try? diff.document.data(as: Comment.self) else { return }
+
+                    self.updatedComments = self.updatedComments.filter { comment in
+                        comment.id != removedComment.id
+                    }
+                    self.serverReplyCount = self.updatedComments.count
+
+                default:
+                    return
+                }
+            }
+
+            if self.isPostComment || self.isDeleteComment {
+                self.viewNeedsReload = true
+                self.isPostComment = false
+                self.isDeleteComment = false
+
+                return
+            }
+        }
+    }()
+
     init(curation: Curation, images: [UIImage]) {
         self.curation = curation
         self.images = images
         super.init(nibName: nil, bundle: nil)
+        _ = listener
     }
 
     required init?(coder: NSCoder) {
@@ -84,59 +136,26 @@ final class CurationViewController: UIViewController {
         return view
     }()
 
-    private lazy var bottomView: UIView = {
+    private lazy var bottomView: CurationButtonStackView = {
         let view = CurationButtonStackView(frame: .zero, curation: curation)
-        guard let replyView = view.replyView as? CurationButtonItemView else { return UIView()}
+        let replyView = view.replyView
         replyView.delegate = self
-        guard let settingView = view.settingView as? CurationButtonItemView else { return UIView() }
+        let settingView = view.settingView
         settingView.menuDelegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // --------------
-        // MARK: 서점 정보 불러오는 Task
-        //        self.bookstoresRequestTask = Task {
-        //            self.bookStore = try? await firestoreManager.fetchBookstore(with: curation.bookstoreID)
-        //            bookstoresRequestTask = nil
-        //        }
-        // --------------
-
-        commentListener = commentManager.update(curationID: curation.id, completion: { querySnapshot, _ in
-
-            if self.isFirstShowingView {
-                self.commentTask = Task {
-                    self.comments = querySnapshot?.documents.map { try! $0.data(as: Comment.self)}
-                    self.afterFetchComment()
-                    self.isFirstShowingView = false
-                }
-                return
-            }
-
-            querySnapshot?.documentChanges.forEach { diff in
-                if diff.type == .added {
-                    try? self.comments?.append(diff.document.data(as: Comment.self))
-                }
-                if diff.type == .modified {
-                    print("Modified : \(diff.document.data())")
-                }
-                if diff.type == .removed {
-                    self.comments = self.comments?.filter { comment in
-                        try! comment.id != diff.document.data(as: Comment.self).id
-                    }
-                }
-            }
-            if self.isPostComment || self.isDeleteComment {
-                self.viewNeedsReload = true
-                self.isPostComment = false
-                self.isDeleteComment = false
-
-                return
-            }
-        })
-    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        super.viewWillAppear(animated)
+    // --------------
+    // MARK: 서점 정보 불러오는 Task
+    //        self.bookstoresRequestTask = Task {
+    //            self.bookStore = try? await firestoreManager.fetchBookstore(with: curation.bookstoreID)
+    //            bookstoresRequestTask = nil
+    //        }
+    // --------------
+    //    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,23 +173,20 @@ final class CurationViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        curationListener?.remove()
-        commentListener?.remove()
-    }
+        curationRequestTask = Task {
+            if curation.commentCount != serverReplyCount {
+                try? await curationManager.equalizedCommentCount(curationID: curation.id, count: serverReplyCount)
+            }
+            curationRequestTask = nil
+        }
 
-    deinit {
+        listener.remove()
         NotificationCenter.default.removeObserver(self)
     }
 
     private func configureRefreshControl () {
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
-    }
-
-    private func postRefresh() {
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            self.handleRefreshControl()
-        }
     }
 
     @objc private func handleRefreshControl() {
@@ -183,7 +199,7 @@ final class CurationViewController: UIViewController {
             self.view.isUserInteractionEnabled = false
         }
 
-        afterFetchComment()
+        reFetch()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.view.isUserInteractionEnabled = true
@@ -197,28 +213,39 @@ final class CurationViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
 
-    private func afterFetchComment() {
-        userNameTask = Task {
-            self.comments?.sort(by: { first, second in
-                first.createdAt < second.createdAt
-            })
+    private func reFetch() {
+        if !isFirstShowingView {
+            curationRequestTask = Task {
+                guard let newCuration = try? await curationManager.fetch(with: curation.id) else { return }
 
-            var index = 0
-            for comment in self.comments ?? [] {
-                if comment.userNickname == nil {
-                    self.comments?[index].userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
-                }
-                index += 1
+                curation = newCuration
+                likeCount = curation.likes.count
+                curationRequestTask = nil
+            }
+        }
+
+        userNameTask = Task {
+            updatedComments.sort { first, second in
+                first.createdAt < second.createdAt
             }
 
-            self.replyCount = self.comments?.count ?? 0
-            self.changeReplyCount()
-            self.collectionView.reloadData()
+            comments = try? await updatedComments.concurrentMap { comment in
+                if comment.userNickname == nil {
+                    var newComment = comment
+                    newComment.userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
+                    return newComment
+                } else { return comment }
+            }
+
+            replyCount = comments?.count ?? 0
+            updatedCounts()
+            collectionView.reloadData()
+            userNameTask = nil
         }
     }
 }
 
-private extension CurationViewController {
+extension CurationViewController {
     func configureCollectionView() {
         //        collectionView.register(CurationStoreCell.self, forCellWithReuseIdentifier: CurationStoreCell.identifier)
 
@@ -246,7 +273,7 @@ private extension CurationViewController {
             bottomView.topAnchor.constraint(equalTo: collectionView.bottomAnchor),
             bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 }
@@ -261,14 +288,13 @@ extension CurationViewController: UICollectionViewDataSource {
         //            return cell
         //        } else
         // --- 서점 스토어셀은 추후에 추가
+        switch (indexPath.section, indexPath.item) {
+        case (0, 0):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
+            cell.headConfigure(data: curation)
+            return cell
 
-        if indexPath.section == 0 {
-            if indexPath.item == 0 {
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationTextCell.identifier, for: indexPath) as? CurationTextCell else { return UICollectionViewCell() }
-                cell.headConfigure(data: curation)
-                return cell
-            }
-
+        case (0, 1...):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationDetailCell.identifier, for: indexPath) as? CurationDetailCell else { return UICollectionViewCell() }
 
             if indexPath.item == cellCount {
@@ -277,27 +303,57 @@ extension CurationViewController: UICollectionViewDataSource {
                 cell.removeLineView()
             }
 
-            cell.configure(description: curation.descriptions[indexPath.item - 1], image: images[indexPath.item])
+            let index = indexPath.item - 1
+            cell.url = curation.descriptions[index].image
+
+            imageRequestTask = Task {
+                let imageTask = Task.detached(
+                    priority: .high,
+                    operation: { [curation] in
+                        let imageUrl = curation.descriptions[index].image
+                        let image = try await ImageCache.shared.load(curation.descriptions[index].image)
+                        return (imageUrl, image)
+                    }
+                )
+                do {
+                    let (imageUrl, image) = try await imageTask.value
+                    guard cell.url == imageUrl && cell.imageView.image == nil else {
+                        print("task cancel")
+                        imageTask.cancel()
+
+                        return
+                    }
+                    cell.imageView.image = image
+                } catch {
+                    print("image error")
+                    cell.imageView.image = UIImage(named: "kindyGray2")
+                }
+                imageRequestTask = nil
+            }
+            cell.configure(description: curation.descriptions[index].content ?? "")
+
             return cell
-        }
 
-        if indexPath.item != replyCount {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentCell.identifier, for: indexPath) as? CurationCommentCell else { return UICollectionViewCell() }
-
-            guard let comments = comments else { return UICollectionViewCell() }
-
-            cell.userLabel.text = comments[indexPath.item].userNickname
+        case (1, 0..<replyCount):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentCell.identifier, for: indexPath) as? CurationCommentCell,
+                  let comments = comments else { return UICollectionViewCell() }
             cell.configure(data: comments[indexPath.item])
 
             return cell
-        } else {
+
+        case (1, replyCount):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurationCommentTextFieldCell.identifier, for: indexPath) as? CurationCommentTextFieldCell else { return UICollectionViewCell() }
             cell.bottomTextFieldView.delegate = self
             cell.delegate = self
+
             return cell
+
+        default:
+            return UICollectionViewCell()
         }
     }
 }
+
 extension CurationViewController: UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         2
@@ -336,10 +392,8 @@ extension CurationViewController: PostComment {
     func postComment(content: String) {
         commentTask = Task {
             isPostComment = true
-            curation.commentCount += 1
-            let tempCuration = curation
-            try? await commentManager.add(curationID: tempCuration.id, userID: userID, content: content, count: tempCuration.commentCount)
-            try? userManager.addCommentedCuration(userID: userID, curationID: tempCuration.id)
+            try? await commentManager.add(curationID: curation.id, userID: userID, content: content, count: curation.commentCount)
+            try? userManager.addCommentedCuration(userID: userID, curationID: curation.id)
             commentTask = nil
         }
     }
@@ -349,10 +403,10 @@ extension CurationViewController: KeyboardActionable {
     @objc func keyboardWillShow(_ notification: Notification) {
         if isViewingKeyboard { return }
 
-        let notiInfo = notification.userInfo!
-        let keyboardFrame = notiInfo[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+        guard let notiInfo = notification.userInfo else { return }
+        guard let keyboardFrame = notiInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
         let height = keyboardFrame.height
-        let animationDuration = notiInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
+        guard let animationDuration = notiInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
 
         UIView.animate(withDuration: animationDuration) {
             self.collectionViewBottomContraint.constant -= height - 10
@@ -407,8 +461,7 @@ extension CurationViewController: UIGestureRecognizerDelegate {
 
     @objc func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
         let location = gestureRecognizer.location(in: gestureRecognizer.view)
-        let collectionView = gestureRecognizer.view as! UICollectionView
-
+        guard let collectionView = gestureRecognizer.view as? UICollectionView else { return }
         if gestureRecognizer.state == .began {
             if let indexPath = collectionView.indexPathForItem(at: location) {
                 UIView.animate(withDuration: 0.2) {
@@ -421,7 +474,7 @@ extension CurationViewController: UIGestureRecognizerDelegate {
         } else if gestureRecognizer.state == .ended {
             if let indexPath = collectionView.indexPathForItem(at: location) {
                 UIView.animate(withDuration: 0.2) {
-                    if let cell = self.currentLongPressedCell {
+                    if let cell = self.currentLongPressedCell  {
                         cell.transform = .init(scaleX: 1, y: 1)
                         if cell == collectionView.cellForItem(at: indexPath) as? CurationCommentCell {
                             if self.userID == self.comments?[indexPath.row].userID {
@@ -430,12 +483,12 @@ extension CurationViewController: UIGestureRecognizerDelegate {
                                 let okAction = UIAlertAction(title: "확인", style: .default) { _ in
                                     self.curationRequestTask = Task {
                                         self.curation.commentCount -= 1
-                                        let tempCuration = self.curation
-                                        guard let tempComments = self.comments else { return }
+
+                                        guard let comments = self.comments else { return }
                                         self.isDeleteComment = true
 
-                                        try? await self.userManager.deleteCommentedCurationIfNeeded(userID: self.userID, curationID: tempCuration.id)
-                                        try? await self.commentManager.delete(curationID: tempCuration.id, commentID: tempComments[indexPath.row].id, count: tempCuration.commentCount)
+                                        try? await self.userManager.deleteCommentedCurationIfNeeded(userID: self.userID, curationID: self.curation.id)
+                                        try? await self.commentManager.delete(curationID: self.curation.id, commentID: comments[indexPath.row].id, count: self.curation.commentCount)
                                     }
                                 }
                                 let cancelAction = UIAlertAction(title: "취소", style: .default)
@@ -453,11 +506,13 @@ extension CurationViewController: UIGestureRecognizerDelegate {
     }
 }
 
-private extension CurationViewController {
-    func changeReplyCount() {
-        guard let stackView = bottomView as? CurationButtonStackView else { return }
-        guard let replyView = stackView.replyView as? CurationButtonItemView else { return }
+extension CurationViewController {
+    func updatedCounts() {
+        let replyView = bottomView.replyView
         replyView.countLabel.text = String(replyCount)
+
+        let likeView = bottomView.heartView
+        likeView.countLabel.text = String(likeCount)
     }
 }
 
@@ -531,25 +586,6 @@ extension CurationViewController: ShowingMenu, Reportable {
         } else {
             showReportController(self, style: .actionSheet, title: "게시글 신고")
         }
-    }
-}
-
-extension CurationViewController {
-    private func refetchImages(curation: Curation) async -> [UIImage] {
-        imageRequestTask = Task {
-            imageRequestTask = nil
-            var newImages: [UIImage] = []
-            if let mainImage = try? await ImageCache.shared.load(curation.mainImage) {
-                newImages.append(mainImage)
-            } else {
-                newImages.append(UIImage())
-            }
-
-            let descriptionImages = try! await ImageCache.shared.loadImageArray(URLs: curation.descriptions.map { $0.image ?? "" })
-            newImages.append(contentsOf: descriptionImages.map { $0 })
-            return newImages
-        }
-        return await imageRequestTask?.value ?? []
     }
 }
 

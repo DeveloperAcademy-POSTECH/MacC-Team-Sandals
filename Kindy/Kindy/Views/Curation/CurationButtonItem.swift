@@ -15,7 +15,6 @@ protocol ShowingMenu: AnyObject {
 }
 
 final class CurationButtonItemView: UIView {
-
     enum Views {
         case heart
         case comment
@@ -39,12 +38,10 @@ final class CurationButtonItemView: UIView {
 
     private lazy var heartCount: Int = curation?.likes.count ?? 0
     private var commentCount: Int {
-        get {
-            if let count = curation?.commentCount {
-                return count
-            } else {
-                return 0
-            }
+        if let count = curation?.commentCount {
+            return count
+        } else {
+            return 0
         }
     }
 
@@ -164,7 +161,7 @@ final class CurationButtonItemView: UIView {
     }
 }
 
-private extension CurationButtonItemView {
+extension CurationButtonItemView {
     @objc func customAction() {
         if isLoggedIn || UserManager().isLoggedIn() {
             switch view {

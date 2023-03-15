@@ -8,6 +8,7 @@
 import UIKit
 import PhotosUI
 
+// swiftlint:disable type_name
 final class CurationCreateViewController: UIViewController {
 
     var curationImagesTask: Task<Void, Never>?

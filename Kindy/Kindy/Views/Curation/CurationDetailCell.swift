@@ -8,6 +8,7 @@
 import UIKit
 
 final class CurationDetailCell: UICollectionViewCell {
+    var url: String?
 
     private lazy var lineView: UIView = {
         let view = UIView()
@@ -25,7 +26,7 @@ final class CurationDetailCell: UICollectionViewCell {
         return view
     }()
 
-    private lazy var imageView: UIImageView = {
+    private(set) lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
@@ -44,6 +45,13 @@ final class CurationDetailCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        url = nil
+        imageView.image = nil
+        descriptionLabel.text = nil
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -78,9 +86,8 @@ final class CurationDetailCell: UICollectionViewCell {
         ])
     }
 
-    func configure(description: Description, image: UIImage) {
-        imageView.image = image
-        descriptionLabel.text = description.content
+    func configure(description: String) {
+        descriptionLabel.text = description
     }
 
     func addLineView() {

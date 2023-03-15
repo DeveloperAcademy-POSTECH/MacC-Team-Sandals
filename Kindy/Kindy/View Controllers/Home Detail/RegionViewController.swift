@@ -139,7 +139,7 @@ final class RegionViewController: UIViewController, UISearchResultsUpdating {
 }
 
 // MARK: - 데이터 소스
-
+// swiftlint:disable empty_count
 extension RegionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         filteredItems.count == 0 ? tableView.setEmptyView(text: "찾으시는 서점이 없으신가요?") : tableView.restore()

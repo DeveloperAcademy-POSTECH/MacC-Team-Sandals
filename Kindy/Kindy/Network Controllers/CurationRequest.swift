@@ -2,6 +2,7 @@ import UIKit
 
 import FirebaseFirestoreSwift
 import FirebaseStorage
+import FirebaseFirestore
 
 struct CurationRequest: FirestoreRequest {
     typealias Response = Curation
@@ -15,7 +16,16 @@ extension CurationRequest {
     }
 
     /// 큐레이션 댓글 수 업데이트
-    func updateCommentCount(curationID: String, count: Int) async throws {
+    func updateCommentCount(curationID: String, plus: Bool) async throws {
+        if plus {
+            try await documentReference(curationID).updateData(["commentCount": FieldValue.increment(Int64(1))])
+        } else {
+            try await documentReference(curationID).updateData(["commentCount": FieldValue.increment(Int64(-1))])
+        }
+    }
+
+    /// 큐레이션에 저장된 댓글 수와, 실제 댓글 수를 같게 하는 함수
+    func equalizedCommentCount(curationID: String, count: Int) async throws {
         try await documentReference(curationID).updateData(["commentCount": count])
     }
 }

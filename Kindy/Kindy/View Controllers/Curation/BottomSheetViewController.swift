@@ -8,7 +8,6 @@
 import UIKit
 
 final class BottomSheetViewController: UIViewController {
-
     enum BottomSheetViewState {
         case expanded
         case normal
@@ -18,11 +17,20 @@ final class BottomSheetViewController: UIViewController {
     weak var popDelegate: PopView?
     weak var changeHeaderViewDelegate: ChangeHeaderView?
 
-    private let contentViewController: UIViewController
+    private let curation: Curation
+    private let images: [UIImage]
 
-    init(contentViewController: UIViewController) {
-        self.contentViewController = contentViewController
-        self.contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var curationVC: CurationViewController = {
+        let vc = CurationViewController(curation: curation, images: images)
+        vc.delegate = self
+        vc.view.translatesAutoresizingMaskIntoConstraints = false
+
+        return vc
+    }()
+
+    init(curation: Curation, images: [UIImage]) {
+        self.curation = curation
+        self.images = images
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -39,6 +47,7 @@ final class BottomSheetViewController: UIViewController {
         view.setImage(image, for: .normal)
         view.tintColor = .white
         view.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
+        view.alpha = 0
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -65,19 +74,22 @@ final class BottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let vc = contentViewController as? CurationViewController else { return }
-        vc.delegate = self
+        setupLayout()
+        showBottomSheet()
+        configureGesture()
 
         NotificationCenter.default.addObserver(self, selector: #selector(presentReport(_:)), name: .Report, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(checkLogin(_:)), name: .Loggin, object: nil)
-
-        setupLayout()
-        configureGesture()
     }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        dismissButton.alpha = 1
     }
 
     @objc func dismissView() {
@@ -148,24 +160,16 @@ final class BottomSheetViewController: UIViewController {
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        showBottomSheet()
-    }
-
     func showBottomSheet(atState: BottomSheetViewState = .normal) {
-        guard let vc = self.contentViewController as? CurationViewController else { return }
-
         if atState == .normal {
-            vc.collectionView.isUserInteractionEnabled = false
+            curationVC.collectionView.isUserInteractionEnabled = false
             let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
             let bottomPadding: CGFloat = view.safeAreaInsets.bottom
             bottomSheetViewTopConstraint.constant = (safeAreaHeight + bottomPadding) - defaultHeight
         } else {
-            vc.collectionView.isUserInteractionEnabled = true
+            curationVC.collectionView.isUserInteractionEnabled = true
             // 확장시 위치
             bottomSheetViewTopConstraint.constant = bottomSheetPanMinTopConstant
-
         }
 
         UIView.animate(withDuration: 0.33, delay: 0, options: .curveEaseIn, animations: {
@@ -176,7 +180,7 @@ final class BottomSheetViewController: UIViewController {
     private func setupLayout() {
         view.addSubview(dismissButton)
         view.addSubview(bottomSheetView)
-        bottomSheetView.addSubview(contentViewController.view)
+        bottomSheetView.addSubview(curationVC.view)
 
         let topConstant = view.safeAreaInsets.bottom + view.safeAreaLayoutGuide.layoutFrame.height
 
@@ -193,10 +197,10 @@ final class BottomSheetViewController: UIViewController {
             bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomSheetViewTopConstraint,
 
-            contentViewController.view.topAnchor.constraint(equalTo: bottomSheetView.topAnchor, constant: 30),
-            contentViewController.view.leadingAnchor.constraint(equalTo: bottomSheetView.leadingAnchor),
-            contentViewController.view.trailingAnchor.constraint(equalTo: bottomSheetView.trailingAnchor),
-            contentViewController.view.bottomAnchor.constraint(equalTo: bottomSheetView.bottomAnchor)
+            curationVC.view.topAnchor.constraint(equalTo: bottomSheetView.topAnchor, constant: 30),
+            curationVC.view.leadingAnchor.constraint(equalTo: bottomSheetView.leadingAnchor),
+            curationVC.view.trailingAnchor.constraint(equalTo: bottomSheetView.trailingAnchor),
+            curationVC.view.bottomAnchor.constraint(equalTo: bottomSheetView.bottomAnchor)
         ])
     }
 

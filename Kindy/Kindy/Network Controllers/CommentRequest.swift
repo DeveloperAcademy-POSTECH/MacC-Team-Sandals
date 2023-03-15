@@ -1,7 +1,6 @@
-import Foundation
-
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Foundation
 
 struct CommentRequest: FirestoreRequest {
     typealias Response = Comment
@@ -12,12 +11,7 @@ struct CommentRequest: FirestoreRequest {
 extension CommentRequest {
     /// 댓글 추가
     func add(curationID: String, userID: String, content: String, count: Int) async throws {
-        let comment = Comment(
-            id: UUID().uuidString,
-            userID: userID,
-            content: content,
-            createdAt: Date()
-        )
+        let comment = Comment(id: UUID().uuidString, userID: userID, content: content, createdAt: Date())
         try await subdocumentReference(curationID, comment.id).setData(
             [
                 "id": comment.id,
@@ -27,13 +21,13 @@ extension CommentRequest {
             ]
         )
 
-        try await CurationRequest().updateCommentCount(curationID: curationID, count: count)
+        try await CurationRequest().updateCommentCount(curationID: curationID, plus: true)
     }
 
     /// 댓글 삭제
     func delete(curationID: String, commentID: String, count: Int) async throws {
         try await subdocumentReference(curationID, commentID).delete()
-        try await CurationRequest().updateCommentCount(curationID: curationID, count: count)
+        try await CurationRequest().updateCommentCount(curationID: curationID, plus: false)
     }
 }
 
@@ -43,15 +37,5 @@ extension CommentRequest {
         let querySnapshot = try await subcollectionReference(documentID).getDocuments()
         let responses = try querySnapshot.documents.map { try $0.data(as: Comment.self) }
         return responses
-    }
-
-    ///  댓글의 바뀐 부분만 불러오는 함수
-    func update(
-        curationID: String,
-        completion: @escaping (QuerySnapshot?, Error?) -> Void
-    ) -> ListenerRegistration {
-        subcollectionReference(curationID).addSnapshotListener { querySnapshot, error in
-            completion(querySnapshot, error)
-        }
     }
 }

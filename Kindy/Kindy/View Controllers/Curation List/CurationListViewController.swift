@@ -192,10 +192,7 @@ final class CurationListViewController: UIViewController {
 // MARK: - DataSource
 
 extension CurationListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        return curations.count
-    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { curations.count }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurationListCell.identifier, for: indexPath) as? CurationListCell else { return UITableViewCell() }
@@ -231,7 +228,7 @@ extension CurationListViewController: UITableViewDataSource {
 
 extension CurationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curationVC = PagingCurationViewController(curation: curations[indexPath.row])
+        let curationVC = PagingCurationViewController(curation: curations[indexPath.row], mainImage: curationImage)
         curationVC.modalPresentationStyle = .fullScreen
         curationVC.modalTransitionStyle = .crossDissolve
 

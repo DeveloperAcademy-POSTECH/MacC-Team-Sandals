@@ -111,7 +111,7 @@ final class NearbyViewController: UIViewController, UISearchResultsUpdating {
 }
 
 // MARK: - DataSource
-
+// swiftlint:disable empty_count
 extension NearbyViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         filteredItems.count == 0 ? tableView.setEmptyView(text: "현재 계신 곳 주변에 독립서점 정보가 없어요") : tableView.restore()
