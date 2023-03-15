@@ -8,6 +8,8 @@
 import UIKit
 
 final class CurationDetailCell: UICollectionViewCell {
+    var url: String?
+
     private lazy var lineView: UIView = {
         let view = UIView()
         view.backgroundColor = .kindyLightGray
@@ -46,6 +48,7 @@ final class CurationDetailCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        url = nil
         imageView.image = nil
         descriptionLabel.text = nil
     }
