@@ -86,20 +86,21 @@ final class CurationViewController: UIViewController {
             }
 
             snapshot.documentChanges.forEach { diff in
-                if (diff.type == .added) {
+                switch diff.type {
+                case .added:
                     try? self.updatedComments.append(diff.document.data(as: Comment.self))
                     self.serverReplyCount = self.updatedComments.count
-                }
-                if (diff.type == .modified) {
-                    print("Modified : \(diff.document.data())")
-                }
-                if (diff.type == .removed) {
+
+                case .removed:
                     guard let removedComment = try? diff.document.data(as: Comment.self) else { return }
 
                     self.updatedComments = self.updatedComments.filter { comment in
                         comment.id != removedComment.id
                     }
                     self.serverReplyCount = self.updatedComments.count
+
+                default:
+                    return
                 }
             }
 
@@ -117,7 +118,7 @@ final class CurationViewController: UIViewController {
         self.curation = curation
         self.images = images
         super.init(nibName: nil, bundle: nil)
-        print(listener)
+        _ = listener
     }
 
     required init?(coder: NSCoder) {
