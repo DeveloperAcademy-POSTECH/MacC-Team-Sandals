@@ -136,11 +136,11 @@ final class CurationViewController: UIViewController {
         return view
     }()
 
-    private lazy var bottomView: UIView = {
+    private lazy var bottomView: CurationButtonStackView = {
         let view = CurationButtonStackView(frame: .zero, curation: curation)
-        guard let replyView = view.replyView as? CurationButtonItemView else { return UIView()}
+        let replyView = view.replyView
         replyView.delegate = self
-        guard let settingView = view.settingView as? CurationButtonItemView else { return UIView() }
+        let settingView = view.settingView
         settingView.menuDelegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -225,17 +225,16 @@ final class CurationViewController: UIViewController {
         }
 
         userNameTask = Task {
-            updatedComments.sort(by: { first, second in
+            updatedComments.sort { first, second in
                 first.createdAt < second.createdAt
-            })
+            }
 
             comments = try? await updatedComments.concurrentMap { comment in
                 if comment.userNickname == nil {
                     var newComment = comment
                     newComment.userNickname = try? await self.userManager.fetch(with: comment.userID).nickName
                     return newComment
-                }
-                else { return comment }
+                } else { return comment }
             }
 
             replyCount = comments?.count ?? 0
@@ -493,12 +492,10 @@ extension CurationViewController: UIGestureRecognizerDelegate {
 
 extension CurationViewController {
     func updatedCounts() {
-        guard let stackView = bottomView as? CurationButtonStackView else { return }
-
-        guard let replyView = stackView.replyView as? CurationButtonItemView else { return }
+        let replyView = bottomView.replyView
         replyView.countLabel.text = String(replyCount)
 
-        guard let likeView = stackView.heartView as? CurationButtonItemView else { return }
+        let likeView = bottomView.heartView
         likeView.countLabel.text = String(likeCount)
     }
 }
@@ -549,7 +546,7 @@ extension CurationViewController: ShowingMenu, Reportable {
 
                         try? self.curationManager.deleteImage(url: self.curation.mainImage)
 
-                        let _ = try? await self.curation.descriptions.concurrentMap { description in
+                        _ = try? await self.curation.descriptions.concurrentMap { description in
                             try self.curationManager.deleteImage(url: description.image ?? "")
                         }
 
